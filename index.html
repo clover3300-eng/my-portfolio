@@ -26,39 +26,64 @@
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 8px; }
         
+        /* Стили поля ввода суммы и кнопок управления */
         .calc-box {
             background: white; padding: 20px; border-radius: 20px;
             display: flex; align-items: center; justify-content: space-between;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
+            gap: 10px;
         }
         
         .input-container { flex: 1; }
         .input-label { font-size: 12px; color: #8e8e93; font-weight: 500; margin-bottom: 4px; display: block; }
         
-        .input-wrapper { display: flex; align-items: baseline; gap: 6px; }
-        input { 
-            border: none; font-size: 28px; font-weight: 400; width: 100%; 
-            outline: none; color: var(--input-color); background: transparent;
+        .input-wrapper { 
+            display: flex; 
+            align-items: center; 
+            gap: 4px;
         }
-        .currency { font-size: 22px; color: #a1a1a1; }
+
+        input { 
+            border: none; font-size: 26px; font-weight: bold; width: 100%; 
+            outline: none; color: var(--input-color); background: transparent;
+            margin: 0; padding: 0;
+            appearance: none; -webkit-appearance: none;
+        }
+        /* Убираем стрелки в разных браузерах */
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .currency { 
+            font-size: 24px; color: var(--input-color); font-weight: bold;
+            display: inline-block; transform: translateY(1px);
+        }
+
+        /* Кнопки плюс/минус */
+        .step-btn {
+            width: 36px; height: 36px; border-radius: 10px;
+            border: none; background: #f0f3f5; color: var(--input-color);
+            font-size: 20px; font-weight: bold; display: flex;
+            align-items: center; justify-content: center; cursor: pointer;
+            transition: background 0.2s;
+        }
+        .step-btn:active { background: #e2e6e9; }
 
         .chart-mini {
-            width: 65px; height: 65px; border-radius: 50%;
+            width: 55px; height: 55px; border-radius: 50%;
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink: 0;
         }
-        .chart-mini::after { content: "50/50"; font-size: 10px; font-weight: 900; color: white; }
+        .chart-mini::after { content: "50/50"; font-size: 9px; font-weight: 900; color: white; }
 
-        /* Улучшенные карточки описания стратегии */
         .strategy-desc { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
         .desc-card { background: white; padding: 18px; border-radius: 16px; border-left: 6px solid #eee; position: relative; }
         .desc-card.blue { border-color: var(--accent-blue); }
         .desc-card.green { border-color: var(--accent-green); }
-        .desc-card h3 { margin: 0 0 4px 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .desc-card h3 { margin: 0 0 4px 0; font-size: 16px; }
         .desc-card .subtitle { font-weight: bold; color: var(--text-main); font-size: 14px; display: block; margin-bottom: 8px; }
         .desc-card p { margin: 0 0 10px 0; font-size: 13px; color: #555; line-height: 1.5; }
-        .desc-card .badge { font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .desc-card .badge { font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; }
         .blue .badge { background: #ebf5fb; color: var(--accent-blue); }
         .green .badge { background: #eafaf1; color: var(--accent-green); }
 
@@ -75,10 +100,7 @@
         .qty { text-align: center; font-weight: bold; color: var(--accent-blue); }
         .price { text-align: right; color: #999; }
 
-        .echelon-title { 
-            padding: 8px 12px; font-size: 12px; font-weight: bold; 
-            background: #eee; color: #666; display: flex; justify-content: space-between;
-        }
+        .echelon-title { padding: 8px 12px; font-size: 12px; font-weight: bold; background: #eee; color: #666; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body onclick="if(document.activeElement.tagName==='INPUT')document.activeElement.blur()">
@@ -89,13 +111,15 @@
     </div>
 
     <div class="calc-box">
+        <button class="step-btn" onclick="changeSum(-10000)">−</button>
         <div class="input-container">
             <span class="input-label">Сколько вы готовы вложить?</span>
             <div class="input-wrapper">
-                <input type="number" id="sumInput" value="100000" oninput="draw()" pattern="\d*">
+                <input type="number" id="sumInput" value="100000" oninput="draw()" inputmode="decimal">
                 <span class="currency">₽</span>
             </div>
         </div>
+        <button class="step-btn" onclick="changeSum(10000)">+</button>
         <div class="chart-mini"></div>
     </div>
 
@@ -119,9 +143,7 @@
         <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
         <span class="percent-tag">50% от капитала</span>
     </div>
-    <div id="listBonds" class="asset-list">
-        <div style="padding:20px; text-align:center; color:#999;">Загрузка данных...</div>
-    </div>
+    <div id="listBonds" class="asset-list"><div style="padding:20px; text-align:center; color:#999;">Загрузка...</div></div>
 
     <div class="section-header">2. Растущая часть</div>
     <div class="allocation-info">
@@ -143,6 +165,14 @@
             { title: 'IV Эшелон (Венчурный)', weight: 0.15, assets: [] }
         ];
 
+        // Функция для кнопок + и -
+        function changeSum(step) {
+            const input = document.getElementById('sumInput');
+            let current = parseInt(input.value) || 0;
+            input.value = Math.max(0, current + step);
+            draw();
+        }
+
         async function loadData() {
             try {
                 const response = await fetch(CSV_URL);
@@ -154,22 +184,14 @@
                 bonds = [];
                 for (let i = 2; i <= 9; i++) {
                     if (rows[i] && rows[i][10]) {
-                        bonds.push({
-                            t: rows[i][10],
-                            n: rows[i][11] || '',
-                            p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0
-                        });
+                        bonds.push({ t: rows[i][10], n: rows[i][11] || '', p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0 });
                     }
                 }
 
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) {
                     if (rows[i] && rows[i][10]) {
-                        allStocks.push({
-                            t: rows[i][10],
-                            n: rows[i][11] || '',
-                            p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0
-                        });
+                        allStocks.push({ t: rows[i][10], n: rows[i][11] || '', p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0 });
                     }
                 }
 
@@ -179,11 +201,9 @@
                     echelons[2].assets = allStocks.slice(6, 9);
                     echelons[3].assets = allStocks.slice(9, 12);
                 }
-
                 draw();
             } catch (e) {
-                console.error('Ошибка загрузки:', e);
-                document.getElementById('listBonds').innerHTML = '<div style="padding:20px; color:red;">Ошибка доступа к таблице</div>';
+                document.getElementById('listBonds').innerHTML = '<div style="padding:20px; color:red;">Ошибка данных</div>';
             }
         }
 
@@ -199,32 +219,18 @@
                 const bPart = half / bonds.length; 
                 bonds.forEach(b => {
                     const q = b.p > 0 ? Math.floor(bPart / b.p) : 0;
-                    bHtml += `
-                        <div class="asset-item">
-                            <span class="ticker">${b.t}</span>
-                            <span>${b.n}</span>
-                            <span class="qty">${q} шт.</span>
-                            <span class="price">${Math.round(q*b.p).toLocaleString()} ₽</span>
-                        </div>`;
+                    bHtml += `<div class="asset-item"><span class="ticker">${b.t}</span><span>${b.n}</span><span class="qty">${q} шт.</span><span class="price">${Math.round(q*b.p).toLocaleString()} ₽</span></div>`;
                 });
             }
-            document.getElementById('listBonds').innerHTML = bHtml || 'Данные не найдены';
+            document.getElementById('listBonds').innerHTML = bHtml || 'Нет данных';
 
             let eHtml = '';
             echelons.forEach(e => {
                 eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${Math.round(e.weight*100)}%</span></div><div class="asset-list">`;
-                const echelonSum = half * e.weight;
-                const assetPart = e.assets.length > 0 ? echelonSum / e.assets.length : 0;
-
+                const assetPart = e.assets.length > 0 ? (half * e.weight) / e.assets.length : 0;
                 e.assets.forEach(a => {
                     const q = a.p > 0 ? Math.floor(assetPart / a.p) : 0;
-                    eHtml += `
-                        <div class="asset-item">
-                            <span class="ticker">${a.t}</span>
-                            <span>${a.n}</span>
-                            <span class="qty">${q} шт.</span>
-                            <span class="price">${Math.round(q*a.p).toLocaleString()} ₽</span>
-                        </div>`;
+                    eHtml += `<div class="asset-item"><span class="ticker">${a.t}</span><span>${a.n}</span><span class="qty">${q} шт.</span><span class="price">${Math.round(q*a.p).toLocaleString()} ₽</span></div>`;
                 });
                 eHtml += `</div>`;
             });
@@ -232,9 +238,8 @@
         }
 
         loadData();
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
     </script>
 </body>
 </html>
