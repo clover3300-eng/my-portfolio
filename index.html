@@ -26,63 +26,63 @@
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 8px; }
         
-        /* Стили поля ввода суммы и кнопок управления */
+        /* Улучшенный блок ввода суммы */
         .calc-box {
-            background: white; padding: 20px; border-radius: 20px;
-            display: flex; align-items: center; justify-content: space-between;
+            background: white; padding: 24px 20px; border-radius: 24px;
+            text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
-            gap: 10px;
+            display: flex; flex-direction: column; align-items: center;
         }
         
-        .input-container { flex: 1; }
-        .input-label { font-size: 12px; color: #8e8e93; font-weight: 500; margin-bottom: 4px; display: block; }
+        .input-label { font-size: 13px; color: #8e8e93; font-weight: 600; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
         
+        .input-control-row {
+            display: flex; align-items: center; justify-content: center; gap: 20px; width: 100%;
+        }
+
         .input-wrapper { 
-            display: flex; 
-            align-items: center; 
-            gap: 4px;
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
         }
 
         input { 
-            border: none; font-size: 26px; font-weight: bold; width: 100%; 
+            border: none; font-size: 32px; font-weight: 800; width: 160px; 
             outline: none; color: var(--input-color); background: transparent;
-            margin: 0; padding: 0;
+            text-align: center; margin: 0; padding: 0;
             appearance: none; -webkit-appearance: none;
         }
-        /* Убираем стрелки в разных браузерах */
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
 
         .currency { 
-            font-size: 24px; color: var(--input-color); font-weight: bold;
-            display: inline-block; transform: translateY(1px);
+            font-size: 24px; color: #a1a1a1; font-weight: 600;
+            margin-left: 5px;
         }
 
-        /* Кнопки плюс/минус */
         .step-btn {
-            width: 36px; height: 36px; border-radius: 10px;
+            width: 44px; height: 44px; border-radius: 14px;
             border: none; background: #f0f3f5; color: var(--input-color);
-            font-size: 20px; font-weight: bold; display: flex;
+            font-size: 24px; font-weight: bold; display: flex;
             align-items: center; justify-content: center; cursor: pointer;
-            transition: background 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .step-btn:active { background: #e2e6e9; }
+        .step-btn:active { background: #e2e6e9; transform: scale(0.95); }
 
+        /* Диаграмма перенесена чуть ниже для баланса */
+        .chart-mini-container { margin-top: 15px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: bold; color: #8e8e93; }
         .chart-mini {
-            width: 55px; height: 55px; border-radius: 50%;
+            width: 24px; height: 24px; border-radius: 50%;
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink: 0;
         }
-        .chart-mini::after { content: "50/50"; font-size: 9px; font-weight: 900; color: white; }
 
+        /* Остальные стили */
         .strategy-desc { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
-        .desc-card { background: white; padding: 18px; border-radius: 16px; border-left: 6px solid #eee; position: relative; }
+        .desc-card { background: white; padding: 18px; border-radius: 16px; border-left: 6px solid #eee; }
         .desc-card.blue { border-color: var(--accent-blue); }
         .desc-card.green { border-color: var(--accent-green); }
         .desc-card h3 { margin: 0 0 4px 0; font-size: 16px; }
-        .desc-card .subtitle { font-weight: bold; color: var(--text-main); font-size: 14px; display: block; margin-bottom: 8px; }
-        .desc-card p { margin: 0 0 10px 0; font-size: 13px; color: #555; line-height: 1.5; }
+        .desc-card .subtitle { font-weight: bold; font-size: 14px; display: block; margin-bottom: 8px; }
+        .desc-card p { margin: 0 0 10px 0; font-size: 13px; color: #555; }
         .desc-card .badge { font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; }
         .blue .badge { background: #ebf5fb; color: var(--accent-blue); }
         .green .badge { background: #eafaf1; color: var(--accent-green); }
@@ -99,7 +99,6 @@
         .ticker { font-weight: bold; color: #333; }
         .qty { text-align: center; font-weight: bold; color: var(--accent-blue); }
         .price { text-align: right; color: #999; }
-
         .echelon-title { padding: 8px 12px; font-size: 12px; font-weight: bold; background: #eee; color: #666; display: flex; justify-content: space-between; }
     </style>
 </head>
@@ -111,16 +110,19 @@
     </div>
 
     <div class="calc-box">
-        <button class="step-btn" onclick="changeSum(-10000)">−</button>
-        <div class="input-container">
-            <span class="input-label">Сколько вы готовы вложить?</span>
+        <span class="input-label">Сумма инвестиций</span>
+        <div class="input-control-row">
+            <button class="step-btn" onclick="changeSum(-10000)">−</button>
             <div class="input-wrapper">
                 <input type="number" id="sumInput" value="100000" oninput="draw()" inputmode="decimal">
                 <span class="currency">₽</span>
             </div>
+            <button class="step-btn" onclick="changeSum(10000)">+</button>
         </div>
-        <button class="step-btn" onclick="changeSum(10000)">+</button>
-        <div class="chart-mini"></div>
+        <div class="chart-mini-container">
+            <div class="chart-mini"></div>
+            <span>БАЛАНС 50/50</span>
+        </div>
     </div>
 
     <div class="strategy-desc">
@@ -143,7 +145,7 @@
         <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
         <span class="percent-tag">50% от капитала</span>
     </div>
-    <div id="listBonds" class="asset-list"><div style="padding:20px; text-align:center; color:#999;">Загрузка...</div></div>
+    <div id="listBonds" class="asset-list"><div style="padding:20px; text-align:center; color:#999;">Загрузка данных...</div></div>
 
     <div class="section-header">2. Растущая часть</div>
     <div class="allocation-info">
@@ -165,7 +167,6 @@
             { title: 'IV Эшелон (Венчурный)', weight: 0.15, assets: [] }
         ];
 
-        // Функция для кнопок + и -
         function changeSum(step) {
             const input = document.getElementById('sumInput');
             let current = parseInt(input.value) || 0;
@@ -180,21 +181,18 @@
                 const rows = text.split('\n').map(row => 
                     row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim())
                 );
-
                 bonds = [];
                 for (let i = 2; i <= 9; i++) {
                     if (rows[i] && rows[i][10]) {
                         bonds.push({ t: rows[i][10], n: rows[i][11] || '', p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0 });
                     }
                 }
-
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) {
                     if (rows[i] && rows[i][10]) {
                         allStocks.push({ t: rows[i][10], n: rows[i][11] || '', p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0 });
                     }
                 }
-
                 if (allStocks.length > 0) {
                     echelons[0].assets = allStocks.slice(0, 3);
                     echelons[1].assets = allStocks.slice(3, 6);
@@ -203,14 +201,13 @@
                 }
                 draw();
             } catch (e) {
-                document.getElementById('listBonds').innerHTML = '<div style="padding:20px; color:red;">Ошибка данных</div>';
+                document.getElementById('listBonds').innerHTML = '<div style="padding:20px; color:red;">Ошибка загрузки</div>';
             }
         }
 
         function draw() {
             const total = parseFloat(document.getElementById('sumInput').value) || 0;
             const half = total / 2;
-
             document.getElementById('valBonds').innerText = Math.round(half).toLocaleString();
             document.getElementById('valStocks').innerText = Math.round(half).toLocaleString();
 
@@ -222,7 +219,7 @@
                     bHtml += `<div class="asset-item"><span class="ticker">${b.t}</span><span>${b.n}</span><span class="qty">${q} шт.</span><span class="price">${Math.round(q*b.p).toLocaleString()} ₽</span></div>`;
                 });
             }
-            document.getElementById('listBonds').innerHTML = bHtml || 'Нет данных';
+            document.getElementById('listBonds').innerHTML = bHtml || 'Данные не найдены';
 
             let eHtml = '';
             echelons.forEach(e => {
