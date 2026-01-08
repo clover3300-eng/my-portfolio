@@ -1,108 +1,139 @@
-<script>
-    // Конфигурация
-    const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
-    const GID = '1213653337'; // Ваш GID листа TELEGRAMBOT
-    const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Стратегия 50/50</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f9; padding: 15px; color: #333; }
+        .card { background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        input { width: 100%; border: 1px solid #ddd; padding: 10px; font-size: 18px; border-radius: 8px; box-sizing: border-box; }
+        .asset-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px; }
+        .ticker { font-weight: bold; }
+        .log { background: #000; color: #0f0; padding: 10px; font-family: monospace; font-size: 10px; border-radius: 5px; margin-top: 20px; max-height: 150px; overflow: auto; }
+        .header { font-weight: bold; margin: 15px 0 5px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
 
-    let bonds = [];
-    let echelons = [
-        { title: 'I Эшелон', weight: 0.30, assets: [] },
-        { title: 'II Эшелон', weight: 0.40, assets: [] },
-        { title: 'III Эшелон', weight: 0.15, assets: [] },
-        { title: 'IV Эшелон', weight: 0.15, assets: [] }
-    ];
+    <div class="card">
+        <div style="font-size: 12px; color: #888;">Сумма инвестиций (₽)</div>
+        <input type="number" id="sumInput" value="100000" oninput="draw()">
+    </div>
 
-    async function loadData() {
-        try {
-            const response = await fetch(CSV_URL);
-            if (!response.ok) throw new Error('Ошибка сети');
-            const text = await response.text();
-            
-            // Разбиваем CSV на строки и ячейки
-            const rows = text.split('\n').map(row => 
-                row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim())
-            );
+    <div class="header">ОБЛИГАЦИИ</div>
+    <div id="listBonds" class="card">Загрузка...</div>
 
-            // Очищаем данные перед заполнением
-            bonds = [];
-            let allStocks = [];
+    <div class="header">АКЦИИ</div>
+    <div id="listStocks" class="card">Загрузка...</div>
 
-            // Парсим облигации (Строки 3-10 в таблице -> индексы 2-9)
-            // K=10, L=11, M=12
-            for (let i = 2; i <= 9; i++) {
-                if (rows[i] && rows[i][10]) {
-                    const rawPrice = rows[i][12] || "0";
-                    bonds.push({
-                        t: rows[i][10],
-                        n: rows[i][11] || '',
-                        p: parseFloat(rawPrice.replace(',', '.')) || 0
+    <div id="debugLog" class="log">Инициализация лога...</div>
+
+    <script>
+        const logBox = document.getElementById('debugLog');
+        function addLog(msg) { logBox.innerHTML += '<br>> ' + msg; }
+
+        const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
+        const GID = '1213653337';
+        // Используем более надежный метод получения CSV
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+
+        let bonds = [];
+        let stocks = [];
+
+        async function loadData() {
+            try {
+                addLog('Запрос к Google Sheets...');
+                const response = await fetch(CSV_URL);
+                
+                if (!response.ok) {
+                    throw new Error('Ответ сети не OK: ' + response.status);
+                }
+
+                const text = await response.text();
+                addLog('Данные получены, длина: ' + text.length);
+
+                const rows = text.split('\n').map(row => {
+                    // Обработка CSV с учетом кавычек
+                    return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim());
+                });
+
+                addLog('Строк обработано: ' + rows.length);
+
+                // Облигации K3:M10 (Индексы 10, 11, 12)
+                bonds = [];
+                for (let i = 2; i <= 9; i++) {
+                    if (rows[i] && rows[i][10]) {
+                        bonds.push({
+                            t: rows[i][10],
+                            n: rows[i][11] || '',
+                            p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0
+                        });
+                    }
+                }
+                addLog('Облигаций найдено: ' + bonds.length);
+
+                // Акции K12:M23
+                stocks = [];
+                for (let i = 11; i <= 22; i++) {
+                    if (rows[i] && rows[i][10]) {
+                        stocks.push({
+                            t: rows[i][10],
+                            n: rows[i][11] || '',
+                            p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0
+                        });
+                    }
+                }
+                addLog('Акций найдено: ' + stocks.length);
+
+                draw();
+            } catch (e) {
+                addLog('КРИТИЧЕСКАЯ ОШИБКА: ' + e.message);
+                document.getElementById('listBonds').innerHTML = 'Ошибка. См. лог ниже.';
+            }
+        }
+
+        function draw() {
+            try {
+                const total = parseFloat(document.getElementById('sumInput').value) || 0;
+                const half = total / 2;
+
+                // Облигации
+                let bHtml = '';
+                if (bonds.length > 0) {
+                    const bPart = half / bonds.length;
+                    bonds.forEach(b => {
+                        const q = b.p > 0 ? Math.floor(bPart / b.p) : 0;
+                        bHtml += `<div class="asset-item"><span class="ticker">${b.t}</span><span>${q} шт.</span><span>${Math.round(q*b.p)} ₽</span></div>`;
                     });
                 }
-            }
+                document.getElementById('listBonds').innerHTML = bHtml || 'Нет данных в столбцах K-M';
 
-            // Парсим акции (Строки 12-23 в таблице -> индексы 11-22)
-            for (let i = 11; i <= 22; i++) {
-                if (rows[i] && rows[i][10]) {
-                    const rawPrice = rows[i][12] || "0";
-                    allStocks.push({
-                        t: rows[i][10],
-                        n: rows[i][11] || '',
-                        p: parseFloat(rawPrice.replace(',', '.')) || 0
+                // Акции
+                let sHtml = '';
+                if (stocks.length > 0) {
+                    const sPart = half / stocks.length;
+                    stocks.forEach(s => {
+                        const q = s.p > 0 ? Math.floor(sPart / s.p) : 0;
+                        sHtml += `<div class="asset-item"><span class="ticker">${s.t}</span><span>${q} шт.</span><span>${Math.round(q*s.p)} ₽</span></div>`;
                     });
                 }
+                document.getElementById('listStocks').innerHTML = sHtml || 'Нет данных в столбцах K-M';
+
+            } catch (e) {
+                addLog('Ошибка отрисовки: ' + e.message);
             }
-
-            // Распределяем по эшелонам (по 3 актива)
-            if (allStocks.length > 0) {
-                echelons[0].assets = allStocks.slice(0, 3);
-                echelons[1].assets = allStocks.slice(3, 6);
-                echelons[2].assets = allStocks.slice(6, 9);
-                echelons[3].assets = allStocks.slice(9, 12);
-            }
-
-            draw();
-        } catch (e) {
-            console.error(e);
-            document.getElementById('listBonds').innerHTML = 
-                `<div style="color:red; padding:20px; text-align:center;">Ошибка загрузки. Проверьте публикацию листа TELEGRAMBOT.</div>`;
         }
-    }
 
-    function draw() {
-        const total = parseFloat(document.getElementById('sumInput').value) || 0;
-        const half = total / 2;
+        // Запуск
+        loadData();
 
-        document.getElementById('valBonds').innerText = Math.round(half).toLocaleString();
-        document.getElementById('valStocks').innerText = Math.round(half).toLocaleString();
-
-        // Облигации
-        let bHtml = '';
-        if (bonds.length > 0) {
-            const bPart = half / bonds.length;
-            bonds.forEach(b => {
-                const q = b.p > 0 ? Math.floor(bPart / b.p) : 0;
-                bHtml += `<div class="asset-item"><span class="ticker">${b.t}</span><span>${b.n}</span><span class="qty">${q} шт.</span><span class="price">${Math.round(q*b.p).toLocaleString()} ₽</span></div>`;
-            });
+        // Инициализация Telegram
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
         }
-        document.getElementById('listBonds').innerHTML = bHtml || 'Данные не найдены';
-
-        // Акции
-        let eHtml = '';
-        echelons.forEach(e => {
-            eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${e.weight*100}%</span></div><div class="asset-list">`;
-            const ePart = e.assets.length > 0 ? (half * e.weight) / e.assets.length : 0;
-            e.assets.forEach(a => {
-                const q = a.p > 0 ? Math.floor(ePart / a.p) : 0;
-                eHtml += `<div class="asset-item"><span class="ticker">${a.t}</span><span>${a.n}</span><span class="qty">${q} шт.</span><span class="price">${Math.round(q*a.p).toLocaleString()} ₽</span></div>`;
-            });
-            eHtml += `</div>`;
-        });
-        document.getElementById('echelonContainer').innerHTML = eHtml;
-    }
-
-    loadData();
-    
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-    tg.ready();
-</script>
+    </script>
+</body>
+</html>
