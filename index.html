@@ -171,7 +171,7 @@
         
         .coupon-row {
             display: grid;
-            grid-template-columns: 70px 1fr 50px 70px;
+            grid-template-columns: 85px 1fr 50px 70px;
             gap: 5px;
             padding: 10px 0;
             border-bottom: 1px solid var(--item-border);
@@ -519,7 +519,7 @@
                 totalRain += r.amount;
                 rainHtml += `
                     <div class="coupon-row">
-                        <div><b>${new Date(r.date).toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit'})}</b></div>
+                        <div><b>${new Date(r.date).toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'})}</b></div>
                         <div style="color:#8e8e93">${limitName(r.name)}</div>
                         <div style="text-align:center">${r.qty}шт.</div>
                         <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
@@ -580,12 +580,15 @@
                     document.getElementById('modalImg').src = dataUrl;
                     document.getElementById('photoModal').style.display = 'flex';
                     
-                    // Возврат к началу страницы (к сумме инвестиций)
                     window.scrollTo({ top: 0, behavior: 'smooth' });
 
                     document.getElementById('sendBtn').onclick = async () => {
                         const blob = await (await fetch(dataUrl)).blob();
                         const file = new File([blob], "portfolio.png", { type: "image/png" });
+                        
+                        // Закрываем модальное окно сразу при нажатии переслать
+                        document.getElementById('photoModal').style.display = 'none';
+                        
                         if (navigator.share) {
                             navigator.share({ files: [file], title: 'Мой портфель' });
                         }
