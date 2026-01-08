@@ -27,7 +27,6 @@
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 4px; }
         
-        /* Основной блок калькулятора */
         .calc-box {
             background: white; padding: 24px; border-radius: 24px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.04); margin-bottom: 25px;
@@ -47,7 +46,6 @@
 
         .currency { font-size: 28px; color: #d1d1d6; font-weight: 500; }
 
-        /* Блок комиссии */
         .fee-selector { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; }
         .fee-label { font-size: 11px; color: #8e8e93; font-weight: bold; margin-bottom: 8px; display: block; text-transform: uppercase; }
         .fee-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -63,7 +61,7 @@
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 8px 15px rgba(52, 152, 219, 0.2); flex-shrink: 0; margin-left: 15px;
-            transition: background 0.3s;
+            transition: background 0.3s; cursor: pointer;
         }
         .chart-mini::after { content: attr(data-pct); font-size: 10px; font-weight: 900; color: white; }
 
@@ -142,15 +140,15 @@
     </div>
 
     <div class="calc-box">
-        <div class="calc-top" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
-            <div class="input-container">
+        <div class="calc-top">
+            <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
                 <span class="input-label">Сумма Инвестиций</span>
                 <div class="input-wrapper">
                     <input type="number" id="sumInput" value="100000" oninput="draw()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
                     <span class="currency">₽</span>
                 </div>
             </div>
-            <div id="mainChart" class="chart-mini" data-pct="50/50"></div>
+            <div id="mainChart" class="chart-mini" data-pct="50/50" onclick="resetRatio()"></div>
         </div>
         
         <div class="fee-selector">
@@ -214,13 +212,19 @@
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
         let bonds = [];
-        let brokerFee = 0.0003; // По умолчанию 0.03%
+        let brokerFee = 0.0003; 
         let echelons = [
             { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
             { title: 'II Эшелон', weight: 0.40, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ, НО ВЫПЛАТЫ РАЗНЯТСЯ' },
             { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
             { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
+
+        // Функция сброса ползунка при клике на круг
+        function resetRatio() {
+            document.getElementById('ratioSlider').value = 50;
+            draw();
+        }
 
         function setFee(val, btn) {
             brokerFee = val;
@@ -261,7 +265,7 @@
                 const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
                 const data = await res.json();
                 return data.securities.data[0][data.securities.columns.indexOf('ACCRUEDINT')] || 0;
-            } catch (e) { return "н/д"; }
+            } catch (e) { return 0; }
         }
 
         async function loadData() {
@@ -271,7 +275,17 @@
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
                 bonds = [];
                 for (let i = 2; i <= 9; i++) {
-                    if (rows[i] && rows[i][10]) bonds.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
+                    if (rows[i] && rows[i][10]) {
+                        // Чистим НКД из таблицы, если он там есть
+                        let rawNKD = rows[i][14] ? parseFloat(rows[i][14].replace(',', '.')) : 0;
+                        bonds.push({ 
+                            t: rows[i][10], 
+                            n: rows[i][11], 
+                            p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
+                            y: rows[i][13] || '0%',
+                            nkd: rawNKD
+                        });
+                    }
                 }
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) {
@@ -288,14 +302,12 @@
         }
 
         function draw() {
-            // Считаем общую сумму за вычетом комиссии (резервируем средства на сделку)
             const inputSum = parseFloat(document.getElementById('sumInput').value) || 0;
-            const total = inputSum / (1 + brokerFee); 
-            
             const bondPct = parseInt(document.getElementById('ratioSlider').value);
             const stockPct = 100 - bondPct;
-            const bondSum = (total * bondPct) / 100;
-            const stockSum = (total * stockPct) / 100;
+            
+            const bondBudget = (inputSum * bondPct) / 100;
+            const stockBudget = (inputSum * stockPct) / 100;
 
             document.getElementById('labelBondsPct').innerText = bondPct;
             document.getElementById('labelStocksPct').innerText = stockPct;
@@ -304,37 +316,52 @@
             document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
             document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
             document.getElementById('dynamicSubtitle').innerText = `Простая система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
-            document.getElementById('valBonds').innerText = Math.round(bondSum).toLocaleString();
-            document.getElementById('valStocks').innerText = Math.round(stockSum).toLocaleString();
 
+            // --- РАСЧЕТ ОБЛИГАЦИЙ ---
             let bHtml = '';
+            let totalBondSpent = 0;
             if (bonds.length > 0) {
-                const bPart = bondSum / bonds.length;
-                bonds.forEach(b => {
-                    const q = b.p > 0 ? Math.floor(bPart / b.p) : 0;
-                    bHtml += `<div class="asset-item bond-row" onclick="toggleRow(this)" data-code="${b.t}" data-nkd="..."><span class="ticker">${shortenTicker(b.t)}</span><span class="asset-name">${limitName(b.n)}</span><span class="qty">${q} шт.</span><span class="price-total">${Math.round(q*b.p).toLocaleString()} ₽</span><div class="details">Код: <b>${b.t}</b> | Цена: <b>${b.p} ₽</b><br>НКД: <b class="nkd-val">Загрузка...</b> | Доходность: <b>${b.y.replace(' ₽','')}</b></div></div>`;
+                const perBondBudget = bondBudget / bonds.length;
+                let bondCalculations = bonds.map(b => {
+                    const priceWithNkd = b.p + b.nkd;
+                    const fullCostPerUnit = priceWithNkd * (1 + brokerFee);
+                    let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0;
+                    return { ...b, qty, fullCostPerUnit };
+                });
+
+                // Распределение остатка средств в первую облигацию
+                let currentSpent = bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
+                let leftover = bondBudget - currentSpent;
+                if (leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
+                    let extra = Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
+                    bondCalculations[0].qty += extra;
+                }
+
+                bondCalculations.forEach(b => {
+                    const cost = b.qty * b.p; // Отображаем чистую стоимость бумаг
+                    totalBondSpent += (b.qty * b.fullCostPerUnit); 
+                    bHtml += `<div class="asset-item bond-row" onclick="toggleRow(this)" data-code="${b.t}" data-nkd="${b.nkd}"><span class="ticker">${shortenTicker(b.t)}</span><span class="asset-name">${limitName(b.n)}</span><span class="qty">${b.qty} шт.</span><span class="price-total">${Math.round(cost).toLocaleString()} ₽</span><div class="details">Код: <b>${b.t}</b> | Цена: <b>${b.p} ₽</b><br>НКД: <b class="nkd-val">${b.nkd} ₽</b> | Доходность: <b>${b.y.replace(' ₽','')}</b></div></div>`;
                 });
             }
             document.getElementById('listBonds').innerHTML = bHtml;
+            document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString();
 
+            // --- РАСЧЕТ АКЦИЙ ---
             let eHtml = '';
             echelons.forEach(e => {
-                eHtml += `
-                <div class="echelon-title" onclick="toggleTip(event, this)">
-                    <span>${e.title} <span class="echelon-info-icon">ⓘ</span></span>
-                    <span>${Math.round(e.weight*100)}%</span>
-                    <div class="echelon-tip">${e.info}</div>
-                </div>
-                <div class="asset-list">`;
-                const echelonSum = stockSum * e.weight;
-                const assetPart = e.assets.length > 0 ? echelonSum / e.assets.length : 0;
+                eHtml += `<div class="echelon-title" onclick="toggleTip(event, this)"><span>${e.title} <span class="echelon-info-icon">ⓘ</span></span><span>${Math.round(e.weight*100)}%</span><div class="echelon-tip">${e.info}</div></div><div class="asset-list">`;
+                const echelonBudget = stockBudget * e.weight;
+                const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
+                
                 e.assets.forEach(a => {
-                    const q = a.p > 0 ? Math.floor(assetPart / a.p) : 0;
+                    const fullCostPerUnit = a.p * (1 + brokerFee);
+                    const q = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0;
                     eHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${a.t}</span><span class="asset-name">${limitName(a.n)}</span><span class="qty">${q} шт.</span><span class="price-total">${Math.round(q*a.p).toLocaleString()} ₽</span><div class="details">Тикер: <b>${a.t}</b> | Цена: <b>${a.p} ₽</b> | Цель: <b>${a.target.replace(' ₽','')}</b></div></div>`;
                 });
                 eHtml += `</div>`;
             });
             document.getElementById('echelonContainer').innerHTML = eHtml;
+            document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
         }
 
         loadData();
