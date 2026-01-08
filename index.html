@@ -27,7 +27,6 @@
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 4px; }
         
-        /* Блок ввода и управления пропорциями */
         .calc-box {
             background: white; padding: 24px; border-radius: 24px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.04); margin-bottom: 25px;
@@ -56,7 +55,6 @@
         }
         .chart-mini::after { content: attr(data-pct); font-size: 10px; font-weight: 900; color: white; }
 
-        /* Слайдер пропорций */
         .ratio-control { padding-top: 15px; border-top: 1px solid #f0f0f0; }
         .ratio-slider {
             -webkit-appearance: none; width: 100%; height: 6px; border-radius: 5px;
@@ -68,7 +66,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* Карточки стратегий */
         .strategy-desc { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
         .desc-card { background: white; padding: 18px; border-radius: 16px; border-left: 6px solid #eee; }
         .desc-card.blue { border-color: var(--accent-blue); }
@@ -80,7 +77,6 @@
         .blue .badge { background: #ebf5fb; color: var(--accent-blue); }
         .green .badge { background: #eafaf1; color: var(--accent-green); }
 
-        /* Список активов */
         .asset-list { background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item {
             display: grid; grid-template-columns: 80px 1fr 65px 85px;
@@ -111,8 +107,8 @@
 <body onclick="if(event.target.tagName !== 'INPUT') document.getElementById('sumInput').blur()">
 
     <div class="header">
-        <h1 id="dynamicTitle">Система 50/50</h1>
-        <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Денежный Поток и Рост.</p>
+        <h1>Как Вложить и Наслаждаться?</h1>
+        <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
     </div>
 
     <div class="calc-box">
@@ -140,13 +136,13 @@
         <div class="desc-card blue">
             <h3>🛡️ <span class="bond-pct-text">50</span>% Облигации</h3>
             <span class="subtitle">Ваш "Денежный Поток"</span>
-            <p>Надежный доход и защита капитала.</p>
+            <p>Это как дать в долг государству. Оно гарантирует возврат денег и платит проценты. Один из самых надежных способов сохранить деньги.</p>
             <span class="badge">Надежность: Высокая</span>
         </div>
         <div class="desc-card green">
             <h3>🚀 <span class="stock-pct-text">50</span>% Акции</h3>
             <span class="subtitle">Ваш двигатель роста</span>
-            <p>Рост капитала за счет лучших компаний.</p>
+            <p>Вы становитесь совладельцем Сбера, Газпрома и других гигантов. Когда они зарабатывают и растут — растет и ваш капитал.</p>
             <span class="badge">Потенциал дохода: Очень высокий</span>
         </div>
     </div>
@@ -234,19 +230,19 @@
             const bondSum = (total * bondPct) / 100;
             const stockSum = (total * stockPct) / 100;
 
-            // Обновление текстов и диаграммы
             document.getElementById('labelBondsPct').innerText = bondPct;
             document.getElementById('labelStocksPct').innerText = stockPct;
             document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
             document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
+            
             document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
             document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
-            document.getElementById('dynamicTitle').innerText = `Система ${bondPct}/${stockPct}`;
+            
+            document.getElementById('dynamicSubtitle').innerText = `Простая система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
             
             document.getElementById('valBonds').innerText = Math.round(bondSum).toLocaleString();
             document.getElementById('valStocks').innerText = Math.round(stockSum).toLocaleString();
 
-            // Облигации
             let bHtml = '';
             if (bonds.length > 0) {
                 const bPart = bondSum / bonds.length;
@@ -257,7 +253,6 @@
             }
             document.getElementById('listBonds').innerHTML = bHtml;
 
-            // Акции
             let eHtml = '';
             echelons.forEach(e => {
                 eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${Math.round(e.weight*100)}%</span></div><div class="asset-list">`;
