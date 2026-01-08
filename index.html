@@ -127,15 +127,15 @@
         .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
         .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         
-        /* ПЛАШКА % */
         .percent-tag { 
             background: var(--accent-blue); 
-            padding: 5px 10px; 
+            padding: 5px 12px; 
             border-radius: 20px; 
             font-weight: 800; 
             font-size: 11px; 
             color: white; 
             box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3);
+            white-space: nowrap;
         }
         
         .echelon-title { 
@@ -157,7 +157,6 @@
         }
         .echelon-title.show-tip .echelon-tip { display: block; }
 
-        /* ОБНОВЛЕННЫЙ БЛОК КУПОННЫЙ ДОЖДЬ */
         .coupon-box {
             background: var(--card-bg); border-radius: 16px; margin-top: 10px;
             border: 1px solid var(--accent-blue); overflow: hidden;
@@ -181,7 +180,6 @@
         }
         .coupon-row b { color: var(--text-main); }
 
-        /* ДИЗАЙН ВЫБОРА НАЛОГА */
         .tax-selector-ui {
             display: flex; background: var(--bg-color); border-radius: 10px;
             padding: 3px; margin: 12px 0; gap: 2px;
@@ -276,13 +274,13 @@
             <div class="section-header">1. Денежный Поток</div>
             <div class="allocation-info">
                 <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
-                <span class="percent-tag"><span class="bond-pct-text">50</span>%</span>
+                <span class="percent-tag"><span class="bond-pct-text">50</span>% от капитала</span>
             </div>
             <div id="listBonds" class="asset-list"></div>
 
             <div class="coupon-box" id="couponBox">
                 <div class="coupon-header" onclick="document.getElementById('couponContent').classList.toggle('active')">
-                    <span>☔️ Купонный Дождь</span>
+                    <span>🌦 Купонный Дождь</span>
                     <span id="couponTotalHeader">0 ₽</span>
                 </div>
                 <div class="coupon-content" id="couponContent">
@@ -298,7 +296,7 @@
             <div class="section-header">2. Растущая часть</div>
             <div class="allocation-info">
                 <span>Выделить: <b id="valStocks">50 000</b> ₽</span>
-                <span class="percent-tag"><span class="stock-pct-text">50</span>%</span>
+                <span class="percent-tag"><span class="stock-pct-text">50</span>% от капитала</span>
             </div>
             <div id="echelonContainer"></div>
         </div>
@@ -410,7 +408,6 @@
                 const cols = data.securities.columns;
                 const row = data.securities.data[0];
                 
-                // Сохраняем данные для дождя
                 bondCouponsMap[code] = {
                     date: row[cols.indexOf('NEXTCOUPON')],
                     value: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0
@@ -507,25 +504,15 @@
             document.getElementById('listBonds').innerHTML = bHtml;
             document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString();
 
-            // Расчет Дождя
             let rainHtml = '';
             let totalRain = 0;
-            
             const rainData = Object.keys(bondQuantities).map(ticker => {
                 const info = bondCouponsMap[ticker];
                 const qty = bondQuantities[ticker];
                 if (!info || !info.date || qty <= 0) return null;
-                
-                const rawAmount = info.value * qty;
-                const netAmount = rawAmount * (1 - currentTax);
+                const netAmount = (info.value * qty) * (1 - currentTax);
                 const bondName = bonds.find(b => b.t === ticker)?.n || ticker;
-                
-                return {
-                    date: info.date,
-                    name: bondName,
-                    qty: qty,
-                    amount: netAmount
-                };
+                return { date: info.date, name: bondName, qty: qty, amount: netAmount };
             }).filter(x => x !== null).sort((a,b) => new Date(a.date) - new Date(b.date));
 
             rainData.forEach(r => {
@@ -538,7 +525,6 @@
                         <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
                     </div>`;
             });
-
             document.getElementById('couponList').innerHTML = rainHtml || 'Нет данных о ближайших купонах';
             document.getElementById('couponTotalHeader').innerText = Math.round(totalRain).toLocaleString() + ' ₽';
 
@@ -589,9 +575,14 @@
                     brand.style.display = 'none';
                     btn.innerText = "📸 Поделиться портфелем";
                     btn.disabled = false;
+                    
                     const dataUrl = canvas.toDataURL("image/png");
                     document.getElementById('modalImg').src = dataUrl;
                     document.getElementById('photoModal').style.display = 'flex';
+                    
+                    // Возврат к началу страницы (к сумме инвестиций)
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
                     document.getElementById('sendBtn').onclick = async () => {
                         const blob = await (await fetch(dataUrl)).blob();
                         const file = new File([blob], "portfolio.png", { type: "image/png" });
