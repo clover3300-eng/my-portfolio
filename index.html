@@ -27,6 +27,7 @@
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 4px; }
         
+        /* Основной блок калькулятора */
         .calc-box {
             background: white; padding: 24px; border-radius: 24px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.04); margin-bottom: 25px;
@@ -46,6 +47,7 @@
 
         .currency { font-size: 28px; color: #d1d1d6; font-weight: 500; }
 
+        /* Круговая диаграмма на CSS */
         .chart-mini {
             width: 60px; height: 60px; border-radius: 18px; 
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
@@ -55,6 +57,7 @@
         }
         .chart-mini::after { content: attr(data-pct); font-size: 10px; font-weight: 900; color: white; }
 
+        /* Ползунок выбора пропорций */
         .ratio-control { padding-top: 15px; border-top: 1px solid #f0f0f0; }
         .ratio-slider {
             -webkit-appearance: none; width: 100%; height: 6px; border-radius: 5px;
@@ -66,6 +69,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
+        /* Информационные карточки стратегий */
         .strategy-desc { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
         .desc-card { background: white; padding: 18px; border-radius: 16px; border-left: 6px solid #eee; }
         .desc-card.blue { border-color: var(--accent-blue); }
@@ -77,6 +81,7 @@
         .blue .badge { background: #ebf5fb; color: var(--accent-blue); }
         .green .badge { background: #eafaf1; color: var(--accent-green); }
 
+        /* Списки активов */
         .asset-list { background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item {
             display: grid; grid-template-columns: 80px 1fr 65px 85px;
@@ -87,6 +92,7 @@
         .qty { text-align: center; font-weight: bold; color: var(--accent-blue); }
         .price-total { text-align: right; color: #333; font-weight: 500; }
 
+        /* Скрытые детали строки */
         .details {
             grid-column: 1 / -1; display: none; background: #fafbfc;
             padding: 10px 12px; border-top: 1px solid #eee; font-size: 11px;
@@ -97,14 +103,33 @@
         .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
         .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .percent-tag { background: #e1e8ed; padding: 4px 8px; border-radius: 8px; font-weight: bold; font-size: 11px; color: #5d7185; }
-        .echelon-title { padding: 8px 12px; font-size: 12px; font-weight: bold; background: #eee; color: #666; display: flex; justify-content: space-between; }
+        
+        /* Заголовки эшелонов с подсказками */
+        .echelon-title { 
+            padding: 10px 12px; font-size: 12px; font-weight: bold; 
+            background: #eee; color: #666; display: flex; 
+            justify-content: space-between; align-items: center;
+            position: relative;
+        }
+        .echelon-info-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 14px; height: 14px; background: #999; color: white;
+            border-radius: 50%; font-size: 9px; margin-left: 6px; cursor: pointer;
+        }
+        .echelon-tip {
+            display: none; position: absolute; top: 100%; left: 12px; right: 12px;
+            background: #3a506b; color: white; padding: 10px; border-radius: 8px;
+            font-size: 11px; z-index: 10; font-weight: normal; line-height: 1.3;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .echelon-title.show-tip .echelon-tip { display: block; }
 
         .footer-disclaimer {
             text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px;
         }
     </style>
 </head>
-<body onclick="if(event.target.tagName !== 'INPUT') document.getElementById('sumInput').blur()">
+<body onclick="hideAllTips(event)">
 
     <div class="header">
         <h1>Как Вложить и Наслаждаться?</h1>
@@ -166,54 +191,50 @@
     </div>
 
     <script>
+        // 1. КОНФИГУРАЦИЯ И ДАННЫЕ
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
         const GID = '1213653337'; 
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
         let bonds = [];
         let echelons = [
-            { title: 'I Эшелон', weight: 0.30, assets: [] },
-            { title: 'II Эшелон', weight: 0.40, assets: [] },
-            { title: 'III Эшелон', weight: 0.15, assets: [] },
-            { title: 'IV Эшелон', weight: 0.15, assets: [] }
+            { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
+            { title: 'II Эшелон', weight: 0.40, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ, НО ВЫПЛАТЫ РАЗНЯТСЯ' },
+            { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
+            { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
 
+        // 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ (ФОРМАТИРОВАНИЕ)
+        
+        /** Сокращает длинные коды облигаций до 7 знаков */
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
+        
+        /** Обрезает длинные названия компаний, чтобы верстка не "ехала" */
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
 
-        async function fetchNKD(code) {
-            try {
-                const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
-                const data = await res.json();
-                return data.securities.data[0][data.securities.columns.indexOf('ACCRUEDINT')] || 0;
-            } catch (e) { return "..."; }
+        // 3. ФУНКЦИИ ИНТЕРФЕЙСА (ПОДСКАЗКИ И КЛАВИАТУРА)
+
+        /** Показывает или прячет подсказку эшелона при клике */
+        function toggleTip(event, el) {
+            event.stopPropagation();
+            const isActive = el.classList.contains('show-tip');
+            hideAllTips(); // Сначала прячем все другие
+            if (!isActive) el.classList.add('show-tip');
         }
 
-        async function loadData() {
-            try {
-                const response = await fetch(CSV_URL);
-                const text = await response.text();
-                const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
-                bonds = [];
-                for (let i = 2; i <= 9; i++) {
-                    if (rows[i] && rows[i][10]) bonds.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
-                }
-                let allStocks = [];
-                for (let i = 11; i <= 22; i++) {
-                    if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
-                }
-                if (allStocks.length > 0) {
-                    echelons[0].assets = allStocks.slice(0, 3);
-                    echelons[1].assets = allStocks.slice(3, 6);
-                    echelons[2].assets = allStocks.slice(6, 9);
-                    echelons[3].assets = allStocks.slice(9, 12);
-                }
-                draw();
-            } catch (e) { console.error(e); }
+        /** Прячет все открытые подсказки и убирает фокус с ввода (скрывает клавиатуру) */
+        function hideAllTips(event) {
+            document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip'));
+            // Если кликнули не по полю ввода — скрываем клавиатуру
+            if(event && event.target.tagName !== 'INPUT') {
+                document.getElementById('sumInput').blur();
+            }
         }
 
+        /** Раскрывает или скрывает строку актива (аккордеон) */
         function toggleRow(el) {
             el.classList.toggle('active');
+            // Если открыли облигацию — подгружаем НКД в реальном времени
             if(el.classList.contains('bond-row') && el.dataset.nkd === "...") {
                 fetchNKD(el.dataset.code).then(val => {
                     el.dataset.nkd = val;
@@ -222,6 +243,51 @@
             }
         }
 
+        // 4. РАБОТА С API И ТАБЛИЦЕЙ
+
+        /** Запрашивает НКД облигации напрямую с Московской Биржи (ISS MOEX) */
+        async function fetchNKD(code) {
+            try {
+                const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
+                const data = await res.json();
+                return data.securities.data[0][data.securities.columns.indexOf('ACCRUEDINT')] || 0;
+            } catch (e) { return "н/д"; }
+        }
+
+        /** Загружает данные из Google Таблицы и распределяет их по категориям */
+        async function loadData() {
+            try {
+                const response = await fetch(CSV_URL);
+                const text = await response.text();
+                // Парсим CSV, учитывая возможные запятые внутри кавычек
+                const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
+                
+                // Извлекаем Облигации (K3:M10)
+                bonds = [];
+                for (let i = 2; i <= 9; i++) {
+                    if (rows[i] && rows[i][10]) bonds.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
+                }
+                
+                // Извлекаем Акции (K12:M23)
+                let allStocks = [];
+                for (let i = 11; i <= 22; i++) {
+                    if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
+                }
+                
+                // Распределяем акции по 4 эшелонам
+                if (allStocks.length > 0) {
+                    echelons[0].assets = allStocks.slice(0, 3);
+                    echelons[1].assets = allStocks.slice(3, 6);
+                    echelons[2].assets = allStocks.slice(6, 9);
+                    echelons[3].assets = allStocks.slice(9, 12);
+                }
+                draw(); // Запускаем расчет и отрисовку
+            } catch (e) { console.error("Ошибка загрузки данных:", e); }
+        }
+
+        // 5. ГЛАВНАЯ ФУНКЦИЯ РАСЧЕТА И ОТРИСОВКИ
+
+        /** Основная функция: считает суммы, количество лотов и обновляет HTML */
         function draw() {
             const total = parseFloat(document.getElementById('sumInput').value) || 0;
             const bondPct = parseInt(document.getElementById('ratioSlider').value);
@@ -230,19 +296,24 @@
             const bondSum = (total * bondPct) / 100;
             const stockSum = (total * stockPct) / 100;
 
+            // Обновляем визуальные элементы управления
             document.getElementById('labelBondsPct').innerText = bondPct;
             document.getElementById('labelStocksPct').innerText = stockPct;
             document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
             document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
             
+            // Перерисовываем диаграмму
             document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
             document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
             
+            // Обновляем заголовок стратегии
             document.getElementById('dynamicSubtitle').innerText = `Простая система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
             
+            // Обновляем итоговые суммы секций
             document.getElementById('valBonds').innerText = Math.round(bondSum).toLocaleString();
             document.getElementById('valStocks').innerText = Math.round(stockSum).toLocaleString();
 
+            // Генерация списка Облигаций
             let bHtml = '';
             if (bonds.length > 0) {
                 const bPart = bondSum / bonds.length;
@@ -253,9 +324,16 @@
             }
             document.getElementById('listBonds').innerHTML = bHtml;
 
+            // Генерация списка Акций по Эшелонам
             let eHtml = '';
             echelons.forEach(e => {
-                eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${Math.round(e.weight*100)}%</span></div><div class="asset-list">`;
+                eHtml += `
+                <div class="echelon-title" onclick="toggleTip(event, this)">
+                    <span>${e.title} <span class="echelon-info-icon">ⓘ</span></span>
+                    <span>${Math.round(e.weight*100)}%</span>
+                    <div class="echelon-tip">${e.info}</div>
+                </div>
+                <div class="asset-list">`;
                 const echelonSum = stockSum * e.weight;
                 const assetPart = e.assets.length > 0 ? echelonSum / e.assets.length : 0;
                 e.assets.forEach(a => {
@@ -267,6 +345,7 @@
             document.getElementById('echelonContainer').innerHTML = eHtml;
         }
 
+        // Запуск при старте
         loadData();
         window.Telegram.WebApp.ready();
         window.Telegram.WebApp.expand();
