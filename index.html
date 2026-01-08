@@ -46,7 +46,6 @@
 
         .currency { font-size: 28px; color: #d1d1d6; font-weight: 500; }
 
-        /* Индикатор израсходованности */
         .usage-bar-container { margin-bottom: 20px; }
         .usage-label { font-size: 10px; color: #8e8e93; display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: bold; }
         .usage-track { height: 4px; background: #eee; border-radius: 2px; overflow: hidden; }
@@ -270,19 +269,15 @@
 
         function toggleRow(el) {
             el.classList.toggle('active');
-            if(el.classList.contains('bond-row') && el.dataset.nkd === "...") {
-                fetchNKD(el.dataset.code).then(val => {
-                    el.dataset.nkd = val;
-                    el.querySelector('.nkd-val').innerText = val + ' ₽';
-                });
-            }
         }
 
+        /** Запрашивает НКД облигации напрямую с Московской Биржи (ISS MOEX) */
         async function fetchNKD(code) {
             try {
                 const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
                 const data = await res.json();
-                return data.securities.data[0][data.securities.columns.indexOf('ACCRUEDINT')] || 0;
+                const nkdValue = data.securities.data[0][data.securities.columns.indexOf('ACCRUEDINT')];
+                return parseFloat(nkdValue) || 0;
             } catch (e) { return 0; }
         }
 
@@ -291,22 +286,39 @@
                 const response = await fetch(CSV_URL);
                 const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
-                bonds = [];
+                
+                // Извлекаем Облигации
+                let bondList = [];
                 for (let i = 2; i <= 9; i++) {
                     if (rows[i] && rows[i][10]) {
-                        let rawNKD = rows[i][14] ? parseFloat(rows[i][14].replace(',', '.')) : 0;
-                        bonds.push({ 
+                        bondList.push({ 
                             t: rows[i][10], 
                             n: rows[i][11], 
                             p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
                             y: rows[i][13] || '0%',
-                            nkd: rawNKD
+                            nkd: 0 // По умолчанию 0, обновим ниже
                         });
                     }
                 }
+
+                // Асинхронно подгружаем НКД для каждой облигации
+                const bondPromises = bondList.map(async (b) => {
+                    const freshNKD = await fetchNKD(b.t);
+                    return { ...b, nkd: freshNKD };
+                });
+                bonds = await Promise.all(bondPromises);
+
+                // Извлекаем Акции
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) {
-                    if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
+                    if (rows[i] && rows[i][10]) {
+                        allStocks.push({ 
+                            t: rows[i][10], 
+                            n: rows[i][11], // Полное название из таблицы
+                            p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
+                            target: rows[i][13] || '—' 
+                        });
+                    }
                 }
                 if (allStocks.length > 0) {
                     echelons[0].assets = allStocks.slice(0, 3);
@@ -356,7 +368,7 @@
                 bondCalculations.forEach(b => {
                     const costTotal = b.qty * b.fullCostPerUnit;
                     actualSpentTotal += costTotal;
-                    bHtml += `<div class="asset-item bond-row" onclick="toggleRow(this)" data-code="${b.t}" data-nkd="${b.nkd}"><span class="ticker">${shortenTicker(b.t)}</span><span class="asset-name">${limitName(b.n)}</span><span class="qty">${b.qty} шт.</span><span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span><div class="details">Код: <b>${b.t}</b> | Цена: <b>${b.p} ₽</b><br>НКД: <b class="nkd-val">${b.nkd} ₽</b> | Простая Доходность к Погашению: <b>${b.y.replace(' ₽','')}</b></div></div>`;
+                    bHtml += `<div class="asset-item bond-row" onclick="toggleRow(this)"><span class="ticker">${shortenTicker(b.t)}</span><span class="asset-name">${limitName(b.n)}</span><span class="qty">${b.qty} шт.</span><span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span><div class="details">Полное название: <b>${b.n}</b><br>Код: <b>${b.t}</b> | Цена: <b>${b.p} ₽</b><br>НКД: <b class="nkd-val">${b.nkd.toFixed(2)} ₽</b> | Простая Доходность к Погашению: <b>${b.y.replace(' ₽','')}</b></div></div>`;
                 });
             }
             document.getElementById('listBonds').innerHTML = bHtml;
@@ -384,14 +396,13 @@
                 eHtml += `<div class="echelon-title" onclick="toggleTip(event, this)"><span>${e.title} <span class="echelon-info-icon">ⓘ</span></span><span>${Math.round(e.weight*100)}%</span><div class="echelon-tip">${e.info}</div></div><div class="asset-list">`;
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
-                    eHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${s.t}</span><span class="asset-name">${limitName(s.n)}</span><span class="qty">${s.qty} шт.</span><span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span><div class="details">Тикер: <b>${s.t}</b> | Цена: <b>${s.p} ₽</b> | Цель: <b>${s.target.replace(' ₽','')}</b></div></div>`;
+                    eHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${s.t}</span><span class="asset-name">${limitName(s.n)}</span><span class="qty">${s.qty} шт.</span><span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span><div class="details">Компания: <b>${s.n}</b><br>Тикер: <b>${s.t}</b> | Цена: <b>${s.p} ₽</b> | Цель: <b>${s.target.replace(' ₽','')}</b></div></div>`;
                 });
                 eHtml += `</div>`;
             });
             document.getElementById('echelonContainer').innerHTML = eHtml;
             document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
 
-            // ОБНОВЛЕНИЕ ИНДИКАТОРА
             const usagePercent = inputSum > 0 ? (actualSpentTotal / inputSum) * 100 : 0;
             document.getElementById('usageFill').style.width = Math.min(usagePercent, 100) + '%';
             document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
