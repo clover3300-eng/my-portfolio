@@ -26,7 +26,6 @@
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 8px; }
         
-        /* Стили поля ввода суммы */
         .calc-box {
             background: white; padding: 20px; border-radius: 20px;
             display: flex; align-items: center; justify-content: space-between;
@@ -43,7 +42,6 @@
         }
         .currency { font-size: 22px; color: #a1a1a1; }
 
-        /* Круговая диаграмма в углу */
         .chart-mini {
             width: 65px; height: 65px; border-radius: 50%;
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
@@ -52,18 +50,21 @@
         }
         .chart-mini::after { content: "50/50"; font-size: 10px; font-weight: 900; color: white; }
 
-        /* Карточки описания стратегии */
+        /* Улучшенные карточки описания стратегии */
         .strategy-desc { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
-        .desc-card { background: white; padding: 18px; border-radius: 16px; border-left: 6px solid #eee; }
+        .desc-card { background: white; padding: 18px; border-radius: 16px; border-left: 6px solid #eee; position: relative; }
         .desc-card.blue { border-color: var(--accent-blue); }
         .desc-card.green { border-color: var(--accent-green); }
-        .desc-card h3 { margin: 0 0 8px 0; font-size: 16px; }
-        .desc-card p { margin: 0; font-size: 13px; color: #555; }
+        .desc-card h3 { margin: 0 0 4px 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .desc-card .subtitle { font-weight: bold; color: var(--text-main); font-size: 14px; display: block; margin-bottom: 8px; }
+        .desc-card p { margin: 0 0 10px 0; font-size: 13px; color: #555; line-height: 1.5; }
+        .desc-card .badge { font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .blue .badge { background: #ebf5fb; color: var(--accent-blue); }
+        .green .badge { background: #eafaf1; color: var(--accent-green); }
 
-        /* Списки активов */
         .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
-        .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; }
-        .percent-tag { background: #eee; padding: 2px 6px; border-radius: 6px; font-weight: bold; font-size: 11px; }
+        .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .percent-tag { background: #e1e8ed; padding: 4px 8px; border-radius: 8px; font-weight: bold; font-size: 11px; color: #5d7185; }
 
         .asset-list { background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item {
@@ -101,18 +102,22 @@
     <div class="strategy-desc">
         <div class="desc-card blue">
             <h3>🛡️ 50% Облигации</h3>
-            <p>Ваш Денежный Поток.</p>
+            <span class="subtitle">Ваш "Денежный Поток"</span>
+            <p>Это как дать в долг государству. Оно гарантирует возврат денег и платит проценты. Один из самых надежных способов сохранить деньги.</p>
+            <span class="badge">Надежность: Высокая</span>
         </div>
         <div class="desc-card green">
             <h3>🚀 50% Акции</h3>
-            <p>Ваш двигатель Роста Капитала</p>
+            <span class="subtitle">Ваш двигатель роста</span>
+            <p>Вы становитесь совладельцем Сбера, Газпрома и других гигантов. Когда они зарабатывают и растут — растет и ваш капитал.</p>
+            <span class="badge">Потенциал дохода: Очень высокий</span>
         </div>
     </div>
 
     <div class="section-header">1. Денежный Поток</div>
     <div class="allocation-info">
         <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
-        <span class="percent-tag">50%</span>
+        <span class="percent-tag">50% от капитала</span>
     </div>
     <div id="listBonds" class="asset-list">
         <div style="padding:20px; text-align:center; color:#999;">Загрузка данных...</div>
@@ -121,17 +126,15 @@
     <div class="section-header">2. Растущая часть</div>
     <div class="allocation-info">
         <span>Выделить: <b id="valStocks">50 000</b> ₽</span>
-        <span class="percent-tag">50%</span>
+        <span class="percent-tag">50% от капитала</span>
     </div>
     <div id="echelonContainer"></div>
 
     <script>
-        // --- НАСТРОЙКИ ТАБЛИЦЫ ---
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
-        const GID = '1213653337'; // ID листа TELEGRAMBOT
+        const GID = '1213653337'; 
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
-        // Глобальные переменные для данных
         let bonds = [];
         let echelons = [
             { title: 'I Эшелон (Консервативный)', weight: 0.30, assets: [] },
@@ -140,23 +143,17 @@
             { title: 'IV Эшелон (Венчурный)', weight: 0.15, assets: [] }
         ];
 
-        /**
-         * Функция загрузки данных из Google Sheets
-         */
         async function loadData() {
             try {
                 const response = await fetch(CSV_URL);
                 const text = await response.text();
-                
-                // Парсим CSV (учитываем запятые внутри кавычек)
                 const rows = text.split('\n').map(row => 
                     row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim())
                 );
 
-                // 1. Извлекаем ОФЗ (ячейки K3:M10 -> индексы массива 2-9)
                 bonds = [];
                 for (let i = 2; i <= 9; i++) {
-                    if (rows[i] && rows[i][10]) { // Проверяем наличие тикера в колонке K
+                    if (rows[i] && rows[i][10]) {
                         bonds.push({
                             t: rows[i][10],
                             n: rows[i][11] || '',
@@ -165,7 +162,6 @@
                     }
                 }
 
-                // 2. Извлекаем Акции (ячейки K12:M23 -> индексы массива 11-22)
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) {
                     if (rows[i] && rows[i][10]) {
@@ -177,7 +173,6 @@
                     }
                 }
 
-                // 3. Распределяем акции по 3 штуки в каждый эшелон
                 if (allStocks.length > 0) {
                     echelons[0].assets = allStocks.slice(0, 3);
                     echelons[1].assets = allStocks.slice(3, 6);
@@ -185,7 +180,6 @@
                     echelons[3].assets = allStocks.slice(9, 12);
                 }
 
-                // После загрузки отрисовываем интерфейс
                 draw();
             } catch (e) {
                 console.error('Ошибка загрузки:', e);
@@ -193,24 +187,18 @@
             }
         }
 
-        /**
-         * Функция отрисовки данных на странице
-         */
         function draw() {
-            // Получаем сумму из поля ввода
             const total = parseFloat(document.getElementById('sumInput').value) || 0;
             const half = total / 2;
 
-            // Обновляем текстовые значения заголовков
             document.getElementById('valBonds').innerText = Math.round(half).toLocaleString();
             document.getElementById('valStocks').innerText = Math.round(half).toLocaleString();
 
-            // Отрисовка списка облигаций
             let bHtml = '';
             if (bonds.length > 0) {
-                const bPart = half / bonds.length; // Делим 50% капитала поровну между всеми ОФЗ
+                const bPart = half / bonds.length; 
                 bonds.forEach(b => {
-                    const q = b.p > 0 ? Math.floor(bPart / b.p) : 0; // Считаем кол-во штук
+                    const q = b.p > 0 ? Math.floor(bPart / b.p) : 0;
                     bHtml += `
                         <div class="asset-item">
                             <span class="ticker">${b.t}</span>
@@ -222,12 +210,9 @@
             }
             document.getElementById('listBonds').innerHTML = bHtml || 'Данные не найдены';
 
-            // Отрисовка эшелонов акций
             let eHtml = '';
             echelons.forEach(e => {
                 eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${Math.round(e.weight*100)}%</span></div><div class="asset-list">`;
-                
-                // Сумма на конкретный эшелон (например 30% от половины капитала)
                 const echelonSum = half * e.weight;
                 const assetPart = e.assets.length > 0 ? echelonSum / e.assets.length : 0;
 
@@ -246,10 +231,7 @@
             document.getElementById('echelonContainer').innerHTML = eHtml;
         }
 
-        // Запуск процесса загрузки при открытии
         loadData();
-
-        // Настройки Telegram Mini App
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.ready();
