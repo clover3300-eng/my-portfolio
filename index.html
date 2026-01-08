@@ -22,7 +22,7 @@
             color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
             -webkit-tap-highlight-color: transparent;
-            padding-bottom: 100px;
+            padding-bottom: 80px;
         }
 
         .header { text-align: center; margin-bottom: 20px; }
@@ -86,17 +86,15 @@
 
         .asset-list { background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         
-        /* ОБНОВЛЕННАЯ СЕТКА: Название теперь занимает 50% ширины */
+        /* Исправленная ширина столбцов: больше места названию */
         .asset-item {
-            display: grid; 
-            grid-template-columns: 70px 1.5fr 60px 85px;
-            padding: 12px 8px; border-bottom: 1px solid #f0f0f0; font-size: 12px; align-items: center;
+            display: grid; grid-template-columns: 75px 1fr 65px 85px;
+            padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 12px; align-items: center;
         }
-        
-        .ticker { font-weight: 700; color: #333; font-size: 11px; }
-        .asset-name { color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; font-weight: 500; }
+        .ticker { font-weight: bold; color: #333; }
+        .asset-name { color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
         .qty { text-align: center; font-weight: bold; color: var(--accent-blue); }
-        .price-total { text-align: right; color: #333; font-weight: 600; }
+        .price-total { text-align: right; color: #333; font-weight: 500; }
 
         .details {
             grid-column: 1 / -1; display: none; background: #fafbfc;
@@ -113,23 +111,10 @@
             padding: 10px 12px; font-size: 12px; font-weight: bold; 
             background: #eee; color: #666; display: flex; 
             justify-content: space-between; align-items: center;
-            position: relative;
         }
-        .echelon-info-icon {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 14px; height: 14px; background: #999; color: white;
-            border-radius: 50%; font-size: 9px; margin-left: 6px; cursor: pointer;
-        }
-        .echelon-tip {
-            display: none; position: absolute; top: 100%; left: 12px; right: 12px;
-            background: #3a506b; color: white; padding: 10px; border-radius: 8px;
-            font-size: 11px; z-index: 10; font-weight: normal; line-height: 1.3;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .echelon-title.show-tip .echelon-tip { display: block; }
 
         .btn-share {
-            display: block; width: 100%; padding: 18px; border: none; border-radius: 16px;
+            display: block; width: 100%; padding: 16px; border: none; border-radius: 16px;
             background: var(--accent-blue); color: white; font-size: 16px; font-weight: bold;
             cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
@@ -137,15 +122,16 @@
         /* Модальное окно */
         #photoModal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; flex-direction: column;
+            background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; flex-direction: column;
         }
-        #photoModal img { max-width: 90%; max-height: 70%; border-radius: 12px; margin-bottom: 20px; }
-        .modal-buttons { display: flex; gap: 10px; width: 90%; }
-        .modal-btn { 
-            flex: 1; text-align: center; padding: 14px; border-radius: 12px; 
-            font-weight: bold; font-size: 14px; cursor: pointer;
+        #photoModal img { max-width: 85%; max-height: 70%; border-radius: 12px; margin-bottom: 20px; }
+        
+        .modal-actions { display: flex; gap: 15px; width: 85%; }
+        .btn-modal { 
+            flex: 1; padding: 12px; border-radius: 12px; border: none; 
+            font-weight: bold; cursor: pointer; font-size: 14px; text-align: center;
         }
-        .btn-tg { background: #0088cc; color: white; }
+        .btn-send { background: var(--accent-green); color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-close { background: #444; color: white; }
 
         .footer-disclaimer {
@@ -172,71 +158,32 @@
                 </div>
                 <div id="mainChart" class="chart-mini" data-pct="50/50" onclick="resetRatio()"></div>
             </div>
-            
-            <div class="usage-bar-container">
-                <div class="usage-label">
-                    <span>ЗАДЕЙСТВОВАНО СРЕДСТВ</span>
-                    <span id="usageLabelText">0 ₽</span>
-                </div>
-                <div class="usage-track">
-                    <div id="usageFill"></div>
-                </div>
-            </div>
-
-            <div class="fee-selector">
-                <span class="fee-label">Комиссия брокера</span>
-                <div class="fee-buttons" id="feeGroup">
-                    <button class="fee-btn" onclick="setFee(0.0001, this)">0.01%</button>
-                    <button class="fee-btn active" onclick="setFee(0.0003, this)">0.03%</button>
-                    <button class="fee-btn" onclick="setFee(0.0005, this)">0.05%</button>
-                    <button class="fee-btn" onclick="setFee(0.001, this)">0.1%</button>
-                    <button class="fee-btn" onclick="setFee(0.003, this)">0.3%</button>
-                    <button class="fee-btn" onclick="setFee(0.004, this)">0.4%</button>
-                    <button class="fee-btn" onclick="setFee(0.005, this)">0.5%</button>
-                </div>
-            </div>
-
             <div class="ratio-control">
-                <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">
-                    <span>Облигации <span id="labelBondsPct">50</span>%</span>
-                    <span>Акции <span id="labelStocksPct">50</span>%</span>
-                </div>
                 <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
             </div>
         </div>
 
         <div id="shareContainer">
-            <div style="text-align: center; padding: 15px; display: none; background: white; border-radius: 12px 12px 0 0;" id="shareBrand">
-                <h2 style="margin: 0; color: #3498db; font-size: 20px;">Мой Портфель 50/50</h2>
-                <div id="shareDate" style="font-size: 11px; color: #888; margin-top: 5px;"></div>
+            <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
+                <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
+                <div id="shareDate" style="font-size: 10px; color: #888;"></div>
             </div>
             <div class="section-header">1. Денежный Поток</div>
-            <div class="allocation-info">
-                <span>Бюджет: <b id="valBonds">50 000</b> ₽</span>
-                <span class="percent-tag"><span class="bond-pct-text">50</span>%</span>
-            </div>
             <div id="listBonds" class="asset-list"></div>
             <div class="section-header">2. Растущая часть</div>
-            <div class="allocation-info">
-                <span>Бюджет: <b id="valStocks">50 000</b> ₽</span>
-                <span class="percent-tag"><span class="stock-pct-text">50</span>%</span>
-            </div>
             <div id="echelonContainer"></div>
         </div>
 
-        <button class="btn-share" id="btnShare" onclick="shareAsImage()">📸 Сохранить / Отправить</button>
-
-        <div class="footer-disclaimer">
-            Инвестиции связаны с риском. Наш гид — это пример распределения.
-        </div>
+        <button class="btn-share" id="btnShare" onclick="shareAsImage()">📸 Поделиться портфелем</button>
     </div>
 
     <div id="photoModal">
-        <div style="color:white; font-size: 16px; margin-bottom: 15px; font-weight: bold;">Портфель сформирован!</div>
         <img id="modalImg" src="">
-        <div class="modal-buttons">
-            <div class="modal-btn btn-tg" onclick="sendToTelegram()">Отправить другу</div>
-            <div class="modal-btn btn-close" onclick="document.getElementById('photoModal').style.display='none'">Закрыть</div>
+        <div class="modal-actions">
+            <button class="btn-modal btn-close" onclick="document.getElementById('photoModal').style.display='none'">Закрыть</button>
+            <button class="btn-modal btn-send" id="btnSystemShare">
+                <span>Переслать</span> <span style="font-size: 18px;">➔</span>
+            </button>
         </div>
     </div>
 
@@ -247,42 +194,12 @@
 
         let bonds = [];
         let brokerFee = 0.0003; 
-        let currentImageBlob = null;
         let echelons = [
-            { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
-            { title: 'II Эшелон', weight: 0.40, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ, НО ВЫПЛАТЫ РАЗНЯТСЯ' },
-            { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
-            { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
+            { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ' },
+            { title: 'II Эшелон', weight: 0.40, assets: [], info: 'КОМПАНИИ С ПЕРЕМЕННЫМИ ВЫПЛАТАМИ' },
+            { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ БЕЗ ВЫПЛАТ' },
+            { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'РИСКОВЫЕ АКТИВЫ' }
         ];
-
-        function resetRatio() {
-            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-            document.getElementById('ratioSlider').value = 50;
-            draw();
-        }
-
-        function setFee(val, btn) {
-            brokerFee = val;
-            document.querySelectorAll('.fee-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            draw();
-        }
-
-        function limitName(n) { return n.length > 25 ? n.substring(0, 23) + '..' : n; }
-
-        function toggleTip(event, el) {
-            event.stopPropagation();
-            const isActive = el.classList.contains('show-tip');
-            hideAllTips();
-            if (!isActive) el.classList.add('show-tip');
-        }
-
-        function hideAllTips(event) {
-            document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip'));
-            if(event && event.target.tagName !== 'INPUT') document.getElementById('sumInput').blur();
-        }
-
-        function toggleRow(el) { el.classList.toggle('active'); }
 
         async function fetchBondData(code) {
             try {
@@ -290,10 +207,7 @@
                 const data = await res.json();
                 const cols = data.securities.columns;
                 const row = data.securities.data[0];
-                return {
-                    nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0,
-                    matDate: row[cols.indexOf('MATDATE')] || '—'
-                };
+                return { nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0, matDate: row[cols.indexOf('MATDATE')] || '—' };
             } catch (e) { return { nkd: 0, matDate: '—' }; }
         }
 
@@ -302,19 +216,17 @@
                 const response = await fetch(CSV_URL);
                 const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
-                
                 let bondList = [];
                 for (let i = 2; i <= 9; i++) {
                     if (rows[i] && rows[i][10]) {
                         bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
                     }
                 }
-
-                bonds = await Promise.all(bondList.map(async (b) => {
+                const bondPromises = bondList.map(async (b) => {
                     const extra = await fetchBondData(b.t);
                     return { ...b, nkd: extra.nkd, matDate: extra.matDate };
-                }));
-
+                });
+                bonds = await Promise.all(bondPromises);
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) {
                     if (rows[i] && rows[i][10]) {
@@ -338,89 +250,79 @@
             const bondBudget = (inputSum * bondPct) / 100;
             const stockBudget = (inputSum * stockPct) / 100;
 
-            document.getElementById('labelBondsPct').innerText = bondPct;
-            document.getElementById('labelStocksPct').innerText = stockPct;
-            document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
-            document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
             document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
+            document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
 
-            let actualSpentTotal = 0;
             let bHtml = '';
             if (bonds.length > 0) {
                 const perBondBudget = bondBudget / bonds.length;
-                let bondCalculations = bonds.map(b => {
-                    const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee);
-                    let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0;
-                    return { ...b, qty, fullCostPerUnit };
-                });
-                bondCalculations.forEach(b => {
-                    actualSpentTotal += (b.qty * b.fullCostPerUnit);
-                    bHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${b.t}</span><span class="asset-name">${limitName(b.n)}</span><span class="qty">${b.qty}</span><span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span><div class="details">Компания: <b>${b.n}</b><br>НКД: <b>${b.nkd.toFixed(2)} ₽</b> | Погашение: <b>${b.matDate}</b><br>Простая Доходность: <b>${b.y.replace(' ₽','')}</b></div></div>`;
+                bonds.forEach(b => {
+                    const fullCost = (b.p + b.nkd) * (1 + brokerFee);
+                    let qty = fullCost > 0 ? Math.floor(perBondBudget / fullCost) : 0;
+                    bHtml += `<div class="asset-item" onclick="this.classList.toggle('active')"><span class="ticker">${b.t}</span><span class="asset-name">${b.n}</span><span class="qty">${qty} шт.</span><span class="price-total">${Math.round(qty * b.p).toLocaleString()} ₽</span><div class="details">Код: ${b.t}<br>НКД: ${b.nkd.toFixed(2)} ₽ | Погашение: ${b.matDate}<br><b>Доходность: ${b.y}</b></div></div>`;
                 });
             }
             document.getElementById('listBonds').innerHTML = bHtml;
-            document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString();
 
             let eHtml = '';
             echelons.forEach(e => {
                 const echelonBudget = stockBudget * e.weight;
                 const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
-                let stockCalculations = e.assets.map(a => {
-                    const cost = a.p * (1 + brokerFee);
-                    return { ...a, qty: cost > 0 ? Math.floor(perAssetBudget / cost) : 0, cost };
-                });
-                eHtml += `<div class="echelon-title" onclick="toggleTip(event, this)"><span>${e.title}</span><span>${Math.round(e.weight*100)}%</span><div class="echelon-tip">${e.info}</div></div><div class="asset-list">`;
-                stockCalculations.forEach(s => {
-                    actualSpentTotal += (s.qty * s.cost);
-                    eHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${s.t}</span><span class="asset-name">${limitName(s.n)}</span><span class="qty">${s.qty}</span><span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span><div class="details">Компания: <b>${s.n}</b><br>Цена: <b>${s.p} ₽</b> | Цель: <b>${s.target.replace(' ₽','')}</b></div></div>`;
+                eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${Math.round(e.weight*100)}%</span></div><div class="asset-list">`;
+                e.assets.forEach(s => {
+                    const fullCost = s.p * (1 + brokerFee);
+                    let qty = fullCost > 0 ? Math.floor(perAssetBudget / fullCost) : 0;
+                    eHtml += `<div class="asset-item" onclick="this.classList.toggle('active')"><span class="ticker">${s.t}</span><span class="asset-name">${s.n}</span><span class="qty">${qty} шт.</span><span class="price-total">${Math.round(qty*s.p).toLocaleString()} ₽</span><div class="details">Компания: ${s.n}<br>Цель: ${s.target}</div></div>`;
                 });
                 eHtml += `</div>`;
             });
             document.getElementById('echelonContainer').innerHTML = eHtml;
-            document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
-            document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
-            document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
         }
 
-        function shareAsImage() {
+        async function shareAsImage() {
             const btn = document.getElementById('btnShare');
             const container = document.getElementById('shareContainer');
             const brand = document.getElementById('shareBrand');
+            const dateEl = document.getElementById('shareDate');
             
-            btn.innerText = "⏳ Ожидайте...";
-            btn.disabled = true;
-
-            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+            btn.innerText = "⏳ Подготовка...";
+            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
 
             brand.style.display = 'block';
-            document.getElementById('shareDate').innerText = new Date().toLocaleString();
+            dateEl.innerText = new Date().toLocaleString();
 
             setTimeout(() => {
-                html2canvas(container, { backgroundColor: "#f4f7f9", scale: 2 }).then(canvas => {
+                html2canvas(container, { backgroundColor: "#f4f7f9", scale: 2 }).then(async canvas => {
                     brand.style.display = 'none';
-                    btn.innerText = "📸 Сохранить / Отправить";
-                    btn.disabled = false;
-
+                    btn.innerText = "📸 Поделиться портфелем";
+                    
                     const dataUrl = canvas.toDataURL("image/png");
                     document.getElementById('modalImg').src = dataUrl;
                     document.getElementById('photoModal').style.display = 'flex';
 
-                    // Авто-скачивание для десктопа
-                    const link = document.createElement('a');
-                    link.download = 'portfolio.png';
-                    link.href = dataUrl;
-                    link.click();
+                    // Настройка системной кнопки "Переслать"
+                    document.getElementById('btnSystemShare').onclick = async () => {
+                        const blob = await (await fetch(dataUrl)).blob();
+                        const file = new File([blob], 'portfolio.png', { type: 'image/png' });
+                        
+                        if (navigator.share) {
+                            navigator.share({
+                                files: [file],
+                                title: 'Мой портфель 50/50',
+                            }).catch(() => {});
+                        } else {
+                            // Фоллбек: скачивание
+                            const link = document.createElement('a');
+                            link.download = 'portfolio.png';
+                            link.href = dataUrl;
+                            link.click();
+                        }
+                    };
                 });
             }, 100);
         }
 
-        function sendToTelegram() {
-            // Используем стандартный share link Telegram
-            const text = "Мой инвестиционный портфель 50/50, рассчитанный в приложении!";
-            const url = "https://t.me/share/url?url=" + encodeURIComponent("Посмотри мой расчет") + "&text=" + encodeURIComponent(text);
-            window.Telegram.WebApp.openTelegramLink(url);
-        }
-
+        function hideAllTips() { document.getElementById('sumInput').blur(); }
         loadData();
         window.Telegram.WebApp.ready();
         window.Telegram.WebApp.expand();
