@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Инвест-Помощник 50/50</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 1.5rem; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">📊 Стратегия «Сбалансированный Рост»</h1>
+            <p class="text-gray-500">Ваш персональный план распределения капитала 50/50</p>
+        </header>
+
+        <div class="glass-card p-6 shadow-xl mb-8 border border-blue-100">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Сколько вы готовы инвестировать? (₽)</label>
+            <input type="number" id="totalAmount" placeholder="Например: 100000" 
+                   class="w-full p-4 text-2xl font-bold border-2 border-blue-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all">
+            <p class="mt-3 text-xs text-gray-400">*Рекомендуется сумма от 15 000 ₽ для корректного деления на все бумаги.</p>
+        </div>
+
+        <div id="dashboard" class="hidden space-y-8">
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass-card p-6 shadow-md text-center">
+                    <h3 class="font-semibold mb-4 text-gray-700">Общее распределение</h3>
+                    <canvas id="mainChart" width="200" height="200"></canvas>
+                </div>
+                <div class="glass-card p-6 shadow-md flex flex-col justify-center">
+                    <div class="mb-4">
+                        <span class="text-sm text-gray-500 block">Защитная часть (Облигации)</span>
+                        <span class="text-2xl font-bold text-blue-600" id="bondSumDisplay">0 ₽</span>
+                        <p class="text-xs text-gray-400 italic">Ваша "подушка безопасности". Облигации — это когда вы даете в долг государству под процент.</p>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-500 block">Активная часть (Акции)</span>
+                        <span class="text-2xl font-bold text-emerald-600" id="stockSumDisplay">0 ₽</span>
+                        <p class="text-xs text-gray-400 italic">Покупка долей в компаниях. Растут в цене и могут платить дивиденды.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="glass-card overflow-hidden shadow-lg border-l-8 border-blue-500">
+                    <div class="p-4 bg-blue-50">
+                        <h2 class="text-xl font-bold text-blue-800">🏦 Облигации (ОФЗ) — 8 бумаг</h2>
+                        <p class="text-sm text-blue-600">Надежный доход. Распределено поровну.</p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+                                <tr>
+                                    <th class="p-4">Название</th>
+                                    <th class="p-4">Цена</th>
+                                    <th class="p-4">Кол-во</th>
+                                    <th class="p-4">Сумма</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bondTable" class="divide-y divide-gray-100 text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="glass-card overflow-hidden shadow-lg border-l-8 border-emerald-500">
+                    <div class="p-4 bg-emerald-50">
+                        <h2 class="text-xl font-bold text-emerald-800">📈 Акции — 4 эшелона риска</h2>
+                        <p class="text-sm text-emerald-600">От надежных гигантов до амбициозных компаний.</p>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+                                <tr>
+                                    <th class="p-4">Тикер / Эшелон</th>
+                                    <th class="p-4">Цена</th>
+                                    <th class="p-4">Кол-во</th>
+                                    <th class="p-4">Доля</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stockTable" class="divide-y divide-gray-100 text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="text-center text-gray-400 text-xs pb-10">
+                Данный расчет носит ознакомительный характер. ID: I2-System
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const bondsData = [
+            { n: "ОФЗ 26233", p: 596.94 }, { n: "ОФЗ 26238", p: 602.52 },
+            { n: "ОФЗ 26240", p: 632.30 }, { n: "ОФЗ 26230", p: 639.51 },
+            { n: "ОФЗ 26225", p: 687.50 }, { n: "ОФЗ 26243", p: 748.58 },
+            { n: "ОФЗ 26221", p: 722.53 }, { n: "ОФЗ 26235", p: 722.37 }
+        ];
+
+        const stocksData = [
+            { t: "STSBp", n: "Ставрополэнергосбыт", p: 5.39, e: "I", w: 0.10 },
+            { t: "SBER", n: "Сбербанк", p: 299.08, e: "I", w: 0.10 },
+            { t: "MRKC", n: "Россети Центр", p: 0.93, e: "I", w: 0.10 },
+            { t: "VTBR", n: "Банк ВТБ", p: 71.50, e: "II", w: 0.133 },
+            { t: "SNGSp", n: "Сургутнефтегаз", p: 43.17, e: "II", w: 0.133 },
+            { t: "GAZP", n: "Газпром", p: 123.64, e: "II", w: 0.133 },
+            { t: "MRKY", n: "Россети Юг", p: 0.09, e: "III", w: 0.05 },
+            { t: "LSRG", n: "Группа ЛСР", p: 650.20, e: "III", w: 0.05 },
+            { t: "ELFV", n: "ЭЛ5-Энерго", p: 0.50, e: "III", w: 0.05 },
+            { t: "RNFT", n: "РуссНефть", p: 95.75, e: "IV", w: 0.05 },
+            { t: "URKZ", n: "Уральская кузница", p: 260.50, e: "IV", w: 0.05 },
+            { t: "ENPG", n: "ЭН+ ГРУП", p: 468.05, e: "IV", w: 0.05 }
+        ];
+
+        let myChart;
+
+        document.getElementById('totalAmount').addEventListener('input', function(e) {
+            const total = parseFloat(e.target.value);
+            if (total > 0) {
+                document.getElementById('dashboard').classList.remove('hidden');
+                calculate(total);
+            } else {
+                document.getElementById('dashboard').classList.add('hidden');
+            }
+        });
+
+        function calculate(total) {
+            const part = total / 2;
+            document.getElementById('bondSumDisplay').innerText = part.toLocaleString() + ' ₽';
+            document.getElementById('stockSumDisplay').innerText = part.toLocaleString() + ' ₽';
+
+            // Bonds
+            const bondTable = document.getElementById('bondTable');
+            bondTable.innerHTML = '';
+            const perBond = part / bondsData.length;
+            bondsData.forEach(b => {
+                const qty = Math.floor(perBond / b.p);
+                bondTable.innerHTML += `<tr>
+                    <td class="p-4 font-semibold">${b.n}</td>
+                    <td class="p-4 text-gray-500">${b.p} ₽</td>
+                    <td class="p-4 font-bold text-blue-600">${qty} шт.</td>
+                    <td class="p-4">${(qty * b.p).toFixed(0)} ₽</td>
+                </tr>`;
+            });
+
+            // Stocks
+            const stockTable = document.getElementById('stockTable');
+            stockTable.innerHTML = '';
+            stocksData.forEach(s => {
+                const stockPart = part * s.w;
+                const qty = Math.floor(stockPart / s.p);
+                const color = s.e === 'I' ? 'blue' : s.e === 'II' ? 'emerald' : 'orange';
+                stockTable.innerHTML += `<tr>
+                    <td class="p-4">
+                        <span class="font-bold">${s.t}</span> 
+                        <span class="text-[10px] bg-${color-100} text-${color-700} px-2 py-0.5 rounded-full ml-2">Эшелон ${s.e}</span>
+                        <div class="text-[10px] text-gray-400">${s.n}</div>
+                    </td>
+                    <td class="p-4 text-gray-500">${s.p} ₽</td>
+                    <td class="p-4 font-bold text-emerald-600">${qty} шт.</td>
+                    <td class="p-4 text-xs">${(s.w * 100).toFixed(1)}%</td>
+                </tr>`;
+            });
+
+            updateChart(part, part);
+        }
+
+        function updateChart(bonds, stocks) {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            if (myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Облигации', 'Акции'],
+                    datasets: [{
+                        data: [bonds, stocks],
+                        backgroundColor: ['#3b82f6', '#10b981'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { cutout: '70%', plugins: { legend: { display: false } } }
+            });
+        }
+    </script>
+</body>
+</html>
