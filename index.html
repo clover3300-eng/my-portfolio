@@ -31,141 +31,176 @@
             border-radius: 8px;
             font-size: 12px;
             font-weight: bold;
+            cursor: pointer;
         }
 
         .header { text-align: center; margin-bottom: 20px; }
         
         .calc-box {
-            background: white; padding: 20px; border-radius: 20px;
-            display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
+            background: white; 
+            padding: 20px; 
+            border-radius: 20px;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            margin-bottom: 25px;
         }
         
         .input-container { flex: 1; }
         .input-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; padding-right: 10px; }
         .input-label { font-size: 12px; color: #8e8e93; font-weight: 500; }
         
-        input { border: none; font-size: 28px; font-weight: 400; width: 100%; outline: none; color: var(--input-color); background: transparent; }
+        .input-wrapper { display: flex; align-items: baseline; gap: 6px; }
+        input { 
+            border: none; 
+            font-size: 28px; 
+            font-weight: 400; 
+            width: 100%; 
+            outline: none; 
+            color: var(--input-color);
+            background: transparent;
+            -webkit-appearance: none;
+        }
 
+        .chart-container { width: 65px; height: 65px; }
         .chart-mini {
-            width: 65px; height: 65px; border-radius: 50%;
+            width: 100%; height: 100%; border-radius: 50%;
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
             display: flex; align-items: center; justify-content: center;
         }
         .chart-mini::after { content: "50/50"; font-size: 10px; font-weight: 900; color: white; }
 
-        .strategy-desc { display: grid; gap: 12px; margin-bottom: 25px; }
-        .desc-card { background: white; padding: 16px; border-radius: 16px; border-left: 6px solid #eee; }
+        .strategy-desc { display: grid; gap: 15px; margin-bottom: 25px; }
+        .desc-card { background: white; padding: 18px; border-radius: 16px; border-left: 6px solid #eee; }
         .desc-card.blue { border-color: var(--accent-blue); }
         .desc-card.green { border-color: var(--accent-green); }
-        .desc-card h3 { margin: 0 0 4px 0; font-size: 16px; }
+        .desc-card h3 { margin: 0 0 8px 0; font-size: 16px; }
         .desc-card p { margin: 0; font-size: 13px; color: #555; }
         
         .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
         .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; }
         .percent-tag { background: #eee; padding: 2px 6px; border-radius: 6px; font-weight: bold; font-size: 11px; }
 
-        /* ИСПРАВЛЕННАЯ ТАБЛИЦА */
+        /* УЛУЧШЕННОЕ ОТОБРАЖЕНИЕ СПИСКА */
         .asset-list { background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item { 
             display: grid; 
-            grid-template-columns: 75px 1fr 65px 75px; /* Перераспределили ширину */
+            grid-template-columns: 85px 1fr 65px 85px; 
             padding: 12px; 
             border-bottom: 1px solid #f0f0f0; 
             font-size: 12px; 
-            align-items: center;
-            gap: 4px;
+            align-items: center; 
+            gap: 8px;
         }
-        .ticker { font-weight: 700; font-size: 11px; color: #333; }
-        .asset-name { color: #666; line-height: 1.2; padding-right: 4px; word-break: break-word; }
-        .qty { text-align: center; font-weight: bold; color: var(--accent-blue); }
-        .price { text-align: right; color: #999; font-variant-numeric: tabular-nums; }
+        .ticker { font-weight: bold; color: #333; }
+        
+        /* Стили для обрезки длинных названий */
+        .asset-name { 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            color: #555;
+        }
 
-        .echelon-title { padding: 8px 12px; font-size: 11px; font-weight: bold; background: #f8f8f8; color: #888; display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.5px;}
+        .qty { text-align: center; font-weight: bold; color: var(--accent-blue); }
+        .price { text-align: right; color: #999; white-space: nowrap; }
+        
+        .echelon-title { padding: 8px 12px; font-size: 12px; font-weight: bold; background: #eee; color: #666; display: flex; justify-content: space-between; }
+        .note { font-size: 11px; color: #888; margin: 10px 0; font-style: italic; }
     </style>
 </head>
-<body id="body" onclick="closeKeyboard(event)">
+<body id="body">
 
     <div class="header">
         <h1>Как вложить деньги и не переживать?</h1>
     </div>
 
-    <div class="calc-box" onclick="event.stopPropagation()">
+    <div class="calc-box">
         <div class="input-container">
             <div class="input-label-row">
                 <span class="input-label">Сколько вложить?</span>
-                <span id="doneBtn" class="done-btn" onclick="closeKeyboard(event)">Готово</span>
+                <span id="doneBtn" class="done-btn" onclick="closeKeyboard()">Готово</span>
             </div>
-            <div style="display: flex; align-items: baseline; gap: 6px;">
+            <div class="input-wrapper">
                 <input type="number" id="sumInput" value="100000" oninput="draw()" inputmode="decimal">
                 <span style="font-size: 22px; color: #a1a1a1;">₽</span>
             </div>
         </div>
-        <div class="chart-mini"></div>
-    </div>
-
-    <div class="strategy-desc">
-        <div class="desc-card blue">
-            <h3>🛡️ 50% Облигации</h3>
-            <p>Ваш "Денежный Поток". Половина капитала в ОФЗ.</p>
-        </div>
-        <div class="desc-card green">
-            <h3>🚀 50% Акции</h3>
-            <p>Ваш двигатель роста. Доли в крупнейших компаниях.</p>
+        <div class="chart-container">
+            <div class="chart-mini"></div>
         </div>
     </div>
 
-    <div class="section-header">1. Денежный Поток</div>
-    <div class="allocation-info">
-        <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
-        <span class="percent-tag">50%</span>
-    </div>
-    <div class="asset-list" id="listBonds"></div>
+    <div id="content">
+        <div class="strategy-desc">
+            <div class="desc-card blue">
+                <h3>🛡️ 50% Облигации</h3>
+                <p>Ваш "Денежный Поток". Надежный способ сохранить деньги.</p>
+            </div>
+            <div class="desc-card green">
+                <h3>🚀 50% Акции</h3>
+                <p>Ваш двигатель роста. Вы — совладелец гигантов рынка.</p>
+            </div>
+        </div>
 
-    <div class="section-header">2. Растущая часть</div>
-    <div id="echelonContainer"></div>
+        <div class="section-header">1. Денежный Поток</div>
+        <div class="allocation-info">
+            <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
+            <span class="percent-tag">50%</span>
+        </div>
+        <div class="asset-list" id="listBonds"></div>
+
+        <div class="section-header">2. Растущая часть</div>
+        <div id="echelonContainer"></div>
+    </div>
 
     <script>
         const sumInput = document.getElementById('sumInput');
         const doneBtn = document.getElementById('doneBtn');
 
+        sumInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') closeKeyboard(); });
         sumInput.addEventListener('focus', () => { doneBtn.style.display = 'block'; });
         sumInput.addEventListener('blur', () => { setTimeout(() => { doneBtn.style.display = 'none'; }, 200); });
+        document.getElementById('body').addEventListener('click', (e) => { if (e.target.id !== 'sumInput') closeKeyboard(); });
 
-        function closeKeyboard(e) {
-            if (e.target.id !== 'sumInput') {
-                sumInput.blur();
-                window.scrollTo(0, 0);
-            }
+        function closeKeyboard() {
+            sumInput.blur();
+            window.scrollTo(0, 0);
         }
 
+        // ПОЛНЫЕ НАЗВАНИЯ ДЛЯ ТЕСТА ОБРЕЗКИ
         const bonds = [
-            { t: 'SU26233', n: 'ОФЗ 26233', p: 596.94 }, { t: 'SU26238', n: 'ОФЗ 26238', p: 602.52 },
-            { t: 'SU26240', n: 'ОФЗ 26240', p: 632.30 }, { t: 'SU26230', n: 'ОФЗ 26230', p: 639.51 },
-            { t: 'SU26225', n: 'ОФЗ 26225', p: 687.50 }, { t: 'SU26243', n: 'ОФЗ 26243', p: 748.58 },
-            { t: 'SU26221', n: 'ОФЗ 26221', p: 722.53 }, { t: 'SU26235', n: 'ОФЗ 26235', p: 722.37 }
+            { t: 'SU26233RMFS5', n: 'ОФЗ 26233', p: 596.94 }, 
+            { t: 'SU26238RMFS4', n: 'ОФЗ 26238', p: 602.52 },
+            { t: 'SU26240RMFS0', n: 'ОФЗ 26240', p: 632.30 }, 
+            { t: 'SU26230RMFS1', n: 'ОФЗ 26230', p: 639.51 },
+            { t: 'SU26225RMFS1', n: 'ОФЗ 26225', p: 687.50 }, 
+            { t: 'SU26243RMFS4', n: 'ОФЗ 26243', p: 748.58 },
+            { t: 'SU26221RMFS0', n: 'ОФЗ 26221', p: 722.53 }, 
+            { t: 'SU26235RMFS0', n: 'ОФЗ 26235', p: 722.37 }
         ];
 
         const echelons = [
             { title: 'I Эшелон', weight: 0.30, assets: [
-                { t: 'STSBp', n: 'Ставропольэнергосбыт', p: 5.39 }, 
-                { t: 'SBER', n: 'Сбербанк России', p: 299.08 }, 
-                { t: 'MRKC', n: 'Россети Центр', p: 0.93 }
+                { t: 'STSBp', n: 'Ставропольэнергосбыт ПАО', p: 5.39 }, 
+                { t: 'SBER', n: 'Сбербанк России ПАО', p: 299.08 }, 
+                { t: 'MRKC', n: 'ПАО Россети Центр', p: 0.93 }
             ]},
             { title: 'II Эшелон', weight: 0.40, assets: [
-                { t: 'VTBR', n: 'Банк ВТБ', p: 71.50 }, 
-                { t: 'SNGSp', n: 'Сургутнефтегаз', p: 43.17 }, 
-                { t: 'GAZP', n: 'Газпром', p: 123.64 }
+                { t: 'VTBR', n: 'Банк ВТБ (ПАО)', p: 71.50 }, 
+                { t: 'SNGSp', n: 'Сургутнефтегаз ПАО', p: 43.17 }, 
+                { t: 'GAZP', n: 'Газпром (ПАО)', p: 123.64 }
             ]},
             { title: 'III Эшелон', weight: 0.15, assets: [
-                { t: 'MRKY', n: 'Россети Юг', p: 0.09 }, 
-                { t: 'LSRG', n: 'Группа ЛСР', p: 650.20 }, 
-                { t: 'ELFV', n: 'ЭЛ5-Энерго', p: 0.50 }
+                { t: 'MRKY', n: 'Россети Юг (ПАО)', p: 0.09 }, 
+                { t: 'LSRG', n: 'Группа ЛСР ПАО', p: 650.20 }, 
+                { t: 'ELFV', n: 'ЭЛ5-Энерго ПАО', p: 0.50 }
             ]},
             { title: 'IV Эшелон', weight: 0.15, assets: [
-                { t: 'RNFT', n: 'РуссНефть', p: 95.75 }, 
+                { t: 'RNFT', n: 'РуссНефть НК ПАО', p: 95.75 }, 
                 { t: 'URKZ', n: 'Уральская кузница', p: 260.50 }, 
-                { t: 'ENPG', n: 'ЭН+ ГРУП', p: 468.05 }
+                { t: 'ENPG', n: 'ЭН+ ГРУП МКПАО', p: 468.05 }
             ]}
         ];
 
@@ -177,7 +212,13 @@
             let bHtml = '';
             bonds.forEach(b => {
                 const q = Math.floor((half / bonds.length) / b.p);
-                bHtml += `<div class="asset-item"><span class="ticker">${b.t}</span><span class="asset-name">${b.n}</span><span class="qty">${q} шт.</span><span class="price">~${Math.round(q*b.p)} ₽</span></div>`;
+                bHtml += `
+                <div class="asset-item">
+                    <span class="ticker asset-name">${b.t}</span>
+                    <span class="asset-name">${b.n}</span>
+                    <span class="qty">${q} шт.</span>
+                    <span class="price">~${Math.round(q*b.p)} ₽</span>
+                </div>`;
             });
             document.getElementById('listBonds').innerHTML = bHtml;
 
@@ -186,7 +227,13 @@
                 eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${e.weight*100}%</span></div><div class="asset-list">`;
                 e.assets.forEach(a => {
                     const q = Math.floor(((half * e.weight) / e.assets.length) / a.p);
-                    eHtml += `<div class="asset-item"><span class="ticker">${a.t}</span><span class="asset-name">${a.n}</span><span class="qty">${q} шт.</span><span class="price">~${Math.round(q*a.p)} ₽</span></div>`;
+                    eHtml += `
+                    <div class="asset-item">
+                        <span class="ticker asset-name">${a.t}</span>
+                        <span class="asset-name">${a.n}</span>
+                        <span class="qty">${q} шт.</span>
+                        <span class="price">~${Math.round(q*a.p)} ₽</span>
+                    </div>`;
                 });
                 eHtml += `</div>`;
             });
