@@ -27,54 +27,25 @@
         h1 { font-size: 20px; margin-bottom: 8px; }
         
         .calc-box {
-            background: white; 
-            padding: 24px; 
-            border-radius: 24px;
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.04); 
-            margin-bottom: 25px;
-            border: 1px solid rgba(0,0,0,0.02);
-            cursor: text;
+            background: white; padding: 24px; border-radius: 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.04); margin-bottom: 25px;
+            border: 1px solid rgba(0,0,0,0.02); cursor: text;
         }
         
         .input-container { flex: 1; }
-
-        .input-label { 
-            font-size: 13px; 
-            color: #8e8e93; 
-            font-weight: 600; 
-            margin-bottom: 8px; 
-            display: block;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
+        .input-label { font-size: 13px; color: #8e8e93; font-weight: 600; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         .input-wrapper { display: flex; align-items: baseline; gap: 8px; }
 
         input { 
-            border: none; 
-            font-size: 34px; 
-            font-weight: 700; 
-            width: 100%; 
-            outline: none; 
-            color: var(--input-color); 
-            background: transparent;
-            margin: 0; padding: 0; line-height: 1;
-            appearance: none; -webkit-appearance: none;
+            border: none; font-size: 34px; font-weight: 700; width: 100%; 
+            outline: none; color: var(--input-color); background: transparent;
+            margin: 0; padding: 0; line-height: 1; appearance: none; -webkit-appearance: none;
         }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
 
-        .currency { 
-            font-size: 28px; 
-            color: #d1d1d6; 
-            font-weight: 500;
-            line-height: 1;
-            transition: color 0.3s;
-        }
-        
+        .currency { font-size: 28px; color: #d1d1d6; font-weight: 500; line-height: 1; transition: color 0.3s; }
         .calc-box:focus-within { border: 1px solid rgba(52, 152, 219, 0.3); }
         .calc-box:focus-within .currency { color: var(--accent-blue); }
 
@@ -82,8 +53,7 @@
             width: 56px; height: 56px; border-radius: 18px; 
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 8px 15px rgba(52, 152, 219, 0.2); 
-            flex-shrink: 0; margin-left: 15px;
+            box-shadow: 0 8px 15px rgba(52, 152, 219, 0.2); flex-shrink: 0; margin-left: 15px;
         }
         .chart-mini::after { content: "50/50"; font-size: 10px; font-weight: 900; color: white; }
 
@@ -95,8 +65,6 @@
         .desc-card .subtitle { font-weight: bold; color: var(--text-main); font-size: 14px; display: block; margin-bottom: 8px; }
         .desc-card p { margin: 0 0 10px 0; font-size: 13px; color: #555; line-height: 1.5; }
         .desc-card .badge { font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; }
-        .blue .badge { background: #ebf5fb; color: var(--accent-blue); }
-        .green .badge { background: #eafaf1; color: var(--accent-green); }
 
         .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
         .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -104,12 +72,25 @@
 
         .asset-list { background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item {
-            display: grid; grid-template-columns: 80px 1fr 60px 80px;
-            padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 12px; align-items: center;
+            display: grid; grid-template-columns: 80px 1fr 65px 85px;
+            padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 12px; align-items: center;
+            cursor: pointer; transition: background 0.2s;
         }
-        .ticker { font-weight: bold; color: #333; }
+        .asset-item:active { background: #f9f9f9; }
+        .ticker { font-weight: bold; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .asset-name { color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
         .qty { text-align: center; font-weight: bold; color: var(--accent-blue); }
-        .price { text-align: right; color: #999; }
+        .price-total { text-align: right; color: #333; font-weight: 500; }
+
+        /* Стили для выпадающей информации */
+        .details {
+            grid-column: 1 / -1; display: none; background: #fafbfc;
+            padding: 10px 12px; border-top: 1px solid #eee; font-size: 11px;
+            color: #7f8c8d; line-height: 1.6;
+        }
+        .details b { color: #34495e; }
+        .asset-item.active .details { display: block; }
+        .asset-item.active { background: #fcfdfe; }
 
         .echelon-title { padding: 8px 12px; font-size: 12px; font-weight: bold; background: #eee; color: #666; display: flex; justify-content: space-between; }
     </style>
@@ -125,17 +106,7 @@
         <div class="input-container">
             <span class="input-label">Сумма Инвестиций</span>
             <div class="input-wrapper">
-                <input 
-                    type="number" 
-                    id="sumInput" 
-                    value="100000" 
-                    oninput="draw()" 
-                    onclick="event.stopPropagation(); this.select()" 
-                    onkeyup="if(event.keyCode===13) this.blur()"
-                    inputmode="numeric" 
-                    pattern="[0-9]*"
-                    enterkeyhint="done"
-                >
+                <input type="number" id="sumInput" value="100000" oninput="draw()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
                 <span class="currency">₽</span>
             </div>
         </div>
@@ -146,14 +117,14 @@
         <div class="desc-card blue">
             <h3>🛡️ 50% Облигации</h3>
             <span class="subtitle">Ваш "Денежный Поток"</span>
-            <p>Это как дать в долг государству. Оно гарантирует возврат денег и платит проценты. Один из самых надежных способов сохранить деньги.</p>
+            <p>Это как дать в долг государству. Гарантированный доход и надежность.</p>
             <span class="badge">Надежность: Высокая</span>
         </div>
         <div class="desc-card green">
             <h3>🚀 50% Акции</h3>
             <span class="subtitle">Ваш двигатель роста</span>
-            <p>Вы становитесь совладельцем Сбера, Газпрома и других гигантов. Когда они зарабатывают и растут — растет и ваш капитал.</p>
-            <span class="badge">Потенциал дохода: Очень высокий</span>
+            <p>Вы совладелец крупнейших компаний страны.</p>
+            <span class="badge">Потенциал дохода: Высокий</span>
         </div>
     </div>
 
@@ -162,9 +133,7 @@
         <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
         <span class="percent-tag">50% от капитала</span>
     </div>
-    <div id="listBonds" class="asset-list">
-        <div style="padding:20px; text-align:center; color:#999;">Загрузка данных...</div>
-    </div>
+    <div id="listBonds" class="asset-list"></div>
 
     <div class="section-header">2. Растущая часть</div>
     <div class="allocation-info">
@@ -186,53 +155,60 @@
             { title: 'IV Эшелон (Венчурный)', weight: 0.15, assets: [] }
         ];
 
+        // Функция сокращения кодов облигаций и длинных названий
+        function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
+        function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
+
+        async function fetchNKD(code) {
+            try {
+                // Пытаемся получить данные с Мосбиржи (через прокси или напрямую, если CORS позволит)
+                const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
+                const data = await res.json();
+                return data.securities.data[0][data.securities.columns.indexOf('ACCRUEDINT')] || 0;
+            } catch (e) { return "..."; }
+        }
+
         async function loadData() {
-    try {
-        const response = await fetch(CSV_URL);
-        const text = await response.text();
-        // Разбиваем на строки и ячейки
-        const rows = text.split('\n').map(row => 
-            row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim())
-        );
+            try {
+                const response = await fetch(CSV_URL);
+                const text = await response.text();
+                const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
 
-        // ОБЛИГАЦИИ: Диапазон K3:M10 (строки 3-10 в таблице = индексы 2-9 в массиве)
-        bonds = [];
-        for (let i = 2; i <= 9; i++) {
-            if (rows[i] && rows[i][10]) { // Проверяем колонку K
-                bonds.push({
-                    t: rows[i][10], // Тикер (K)
-                    n: rows[i][11] || '', // Название (L)
-                    p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0 // Цена (M)
+                bonds = [];
+                for (let i = 2; i <= 9; i++) {
+                    if (rows[i] && rows[i][10]) {
+                        bonds.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
+                    }
+                }
+
+                let allStocks = [];
+                for (let i = 11; i <= 22; i++) {
+                    if (rows[i] && rows[i][10]) {
+                        allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
+                    }
+                }
+
+                if (allStocks.length > 0) {
+                    echelons[0].assets = allStocks.slice(0, 3);
+                    echelons[1].assets = allStocks.slice(3, 6);
+                    echelons[2].assets = allStocks.slice(6, 9);
+                    echelons[3].assets = allStocks.slice(9, 12);
+                }
+                draw();
+            } catch (e) { document.getElementById('listBonds').innerHTML = '<div style="padding:20px; color:red;">Ошибка данных</div>'; }
+        }
+
+        function toggleRow(el) {
+            el.classList.toggle('active');
+            // Если это облигация, пробуем подгрузить НКД при открытии
+            if(el.classList.contains('bond-row') && el.dataset.nkd === "...") {
+                const code = el.dataset.code;
+                fetchNKD(code).then(val => {
+                    el.dataset.nkd = val;
+                    el.querySelector('.nkd-val').innerText = val + ' ₽';
                 });
             }
         }
-
-        // АКЦИИ: Диапазон K12:M23 (строки 12-23 в таблице = индексы 11-22 в массиве)
-        let allStocks = [];
-        for (let i = 11; i <= 22; i++) {
-            if (rows[i] && rows[i][10]) { // Проверяем колонку K
-                allStocks.push({
-                    t: rows[i][10], // Тикер (K)
-                    n: rows[i][11] || '', // Название (L)
-                    p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0 // Цена (M)
-                });
-            }
-        }
-
-        // Распределяем акции по эшелонам (по 3 бумаги на каждый)
-        if (allStocks.length > 0) {
-            echelons[0].assets = allStocks.slice(0, 3);
-            echelons[1].assets = allStocks.slice(3, 6);
-            echelons[2].assets = allStocks.slice(6, 9);
-            echelons[3].assets = allStocks.slice(9, 12);
-        }
-        
-        draw();
-    } catch (e) {
-        console.error(e);
-        document.getElementById('listBonds').innerHTML = '<div style="padding:20px; color:red;">Ошибка загрузки данных</div>';
-    }
-}
 
         function draw() {
             const total = parseFloat(document.getElementById('sumInput').value) || 0;
@@ -241,16 +217,28 @@
             document.getElementById('valBonds').innerText = Math.round(half).toLocaleString();
             document.getElementById('valStocks').innerText = Math.round(half).toLocaleString();
 
+            // Отрисовка облигаций
             let bHtml = '';
             if (bonds.length > 0) {
-                const bPart = half / bonds.length; 
+                const bPart = half / bonds.length;
                 bonds.forEach(b => {
                     const q = b.p > 0 ? Math.floor(bPart / b.p) : 0;
-                    bHtml += `<div class="asset-item"><span class="ticker">${b.t}</span><span>${b.n}</span><span class="qty">${q} шт.</span><span class="price">${Math.round(q*b.p).toLocaleString()} ₽</span></div>`;
+                    bHtml += `
+                    <div class="asset-item bond-row" onclick="toggleRow(this)" data-code="${b.t}" data-nkd="...">
+                        <span class="ticker">${shortenTicker(b.t)}</span>
+                        <span class="asset-name">${limitName(b.n)}</span>
+                        <span class="qty">${q} шт.</span>
+                        <span class="price-total">${Math.round(q*b.p).toLocaleString()} ₽</span>
+                        <div class="details">
+                            Код: <b>${b.t}</b> | Цена: <b>${b.p} ₽</b><br>
+                            НКД: <b class="nkd-val">Загрузка...</b> | Доходность: <b>${b.y}</b>
+                        </div>
+                    </div>`;
                 });
             }
-            document.getElementById('listBonds').innerHTML = bHtml || 'Нет данных';
+            document.getElementById('listBonds').innerHTML = bHtml;
 
+            // Отрисовка акций
             let eHtml = '';
             echelons.forEach(e => {
                 eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${Math.round(e.weight*100)}%</span></div><div class="asset-list">`;
@@ -258,7 +246,16 @@
                 const assetPart = e.assets.length > 0 ? echelonSum / e.assets.length : 0;
                 e.assets.forEach(a => {
                     const q = a.p > 0 ? Math.floor(assetPart / a.p) : 0;
-                    eHtml += `<div class="asset-item"><span class="ticker">${a.t}</span><span>${a.n}</span><span class="qty">${q} шт.</span><span class="price">${Math.round(q*a.p).toLocaleString()} ₽</span></div>`;
+                    eHtml += `
+                    <div class="asset-item" onclick="toggleRow(this)">
+                        <span class="ticker">${a.t}</span>
+                        <span class="asset-name">${limitName(a.n)}</span>
+                        <span class="qty">${q} шт.</span>
+                        <span class="price-total">${Math.round(q*a.p).toLocaleString()} ₽</span>
+                        <div class="details">
+                            Тикер: <b>${a.t}</b> | Цена: <b>${a.p} ₽</b> | Цель: <b>${a.target} ₽</b>
+                        </div>
+                    </div>`;
                 });
                 eHtml += `</div>`;
             });
