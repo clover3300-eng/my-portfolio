@@ -26,69 +26,83 @@
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 8px; }
         
-        /* Обновленные стили для ровного отображения блока ввода */
+        /* Улучшенный дизайн блока ввода суммы */
         .calc-box {
-            background: white; padding: 15px 20px; border-radius: 20px;
-            display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
-            gap: 12px; height: 70px; /* Фиксированная высота для стабильности */
+            background: white; 
+            padding: 24px; 
+            border-radius: 24px;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.04); 
+            margin-bottom: 25px;
+            border: 1px solid rgba(0,0,0,0.02);
         }
         
         .input-container { 
             flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center;
         }
 
         .input-label { 
-            font-size: 11px; 
+            font-size: 13px; 
             color: #8e8e93; 
-            font-weight: 500; 
-            margin-bottom: 2px; 
-            white-space: nowrap;
+            font-weight: 600; 
+            margin-bottom: 8px; 
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .input-wrapper { 
             display: flex; 
-            align-items: baseline; /* Выравнивание текста и рубля по одной линии */
-            gap: 4px;
+            align-items: baseline; 
+            gap: 8px;
         }
 
         input { 
-            border: none; font-size: 26px; font-weight: bold; width: 100%; 
-            outline: none; color: var(--input-color); background: transparent;
-            margin: 0; padding: 0; line-height: 1;
-            appearance: none; -webkit-appearance: none;
+            border: none; 
+            font-size: 34px; 
+            font-weight: 700; 
+            width: 100%; 
+            outline: none; 
+            color: var(--input-color); 
+            background: transparent;
+            margin: 0; 
+            padding: 0; 
+            line-height: 1;
+            appearance: none; 
+            -webkit-appearance: none;
         }
-        /* Убираем стрелки */
+        /* Скрываем стрелки */
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
 
         .currency { 
-            font-size: 24px; 
-            color: var(--input-color); 
-            font-weight: bold;
+            font-size: 28px; 
+            color: #d1d1d6; 
+            font-weight: 500;
             line-height: 1;
+            transition: color 0.3s;
+        }
+        
+        /* Эффект при фокусе на поле ввода */
+        .calc-box:focus-within .currency {
+            color: var(--accent-blue);
         }
 
-        .step-btn {
-            width: 40px; height: 40px; border-radius: 12px;
-            border: none; background: #f0f3f5; color: var(--input-color);
-            font-size: 22px; font-weight: 500; display: flex;
-            align-items: center; justify-content: center; cursor: pointer;
-            flex-shrink: 0;
-            transition: background 0.2s;
-        }
-        .step-btn:active { background: #e2e6e9; }
-        
         .chart-mini {
-            width: 50px; height: 50px; border-radius: 50%;
+            width: 56px; 
+            height: 56px; 
+            border-radius: 18px; /* Немного скругленный квадрат вместо круга для стиля */
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink: 0;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 0 8px 15px rgba(52, 152, 219, 0.2); 
+            flex-shrink: 0;
+            margin-left: 15px;
         }
-        .chart-mini::after { content: "50/50"; font-size: 9px; font-weight: 900; color: white; }
+        .chart-mini::after { content: "50/50"; font-size: 10px; font-weight: 900; color: white; }
 
         .strategy-desc { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
         .desc-card { background: white; padding: 18px; border-radius: 16px; border-left: 6px solid #eee; position: relative; }
@@ -120,20 +134,18 @@
 <body onclick="if(document.activeElement.tagName==='INPUT')document.activeElement.blur()">
 
     <div class="header">
-        <h1>Как вложить и не переживать?</h1>
+        <h1>Как Вложить и Наслаждаться?</h1>
         <p style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
     </div>
 
     <div class="calc-box">
-        <button class="step-btn" onclick="changeSum(-10000)">−</button>
         <div class="input-container">
-            <span class="input-label">Сумма вложений</span>
+            <span class="input-label">Сумма Инвестиций</span>
             <div class="input-wrapper">
-                <input type="number" id="sumInput" value="100000" oninput="draw()" inputmode="decimal">
+                <input type="number" id="sumInput" value="100000" oninput="draw()" inputmode="numeric" pattern="[0-9]*">
                 <span class="currency">₽</span>
             </div>
         </div>
-        <button class="step-btn" onclick="changeSum(10000)">+</button>
         <div class="chart-mini"></div>
     </div>
 
@@ -180,13 +192,6 @@
             { title: 'III Эшелон (Активный)', weight: 0.15, assets: [] },
             { title: 'IV Эшелон (Венчурный)', weight: 0.15, assets: [] }
         ];
-
-        function changeSum(step) {
-            const input = document.getElementById('sumInput');
-            let current = parseInt(input.value) || 0;
-            input.value = Math.max(0, current + step);
-            draw();
-        }
 
         async function loadData() {
             try {
