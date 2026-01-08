@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Стратегия 50/50</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -14,7 +14,7 @@
             --accent-green: #2ecc71;
             --accent-orange: #f39c12;
             --accent-red: #e74c3c;
-            --input-color: #3a506b; /* Тот самый приятный цвет */
+            --input-color: #3a506b;
         }
 
         body {
@@ -22,12 +22,12 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 8px; }
         
-        /* Блок калькулятора */
         .calc-box {
             background: white; 
             padding: 20px; 
@@ -47,15 +47,14 @@
         input { 
             border: none; 
             font-size: 28px; 
-            font-weight: 400; /* Убрал жирность */
+            font-weight: 400; 
             width: 100%; 
             outline: none; 
-            color: var(--input-color); /* Приятный цвет */
+            color: var(--input-color);
             background: transparent;
         }
         .currency { font-size: 22px; font-weight: 400; color: #a1a1a1; }
 
-        /* Круг 50/50 */
         .chart-container { position: relative; width: 65px; height: 65px; margin-left: 15px; }
         .chart-mini {
             width: 100%; height: 100%; border-radius: 50%;
@@ -69,7 +68,6 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
-        /* Блоки описания */
         .strategy-desc { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
         .desc-card {
             background: white; padding: 18px; border-radius: 16px;
@@ -86,7 +84,6 @@
         .badge-blue { background: #e1f0fa; color: var(--accent-blue); }
         .badge-green { background: #e8f8ef; color: var(--accent-green); }
 
-        /* Списки активов */
         .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
         .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .percent-tag { background: #eee; padding: 2px 6px; border-radius: 6px; font-weight: bold; font-size: 11px; }
@@ -107,18 +104,15 @@
         .note { font-size: 11px; color: #888; margin: 10px 0; font-style: italic; }
     </style>
 </head>
-<body>
-
-    <div class="header">
+<body onclick="hideKeyboard(event)"> <div class="header">
         <h1>Как вложить деньги и не переживать?</h1>
         <p style="font-size: 13px; color: #666;">Простая система 50/50: защита и рост.</p>
     </div>
 
-    <div class="calc-box">
-        <div class="input-container">
+    <div class="calc-box" onclick="event.stopPropagation()"> <div class="input-container">
             <span class="input-label">Сколько вы готовы вложить?</span>
             <div class="input-wrapper">
-                <input type="number" id="sumInput" value="100000" oninput="draw()">
+                <input type="number" id="sumInput" value="100000" oninput="draw()" pattern="\d*">
                 <span class="currency">₽</span>
             </div>
         </div>
@@ -174,26 +168,25 @@
 
         const echelons = [
             { title: 'I Эшелон (Консервативный)', weight: 0.30, assets: [
-                { t: 'STSBp', n: 'Ставрополэнергосбыт', p: 5.39 },
-                { t: 'SBER', n: 'Сбербанк России', p: 299.08 },
-                { t: 'MRKC', n: 'Россети Центр', p: 0.93 }
+                { t: 'STSBp', n: 'Ставрополэнергосбыт', p: 5.39 }, { t: 'SBER', n: 'Сбербанк России', p: 299.08 }, { t: 'MRKC', n: 'Россети Центр', p: 0.93 }
             ]},
             { title: 'II Эшелон (Умеренный)', weight: 0.40, assets: [
-                { t: 'VTBR', n: 'Банк ВТБ', p: 71.50 },
-                { t: 'SNGSp', n: 'Сургутнефтегаз', p: 43.17 },
-                { t: 'GAZP', n: 'Газпром', p: 123.64 }
+                { t: 'VTBR', n: 'Банк ВТБ', p: 71.50 }, { t: 'SNGSp', n: 'Сургутнефтегаз', p: 43.17 }, { t: 'GAZP', n: 'Газпром', p: 123.64 }
             ]},
             { title: 'III Эшелон (Активный)', weight: 0.15, assets: [
-                { t: 'MRKY', n: 'Россети Юг', p: 0.09 },
-                { t: 'LSRG', n: 'Группа ЛСР', p: 650.20 },
-                { t: 'ELFV', n: 'ЭЛ5-Энерго', p: 0.50 }
+                { t: 'MRKY', n: 'Россети Юг', p: 0.09 }, { t: 'LSRG', n: 'Группа ЛСР', p: 650.20 }, { t: 'ELFV', n: 'ЭЛ5-Энерго', p: 0.50 }
             ]},
             { title: 'IV Эшелон (Венчурный)', weight: 0.15, assets: [
-                { t: 'RNFT', n: 'РуссНефть', p: 95.75 },
-                { t: 'URKZ', n: 'Уральская кузница', p: 260.50 },
-                { t: 'ENPG', n: 'ЭН+ ГРУП', p: 468.05 }
+                { t: 'RNFT', n: 'РуссНефть', p: 95.75 }, { t: 'URKZ', n: 'Уральская кузница', p: 260.50 }, { t: 'ENPG', n: 'ЭН+ ГРУП', p: 468.05 }
             ]}
         ];
+
+        // Функция скрытия клавиатуры
+        function hideKeyboard(event) {
+            if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+                document.activeElement.blur();
+            }
+        }
 
         function draw() {
             const total = document.getElementById('sumInput').value;
@@ -201,7 +194,6 @@
             document.getElementById('valBonds').innerText = Math.round(half).toLocaleString();
             document.getElementById('valStocks').innerText = Math.round(half).toLocaleString();
 
-            // Bonds
             let bHtml = '';
             const bPart = half / bonds.length;
             bonds.forEach(b => {
@@ -210,7 +202,6 @@
             });
             document.getElementById('listBonds').innerHTML = bHtml;
 
-            // Echelons
             let eHtml = '';
             echelons.forEach(e => {
                 eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${e.weight*100}%</span></div><div class="asset-list">`;
@@ -225,7 +216,11 @@
         }
 
         draw();
-        window.Telegram.WebApp.expand();
+        
+        // Telegram JS
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.ready();
     </script>
 </body>
 </html>
