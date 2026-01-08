@@ -139,9 +139,15 @@
             display: block; width: 100%; padding: 16px; border: none; border-radius: 16px;
             background: var(--accent-blue); color: white; font-size: 16px; font-weight: bold;
             cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-            transition: all 0.2s;
         }
-        .btn-share:active { transform: scale(0.98); background: #2980b9; }
+
+        /* Модальное окно для фото */
+        #photoModal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; flex-direction: column;
+        }
+        #photoModal img { max-width: 90%; max-height: 80%; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
+        .modal-close { margin-top: 20px; color: white; font-weight: bold; padding: 10px 25px; border: 2px solid white; border-radius: 30px; }
 
         .footer-disclaimer {
             text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px;
@@ -205,14 +211,12 @@
                 <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
                 <div id="shareDate" style="font-size: 10px; color: #888;"></div>
             </div>
-
             <div class="section-header">1. Денежный Поток</div>
             <div class="allocation-info">
                 <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
                 <span class="percent-tag"><span class="bond-pct-text">50</span>% от капитала</span>
             </div>
             <div id="listBonds" class="asset-list"></div>
-
             <div class="section-header">2. Растущая часть</div>
             <div class="allocation-info">
                 <span>Выделить: <b id="valStocks">50 000</b> ₽</span>
@@ -226,6 +230,12 @@
         <div class="footer-disclaimer">
             Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.
         </div>
+    </div>
+
+    <div id="photoModal" onclick="this.style.display='none'">
+        <div style="color:white; font-size: 14px; margin-bottom: 10px;">Зажмите фото для сохранения</div>
+        <img id="modalImg" src="">
+        <div class="modal-close">Закрыть</div>
     </div>
 
     <script>
@@ -278,13 +288,17 @@
             el.classList.toggle('active');
         }
 
-        async function fetchNKD(code) {
+        async function fetchBondData(code) {
             try {
                 const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
                 const data = await res.json();
-                const nkdValue = data.securities.data[0][data.securities.columns.indexOf('ACCRUEDINT')];
-                return parseFloat(nkdValue) || 0;
-            } catch (e) { return 0; }
+                const cols = data.securities.columns;
+                const row = data.securities.data[0];
+                return {
+                    nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0,
+                    matDate: row[cols.indexOf('MATDATE')] || '—'
+                };
+            } catch (e) { return { nkd: 0, matDate: '—' }; }
         }
 
         async function loadData() {
@@ -300,15 +314,14 @@
                             t: rows[i][10], 
                             n: rows[i][11], 
                             p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
-                            y: rows[i][13] || '0%',
-                            nkd: 0 
+                            y: rows[i][13] || '0%'
                         });
                     }
                 }
 
                 const bondPromises = bondList.map(async (b) => {
-                    const freshNKD = await fetchNKD(b.t);
-                    return { ...b, nkd: freshNKD };
+                    const extra = await fetchBondData(b.t);
+                    return { ...b, nkd: extra.nkd, matDate: extra.matDate };
                 });
                 bonds = await Promise.all(bondPromises);
 
@@ -316,8 +329,7 @@
                 for (let i = 11; i <= 22; i++) {
                     if (rows[i] && rows[i][10]) {
                         allStocks.push({ 
-                            t: rows[i][10], 
-                            n: rows[i][11],
+                            t: rows[i][10], n: rows[i][11],
                             p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
                             target: rows[i][13] || '—' 
                         });
@@ -347,10 +359,8 @@
             document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
             document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
             document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
-            document.getElementById('dynamicSubtitle').innerText = `Простая система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
 
             let actualSpentTotal = 0;
-
             let bHtml = '';
             if (bonds.length > 0) {
                 const perBondBudget = bondBudget / bonds.length;
@@ -360,17 +370,14 @@
                     return { ...b, qty, fullCostPerUnit };
                 });
 
-                let currentBondSpent = bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
-                let leftover = bondBudget - currentBondSpent;
+                let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
                 if (leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
-                    let extra = Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
-                    bondCalculations[0].qty += extra;
+                    bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
                 }
 
                 bondCalculations.forEach(b => {
-                    const costTotal = b.qty * b.fullCostPerUnit;
-                    actualSpentTotal += costTotal;
-                    bHtml += `<div class="asset-item bond-row" onclick="toggleRow(this)"><span class="ticker">${shortenTicker(b.t)}</span><span class="asset-name">${limitName(b.n)}</span><span class="qty">${b.qty} шт.</span><span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span><div class="details">Полное название: <b>${b.n}</b><br>Код: <b>${b.t}</b> | Цена: <b>${b.p} ₽</b><br>НКД: <b class="nkd-val">${b.nkd.toFixed(2)} ₽</b> | Простая Доходность к Погашению: <b>${b.y.replace(' ₽','')}</b></div></div>`;
+                    actualSpentTotal += (b.qty * b.fullCostPerUnit);
+                    bHtml += `<div class="asset-item bond-row" onclick="toggleRow(this)"><span class="ticker">${shortenTicker(b.t)}</span><span class="asset-name">${limitName(b.n)}</span><span class="qty">${b.qty} шт.</span><span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span><div class="details">Полное название: <b>${b.n}</b><br>Код: <b>${b.t}</b> | Цена: <b>${b.p} ₽</b><br>НКД: <b>${b.nkd.toFixed(2)} ₽</b> | Дата погашения: <b>${b.matDate}</b><br>Простая Доходность к Погашению: <b>${b.y.replace(' ₽','')}</b></div></div>`;
                 });
             }
             document.getElementById('listBonds').innerHTML = bHtml;
@@ -380,20 +387,15 @@
             echelons.forEach(e => {
                 const echelonBudget = stockBudget * e.weight;
                 const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
-                
                 let stockCalculations = e.assets.map(a => {
                     const fullCostPerUnit = a.p * (1 + brokerFee);
                     let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0;
                     return { ...a, qty, fullCostPerUnit };
                 });
-
                 let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
-                let leftoverEchelon = echelonBudget - currentEchelonSpent;
-                if (stockCalculations.length > 0 && leftoverEchelon >= stockCalculations[0].fullCostPerUnit && stockCalculations[0].fullCostPerUnit > 0) {
-                    let extra = Math.floor(leftoverEchelon / stockCalculations[0].fullCostPerUnit);
-                    stockCalculations[0].qty += extra;
+                if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
+                    stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
                 }
-
                 eHtml += `<div class="echelon-title" onclick="toggleTip(event, this)"><span>${e.title} <span class="echelon-info-icon">ⓘ</span></span><span>${Math.round(e.weight*100)}%</span><div class="echelon-tip">${e.info}</div></div><div class="asset-list">`;
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
@@ -403,9 +405,7 @@
             });
             document.getElementById('echelonContainer').innerHTML = eHtml;
             document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
-
-            const usagePercent = inputSum > 0 ? (actualSpentTotal / inputSum) * 100 : 0;
-            document.getElementById('usageFill').style.width = Math.min(usagePercent, 100) + '%';
+            document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
             document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
         }
 
@@ -415,26 +415,22 @@
             const brand = document.getElementById('shareBrand');
             const dateEl = document.getElementById('shareDate');
             
-            btn.innerText = "⏳ Формируем...";
+            btn.innerText = "⏳ Ожидайте...";
             btn.disabled = true;
 
             if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
                 window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
             }
 
-            // Показываем заголовок для скриншота
             brand.style.display = 'block';
             dateEl.innerText = new Date().toLocaleString();
 
-            // Небольшая задержка, чтобы UI успел обновиться
             setTimeout(() => {
                 html2canvas(container, {
                     backgroundColor: "#f4f7f9",
-                    scale: 3, 
+                    scale: 2,
                     logging: false,
-                    useCORS: true,
-                    windowWidth: container.scrollWidth,
-                    windowHeight: container.scrollHeight
+                    useCORS: true
                 }).then(canvas => {
                     brand.style.display = 'none';
                     btn.innerText = "📸 Поделиться портфелем";
@@ -442,27 +438,22 @@
 
                     const dataUrl = canvas.toDataURL("image/png");
                     
-                    // Способ 1: Для обычных браузеров
-                    const link = document.createElement('a');
-                    link.download = 'my-portfolio.png';
-                    link.href = dataUrl;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    // Сохраняем/открываем
+                    const modal = document.getElementById('photoModal');
+                    const img = document.getElementById('modalImg');
+                    img.src = dataUrl;
+                    modal.style.display = 'flex';
 
-                    // Способ 2: Для Telegram (открываем в новом окне, откуда можно сохранить)
-                    const newWin = window.open();
-                    if (newWin) {
-                        newWin.document.write('<img src="' + dataUrl + '" style="width:100%;">');
-                        newWin.document.title = "Ваш Портфель (удерживайте для сохранения)";
-                    } else {
-                        // Если popup заблокирован, выводим предупреждение
-                        alert("Портфель готов! Если скачивание не началось автоматически, попробуйте еще раз.");
-                    }
+                    // Пытаемся запустить скачивание для браузера
+                    const link = document.createElement('a');
+                    link.download = 'portfolio.png';
+                    link.href = dataUrl;
+                    link.click();
+
                 }).catch(err => {
-                    alert("Ошибка при создании фото");
                     btn.innerText = "📸 Поделиться портфелем";
                     btn.disabled = false;
+                    alert("Ошибка при создании");
                 });
             }, 100);
         }
