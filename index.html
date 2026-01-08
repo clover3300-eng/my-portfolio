@@ -187,38 +187,52 @@
         ];
 
         async function loadData() {
-            try {
-                const response = await fetch(CSV_URL);
-                const text = await response.text();
-                const rows = text.split('\n').map(row => 
-                    row.split(/,(?=(?:(?:[^3]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim())
-                );
+    try {
+        const response = await fetch(CSV_URL);
+        const text = await response.text();
+        // Разбиваем на строки и ячейки
+        const rows = text.split('\n').map(row => 
+            row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim())
+        );
 
-                bonds = [];
-                for (let i = 2; i <= 9; i++) {
-                    if (rows[i] && rows[i][10]) {
-                        bonds.push({ t: rows[i][10], n: rows[i][11] || '', p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0 });
-                    }
-                }
-
-                let allStocks = [];
-                for (let i = 11; i <= 22; i++) {
-                    if (rows[i] && rows[i][10]) {
-                        allStocks.push({ t: rows[i][10], n: rows[i][11] || '', p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0 });
-                    }
-                }
-
-                if (allStocks.length > 0) {
-                    echelons[0].assets = allStocks.slice(0, 3);
-                    echelons[1].assets = allStocks.slice(3, 6);
-                    echelons[2].assets = allStocks.slice(6, 9);
-                    echelons[3].assets = allStocks.slice(9, 12);
-                }
-                draw();
-            } catch (e) {
-                document.getElementById('listBonds').innerHTML = '<div style="padding:20px; color:red;">Ошибка загрузки</div>';
+        // ОБЛИГАЦИИ: Диапазон K3:M10 (строки 3-10 в таблице = индексы 2-9 в массиве)
+        bonds = [];
+        for (let i = 2; i <= 9; i++) {
+            if (rows[i] && rows[i][10]) { // Проверяем колонку K
+                bonds.push({
+                    t: rows[i][10], // Тикер (K)
+                    n: rows[i][11] || '', // Название (L)
+                    p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0 // Цена (M)
+                });
             }
         }
+
+        // АКЦИИ: Диапазон K12:M23 (строки 12-23 в таблице = индексы 11-22 в массиве)
+        let allStocks = [];
+        for (let i = 11; i <= 22; i++) {
+            if (rows[i] && rows[i][10]) { // Проверяем колонку K
+                allStocks.push({
+                    t: rows[i][10], // Тикер (K)
+                    n: rows[i][11] || '', // Название (L)
+                    p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0 // Цена (M)
+                });
+            }
+        }
+
+        // Распределяем акции по эшелонам (по 3 бумаги на каждый)
+        if (allStocks.length > 0) {
+            echelons[0].assets = allStocks.slice(0, 3);
+            echelons[1].assets = allStocks.slice(3, 6);
+            echelons[2].assets = allStocks.slice(6, 9);
+            echelons[3].assets = allStocks.slice(9, 12);
+        }
+        
+        draw();
+    } catch (e) {
+        console.error(e);
+        document.getElementById('listBonds').innerHTML = '<div style="padding:20px; color:red;">Ошибка загрузки данных</div>';
+    }
+}
 
         function draw() {
             const total = parseFloat(document.getElementById('sumInput').value) || 0;
