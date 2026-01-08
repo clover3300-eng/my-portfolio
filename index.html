@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Стратегия 50/50</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root {
             --bg-color: #f4f7f9;
@@ -21,7 +22,7 @@
             color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
             -webkit-tap-highlight-color: transparent;
-            padding-bottom: 50px;
+            padding-bottom: 80px;
         }
 
         .header { text-align: center; margin-bottom: 20px; }
@@ -92,6 +93,9 @@
         .blue .badge { background: #ebf5fb; color: var(--accent-blue); }
         .green .badge { background: #eafaf1; color: var(--accent-green); }
 
+        /* Контейнер для скриншота */
+        #shareContainer { background: var(--bg-color); padding: 5px; border-radius: 10px; }
+
         .asset-list { background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item {
             display: grid; grid-template-columns: 80px 1fr 65px 85px;
@@ -132,6 +136,14 @@
         }
         .echelon-title.show-tip .echelon-tip { display: block; }
 
+        .btn-share {
+            display: block; width: 100%; padding: 16px; border: none; border-radius: 16px;
+            background: var(--accent-blue); color: white; font-size: 16px; font-weight: bold;
+            cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            transition: transform 0.1s;
+        }
+        .btn-share:active { transform: scale(0.98); }
+
         .footer-disclaimer {
             text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px;
         }
@@ -139,86 +151,77 @@
 </head>
 <body onclick="hideAllTips(event)">
 
-    <div class="header">
-        <h1>Как Вложить и Наслаждаться?</h1>
-        <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
-    </div>
+    <div id="main-content">
+        <div class="header">
+            <h1>Как Вложить и Наслаждаться?</h1>
+            <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
+        </div>
 
-    <div class="calc-box">
-        <div class="calc-top">
-            <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
-                <span class="input-label">Сумма Инвестиций</span>
-                <div class="input-wrapper">
-                    <input type="number" id="sumInput" value="100000" oninput="draw()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
-                    <span class="currency">₽</span>
+        <div class="calc-box">
+            <div class="calc-top">
+                <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
+                    <span class="input-label">Сумма Инвестиций</span>
+                    <div class="input-wrapper">
+                        <input type="number" id="sumInput" value="100000" oninput="draw()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
+                        <span class="currency">₽</span>
+                    </div>
+                </div>
+                <div id="mainChart" class="chart-mini" data-pct="50/50" onclick="resetRatio()"></div>
+            </div>
+            
+            <div class="usage-bar-container">
+                <div class="usage-label">
+                    <span>ЗАДЕЙСТВОВАНО СРЕДСТВ</span>
+                    <span id="usageLabelText">0 ₽</span>
+                </div>
+                <div class="usage-track">
+                    <div id="usageFill"></div>
                 </div>
             </div>
-            <div id="mainChart" class="chart-mini" data-pct="50/50" onclick="resetRatio()"></div>
-        </div>
-        
-        <div class="usage-bar-container">
-            <div class="usage-label">
-                <span>ЗАДЕЙСТВОВАНО СРЕДСТВ</span>
-                <span id="usageLabelText">0 ₽</span>
-            </div>
-            <div class="usage-track">
-                <div id="usageFill"></div>
-            </div>
-        </div>
 
-        <div class="fee-selector">
-            <span class="fee-label">Комиссия брокера</span>
-            <div class="fee-buttons" id="feeGroup">
-                <button class="fee-btn" onclick="setFee(0.0001, this)">0.01%</button>
-                <button class="fee-btn active" onclick="setFee(0.0003, this)">0.03%</button>
-                <button class="fee-btn" onclick="setFee(0.0005, this)">0.05%</button>
-                <button class="fee-btn" onclick="setFee(0.001, this)">0.1%</button>
-                <button class="fee-btn" onclick="setFee(0.003, this)">0.3%</button>
-                <button class="fee-btn" onclick="setFee(0.004, this)">0.4%</button>
-                <button class="fee-btn" onclick="setFee(0.005, this)">0.5%</button>
+            <div class="fee-selector">
+                <span class="fee-label">Комиссия брокера</span>
+                <div class="fee-buttons" id="feeGroup">
+                    <button class="fee-btn" onclick="setFee(0.0001, this)">0.01%</button>
+                    <button class="fee-btn active" onclick="setFee(0.0003, this)">0.03%</button>
+                    <button class="fee-btn" onclick="setFee(0.0005, this)">0.05%</button>
+                    <button class="fee-btn" onclick="setFee(0.001, this)">0.1%</button>
+                    <button class="fee-btn" onclick="setFee(0.003, this)">0.3%</button>
+                    <button class="fee-btn" onclick="setFee(0.004, this)">0.4%</button>
+                    <button class="fee-btn" onclick="setFee(0.005, this)">0.5%</button>
+                </div>
+            </div>
+
+            <div class="ratio-control">
+                <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">
+                    <span>Облигации <span id="labelBondsPct">50</span>%</span>
+                    <span>Акции <span id="labelStocksPct">50</span>%</span>
+                </div>
+                <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
             </div>
         </div>
 
-        <div class="ratio-control">
-            <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">
-                <span>Облигации <span id="labelBondsPct">50</span>%</span>
-                <span>Акции <span id="labelStocksPct">50</span>%</span>
+        <div id="shareContainer">
+            <div class="section-header">1. Денежный Поток</div>
+            <div class="allocation-info">
+                <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
+                <span class="percent-tag"><span class="bond-pct-text">50</span>% от капитала</span>
             </div>
-            <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
+            <div id="listBonds" class="asset-list"></div>
+
+            <div class="section-header">2. Растущая часть</div>
+            <div class="allocation-info">
+                <span>Выделить: <b id="valStocks">50 000</b> ₽</span>
+                <span class="percent-tag"><span class="stock-pct-text">50</span>% от капитала</span>
+            </div>
+            <div id="echelonContainer"></div>
         </div>
-    </div>
 
-    <div class="strategy-desc">
-        <div class="desc-card blue">
-            <h3>🛡️ <span class="bond-pct-text">50</span>% Облигации</h3>
-            <span class="subtitle">Ваш "Денежный Поток"</span>
-            <p>Это как дать в долг государству. Оно гарантирует возврат денег и платит проценты. Один из самых надежных способов сохранить деньги.</p>
-            <span class="badge">Надежность: Высокая</span>
+        <button class="btn-share" onclick="shareAsImage()">📸 Поделиться портфелем</button>
+
+        <div class="footer-disclaimer">
+            Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.
         </div>
-        <div class="desc-card green">
-            <h3>🚀 <span class="stock-pct-text">50</span>% Акции</h3>
-            <span class="subtitle">Ваш "Двигатель Роста"</span>
-            <p>Вы становитесь совладельцем Сбера, Газпрома и других гигантов. Когда они зарабатывают и растут — растет и ваш капитал.</p>
-            <span class="badge">Потенциал дохода: Очень высокий</span>
-        </div>
-    </div>
-
-    <div class="section-header">1. Денежный Поток</div>
-    <div class="allocation-info">
-        <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
-        <span class="percent-tag"><span class="bond-pct-text">50</span>% от капитала</span>
-    </div>
-    <div id="listBonds" class="asset-list"></div>
-
-    <div class="section-header">2. Растущая часть</div>
-    <div class="allocation-info">
-        <span>Выделить: <b id="valStocks">50 000</b> ₽</span>
-        <span class="percent-tag"><span class="stock-pct-text">50</span>% от капитала</span>
-    </div>
-    <div id="echelonContainer"></div>
-
-    <div class="footer-disclaimer">
-        Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.
     </div>
 
     <script>
@@ -271,7 +274,6 @@
             el.classList.toggle('active');
         }
 
-        /** Запрашивает НКД облигации напрямую с Московской Биржи (ISS MOEX) */
         async function fetchNKD(code) {
             try {
                 const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
@@ -287,7 +289,6 @@
                 const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
                 
-                // Извлекаем Облигации
                 let bondList = [];
                 for (let i = 2; i <= 9; i++) {
                     if (rows[i] && rows[i][10]) {
@@ -296,25 +297,23 @@
                             n: rows[i][11], 
                             p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
                             y: rows[i][13] || '0%',
-                            nkd: 0 // По умолчанию 0, обновим ниже
+                            nkd: 0 
                         });
                     }
                 }
 
-                // Асинхронно подгружаем НКД для каждой облигации
                 const bondPromises = bondList.map(async (b) => {
                     const freshNKD = await fetchNKD(b.t);
                     return { ...b, nkd: freshNKD };
                 });
                 bonds = await Promise.all(bondPromises);
 
-                // Извлекаем Акции
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) {
                     if (rows[i] && rows[i][10]) {
                         allStocks.push({ 
                             t: rows[i][10], 
-                            n: rows[i][11], // Полное название из таблицы
+                            n: rows[i][11],
                             p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
                             target: rows[i][13] || '—' 
                         });
@@ -348,7 +347,6 @@
 
             let actualSpentTotal = 0;
 
-            // --- РАСЧЕТ ОБЛИГАЦИЙ ---
             let bHtml = '';
             if (bonds.length > 0) {
                 const perBondBudget = bondBudget / bonds.length;
@@ -374,7 +372,6 @@
             document.getElementById('listBonds').innerHTML = bHtml;
             document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString();
 
-            // --- РАСЧЕТ АКЦИЙ ---
             let eHtml = '';
             echelons.forEach(e => {
                 const echelonBudget = stockBudget * e.weight;
@@ -406,6 +403,27 @@
             const usagePercent = inputSum > 0 ? (actualSpentTotal / inputSum) * 100 : 0;
             document.getElementById('usageFill').style.width = Math.min(usagePercent, 100) + '%';
             document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
+        }
+
+        /** Функция создания и скачивания изображения */
+        function shareAsImage() {
+            const container = document.getElementById('shareContainer');
+            // Включаем виброотклик
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+            }
+
+            html2canvas(container, {
+                backgroundColor: "#f4f7f9",
+                scale: 2, // Повышаем качество картинки
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'MyPortfolio_50_50.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
         }
 
         loadData();
