@@ -8,171 +8,191 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         :root {
-            /* Динамические переменные Telegram */
-            --tg-bg: var(--tg-theme-bg-color, #f4f7f9);
-            --tg-secondary-bg: var(--tg-theme-secondary-bg-color, #ffffff);
-            --tg-text: var(--tg-theme-text-color, #2c3e50);
-            --tg-hint: var(--tg-theme-hint-color, #8e8e93);
-            --tg-link: var(--tg-theme-link-color, #3498db);
-            --tg-button: var(--tg-theme-button-color, #3498db);
-            --tg-button-text: var(--tg-theme-button-text-color, #ffffff);
-            
-            /* Фирменные акценты */
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --accent-blue: #3498db;
             --accent-green: #2ecc71;
-            --card-shadow: rgba(0,0,0,0.06);
-            --item-border: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            --input-color: #3a506b;
+            --card-shadow: rgba(0,0,0,0.04);
+            --border-color: rgba(0,0,0,0.02);
+            --item-border: #f0f0f0;
+            --tag-bg: #e1e8ed;
         }
 
-        /* Принудительные режимы для кнопки переключения */
+        /* Принудительный темный режим при активации класса .dark-mode */
         body.dark-mode {
-            --tg-bg: #0f172a;
-            --tg-secondary-bg: #1e293b;
-            --tg-text: #f1f5f9;
-            --tg-hint: #94a3b8;
-            --tg-link: #38bdf8;
-            --tg-button: #38bdf8;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f1f5f9;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --input-color: #f8fafc;
+            --card-shadow: rgba(0,0,0,0.3);
+            --border-color: rgba(255,255,255,0.05);
+            --item-border: #334155;
+            --tag-bg: #334155;
         }
+
+        @media (prefers-color-scheme: dark) {
+            body:not(.light-mode) {
+                --bg-color: #0f172a;
+                --card-bg: #1e293b;
+                --text-main: #f1f5f9;
+                --accent-blue: #38bdf8;
+                --accent-green: #4ade80;
+                --input-color: #f8fafc;
+                --card-shadow: rgba(0,0,0,0.3);
+                --border-color: rgba(255,255,255,0.05);
+                --item-border: #334155;
+                --tag-bg: #334155;
+            }
+        }
+
+        /* Принудительный светлый режим */
         body.light-mode {
-            --tg-bg: #f4f7f9;
-            --tg-secondary-bg: #ffffff;
-            --tg-text: #2c3e50;
-            --tg-hint: #8e8e93;
-            --tg-link: #3498db;
-            --tg-button: #3498db;
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --accent-blue: #3498db;
+            --accent-green: #2ecc71;
+            --input-color: #3a506b;
+            --card-shadow: rgba(0,0,0,0.04);
+            --border-color: rgba(0,0,0,0.02);
+            --item-border: #f0f0f0;
+            --tag-bg: #e1e8ed;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--tg-bg);
-            color: var(--tg-text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
             -webkit-tap-highlight-color: transparent;
             padding-bottom: 80px;
-            transition: all 0.3s ease;
+            transition: background 0.3s, color 0.3s;
         }
 
-        .header { text-align: center; margin-bottom: 24px; }
-        h1 { font-size: 22px; margin-bottom: 6px; font-weight: 700; }
+        .header { text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 20px; margin-bottom: 4px; }
         
         .calc-box {
-            background: var(--tg-secondary-bg); padding: 24px; border-radius: 20px;
-            box-shadow: 0 4px 12px var(--card-shadow); margin-bottom: 25px;
-            border: 1px solid rgba(0,0,0,0.05);
+            background: var(--card-bg); padding: 24px; border-radius: 24px;
+            box-shadow: 0 15px 35px var(--card-shadow); margin-bottom: 25px;
+            border: 1px solid var(--border-color);
         }
         
-        .calc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .calc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .input-container { flex: 1; }
-        .input-label { font-size: 12px; color: var(--tg-hint); font-weight: 600; margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.8px; }
+        .input-label { font-size: 13px; color: #8e8e93; font-weight: 600; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         .input-wrapper { display: flex; align-items: baseline; gap: 8px; }
 
         input#sumInput { 
-            border: none; font-size: 36px; font-weight: 800; width: 100%; 
-            outline: none; color: var(--tg-text); background: transparent;
+            border: none; font-size: 34px; font-weight: 700; width: 100%; 
+            outline: none; color: var(--input-color); background: transparent;
             margin: 0; padding: 0; line-height: 1;
         }
 
-        .currency { font-size: 28px; color: var(--tg-hint); font-weight: 500; }
+        .currency { font-size: 28px; color: #d1d1d6; font-weight: 500; }
 
-        .usage-bar-container { margin-bottom: 24px; }
-        .usage-label { font-size: 11px; color: var(--tg-hint); display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 700; }
-        .usage-track { height: 6px; background: rgba(0,0,0,0.08); border-radius: 3px; overflow: hidden; }
-        #usageFill { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .usage-bar-container { margin-bottom: 20px; }
+        .usage-label { font-size: 10px; color: #8e8e93; display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: bold; }
+        .usage-track { height: 4px; background: #eee; border-radius: 2px; overflow: hidden; }
+        #usageFill { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.3s; }
 
-        .fee-selector { margin-bottom: 24px; padding-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .fee-label { font-size: 11px; color: var(--tg-hint); font-weight: bold; margin-bottom: 10px; display: block; text-transform: uppercase; }
-        .fee-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+        .fee-selector { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--item-border); }
+        .fee-label { font-size: 11px; color: #8e8e93; font-weight: bold; margin-bottom: 8px; display: block; text-transform: uppercase; }
+        .fee-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
         .fee-btn {
-            padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1);
-            background: var(--tg-bg); font-size: 12px; font-weight: 600; color: var(--tg-text);
+            padding: 6px 10px; border-radius: 8px; border: 1px solid #e1e8ed;
+            background: var(--card-bg); font-size: 11px; font-weight: 600; color: #5d7185;
             cursor: pointer; transition: all 0.2s;
         }
-        .fee-btn.active { background: var(--tg-button); color: var(--tg-button-text); border-color: var(--tg-button); }
+        .fee-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
 
         .chart-mini {
-            width: 64px; height: 64px; border-radius: 16px; 
-            background: conic-gradient(var(--tg-link) 0% 50%, var(--accent-green) 50% 100%);
+            width: 60px; height: 60px; border-radius: 18px; 
+            background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink: 0; margin-left: 15px;
-            transition: transform 0.2s; cursor: pointer;
+            box-shadow: 0 8px 15px rgba(52, 152, 219, 0.2); flex-shrink: 0; margin-left: 15px;
+            transition: background 0.3s; cursor: pointer;
         }
-        .chart-mini:active { transform: scale(0.95); }
-        .chart-mini::after { content: attr(data-pct); font-size: 11px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .chart-mini::after { content: attr(data-pct); font-size: 10px; font-weight: 900; color: white; }
 
         .ratio-control { padding-top: 5px; }
         .ratio-slider {
-            -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px;
-            background: rgba(0,0,0,0.1); outline: none; margin: 15px 0;
+            -webkit-appearance: none; width: 100%; height: 6px; border-radius: 5px;
+            background: #e0e0e0; outline: none; margin: 15px 0;
         }
         .ratio-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
-            background: #fff; cursor: pointer; border: 1px solid rgba(0,0,0,0.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+            background: var(--accent-blue); cursor: pointer; border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        #shareContainer { background: var(--tg-bg); padding: 5px 10px 20px; border-radius: 10px; }
+        #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
 
-        .asset-list { background: var(--tg-secondary-bg); border-radius: 16px; margin-bottom: 15px; overflow: hidden; border: 1px solid rgba(0,0,0,0.03); }
+        .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         
         .asset-item {
             display: grid; 
             grid-template-columns: 85px 1fr 75px 80px;
-            padding: 14px 12px; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 13px; align-items: center;
+            padding: 12px; border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center;
         }
-        .asset-item:last-child { border-bottom: none; }
         
-        .ticker { font-weight: 700; color: var(--tg-text); }
-        .asset-name { color: var(--tg-hint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; font-size: 12px; }
-        .qty { text-align: right; padding-right: 8px; font-weight: 700; color: var(--tg-link); }
-        .price-total { text-align: right; color: var(--tg-text); font-weight: 600; }
+        .ticker { font-weight: bold; color: var(--text-main); }
+        .asset-name { color: #8e8e93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
+        .qty { text-align: right; padding-right: 8px; font-weight: bold; color: var(--accent-blue); }
+        .price-total { text-align: right; color: var(--text-main); font-weight: 500; }
 
         .details {
-            grid-column: 1 / -1; display: none; background: rgba(0,0,0,0.03);
-            padding: 12px; border-top: 1px solid rgba(0,0,0,0.05); font-size: 12px;
-            color: var(--tg-hint); line-height: 1.6;
+            grid-column: 1 / -1; display: none; background: rgba(0,0,0,0.02);
+            padding: 10px 12px; border-top: 1px solid var(--item-border); font-size: 11px;
+            color: #8e8e93; line-height: 1.6;
         }
         .asset-item.active .details { display: block; }
 
-        .section-header { margin: 28px 0 12px; font-weight: 800; font-size: 19px; letter-spacing: -0.5px; }
-        .allocation-info { font-size: 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
+        .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         
         .percent-tag { 
-            background: var(--tg-link); 
-            padding: 6px 14px; 
-            border-radius: 12px; 
+            background: var(--accent-blue); 
+            padding: 5px 12px; 
+            border-radius: 20px; 
             font-weight: 800; 
             font-size: 11px; 
-            color: var(--tg-button-text); 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            color: white; 
+            box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3);
             white-space: nowrap;
         }
         
         .echelon-title { 
-            padding: 12px; font-size: 12px; font-weight: 800; 
-            background: rgba(0,0,0,0.03); color: var(--tg-hint); display: flex; 
+            padding: 10px 12px; font-size: 12px; font-weight: bold; 
+            background: rgba(0,0,0,0.05); color: #8e8e93; display: flex; 
             justify-content: space-between; align-items: center;
-            position: relative; text-transform: uppercase; letter-spacing: 0.5px;
+            position: relative;
         }
         .echelon-info-icon {
             display: inline-flex; align-items: center; justify-content: center;
-            width: 16px; height: 16px; background: var(--tg-hint); color: var(--tg-secondary-bg);
-            border-radius: 50%; font-size: 10px; margin-left: 6px; cursor: pointer;
+            width: 14px; height: 14px; background: #999; color: white;
+            border-radius: 50%; font-size: 9px; margin-left: 6px; cursor: pointer;
         }
         .echelon-tip {
-            display: none; position: absolute; top: 100%; left: 0; right: 0;
-            background: var(--tg-text); color: var(--tg-secondary-bg); padding: 12px;
-            font-size: 12px; z-index: 10; font-weight: 500; line-height: 1.4;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            display: none; position: absolute; top: 100%; left: 12px; right: 12px;
+            background: #3a506b; color: white; padding: 10px; border-radius: 8px;
+            font-size: 11px; z-index: 10; font-weight: normal; line-height: 1.3;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         .echelon-title.show-tip .echelon-tip { display: block; }
 
         .coupon-box {
-            background: var(--tg-secondary-bg); border-radius: 16px; margin-top: 10px;
-            border: 1px solid var(--tg-link); overflow: hidden;
+            background: var(--card-bg); border-radius: 16px; margin-top: 10px;
+            border: 1px solid var(--accent-blue); overflow: hidden;
             margin-bottom: 20px;
         }
         .coupon-header {
-            padding: 16px; background: rgba(var(--tg-link), 0.1); color: var(--tg-link);
-            font-weight: 800; font-size: 15px; display: flex; justify-content: space-between; cursor: pointer;
+            padding: 14px; background: rgba(52, 152, 219, 0.08); color: var(--accent-blue);
+            font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer;
         }
         .coupon-content { display: none; padding: 0 12px 12px; }
         .coupon-content.active { display: block; }
@@ -181,54 +201,51 @@
             display: grid;
             grid-template-columns: 85px 1fr 50px 70px;
             gap: 5px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            font-size: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--item-border);
+            font-size: 11px;
             align-items: center;
         }
-        .coupon-row b { color: var(--tg-text); }
+        .coupon-row b { color: var(--text-main); }
 
         .tax-selector-ui {
-            display: flex; background: rgba(0,0,0,0.05); border-radius: 12px;
-            padding: 4px; margin: 14px 0; gap: 4px;
+            display: flex; background: var(--bg-color); border-radius: 10px;
+            padding: 3px; margin: 12px 0; gap: 2px;
         }
         .tax-ui-btn {
-            flex: 1; border: none; background: transparent; padding: 8px;
-            font-size: 12px; font-weight: 700; color: var(--tg-hint); border-radius: 10px;
+            flex: 1; border: none; background: transparent; padding: 6px;
+            font-size: 11px; font-weight: bold; color: #8e8e93; border-radius: 8px;
             cursor: pointer; transition: all 0.2s;
         }
-        .tax-ui-btn.active { background: var(--tg-secondary-bg); color: var(--tg-link); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .tax-ui-btn.active { background: var(--card-bg); color: var(--accent-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
         .btn-share {
-            display: block; width: 100%; padding: 18px; border: none; border-radius: 18px;
-            background: var(--tg-button); color: var(--tg-button-text); font-size: 17px; font-weight: 700;
-            cursor: pointer; margin-top: 24px; box-shadow: 0 4px 12px rgba(var(--tg-button), 0.3);
-            transition: transform 0.2s;
+            display: block; width: 100%; padding: 16px; border: none; border-radius: 16px;
+            background: var(--accent-blue); color: white; font-size: 16px; font-weight: bold;
+            cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
-        .btn-share:active { transform: scale(0.98); }
 
         #photoModal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; flex-direction: column;
+            background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; flex-direction: column;
         }
-        #photoModal img { max-width: 90%; max-height: 75%; border-radius: 16px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
-        .modal-controls { display: flex; gap: 15px; margin-top: 30px; }
+        #photoModal img { max-width: 85%; max-height: 70%; border-radius: 12px; }
+        .modal-controls { display: flex; gap: 15px; margin-top: 25px; }
         .ctrl-btn { 
-            background: #fff; color: #000; padding: 14px 24px; border-radius: 14px; 
-            font-weight: 700; display: flex; align-items: center; gap: 8px; font-size: 15px;
+            background: white; color: black; padding: 12px 20px; border-radius: 12px; 
+            font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;
         }
-        .ctrl-btn.blue { background: var(--tg-button); color: var(--tg-button-text); }
+        .ctrl-btn.blue { background: var(--accent-blue); color: white; }
 
         .footer-disclaimer {
-            text-align: center; font-size: 12px; color: var(--tg-hint); margin-top: 32px; padding: 0 24px; line-height: 1.5;
+            text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px;
         }
 
         .theme-toggle-container {
-            display: flex; justify-content: center; margin-top: 20px; padding-bottom: 20px;
+            display: flex; justify-content: center; margin-top: 15px; opacity: 0.5;
         }
         .theme-toggle-btn {
-            background: rgba(0,0,0,0.05); border: none; font-size: 20px; cursor: pointer; 
-            padding: 12px; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+            background: transparent; border: none; font-size: 20px; cursor: pointer; padding: 10px;
         }
     </style>
 </head>
@@ -237,7 +254,7 @@
     <div id="main-content">
         <div class="header">
             <h1>Как Вложить и Наслаждаться?</h1>
-            <p id="dynamicSubtitle" style="font-size: 14px; color: var(--tg-hint);">Простая система 50/50: Денежный Поток и Рост.</p>
+            <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
         </div>
 
         <div class="calc-box">
@@ -276,7 +293,7 @@
             </div>
 
             <div class="ratio-control">
-                <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: var(--tg-hint); text-transform: uppercase;">
+                <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">
                     <span>Облигации <span id="labelBondsPct">50</span>%</span>
                     <span>Акции <span id="labelStocksPct">50</span>%</span>
                 </div>
@@ -286,8 +303,8 @@
 
         <div id="shareContainer">
             <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
-                <h2 style="margin: 0; color: var(--tg-link); font-size: 18px;">Моя Стратегия 50/50</h2>
-                <div id="shareDate" style="font-size: 10px; color: var(--tg-hint);"></div>
+                <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
+                <div id="shareDate" style="font-size: 10px; color: #888;"></div>
             </div>
             <div class="section-header">1. Денежный Поток</div>
             <div class="allocation-info">
@@ -528,7 +545,7 @@
             document.getElementById('labelStocksPct').innerText = stockPct;
             document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
             document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
-            document.getElementById('mainChart').style.background = `conic-gradient(var(--tg-link) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
+            document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
             document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
 
             let actualSpentTotal = 0;
@@ -571,7 +588,7 @@
                 rainHtml += `
                     <div class="coupon-row">
                         <div><b>${new Date(r.date).toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'})}</b></div>
-                        <div style="color:var(--tg-hint)">${limitName(r.name)}</div>
+                        <div style="color:#8e8e93">${limitName(r.name)}</div>
                         <div style="text-align:center">${r.qty}шт.</div>
                         <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
                     </div>`;
@@ -618,7 +635,7 @@
 
             setTimeout(() => {
                 html2canvas(container, {
-                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--tg-bg'),
+                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'),
                     scale: 2,
                     logging: false,
                     useCORS: true
