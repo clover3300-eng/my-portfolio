@@ -26,7 +26,7 @@
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 8px; }
         
-        /* Улучшенный дизайн блока ввода суммы */
+        /* Дизайн блока ввода суммы */
         .calc-box {
             background: white; 
             padding: 24px; 
@@ -37,6 +37,7 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.04); 
             margin-bottom: 25px;
             border: 1px solid rgba(0,0,0,0.02);
+            cursor: text; /* Показываем, что сюда можно нажать */
         }
         
         .input-container { 
@@ -85,7 +86,10 @@
             transition: color 0.3s;
         }
         
-        /* Эффект при фокусе на поле ввода */
+        .calc-box:focus-within {
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
         .calc-box:focus-within .currency {
             color: var(--accent-blue);
         }
@@ -93,7 +97,7 @@
         .chart-mini {
             width: 56px; 
             height: 56px; 
-            border-radius: 18px; /* Немного скругленный квадрат вместо круга для стиля */
+            border-radius: 18px; 
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
             display: flex; 
             align-items: center; 
@@ -131,18 +135,18 @@
         .echelon-title { padding: 8px 12px; font-size: 12px; font-weight: bold; background: #eee; color: #666; display: flex; justify-content: space-between; }
     </style>
 </head>
-<body onclick="if(document.activeElement.tagName==='INPUT')document.activeElement.blur()">
+<body>
 
     <div class="header">
         <h1>Как Вложить и Наслаждаться?</h1>
         <p style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
     </div>
 
-    <div class="calc-box">
+    <div class="calc-box" onclick="document.getElementById('sumInput').focus()">
         <div class="input-container">
             <span class="input-label">Сумма Инвестиций</span>
             <div class="input-wrapper">
-                <input type="number" id="sumInput" value="100000" oninput="draw()" inputmode="numeric" pattern="[0-9]*">
+                <input type="number" id="sumInput" value="100000" oninput="draw()" onclick="this.select()" inputmode="numeric" pattern="[0-9]*">
                 <span class="currency">₽</span>
             </div>
         </div>
