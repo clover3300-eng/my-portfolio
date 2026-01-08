@@ -6,65 +6,157 @@
     <title>Стратегия 50/50</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: sans-serif; background: #f4f7f9; padding: 15px; color: #333; }
-        .card { background: white; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        input { width: 100%; border: 1px solid #ddd; padding: 10px; font-size: 18px; border-radius: 8px; box-sizing: border-box; }
-        .asset-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px; }
-        .ticker { font-weight: bold; }
-        .log { background: #000; color: #0f0; padding: 10px; font-family: monospace; font-size: 10px; border-radius: 5px; margin-top: 20px; max-height: 150px; overflow: auto; }
-        .header { font-weight: bold; margin: 15px 0 5px; color: #666; font-size: 14px; }
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --accent-blue: #3498db;
+            --accent-green: #2ecc71;
+            --input-color: #3a506b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0; padding: 16px; line-height: 1.4;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .header { text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 20px; margin-bottom: 8px; }
+        
+        /* Стили поля ввода суммы */
+        .calc-box {
+            background: white; padding: 20px; border-radius: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
+        }
+        
+        .input-container { flex: 1; }
+        .input-label { font-size: 12px; color: #8e8e93; font-weight: 500; margin-bottom: 4px; display: block; }
+        
+        .input-wrapper { display: flex; align-items: baseline; gap: 6px; }
+        input { 
+            border: none; font-size: 28px; font-weight: 400; width: 100%; 
+            outline: none; color: var(--input-color); background: transparent;
+        }
+        .currency { font-size: 22px; color: #a1a1a1; }
+
+        /* Круговая диаграмма в углу */
+        .chart-mini {
+            width: 65px; height: 65px; border-radius: 50%;
+            background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .chart-mini::after { content: "50/50"; font-size: 10px; font-weight: 900; color: white; }
+
+        /* Карточки описания стратегии */
+        .strategy-desc { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
+        .desc-card { background: white; padding: 18px; border-radius: 16px; border-left: 6px solid #eee; }
+        .desc-card.blue { border-color: var(--accent-blue); }
+        .desc-card.green { border-color: var(--accent-green); }
+        .desc-card h3 { margin: 0 0 8px 0; font-size: 16px; }
+        .desc-card p { margin: 0; font-size: 13px; color: #555; }
+
+        /* Списки активов */
+        .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
+        .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; }
+        .percent-tag { background: #eee; padding: 2px 6px; border-radius: 6px; font-weight: bold; font-size: 11px; }
+
+        .asset-list { background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
+        .asset-item {
+            display: grid; grid-template-columns: 80px 1fr 60px 80px;
+            padding: 10px 12px; border-bottom: 1px solid #f0f0f0; font-size: 12px; align-items: center;
+        }
+        .ticker { font-weight: bold; color: #333; }
+        .qty { text-align: center; font-weight: bold; color: var(--accent-blue); }
+        .price { text-align: right; color: #999; }
+
+        .echelon-title { 
+            padding: 8px 12px; font-size: 12px; font-weight: bold; 
+            background: #eee; color: #666; display: flex; justify-content: space-between;
+        }
     </style>
 </head>
-<body>
+<body onclick="if(document.activeElement.tagName==='INPUT')document.activeElement.blur()">
 
-    <div class="card">
-        <div style="font-size: 12px; color: #888;">Сумма инвестиций (₽)</div>
-        <input type="number" id="sumInput" value="100000" oninput="draw()">
+    <div class="header">
+        <h1>Как вложить и не переживать?</h1>
+        <p style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
     </div>
 
-    <div class="header">ОБЛИГАЦИИ</div>
-    <div id="listBonds" class="card">Загрузка...</div>
+    <div class="calc-box">
+        <div class="input-container">
+            <span class="input-label">Сколько вы готовы вложить?</span>
+            <div class="input-wrapper">
+                <input type="number" id="sumInput" value="100000" oninput="draw()" pattern="\d*">
+                <span class="currency">₽</span>
+            </div>
+        </div>
+        <div class="chart-mini"></div>
+    </div>
 
-    <div class="header">АКЦИИ</div>
-    <div id="listStocks" class="card">Загрузка...</div>
+    <div class="strategy-desc">
+        <div class="desc-card blue">
+            <h3>🛡️ 50% Облигации</h3>
+            <p>Ваш Денежный Поток.</p>
+        </div>
+        <div class="desc-card green">
+            <h3>🚀 50% Акции</h3>
+            <p>Ваш двигатель Роста Капитала</p>
+        </div>
+    </div>
 
-    <div id="debugLog" class="log">Инициализация лога...</div>
+    <div class="section-header">1. Денежный Поток</div>
+    <div class="allocation-info">
+        <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
+        <span class="percent-tag">50%</span>
+    </div>
+    <div id="listBonds" class="asset-list">
+        <div style="padding:20px; text-align:center; color:#999;">Загрузка данных...</div>
+    </div>
+
+    <div class="section-header">2. Растущая часть</div>
+    <div class="allocation-info">
+        <span>Выделить: <b id="valStocks">50 000</b> ₽</span>
+        <span class="percent-tag">50%</span>
+    </div>
+    <div id="echelonContainer"></div>
 
     <script>
-        const logBox = document.getElementById('debugLog');
-        function addLog(msg) { logBox.innerHTML += '<br>> ' + msg; }
-
+        // --- НАСТРОЙКИ ТАБЛИЦЫ ---
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
-        const GID = '1213653337';
-        // Используем более надежный метод получения CSV
+        const GID = '1213653337'; // ID листа TELEGRAMBOT
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
+        // Глобальные переменные для данных
         let bonds = [];
-        let stocks = [];
+        let echelons = [
+            { title: 'I Эшелон (Консервативный)', weight: 0.30, assets: [] },
+            { title: 'II Эшелон (Умеренный)', weight: 0.40, assets: [] },
+            { title: 'III Эшелон (Активный)', weight: 0.15, assets: [] },
+            { title: 'IV Эшелон (Венчурный)', weight: 0.15, assets: [] }
+        ];
 
+        /**
+         * Функция загрузки данных из Google Sheets
+         */
         async function loadData() {
             try {
-                addLog('Запрос к Google Sheets...');
                 const response = await fetch(CSV_URL);
-                
-                if (!response.ok) {
-                    throw new Error('Ответ сети не OK: ' + response.status);
-                }
-
                 const text = await response.text();
-                addLog('Данные получены, длина: ' + text.length);
+                
+                // Парсим CSV (учитываем запятые внутри кавычек)
+                const rows = text.split('\n').map(row => 
+                    row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim())
+                );
 
-                const rows = text.split('\n').map(row => {
-                    // Обработка CSV с учетом кавычек
-                    return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim());
-                });
-
-                addLog('Строк обработано: ' + rows.length);
-
-                // Облигации K3:M10 (Индексы 10, 11, 12)
+                // 1. Извлекаем ОФЗ (ячейки K3:M10 -> индексы массива 2-9)
                 bonds = [];
                 for (let i = 2; i <= 9; i++) {
-                    if (rows[i] && rows[i][10]) {
+                    if (rows[i] && rows[i][10]) { // Проверяем наличие тикера в колонке K
                         bonds.push({
                             t: rows[i][10],
                             n: rows[i][11] || '',
@@ -72,68 +164,95 @@
                         });
                     }
                 }
-                addLog('Облигаций найдено: ' + bonds.length);
 
-                // Акции K12:M23
-                stocks = [];
+                // 2. Извлекаем Акции (ячейки K12:M23 -> индексы массива 11-22)
+                let allStocks = [];
                 for (let i = 11; i <= 22; i++) {
                     if (rows[i] && rows[i][10]) {
-                        stocks.push({
+                        allStocks.push({
                             t: rows[i][10],
                             n: rows[i][11] || '',
                             p: parseFloat((rows[i][12] || "0").replace(',', '.')) || 0
                         });
                     }
                 }
-                addLog('Акций найдено: ' + stocks.length);
 
+                // 3. Распределяем акции по 3 штуки в каждый эшелон
+                if (allStocks.length > 0) {
+                    echelons[0].assets = allStocks.slice(0, 3);
+                    echelons[1].assets = allStocks.slice(3, 6);
+                    echelons[2].assets = allStocks.slice(6, 9);
+                    echelons[3].assets = allStocks.slice(9, 12);
+                }
+
+                // После загрузки отрисовываем интерфейс
                 draw();
             } catch (e) {
-                addLog('КРИТИЧЕСКАЯ ОШИБКА: ' + e.message);
-                document.getElementById('listBonds').innerHTML = 'Ошибка. См. лог ниже.';
+                console.error('Ошибка загрузки:', e);
+                document.getElementById('listBonds').innerHTML = '<div style="padding:20px; color:red;">Ошибка доступа к таблице</div>';
             }
         }
 
+        /**
+         * Функция отрисовки данных на странице
+         */
         function draw() {
-            try {
-                const total = parseFloat(document.getElementById('sumInput').value) || 0;
-                const half = total / 2;
+            // Получаем сумму из поля ввода
+            const total = parseFloat(document.getElementById('sumInput').value) || 0;
+            const half = total / 2;
 
-                // Облигации
-                let bHtml = '';
-                if (bonds.length > 0) {
-                    const bPart = half / bonds.length;
-                    bonds.forEach(b => {
-                        const q = b.p > 0 ? Math.floor(bPart / b.p) : 0;
-                        bHtml += `<div class="asset-item"><span class="ticker">${b.t}</span><span>${q} шт.</span><span>${Math.round(q*b.p)} ₽</span></div>`;
-                    });
-                }
-                document.getElementById('listBonds').innerHTML = bHtml || 'Нет данных в столбцах K-M';
+            // Обновляем текстовые значения заголовков
+            document.getElementById('valBonds').innerText = Math.round(half).toLocaleString();
+            document.getElementById('valStocks').innerText = Math.round(half).toLocaleString();
 
-                // Акции
-                let sHtml = '';
-                if (stocks.length > 0) {
-                    const sPart = half / stocks.length;
-                    stocks.forEach(s => {
-                        const q = s.p > 0 ? Math.floor(sPart / s.p) : 0;
-                        sHtml += `<div class="asset-item"><span class="ticker">${s.t}</span><span>${q} шт.</span><span>${Math.round(q*s.p)} ₽</span></div>`;
-                    });
-                }
-                document.getElementById('listStocks').innerHTML = sHtml || 'Нет данных в столбцах K-M';
-
-            } catch (e) {
-                addLog('Ошибка отрисовки: ' + e.message);
+            // Отрисовка списка облигаций
+            let bHtml = '';
+            if (bonds.length > 0) {
+                const bPart = half / bonds.length; // Делим 50% капитала поровну между всеми ОФЗ
+                bonds.forEach(b => {
+                    const q = b.p > 0 ? Math.floor(bPart / b.p) : 0; // Считаем кол-во штук
+                    bHtml += `
+                        <div class="asset-item">
+                            <span class="ticker">${b.t}</span>
+                            <span>${b.n}</span>
+                            <span class="qty">${q} шт.</span>
+                            <span class="price">${Math.round(q*b.p).toLocaleString()} ₽</span>
+                        </div>`;
+                });
             }
+            document.getElementById('listBonds').innerHTML = bHtml || 'Данные не найдены';
+
+            // Отрисовка эшелонов акций
+            let eHtml = '';
+            echelons.forEach(e => {
+                eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${Math.round(e.weight*100)}%</span></div><div class="asset-list">`;
+                
+                // Сумма на конкретный эшелон (например 30% от половины капитала)
+                const echelonSum = half * e.weight;
+                const assetPart = e.assets.length > 0 ? echelonSum / e.assets.length : 0;
+
+                e.assets.forEach(a => {
+                    const q = a.p > 0 ? Math.floor(assetPart / a.p) : 0;
+                    eHtml += `
+                        <div class="asset-item">
+                            <span class="ticker">${a.t}</span>
+                            <span>${a.n}</span>
+                            <span class="qty">${q} шт.</span>
+                            <span class="price">${Math.round(q*a.p).toLocaleString()} ₽</span>
+                        </div>`;
+                });
+                eHtml += `</div>`;
+            });
+            document.getElementById('echelonContainer').innerHTML = eHtml;
         }
 
-        // Запуск
+        // Запуск процесса загрузки при открытии
         loadData();
 
-        // Инициализация Telegram
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.expand();
-        }
+        // Настройки Telegram Mini App
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.ready();
     </script>
 </body>
 </html>
