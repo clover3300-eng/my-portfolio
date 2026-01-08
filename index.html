@@ -14,6 +14,7 @@
             --accent-green: #2ecc71;
             --accent-orange: #f39c12;
             --accent-red: #e74c3c;
+            --input-color: #3a506b; /* Тот самый приятный цвет */
         }
 
         body {
@@ -26,16 +27,46 @@
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 8px; }
         
-        /* Калькулятор */
+        /* Блок калькулятора */
         .calc-box {
-            background: white; padding: 15px; border-radius: 16px;
-            display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px;
+            background: white; 
+            padding: 20px; 
+            border-radius: 20px;
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            margin-bottom: 25px;
+            border: 1px solid rgba(0,0,0,0.03);
         }
-        input { border: none; font-size: 24px; font-weight: bold; width: 140px; outline: none; }
+        
+        .input-container { flex: 1; }
+        .input-label { font-size: 12px; color: #8e8e93; font-weight: 500; margin-bottom: 4px; display: block; }
+        
+        .input-wrapper { display: flex; align-items: baseline; gap: 6px; }
+        input { 
+            border: none; 
+            font-size: 28px; 
+            font-weight: 400; /* Убрал жирность */
+            width: 100%; 
+            outline: none; 
+            color: var(--input-color); /* Приятный цвет */
+            background: transparent;
+        }
+        .currency { font-size: 22px; font-weight: 400; color: #a1a1a1; }
+
+        /* Круг 50/50 */
+        .chart-container { position: relative; width: 65px; height: 65px; margin-left: 15px; }
         .chart-mini {
-            width: 50px; height: 50px; border-radius: 50%;
+            width: 100%; height: 100%; border-radius: 50%;
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .chart-mini::after {
+            content: "50/50";
+            font-size: 10px; font-weight: 900; color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         /* Блоки описания */
@@ -57,6 +88,9 @@
 
         /* Списки активов */
         .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
+        .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .percent-tag { background: #eee; padding: 2px 6px; border-radius: 6px; font-weight: bold; font-size: 11px; }
+
         .asset-list { background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item {
             display: grid; grid-template-columns: 80px 1fr 60px 80px;
@@ -81,11 +115,16 @@
     </div>
 
     <div class="calc-box">
-        <div>
-            <label style="font-size: 11px; color: #999;">Сколько вы готовы вложить?</label><br>
-            <input type="number" id="sumInput" value="100000" oninput="draw()"> <b>₽</b>
+        <div class="input-container">
+            <span class="input-label">Сколько вы готовы вложить?</span>
+            <div class="input-wrapper">
+                <input type="number" id="sumInput" value="100000" oninput="draw()">
+                <span class="currency">₽</span>
+            </div>
         </div>
-        <div class="chart-mini"></div>
+        <div class="chart-container">
+            <div class="chart-mini"></div>
+        </div>
     </div>
 
     <div class="strategy-desc">
@@ -102,11 +141,17 @@
     </div>
 
     <div class="section-header">1. Денежный Поток</div>
-    <div style="font-size: 13px; margin-bottom: 10px;">Выделить: <b id="valBonds">50 000</b> ₽</div>
+    <div class="allocation-info">
+        <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
+        <span class="percent-tag">50% от капитала</span>
+    </div>
     <div class="asset-list" id="listBonds"></div>
 
     <div class="section-header">2. Растущая часть</div>
-    <div style="font-size: 13px; margin-bottom: 5px;">Выделить: <b id="valStocks">50 000</b> ₽</div>
+    <div class="allocation-info">
+        <span>Выделить: <b id="valStocks">50 000</b> ₽</span>
+        <span class="percent-tag">50% от капитала</span>
+    </div>
     
     <div class="note">
         *Эшелон - группа по степени риска [от I до IV]<br>
@@ -115,7 +160,7 @@
 
     <div id="echelonContainer"></div>
 
-    <p style="font-size: 10px; color: #999; text-align: center; margin-top: 30px;">
+    <p style="font-size: 10px; color: #999; text-align: center; margin-top: 30px; padding-bottom: 20px;">
         Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.
     </p>
 
