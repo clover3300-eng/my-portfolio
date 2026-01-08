@@ -1,7 +1,8 @@
 <script>
-    // Используем универсальную ссылку для опубликованного листа
+    // Конфигурация
     const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
-    const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?output=csv`;
+    const GID = '1213653337'; // Ваш GID листа TELEGRAMBOT
+    const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
     let bonds = [];
     let echelons = [
@@ -11,101 +12,96 @@
         { title: 'IV Эшелон', weight: 0.15, assets: [] }
     ];
 
-    async function loadDataFromSheet() {
-        const debugDiv = document.getElementById('listBonds');
+    async function loadData() {
         try {
-            debugDiv.innerHTML = '<div style="padding:20px;">Загрузка данных...</div>';
-            
             const response = await fetch(CSV_URL);
-            if (!response.ok) throw new Error('Нет доступа к таблице. Проверьте публикацию.');
+            if (!response.ok) throw new Error('Ошибка сети');
+            const text = await response.text();
             
-            const data = await response.text();
-            // Разбиваем CSV на массив
-            const rows = data.split(/\r?\n/).map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(cell => cell.replace(/"/g, '').trim()));
+            // Разбиваем CSV на строки и ячейки
+            const rows = text.split('\n').map(row => 
+                row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim())
+            );
 
-            console.log("Данные получены, строк:", rows.length);
-
-            // Поиск индексов колонок (K=10, L=11, M=12 если таблица начинается с A)
-            // Но мы будем искать данные начиная с 3-й строки (индекс 2)
+            // Очищаем данные перед заполнением
             bonds = [];
+            let allStocks = [];
+
+            // Парсим облигации (Строки 3-10 в таблице -> индексы 2-9)
+            // K=10, L=11, M=12
             for (let i = 2; i <= 9; i++) {
-                if (rows[i] && rows[i][10]) { 
+                if (rows[i] && rows[i][10]) {
+                    const rawPrice = rows[i][12] || "0";
                     bonds.push({
                         t: rows[i][10],
-                        n: rows[i][11] || 'Без названия',
-                        p: parseFloat(rows[i][12].replace(/[^0-9.,]/g, '').replace(',', '.')) || 0
+                        n: rows[i][11] || '',
+                        p: parseFloat(rawPrice.replace(',', '.')) || 0
                     });
                 }
             }
 
-            let allStocks = [];
+            // Парсим акции (Строки 12-23 в таблице -> индексы 11-22)
             for (let i = 11; i <= 22; i++) {
                 if (rows[i] && rows[i][10]) {
+                    const rawPrice = rows[i][12] || "0";
                     allStocks.push({
                         t: rows[i][10],
-                        n: rows[i][11] || 'Без названия',
-                        p: parseFloat(rows[i][12].replace(/[^0-9.,]/g, '').replace(',', '.')) || 0
+                        n: rows[i][11] || '',
+                        p: parseFloat(rawPrice.replace(',', '.')) || 0
                     });
                 }
             }
 
-            if (bonds.length === 0 && allStocks.length === 0) {
-                throw new Error('Таблица пуста или неверные колонки (K, L, M)');
+            // Распределяем по эшелонам (по 3 актива)
+            if (allStocks.length > 0) {
+                echelons[0].assets = allStocks.slice(0, 3);
+                echelons[1].assets = allStocks.slice(3, 6);
+                echelons[2].assets = allStocks.slice(6, 9);
+                echelons[3].assets = allStocks.slice(9, 12);
             }
-
-            // Распределение
-            echelons[0].assets = allStocks.slice(0, 3);
-            echelons[1].assets = allStocks.slice(3, 6);
-            echelons[2].assets = allStocks.slice(6, 9);
-            echelons[3].assets = allStocks.slice(9, 12);
 
             draw();
         } catch (e) {
-            debugDiv.innerHTML = `<div style="color:red; padding:20px; font-size:12px;">
-                <b>Ошибка загрузки:</b><br>${e.message}<br><br>
-                1. Проверьте: Файл -> Поделиться -> Опубликовать в интернете.<br>
-                2. Убедитесь, что лист TELEGRAMBOT первый в списке.
-            </div>`;
+            console.error(e);
+            document.getElementById('listBonds').innerHTML = 
+                `<div style="color:red; padding:20px; text-align:center;">Ошибка загрузки. Проверьте публикацию листа TELEGRAMBOT.</div>`;
         }
     }
 
     function draw() {
         const total = parseFloat(document.getElementById('sumInput').value) || 0;
         const half = total / 2;
-        
+
         document.getElementById('valBonds').innerText = Math.round(half).toLocaleString();
         document.getElementById('valStocks').innerText = Math.round(half).toLocaleString();
 
+        // Облигации
         let bHtml = '';
         if (bonds.length > 0) {
             const bPart = half / bonds.length;
             bonds.forEach(b => {
                 const q = b.p > 0 ? Math.floor(bPart / b.p) : 0;
-                bHtml += `<div class="asset-item"><span class="ticker">${b.t}</span><span>${b.n}</span><span class="qty">${q} шт.</span><span class="price">~${Math.round(q*b.p)} ₽</span></div>`;
+                bHtml += `<div class="asset-item"><span class="ticker">${b.t}</span><span>${b.n}</span><span class="qty">${q} шт.</span><span class="price">${Math.round(q*b.p).toLocaleString()} ₽</span></div>`;
             });
         }
-        document.getElementById('listBonds').innerHTML = bHtml;
+        document.getElementById('listBonds').innerHTML = bHtml || 'Данные не найдены';
 
+        // Акции
         let eHtml = '';
         echelons.forEach(e => {
             eHtml += `<div class="echelon-title"><span>${e.title}</span><span>${e.weight*100}%</span></div><div class="asset-list">`;
-            const ePart = (half * e.weight) / (e.assets.length || 1);
+            const ePart = e.assets.length > 0 ? (half * e.weight) / e.assets.length : 0;
             e.assets.forEach(a => {
                 const q = a.p > 0 ? Math.floor(ePart / a.p) : 0;
-                eHtml += `<div class="asset-item"><span class="ticker">${a.t}</span><span>${a.n}</span><span class="qty">${q} шт.</span><span class="price">~${Math.round(q*a.p)} ₽</span></div>`;
+                eHtml += `<div class="asset-item"><span class="ticker">${a.t}</span><span>${a.n}</span><span class="qty">${q} шт.</span><span class="price">${Math.round(q*a.p).toLocaleString()} ₽</span></div>`;
             });
             eHtml += `</div>`;
         });
         document.getElementById('echelonContainer').innerHTML = eHtml;
     }
 
-    function hideKeyboard(event) {
-        if (document.activeElement && document.activeElement.tagName === 'INPUT') {
-            document.activeElement.blur();
-        }
-    }
-
-    loadDataFromSheet();
+    loadData();
+    
     const tg = window.Telegram.WebApp;
     tg.expand();
     tg.ready();
