@@ -20,8 +20,22 @@
             --tag-bg: #e1e8ed;
         }
 
+        /* Класс для принудительной темной темы */
+        body.dark-mode {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f1f5f9;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --input-color: #f8fafc;
+            --card-shadow: rgba(0,0,0,0.3);
+            --border-color: rgba(255,255,255,0.05);
+            --item-border: #334155;
+            --tag-bg: #334155;
+        }
+
         @media (prefers-color-scheme: dark) {
-            :root {
+            body:not(.light-mode) {
                 --bg-color: #0f172a;
                 --card-bg: #1e293b;
                 --text-main: #f1f5f9;
@@ -35,6 +49,20 @@
             }
         }
 
+        /* Класс для принудительной светлой темы */
+        body.light-mode {
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --accent-blue: #3498db;
+            --accent-green: #2ecc71;
+            --input-color: #3a506b;
+            --card-shadow: rgba(0,0,0,0.04);
+            --border-color: rgba(0,0,0,0.02);
+            --item-border: #f0f0f0;
+            --tag-bg: #e1e8ed;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
@@ -42,10 +70,19 @@
             margin: 0; padding: 16px; line-height: 1.4;
             -webkit-tap-highlight-color: transparent;
             padding-bottom: 80px;
-            transition: background 0.3s;
+            transition: background 0.3s, color 0.3s;
         }
 
-        .header { text-align: center; margin-bottom: 20px; }
+        /* Кнопка переключения темы */
+        .theme-toggle {
+            position: fixed; top: 16px; right: 16px; width: 40px; height: 40px;
+            background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px var(--card-shadow); z-index: 1001; cursor: pointer;
+            font-size: 20px; transition: all 0.2s;
+        }
+
+        .header { text-align: center; margin-bottom: 20px; padding-top: 10px; }
         h1 { font-size: 20px; margin-bottom: 4px; }
         
         .calc-box {
@@ -216,6 +253,8 @@
 </head>
 <body onclick="hideAllTips(event)">
 
+    <div class="theme-toggle" id="themeToggle" onclick="toggleTheme(event)">🌙</div>
+
     <div id="main-content">
         <div class="header">
             <h1>Как Вложить и Наслаждаться?</h1>
@@ -332,6 +371,36 @@
             { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
 
+        function toggleTheme(event) {
+            event.stopPropagation();
+            const body = document.body;
+            const btn = document.getElementById('themeToggle');
+            
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                btn.innerText = '☀️';
+                localStorage.setItem('theme', 'light');
+            } else if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                btn.innerText = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                // Если тема системная
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (isDark) {
+                    body.classList.add('light-mode');
+                    btn.innerText = '☀️';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.classList.add('dark-mode');
+                    btn.innerText = '🌙';
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+        }
+
         function saveSettings() {
             const settings = {
                 sum: document.getElementById('sumInput').value,
@@ -343,6 +412,13 @@
         }
 
         function loadSettings() {
+            // Загрузка темы
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme + '-mode');
+                document.getElementById('themeToggle').innerText = savedTheme === 'dark' ? '🌙' : '☀️';
+            }
+
             const saved = localStorage.getItem('invest_settings');
             if (saved) {
                 const s = JSON.parse(saved);
@@ -586,7 +662,6 @@
                         const blob = await (await fetch(dataUrl)).blob();
                         const file = new File([blob], "portfolio.png", { type: "image/png" });
                         
-                        // Закрываем модальное окно сразу при нажатии переслать
                         document.getElementById('photoModal').style.display = 'none';
                         
                         if (navigator.share) {
