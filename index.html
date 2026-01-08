@@ -14,6 +14,22 @@
             --accent-blue: #3498db;
             --accent-green: #2ecc71;
             --input-color: #3a506b;
+            --item-border: #f0f0f0;
+            --details-bg: #fafbfc;
+        }
+
+        /* ТЕМНАЯ ТЕМА */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1a1c1e;
+                --card-bg: #242729;
+                --text-main: #e1e1e1;
+                --accent-blue: #5dade2;
+                --accent-green: #58d68d;
+                --input-color: #ffffff;
+                --item-border: #333;
+                --details-bg: #2c2f31;
+            }
         }
 
         body {
@@ -29,7 +45,7 @@
         h1 { font-size: 20px; margin-bottom: 4px; }
         
         .calc-box {
-            background: white; padding: 24px; border-radius: 24px;
+            background: var(--card-bg); padding: 24px; border-radius: 24px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.04); margin-bottom: 25px;
             border: 1px solid rgba(0,0,0,0.02);
         }
@@ -52,12 +68,12 @@
         .usage-track { height: 4px; background: #eee; border-radius: 2px; overflow: hidden; }
         #usageFill { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.3s; }
 
-        .fee-selector { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; }
+        .fee-selector { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--item-border); }
         .fee-label { font-size: 11px; color: #8e8e93; font-weight: bold; margin-bottom: 8px; display: block; text-transform: uppercase; }
         .fee-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
         .fee-btn {
             padding: 6px 10px; border-radius: 8px; border: 1px solid #e1e8ed;
-            background: white; font-size: 11px; font-weight: 600; color: #5d7185;
+            background: var(--card-bg); font-size: 11px; font-weight: 600; color: #5d7185;
             cursor: pointer; transition: all 0.2s;
         }
         .fee-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
@@ -67,11 +83,9 @@
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 8px 15px rgba(52, 152, 219, 0.2); flex-shrink: 0; margin-left: 15px;
-            transition: background 0.3s; cursor: pointer;
         }
         .chart-mini::after { content: attr(data-pct); font-size: 10px; font-weight: 900; color: white; }
 
-        .ratio-control { padding-top: 5px; }
         .ratio-slider {
             -webkit-appearance: none; width: 100%; height: 6px; border-radius: 5px;
             background: #e0e0e0; outline: none; margin: 15px 0;
@@ -79,59 +93,36 @@
         .ratio-slider::-webkit-slider-thumb {
             -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
             background: var(--accent-blue); cursor: pointer; border: 3px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
-
-        .asset-list { background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
-        
-        /* ИЗМЕНЕНИЕ СЕТКИ ДЛЯ ЭСТЕТИКИ */
+        .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item {
-            display: grid; 
-            grid-template-columns: 85px 1fr 75px 80px; /* Смещено: qty получил больше места, выравнивание правее */
-            padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 12px; align-items: center;
+            display: grid; grid-template-columns: 85px 1fr 75px 80px;
+            padding: 12px; border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center;
         }
-        
-        .ticker { font-weight: bold; color: #333; }
-        .asset-name { color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
+        .ticker { font-weight: bold; }
+        .asset-name { color: #8e8e93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .qty { text-align: right; padding-right: 8px; font-weight: bold; color: var(--accent-blue); }
-        .price-total { text-align: right; color: #333; font-weight: 500; }
+        .price-total { text-align: right; font-weight: 500; }
 
         .details {
-            grid-column: 1 / -1; display: none; background: #fafbfc;
-            padding: 10px 12px; border-top: 1px solid #eee; font-size: 11px;
-            color: #7f8c8d; line-height: 1.6;
+            grid-column: 1 / -1; display: none; background: var(--details-bg);
+            padding: 10px 12px; border-top: 1px solid var(--item-border); font-size: 11px; line-height: 1.6;
         }
         .asset-item.active .details { display: block; }
 
-        .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
-        .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .percent-tag { background: #e1e8ed; padding: 4px 8px; border-radius: 8px; font-weight: bold; font-size: 11px; color: #5d7185; }
-        
-        .echelon-title { 
-            padding: 10px 12px; font-size: 12px; font-weight: bold; 
-            background: #eee; color: #666; display: flex; 
-            justify-content: space-between; align-items: center;
-            position: relative;
+        .tax-selector { display: flex; gap: 5px; margin-top: 8px; }
+        .tax-btn { 
+            padding: 2px 6px; border-radius: 4px; background: #ddd; font-size: 9px; 
+            cursor: pointer; color: #333; font-weight: bold;
         }
-        .echelon-info-icon {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 14px; height: 14px; background: #999; color: white;
-            border-radius: 50%; font-size: 9px; margin-left: 6px; cursor: pointer;
-        }
-        .echelon-tip {
-            display: none; position: absolute; top: 100%; left: 12px; right: 12px;
-            background: #3a506b; color: white; padding: 10px; border-radius: 8px;
-            font-size: 11px; z-index: 10; font-weight: normal; line-height: 1.3;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .echelon-title.show-tip .echelon-tip { display: block; }
+        .tax-btn.active { background: var(--accent-green); color: white; }
 
         .btn-share {
             display: block; width: 100%; padding: 16px; border: none; border-radius: 16px;
             background: var(--accent-blue); color: white; font-size: 16px; font-weight: bold;
-            cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            margin-top: 20px;
         }
 
         #photoModal {
@@ -140,15 +131,8 @@
         }
         #photoModal img { max-width: 85%; max-height: 70%; border-radius: 12px; }
         .modal-controls { display: flex; gap: 15px; margin-top: 25px; }
-        .ctrl-btn { 
-            background: white; color: black; padding: 12px 20px; border-radius: 12px; 
-            font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;
-        }
+        .ctrl-btn { background: white; color: black; padding: 12px 20px; border-radius: 12px; font-weight: bold; }
         .ctrl-btn.blue { background: var(--accent-blue); color: white; }
-
-        .footer-disclaimer {
-            text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px;
-        }
     </style>
 </head>
 <body onclick="hideAllTips(event)">
@@ -156,29 +140,24 @@
     <div id="main-content">
         <div class="header">
             <h1>Как Вложить и Наслаждаться?</h1>
-            <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
+            <p style="font-size: 13px; color: #8e8e93;">Простая система 50/50: Денежный Поток и Рост.</p>
         </div>
 
         <div class="calc-box">
             <div class="calc-top">
-                <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
+                <div class="input-container">
                     <span class="input-label">Сумма Инвестиций</span>
                     <div class="input-wrapper">
-                        <input type="number" id="sumInput" value="100000" oninput="draw()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
+                        <input type="number" id="sumInput" value="100000" oninput="saveAndDraw()" inputmode="numeric">
                         <span class="currency">₽</span>
                     </div>
                 </div>
-                <div id="mainChart" class="chart-mini" data-pct="50/50" onclick="resetRatio()"></div>
+                <div id="mainChart" class="chart-mini" data-pct="50/50"></div>
             </div>
             
             <div class="usage-bar-container">
-                <div class="usage-label">
-                    <span>ЗАДЕЙСТВОВАНО СРЕДСТВ</span>
-                    <span id="usageLabelText">0 ₽</span>
-                </div>
-                <div class="usage-track">
-                    <div id="usageFill"></div>
-                </div>
+                <div class="usage-label"><span>ЗАДЕЙСТВОВАНО СРЕДСТВ</span><span id="usageLabelText">0 ₽</span></div>
+                <div class="usage-track"><div id="usageFill"></div></div>
             </div>
 
             <div class="fee-selector">
@@ -188,45 +167,30 @@
                     <button class="fee-btn active" onclick="setFee(0.0003, this)">0.03%</button>
                     <button class="fee-btn" onclick="setFee(0.0005, this)">0.05%</button>
                     <button class="fee-btn" onclick="setFee(0.001, this)">0.1%</button>
-                    <button class="fee-btn" onclick="setFee(0.003, this)">0.3%</button>
-                    <button class="fee-btn" onclick="setFee(0.004, this)">0.4%</button>
-                    <button class="fee-btn" onclick="setFee(0.005, this)">0.5%</button>
                 </div>
             </div>
 
             <div class="ratio-control">
-                <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">
+                <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8e8e93;">
                     <span>Облигации <span id="labelBondsPct">50</span>%</span>
                     <span>Акции <span id="labelStocksPct">50</span>%</span>
                 </div>
-                <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
+                <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="saveAndDraw()">
             </div>
         </div>
 
         <div id="shareContainer">
-            <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
-                <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
-                <div id="shareDate" style="font-size: 10px; color: #888;"></div>
+            <div id="shareBrand" style="display:none; text-align:center; padding:10px;">
+                <h2 style="color:var(--accent-blue)">Моя Стратегия 50/50</h2>
+                <div id="shareDate" style="font-size:10px"></div>
             </div>
-            <div class="section-header">1. Денежный Поток</div>
-            <div class="allocation-info">
-                <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
-                <span class="percent-tag"><span class="bond-pct-text">50</span>% от капитала</span>
-            </div>
+            <div class="section-header" style="font-weight:bold; margin:10px 0;">1. Денежный Поток</div>
             <div id="listBonds" class="asset-list"></div>
-            <div class="section-header">2. Растущая часть</div>
-            <div class="allocation-info">
-                <span>Выделить: <b id="valStocks">50 000</b> ₽</span>
-                <span class="percent-tag"><span class="stock-pct-text">50</span>% от капитала</span>
-            </div>
+            <div class="section-header" style="font-weight:bold; margin:10px 0;">2. Растущая часть</div>
             <div id="echelonContainer"></div>
         </div>
 
         <button class="btn-share" id="btnShare" onclick="shareAsImage()">📸 Поделиться портфелем</button>
-
-        <div class="footer-disclaimer">
-            Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.
-        </div>
     </div>
 
     <div id="photoModal">
@@ -244,222 +208,169 @@
 
         let bonds = [];
         let brokerFee = 0.0003; 
+        let currentTax = 0.13;
         let echelons = [
-            { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
-            { title: 'II Эшелон', weight: 0.40, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ, НО ВЫПЛАТЫ РАЗНЯТСЯ' },
-            { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
-            { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
+            { title: 'I Эшелон', weight: 0.30, assets: [], info: 'ДИВИДЕНДНЫЕ АРИСТОКРАТЫ' },
+            { title: 'II Эшелон', weight: 0.40, assets: [], info: 'СТАБИЛЬНЫЕ ВЫПЛАТЫ' },
+            { title: 'III Эшелон', weight: 0.15, assets: [], info: 'ПОТЕНЦИАЛ РОСТА' },
+            { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'РИСКОВАННЫЕ ИДЕИ' }
         ];
 
-        function resetRatio() {
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
-                window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-            }
-            document.getElementById('ratioSlider').value = 50;
+        // СОХРАНЕНИЕ НАСТРОЕК
+        function saveAndDraw() {
+            localStorage.setItem('inv_sum', document.getElementById('sumInput').value);
+            localStorage.setItem('inv_ratio', document.getElementById('ratioSlider').value);
+            localStorage.setItem('inv_fee', brokerFee);
             draw();
+        }
+
+        function loadSavedSettings() {
+            if(localStorage.getItem('inv_sum')) document.getElementById('sumInput').value = localStorage.getItem('inv_sum');
+            if(localStorage.getItem('inv_ratio')) document.getElementById('ratioSlider').value = localStorage.getItem('inv_ratio');
+            if(localStorage.getItem('inv_fee')) {
+                brokerFee = parseFloat(localStorage.getItem('inv_fee'));
+                document.querySelectorAll('.fee-btn').forEach(b => {
+                    b.classList.toggle('active', parseFloat(b.getAttribute('onclick').match(/[\d.]+/)) === brokerFee);
+                });
+            }
         }
 
         function setFee(val, btn) {
             brokerFee = val;
             document.querySelectorAll('.fee-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            draw();
-        }
-
-        function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
-        function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
-
-        function toggleTip(event, el) {
-            event.stopPropagation();
-            const isActive = el.classList.contains('show-tip');
-            hideAllTips();
-            if (!isActive) el.classList.add('show-tip');
-        }
-
-        function hideAllTips(event) {
-            document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip'));
-            if(event && event.target.tagName !== 'INPUT') {
-                document.getElementById('sumInput').blur();
-            }
-        }
-
-        function toggleRow(el) {
-            el.classList.toggle('active');
+            saveAndDraw();
         }
 
         async function fetchBondData(code) {
             try {
-                const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
+                const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off`);
                 const data = await res.json();
+                const sec = data.securities.data[0];
                 const cols = data.securities.columns;
-                const row = data.securities.data[0];
                 return {
-                    nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0,
-                    matDate: row[cols.indexOf('MATDATE')] || '—'
+                    nkd: parseFloat(sec[cols.indexOf('ACCRUEDINT')]) || 0,
+                    matDate: sec[cols.indexOf('MATDATE')] || '—',
+                    coupon: parseFloat(sec[cols.indexOf('COUPONVALUE')]) || 0,
+                    nextCoupon: sec[cols.indexOf('NEXTCOUPON')] || '—'
                 };
-            } catch (e) { return { nkd: 0, matDate: '—' }; }
+            } catch (e) { return { nkd: 0, matDate: '—', coupon: 0, nextCoupon: '—' }; }
         }
 
         async function loadData() {
+            loadSavedSettings();
             try {
                 const response = await fetch(CSV_URL);
                 const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
                 
-                let bondList = [];
+                let bList = [];
                 for (let i = 2; i <= 9; i++) {
                     if (rows[i] && rows[i][10]) {
-                        bondList.push({ 
-                            t: rows[i][10], 
-                            n: rows[i][11], 
-                            p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
-                            y: rows[i][13] || '0%'
-                        });
+                        bList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
                     }
                 }
-
-                const bondPromises = bondList.map(async (b) => {
-                    const extra = await fetchBondData(b.t);
-                    return { ...b, nkd: extra.nkd, matDate: extra.matDate };
-                });
-                bonds = await Promise.all(bondPromises);
+                const promises = bList.map(async b => ({ ...b, ...(await fetchBondData(b.t)) }));
+                bonds = await Promise.all(promises);
 
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) {
                     if (rows[i] && rows[i][10]) {
-                        allStocks.push({ 
-                            t: rows[i][10], n: rows[i][11],
-                            p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
-                            target: rows[i][13] || '—' 
-                        });
+                        allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
                     }
                 }
-                if (allStocks.length > 0) {
-                    echelons[0].assets = allStocks.slice(0, 3);
-                    echelons[1].assets = allStocks.slice(3, 6);
-                    echelons[2].assets = allStocks.slice(6, 9);
-                    echelons[3].assets = allStocks.slice(9, 12);
-                }
+                echelons[0].assets = allStocks.slice(0,3);
+                echelons[1].assets = allStocks.slice(3,6);
+                echelons[2].assets = allStocks.slice(6,9);
+                echelons[3].assets = allStocks.slice(9,12);
                 draw();
             } catch (e) { console.error(e); }
         }
 
+        function setTax(tax, bondIdx) {
+            currentTax = tax;
+            draw();
+        }
+
         function draw() {
-            const inputSum = parseFloat(document.getElementById('sumInput').value) || 0;
-            const bondPct = parseInt(document.getElementById('ratioSlider').value);
-            const stockPct = 100 - bondPct;
-            const bondBudget = (inputSum * bondPct) / 100;
-            const stockBudget = (inputSum * stockPct) / 100;
+            const sum = parseFloat(document.getElementById('sumInput').value) || 0;
+            const r = parseInt(document.getElementById('ratioSlider').value);
+            const bBudget = (sum * r) / 100;
+            const sBudget = (sum * (100 - r)) / 100;
 
-            document.getElementById('labelBondsPct').innerText = bondPct;
-            document.getElementById('labelStocksPct').innerText = stockPct;
-            document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
-            document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
-            document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
-            document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
+            document.getElementById('labelBondsPct').innerText = r;
+            document.getElementById('labelStocksPct').innerText = 100 - r;
+            document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${r}%, var(--accent-green) ${r}% 100%)`;
+            document.getElementById('mainChart').setAttribute('data-pct', `${r}/${100-r}`);
 
-            let actualSpentTotal = 0;
+            let totalSpent = 0;
             let bHtml = '';
-            if (bonds.length > 0) {
-                const perBondBudget = bondBudget / bonds.length;
-                let bondCalculations = bonds.map(b => {
-                    const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee);
-                    let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0;
-                    return { ...b, qty, fullCostPerUnit };
-                });
-                let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
-                if (leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
-                    bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
-                }
-                bondCalculations.forEach(b => {
-                    actualSpentTotal += (b.qty * b.fullCostPerUnit);
-                    bHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${shortenTicker(b.t)}</span><span class="asset-name">${limitName(b.n)}</span><span class="qty">${b.qty} шт.</span><span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span><div class="details">Полное название: <b>${b.n}</b><br>Код: <b>${b.t}</b> | Цена: <b>${b.p} ₽</b><br>НКД: <b>${b.nkd.toFixed(2)} ₽</b> | Дата погашения: <b>${b.matDate}</b><br>Простая Доходность к Погашению: <b>${b.y.replace(' ₽','')}</b></div></div>`;
-                });
-            }
+            bonds.forEach((b, idx) => {
+                const cost = (b.p + b.nkd) * (1 + brokerFee);
+                const qty = Math.floor((bBudget / bonds.length) / cost);
+                totalSpent += qty * cost;
+                const netCoupon = (b.coupon * qty * (1 - currentTax)).toFixed(2);
+                
+                bHtml += `<div class="asset-item" onclick="this.classList.toggle('active')">
+                    <span class="ticker">${b.t}</span><span class="asset-name">${b.n}</span>
+                    <span class="qty">${qty} шт.</span><span class="price-total">${Math.round(qty*b.p)} ₽</span>
+                    <div class="details">
+                        <b>🌧 Денежный дождь:</b><br>
+                        Ближайший купон: <b>${b.nextCoupon}</b><br>
+                        Сумма к получению (на ${qty} шт): <b>${netCoupon} ₽</b>
+                        <div class="tax-selector">
+                            Налог: 
+                            <span class="tax-btn ${currentTax===0?'active':''}" onclick="event.stopPropagation(); setTax(0, ${idx})">0%</span>
+                            <span class="tax-btn ${currentTax===0.13?'active':''}" onclick="event.stopPropagation(); setTax(0.13, ${idx})">13%</span>
+                            <span class="tax-btn ${currentTax===0.15?'active':''}" onclick="event.stopPropagation(); setTax(0.15, ${idx})">15%</span>
+                        </div>
+                        <br>Погашение: ${b.matDate} <br>Доходность: ${b.y}
+                    </div>
+                </div>`;
+            });
             document.getElementById('listBonds').innerHTML = bHtml;
-            document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString();
 
             let eHtml = '';
             echelons.forEach(e => {
-                const echelonBudget = stockBudget * e.weight;
-                const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
-                let stockCalculations = e.assets.map(a => {
-                    const fullCostPerUnit = a.p * (1 + brokerFee);
-                    let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0;
-                    return { ...a, qty, fullCostPerUnit };
-                });
-                let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
-                if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
-                    stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
-                }
-                eHtml += `<div class="echelon-title" onclick="toggleTip(event, this)"><span>${e.title} <span class="echelon-info-icon">ⓘ</span></span><span>${Math.round(e.weight*100)}%</span><div class="echelon-tip">${e.info}</div></div><div class="asset-list">`;
-                stockCalculations.forEach(s => {
-                    actualSpentTotal += (s.qty * s.fullCostPerUnit);
-                    eHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${s.t}</span><span class="asset-name">${limitName(s.n)}</span><span class="qty">${s.qty} шт.</span><span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span><div class="details">Компания: <b>${s.n}</b><br>Цена: <b>${s.p} ₽</b> | Тикер: <b>${s.t}</b><br>Цель: <b>${s.target.replace(' ₽','')}</b></div></div>`;
+                eHtml += `<div class="echelon-title" style="padding:10px; font-size:11px; background:rgba(0,0,0,0.05)">${e.title}</div><div class="asset-list">`;
+                e.assets.forEach(s => {
+                    const cost = s.p * (1 + brokerFee);
+                    const qty = Math.floor((sBudget * e.weight / e.assets.length) / cost);
+                    totalSpent += qty * cost;
+                    eHtml += `<div class="asset-item" onclick="this.classList.toggle('active')">
+                        <span class="ticker">${s.t}</span><span class="asset-name">${s.n}</span>
+                        <span class="qty">${qty} шт.</span><span class="price-total">${Math.round(qty*s.p)} ₽</span>
+                        <div class="details">Цена: ${s.p} ₽ | Цель: ${s.target}</div>
+                    </div>`;
                 });
                 eHtml += `</div>`;
             });
             document.getElementById('echelonContainer').innerHTML = eHtml;
-            document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
-            document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
-            document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
+            document.getElementById('usageFill').style.width = Math.min((totalSpent/sum)*100, 100) + '%';
+            document.getElementById('usageLabelText').innerText = Math.round(totalSpent).toLocaleString() + ' ₽';
         }
 
         async function shareAsImage() {
-            const btn = document.getElementById('btnShare');
             const container = document.getElementById('shareContainer');
-            const brand = document.getElementById('shareBrand');
-            const dateEl = document.getElementById('shareDate');
+            document.getElementById('shareBrand').style.display = 'block';
+            document.getElementById('shareDate').innerText = new Date().toLocaleString();
             
-            btn.innerText = "⏳ Подготовка...";
-            btn.disabled = true;
+            const canvas = await html2canvas(container, { backgroundColor: getComputedStyle(document.body).backgroundColor, scale: 2 });
+            document.getElementById('shareBrand').style.display = 'none';
+            
+            const dataUrl = canvas.toDataURL("image/png");
+            document.getElementById('modalImg').src = dataUrl;
+            document.getElementById('photoModal').style.display = 'flex';
 
-            if (window.Telegram?.WebApp?.HapticFeedback) {
-                window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
-            }
-
-            brand.style.display = 'block';
-            dateEl.innerText = new Date().toLocaleString();
-
-            setTimeout(() => {
-                html2canvas(container, {
-                    backgroundColor: "#f4f7f9",
-                    scale: 2,
-                    logging: false,
-                    useCORS: true
-                }).then(async canvas => {
-                    brand.style.display = 'none';
-                    btn.innerText = "📸 Поделиться портфелем";
-                    btn.disabled = false;
-
-                    const dataUrl = canvas.toDataURL("image/png");
-                    const blob = await (await fetch(dataUrl)).blob();
-                    const file = new File([blob], "portfolio.png", { type: "image/png" });
-
-                    document.getElementById('modalImg').src = dataUrl;
-                    document.getElementById('photoModal').style.display = 'flex';
-
-                    document.getElementById('sendBtn').onclick = async () => {
-                        if (navigator.share) {
-                            try {
-                                await navigator.share({
-                                    files: [file],
-                                    title: 'Мой Инвест-портфель',
-                                });
-                            } catch (err) {
-                                console.log("Share failed", err);
-                            }
-                        } else {
-                            const link = document.createElement('a');
-                            link.download = 'portfolio.png';
-                            link.href = dataUrl;
-                            link.click();
-                        }
-                    };
-                });
-            }, 100);
+            document.getElementById('sendBtn').onclick = async () => {
+                const blob = await (await fetch(dataUrl)).blob();
+                const file = new File([blob], "portfolio.png", { type: "image/png" });
+                if (navigator.share) navigator.share({ files: [file] });
+            };
         }
 
+        function hideAllTips() { document.getElementById('sumInput').blur(); }
+        
         loadData();
         window.Telegram.WebApp.ready();
         window.Telegram.WebApp.expand();
