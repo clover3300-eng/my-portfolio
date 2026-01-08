@@ -20,7 +20,7 @@
             --tag-bg: #e1e8ed;
         }
 
-        /* Класс для принудительной темной темы */
+        /* Принудительная темная тема */
         body.dark-mode {
             --bg-color: #0f172a;
             --card-bg: #1e293b;
@@ -32,6 +32,20 @@
             --border-color: rgba(255,255,255,0.05);
             --item-border: #334155;
             --tag-bg: #334155;
+        }
+
+        /* Принудительная светлая тема */
+        body.light-mode {
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --accent-blue: #3498db;
+            --accent-green: #2ecc71;
+            --input-color: #3a506b;
+            --card-shadow: rgba(0,0,0,0.04);
+            --border-color: rgba(0,0,0,0.02);
+            --item-border: #f0f0f0;
+            --tag-bg: #e1e8ed;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -49,40 +63,17 @@
             }
         }
 
-        /* Класс для принудительной светлой темы */
-        body.light-mode {
-            --bg-color: #f4f7f9;
-            --card-bg: #ffffff;
-            --text-main: #2c3e50;
-            --accent-blue: #3498db;
-            --accent-green: #2ecc71;
-            --input-color: #3a506b;
-            --card-shadow: rgba(0,0,0,0.04);
-            --border-color: rgba(0,0,0,0.02);
-            --item-border: #f0f0f0;
-            --tag-bg: #e1e8ed;
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
             -webkit-tap-highlight-color: transparent;
-            padding-bottom: 80px;
+            padding-bottom: 100px;
             transition: background 0.3s, color 0.3s;
         }
 
-        /* Кнопка переключения темы */
-        .theme-toggle {
-            position: fixed; top: 16px; right: 16px; width: 40px; height: 40px;
-            background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 12px var(--card-shadow); z-index: 1001; cursor: pointer;
-            font-size: 20px; transition: all 0.2s;
-        }
-
-        .header { text-align: center; margin-bottom: 20px; padding-top: 10px; }
+        .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 4px; }
         
         .calc-box {
@@ -234,6 +225,17 @@
             cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
 
+        /* Кнопка переключения темы */
+        .theme-toggle {
+            display: flex; justify-content: center; margin: 30px 0 10px;
+        }
+        .theme-toggle-btn {
+            background: var(--tag-bg); border: none; padding: 8px 16px; border-radius: 20px;
+            color: var(--text-main); font-size: 16px; cursor: pointer; opacity: 0.6;
+            transition: all 0.2s;
+        }
+        .theme-toggle-btn:active { transform: scale(0.95); }
+
         #photoModal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; flex-direction: column;
@@ -247,13 +249,11 @@
         .ctrl-btn.blue { background: var(--accent-blue); color: white; }
 
         .footer-disclaimer {
-            text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px;
+            text-align: center; font-size: 11px; color: #99aab5; margin-top: 10px; padding: 0 20px;
         }
     </style>
 </head>
 <body onclick="hideAllTips(event)">
-
-    <div class="theme-toggle" id="themeToggle" onclick="toggleTheme(event)">🌙</div>
 
     <div id="main-content">
         <div class="header">
@@ -342,6 +342,10 @@
 
         <button class="btn-share" id="btnShare" onclick="shareAsImage()">📸 Поделиться портфелем</button>
 
+        <div class="theme-toggle">
+            <button class="theme-toggle-btn" id="themeBtn" onclick="toggleTheme()">☀️</button>
+        </div>
+
         <div class="footer-disclaimer">
             Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.
         </div>
@@ -371,33 +375,20 @@
             { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
 
-        function toggleTheme(event) {
-            event.stopPropagation();
+        function toggleTheme() {
             const body = document.body;
-            const btn = document.getElementById('themeToggle');
+            const btn = document.getElementById('themeBtn');
             
             if (body.classList.contains('dark-mode')) {
                 body.classList.remove('dark-mode');
                 body.classList.add('light-mode');
                 btn.innerText = '☀️';
-                localStorage.setItem('theme', 'light');
-            } else if (body.classList.contains('light-mode')) {
+                localStorage.setItem('theme_choice', 'light');
+            } else {
                 body.classList.remove('light-mode');
                 body.classList.add('dark-mode');
                 btn.innerText = '🌙';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                // Если тема системная
-                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (isDark) {
-                    body.classList.add('light-mode');
-                    btn.innerText = '☀️';
-                    localStorage.setItem('theme', 'light');
-                } else {
-                    body.classList.add('dark-mode');
-                    btn.innerText = '🌙';
-                    localStorage.setItem('theme', 'dark');
-                }
+                localStorage.setItem('theme_choice', 'dark');
             }
         }
 
@@ -413,10 +404,14 @@
 
         function loadSettings() {
             // Загрузка темы
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.body.classList.add(savedTheme + '-mode');
-                document.getElementById('themeToggle').innerText = savedTheme === 'dark' ? '🌙' : '☀️';
+            const savedTheme = localStorage.getItem('theme_choice');
+            const btn = document.getElementById('themeBtn');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                btn.innerText = '🌙';
+            } else if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                btn.innerText = '☀️';
             }
 
             const saved = localStorage.getItem('invest_settings');
