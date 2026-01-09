@@ -83,6 +83,56 @@
             transition: background 0.3s, color 0.3s;
         }
 
+        /* Экраны */
+        .screen { display: none; animation: fadeIn 0.4s ease; }
+        .screen.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Стили Главной страницы */
+        .home-hero {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+            border-radius: 30px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.2);
+        }
+
+        .home-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+        .home-desc { font-size: 15px; opacity: 0.9; line-height: 1.5; }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 12px var(--card-shadow);
+        }
+        .feature-icon { font-size: 24px; background: rgba(52, 152, 219, 0.1); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+
+        .btn-start {
+            background: var(--accent-blue);
+            color: white;
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Остальные стили (без изменений) */
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 4px; }
         
@@ -265,7 +315,7 @@
             bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
-            width: 220px; /* Еще уже */
+            width: 220px;
             background: var(--nav-bg);
             backdrop-filter: blur(25px) saturate(180%);
             -webkit-backdrop-filter: blur(25px) saturate(180%);
@@ -289,6 +339,7 @@
             transition: all 0.2s;
             color: var(--nav-icon);
         }
+        .nav-item.active { color: var(--accent-blue); }
 
         .nav-item svg {
             width: 22px;
@@ -302,7 +353,6 @@
 
         .nav-item:active {
             transform: scale(0.9);
-            color: var(--accent-blue);
             background: rgba(255,255,255,0.2);
         }
 
@@ -310,7 +360,40 @@
 </head>
 <body onclick="hideAllTips(event)">
 
-    <div id="main-content">
+    <div id="screen-home" class="screen active">
+        <div class="home-hero">
+            <div class="home-title">Инвестируй с умом</div>
+            <div class="home-desc">Сбалансированная стратегия 50/50: стабильный доход от облигаций и рост от акций.</div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">💰</div>
+            <div>
+                <div style="font-weight: bold;">Денежный поток</div>
+                <div style="font-size: 12px; color: #8e8e93;">Купоны от лучших облигаций рынка.</div>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <div>
+                <div style="font-weight: bold;">Потенциал роста</div>
+                <div style="font-size: 12px; color: #8e8e93;">Акции компаний с сильными показателями.</div>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <div>
+                <div style="font-weight: bold;">Умный расчет</div>
+                <div style="font-size: 12px; color: #8e8e93;">Автоматическое распределение под ваш бюджет.</div>
+            </div>
+        </div>
+
+        <button class="btn-start" onclick="showScreen('screen-app')">Начать расчет ➔</button>
+    </div>
+
+    <div id="screen-app" class="screen">
         <div class="header">
             <h1>Как Вложить и Наслаждаться?</h1>
             <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
@@ -407,16 +490,16 @@
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
             <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </div>
-        <div class="nav-item" onclick="document.getElementById('portfolioSection').scrollIntoView({behavior: 'smooth'})">
+        <div class="nav-item" id="nav-app" onclick="showScreen('screen-app')">
             <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
         </div>
-        <div class="nav-item" onclick="document.getElementById('rainSection').scrollIntoView({behavior: 'smooth'}); document.getElementById('couponContent').classList.add('active')">
+        <div class="nav-item" onclick="if(currentScreen==='screen-home') showScreen('screen-app'); setTimeout(() => document.getElementById('rainSection').scrollIntoView({behavior: 'smooth'}), 100); document.getElementById('couponContent').classList.add('active')">
             <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
-        <div class="nav-item" onclick="shareAsImage()">
+        <div class="nav-item" onclick="if(currentScreen==='screen-home') showScreen('screen-app'); setTimeout(() => shareAsImage(), 100)">
             <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         </div>
     </div>
@@ -438,12 +521,28 @@
         let brokerFee = 0.0003; 
         let currentTax = 0.13;
         let bondCouponsMap = {}; 
+        let currentScreen = 'screen-home';
+
         let echelons = [
             { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
             { title: 'II Эшелон', weight: 0.40, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ, НО ВЫПЛАТЫ РАЗНЯТСЯ' },
             { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
             { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
+
+        function showScreen(screenId) {
+            currentScreen = screenId;
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            // Обновляем активную иконку в меню
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            if(screenId === 'screen-home') document.getElementById('nav-home').classList.add('active');
+            if(screenId === 'screen-app') document.getElementById('nav-app').classList.add('active');
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        }
 
         function toggleTheme() {
             const body = document.body;
@@ -534,13 +633,11 @@
         function hideAllTips(event) {
             document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip'));
             if(event && event.target.tagName !== 'INPUT') {
-                document.getElementById('sumInput').blur();
+                if(document.getElementById('sumInput')) document.getElementById('sumInput').blur();
             }
         }
 
-        function toggleRow(el) {
-            el.classList.toggle('active');
-        }
+        function toggleRow(el) { el.classList.toggle('active'); }
 
         async function fetchBondData(code) {
             try {
@@ -548,16 +645,11 @@
                 const data = await res.json();
                 const cols = data.securities.columns;
                 const row = data.securities.data[0];
-                
                 bondCouponsMap[code] = {
                     date: row[cols.indexOf('NEXTCOUPON')],
                     value: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0
                 };
-
-                return {
-                    nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0,
-                    matDate: row[cols.indexOf('MATDATE')] || '—'
-                };
+                return { nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0, matDate: row[cols.indexOf('MATDATE')] || '—' };
             } catch (e) { return { nkd: 0, matDate: '—' }; }
         }
 
@@ -572,15 +664,9 @@
                 let bondList = [];
                 for (let i = 2; i <= 9; i++) {
                     if (rows[i] && rows[i][10]) {
-                        bondList.push({ 
-                            t: rows[i][10], 
-                            n: rows[i][11], 
-                            p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
-                            y: rows[i][13] || '0%'
-                        });
+                        bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
                     }
                 }
-
                 const bondPromises = bondList.map(async (b) => {
                     const extra = await fetchBondData(b.t);
                     return { ...b, nkd: extra.nkd, matDate: extra.matDate };
@@ -590,11 +676,7 @@
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) {
                     if (rows[i] && rows[i][10]) {
-                        allStocks.push({ 
-                            t: rows[i][10], n: rows[i][11],
-                            p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
-                            target: rows[i][13] || '—' 
-                        });
+                        allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
                     }
                 }
                 if (allStocks.length > 0) {
@@ -653,19 +735,12 @@
                 const qty = bondQuantities[ticker];
                 if (!info || !info.date || qty <= 0) return null;
                 const netAmount = (info.value * qty) * (1 - currentTax);
-                const bondName = bonds.find(b => b.t === ticker)?.n || ticker;
-                return { date: info.date, name: bondName, qty: qty, amount: netAmount };
+                return { date: info.date, name: bonds.find(b => b.t === ticker)?.n || ticker, qty, amount: netAmount };
             }).filter(x => x !== null).sort((a,b) => new Date(a.date) - new Date(b.date));
 
             rainData.forEach(r => {
                 totalRain += r.amount;
-                rainHtml += `
-                    <div class="coupon-row">
-                        <div><b>${new Date(r.date).toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'})}</b></div>
-                        <div style="color:#8e8e93">${limitName(r.name)}</div>
-                        <div style="text-align:center">${r.qty}шт.</div>
-                        <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
-                    </div>`;
+                rainHtml += `<div class="coupon-row"><div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div><div style="color:#8e8e93">${limitName(r.name)}</div><div style="text-align:center">${r.qty}шт.</div><div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div></div>`;
             });
             document.getElementById('couponList').innerHTML = rainHtml || 'Нет данных о ближайших купонах';
             document.getElementById('couponTotalHeader').innerText = Math.round(totalRain).toLocaleString() + ' ₽';
@@ -703,36 +778,26 @@
             const dateEl = document.getElementById('shareDate');
             btn.innerText = "⏳ Подготовка...";
             btn.disabled = true;
-
             brand.style.display = 'block';
             dateEl.innerText = new Date().toLocaleString();
 
             setTimeout(() => {
                 html2canvas(container, {
                     backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'),
-                    scale: 2,
-                    logging: false,
-                    useCORS: true
+                    scale: 2, logging: false, useCORS: true
                 }).then(async canvas => {
                     brand.style.display = 'none';
                     btn.innerText = "📸 Поделиться портфелем";
                     btn.disabled = false;
-                    
                     const dataUrl = canvas.toDataURL("image/png");
                     document.getElementById('modalImg').src = dataUrl;
                     document.getElementById('photoModal').style.display = 'flex';
-                    
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-
                     document.getElementById('sendBtn').onclick = async () => {
                         const blob = await (await fetch(dataUrl)).blob();
                         const file = new File([blob], "portfolio.png", { type: "image/png" });
-                        
                         document.getElementById('photoModal').style.display = 'none';
-                        
-                        if (navigator.share) {
-                            navigator.share({ files: [file], title: 'Мой портфель' });
-                        }
+                        if (navigator.share) navigator.share({ files: [file], title: 'Мой портфель' });
                     };
                 });
             }, 100);
