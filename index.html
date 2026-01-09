@@ -6,6 +6,8 @@
     <title>Terminal Madame Solomi’na</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <!-- Подключаем jsPDF для генерации PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             --bg-color: #f4f7f9;
@@ -13,16 +15,15 @@
             --text-main: #2c3e50;
             --accent-blue: #3498db;
             --accent-green: #2ecc71;
+            --accent-gradient: linear-gradient(135deg, #3498db, #2980b9);
+            --green-gradient: linear-gradient(135deg, #2ecc71, #27ae60);
             --input-color: #3a506b;
-            --card-shadow: rgba(0,0,0,0.04);
-            --border-color: rgba(0,0,0,0.02);
+            --card-shadow: rgba(0,0,0,0.06);
+            --border-color: rgba(0,0,0,0.04);
             --item-border: #f0f0f0;
-            --tag-bg: #e1e8ed;
-            --nav-bg: rgba(255, 255, 255, 0.4);
+            --nav-bg: rgba(255, 255, 255, 0.85);
             --nav-border: rgba(255, 255, 255, 0.5);
-            --nav-icon: rgba(44, 62, 80, 0.5);
             --coupon-blue-bg: rgba(52, 152, 219, 0.08);
-            --danger: #e74c3c;
         }
 
         body.dark-mode {
@@ -31,51 +32,15 @@
             --text-main: #f1f5f9;
             --accent-blue: #38bdf8;
             --accent-green: #4ade80;
+            --accent-gradient: linear-gradient(135deg, #38bdf8, #0ea5e9);
+            --green-gradient: linear-gradient(135deg, #4ade80, #22c55e);
             --input-color: #f8fafc;
-            --card-shadow: rgba(0,0,0,0.3);
+            --card-shadow: rgba(0,0,0,0.4);
             --border-color: rgba(255,255,255,0.05);
             --item-border: #334155;
-            --tag-bg: #334155;
-            --nav-bg: rgba(30, 41, 59, 0.4);
+            --nav-bg: rgba(30, 41, 59, 0.85);
             --nav-border: rgba(255, 255, 255, 0.1);
-            --nav-icon: rgba(241, 245, 249, 0.5);
             --coupon-blue-bg: rgba(56, 189, 248, 0.1);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body:not(.light-mode) {
-                --bg-color: #0f172a;
-                --card-bg: #1e293b;
-                --text-main: #f1f5f9;
-                --accent-blue: #38bdf8;
-                --accent-green: #4ade80;
-                --input-color: #f8fafc;
-                --card-shadow: rgba(0,0,0,0.3);
-                --border-color: rgba(255,255,255,0.05);
-                --item-border: #334155;
-                --tag-bg: #334155;
-                --nav-bg: rgba(30, 41, 59, 0.4);
-                --nav-border: rgba(255, 255, 255, 0.1);
-                --nav-icon: rgba(241, 245, 249, 0.5);
-                --coupon-blue-bg: rgba(56, 189, 248, 0.1);
-            }
-        }
-
-        body.light-mode {
-            --bg-color: #f4f7f9;
-            --card-bg: #ffffff;
-            --text-main: #2c3e50;
-            --accent-blue: #3498db;
-            --accent-green: #2ecc71;
-            --input-color: #3a506b;
-            --card-shadow: rgba(0,0,0,0.04);
-            --border-color: rgba(0,0,0,0.02);
-            --item-border: #f0f0f0;
-            --tag-bg: #e1e8ed;
-            --nav-bg: rgba(255, 255, 255, 0.4);
-            --nav-border: rgba(255, 255, 255, 0.5);
-            --nav-icon: rgba(44, 62, 80, 0.5);
-            --coupon-blue-bg: rgba(52, 152, 219, 0.08);
         }
 
         body {
@@ -111,31 +76,54 @@
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
         .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 25px; }
 
-        .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
-        .market-item {
-            background: var(--card-bg); padding: 12px 8px; border-radius: 16px; border: 1px solid var(--border-color);
-            text-align: center; box-shadow: 0 4px 10px var(--card-shadow); display: flex; flex-direction: column;
-            justify-content: center; min-height: 60px;
+        /* --- New Market Grid Design --- */
+        .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
+        .market-item-modern {
+            background: var(--card-bg); 
+            border-radius: 16px; 
+            padding: 12px 8px;
+            position: relative; overflow: hidden;
+            box-shadow: 0 4px 12px var(--card-shadow);
+            border: 1px solid var(--border-color);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .market-label { font-size: 9px; font-weight: 800; color: #8e8e93; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .market-value { font-size: 12px; font-weight: 900; color: var(--text-main); }
-        .market-change { font-size: 9px; font-weight: 700; margin-top: 2px; height: 13px; }
-        .up { color: var(--accent-green); }
-        .down { color: #e74c3c; }
+        .market-item-modern::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--item-border);
+        }
+        .market-item-modern.blue::before { background: var(--accent-blue); }
+        .market-item-modern.green::before { background: var(--accent-green); }
+        .market-item-modern.orange::before { background: #f39c12; }
+        
+        .mk-label { font-size: 10px; font-weight: 700; color: #8e8e93; margin-bottom: 4px; }
+        .mk-val { font-size: 13px; font-weight: 900; color: var(--text-main); }
+        .mk-change { font-size: 9px; margin-top: 4px; padding: 2px 6px; border-radius: 6px; font-weight: bold; }
+        .mk-change.pos { background: rgba(46, 204, 113, 0.15); color: var(--accent-green); }
+        .mk-change.neg { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
+        .mk-change.neu { background: rgba(0,0,0,0.05); color: #8e8e93; }
 
+        /* --- Info Cards --- */
         .info-card {
             background: var(--card-bg); padding: 22px; border-radius: 20px; margin-bottom: 18px;
             border: 1px solid var(--border-color); box-shadow: 0 6px 15px var(--card-shadow); position: relative;
         }
         .info-card.bonds { box-shadow: 0 10px 20px rgba(52, 152, 219, 0.05), 0 4px 10px var(--card-shadow); }
         .info-card.stocks { box-shadow: 0 10px 20px rgba(46, 204, 113, 0.05), 0 4px 10px var(--card-shadow); }
-        .info-card-header { font-size: 17px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-        .info-card-sub { font-size: 11px; font-weight: 700; color: var(--accent-blue); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.8px; }
-        .bonds .info-card-sub { color: var(--accent-blue); }
-        .stocks .info-card-sub { color: var(--accent-green); }
+        .info-card-header { font-size: 17px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        
+        /* Centered phrases */
+        .info-card-sub-centered { 
+            font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; 
+            margin: 10px 0 15px 0; padding: 5px 0; border-top: 1px dashed var(--item-border); border-bottom: 1px dashed var(--item-border);
+            text-align: center; width: 100%;
+        }
+        .bonds .info-card-sub-centered { color: var(--accent-blue); }
+        .stocks .info-card-sub-centered { color: var(--accent-green); }
+        
         .info-card-text { font-size: 13px; line-height: 1.6; color: #8e8e93; margin-bottom: 15px; }
         .info-card-footer { font-size: 10px; font-weight: 900; letter-spacing: 1px; border-top: 1px solid var(--item-border); padding-top: 12px; }
 
+        /* --- Buttons --- */
         .btn-action {
             display: flex; align-items: center; justify-content: center; width: 100%; padding: 16px; margin-top: 12px;
             background: var(--coupon-blue-bg); color: var(--accent-blue);
@@ -143,6 +131,22 @@
             font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s; gap: 8px;
         }
         .btn-action:active { opacity: 0.7; transform: scale(0.98); }
+
+        /* Start Calc Button - Improved */
+        .btn-shine {
+            position: relative;
+            background: var(--accent-gradient);
+            color: white; border: none;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+            margin-top: 25px;
+        }
+        .btn-shine::after {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 60%, rgba(255,255,255,0) 100%);
+            transform: rotate(30deg); transition: transform 0.5s; animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { transform: translateX(-100%) rotate(30deg); } 20% { transform: translateX(100%) rotate(30deg); } 100% { transform: translateX(100%) rotate(30deg); } }
 
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 4px; }
@@ -224,6 +228,13 @@
             padding: 10px 12px; font-size: 12px; font-weight: bold; background: rgba(0,0,0,0.05); color: #8e8e93; 
             display: flex; justify-content: space-between; align-items: center; position: relative;
         }
+        
+        /* New Echelon Percent Badge */
+        .echelon-pct-badge {
+            background: var(--card-bg); color: var(--accent-blue);
+            border: 1px solid var(--accent-blue); padding: 2px 8px; border-radius: 10px; font-size: 10px;
+        }
+
         .echelon-info-icon {
             display: inline-flex; align-items: center; justify-content: center;
             width: 14px; height: 14px; background: #999; color: white;
@@ -243,7 +254,7 @@
         }
         .coupon-header {
             padding: 14px; background: var(--coupon-blue-bg); color: var(--accent-blue);
-            font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer;
+            font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer; align-items: center;
         }
         .coupon-content { display: none; padding: 0 12px 12px; }
         .coupon-content.active { display: block; }
@@ -280,26 +291,45 @@
         .theme-toggle-container { display: flex; justify-content: center; margin-top: 15px; opacity: 0.5; margin-bottom: 20px; }
         .theme-toggle-btn { background: transparent; border: none; font-size: 20px; cursor: pointer; padding: 10px; }
 
-        .bottom-nav {
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            width: 220px; background: var(--nav-bg); backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%); border-radius: 25px;
-            display: flex; justify-content: space-around; padding: 8px 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border); z-index: 900;
+        /* --- Updated Navigation Layout --- */
+        .nav-wrapper {
+            position: fixed; bottom: 25px; left: 0; width: 100%; 
+            display: flex; justify-content: center; gap: 10px;
+            padding: 0 15px; box-sizing: border-box; z-index: 900;
         }
+
+        .nav-dock {
+            background: var(--nav-bg); backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 25px;
+            display: flex; align-items: center; padding: 8px 15px; gap: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border);
+        }
+
+        .nav-search-btn {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: var(--nav-bg); backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border);
+            cursor: pointer; color: var(--nav-icon); transition: all 0.2s;
+        }
+        .nav-search-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
+        .nav-search-btn:active { transform: scale(0.9); }
+
         .nav-item {
             display: flex; align-items: center; justify-content: center; width: 44px; height: 44px;
             border-radius: 15px; cursor: pointer; transition: all 0.2s; color: var(--nav-icon);
         }
-        .nav-item.active { color: var(--accent-blue); }
+        .nav-item.active { color: var(--accent-blue); background: rgba(52, 152, 219, 0.1); }
         .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        .nav-item:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
+        .nav-item:active { transform: scale(0.9); }
+
 
         /* ========================
-           СТИЛИ ДЛЯ 3 СТРАНИЦЫ (Assets)
+           ASSETS PAGE STYLES (Screen 3)
            ======================== */
         
-        /* 1. Блок Лучшие ОФЗ */
         .ofz-card {
             background: var(--card-bg);
             border-radius: 12px;
@@ -309,7 +339,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-left: 4px solid var(--accent-blue); /* Акцент */
+            border-left: 4px solid var(--accent-blue); 
             box-shadow: 0 2px 4px var(--card-shadow);
             cursor: pointer;
             transition: transform 0.2s;
@@ -320,7 +350,13 @@
         .ofz-copy-hint { font-size: 9px; color: #8e8e93; font-weight: normal; border: 1px solid #eee; padding: 1px 4px; border-radius: 4px; }
         .ofz-yield { font-weight: 800; font-size: 13px; color: var(--accent-green); background: rgba(46, 204, 113, 0.1); padding: 4px 8px; border-radius: 8px; }
 
-        /* 2. Блок Эшелонов (Таблица) */
+        /* Tooltip icon for OFZ */
+        .ofz-info-icon {
+            display: inline-flex; width: 14px; height: 14px; border-radius: 50%; border: 1px solid #ccc;
+            font-size: 9px; align-items: center; justify-content: center; color: #888; margin-left: 6px;
+        }
+
+        /* Echelon Table Headers */
         .echelon-header-pill {
             background: var(--accent-blue);
             color: white;
@@ -331,6 +367,7 @@
             display: inline-block;
             box-shadow: 0 3px 6px rgba(52, 152, 219, 0.3);
             margin-bottom: 10px;
+            opacity: 0.6; /* Transparency requested */
         }
         .echelon-cell { 
             padding: 12px 6px; 
@@ -341,7 +378,7 @@
         }
         .echelon-cell:active { background: rgba(0,0,0,0.05); }
 
-        /* 3. Инфо-блок (Таргет + Копирование) */
+        /* Info Notification */
         .info-notification {
             background: var(--card-bg);
             border: 1px solid var(--accent-blue);
@@ -364,24 +401,31 @@
         .info-content { font-size: 11px; color: var(--text-main); line-height: 1.5; }
         .info-highlight { color: var(--accent-blue); font-weight: bold; }
 
-        /* 4. Блок Ежемесячный доход (Калькулятор) */
+        /* Calculator Styling */
+        .calc-badge {
+            font-size: 10px; background: #333; color: white; padding: 2px 6px; border-radius: 4px; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
         .calc-bond-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 0; border-bottom: 1px dashed var(--item-border);
+            padding: 12px 0; border-bottom: 1px dashed var(--item-border);
         }
         .calc-bond-name { font-size: 12px; font-weight: bold; color: var(--text-main); flex: 1; }
-        .calc-input {
-            width: 70px;
-            padding: 6px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
-            text-align: center;
-            background: var(--bg-color);
-            color: var(--text-main);
-            outline: none;
+        
+        /* New input controls */
+        .qty-controls { display: flex; align-items: center; gap: 8px; }
+        .qty-btn { 
+            width: 24px; height: 24px; border-radius: 50%; border: 1px solid #ccc; background: var(--bg-color); 
+            display: flex; align-items: center; justify-content: center; font-weight: bold; color: #555;
+            cursor: pointer;
         }
-        .calc-input:focus { border-color: var(--accent-blue); background: var(--card-bg); }
+        .qty-btn:active { background: #ddd; }
+        .calc-input {
+            width: 40px; border: none; font-size: 14px; font-weight: bold; text-align: center;
+            background: transparent; color: var(--text-main); outline: none;
+        }
+        
         .result-list-container { margin-top: 15px; background: rgba(0,0,0,0.02); border-radius: 8px; padding: 10px; }
 
         /* Toast notification */
@@ -392,7 +436,7 @@
         }
         .toast.show { visibility: visible; opacity: 1; }
 
-        /* Стили для поиска */
+        /* Search Styles */
         .search-container { padding: 10px 0; }
         .search-input { width: 100%; padding: 16px; border-radius: 16px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main); font-size: 16px; outline: none; margin-bottom: 15px; box-sizing: border-box; }
         .search-result-item { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--item-border); }
@@ -411,39 +455,40 @@
             <div class="home-title">Добро Пожаловать! 🎉</div>
             <div class="home-desc">Это мини-помощник по выбору российских активов. Помогаем делать Иксы! 😁</div>
             
+            <!-- New Market Grid -->
             <div class="market-grid">
-                <div class="market-item">
-                    <div class="market-label">IMOEX</div>
-                    <div class="market-value" id="val-imoex">---</div>
-                    <div class="market-change" id="change-imoex">---</div>
+                <div class="market-item-modern blue">
+                    <div class="mk-label">IMOEX</div>
+                    <div class="mk-val" id="val-imoex">---</div>
+                    <div class="mk-change neu" id="change-imoex">---</div>
                 </div>
-                <div class="market-item">
-                    <div class="market-label">USD/RUB</div>
-                    <div class="market-value" id="val-usdrub">---</div>
-                    <div class="market-change">MOEX</div>
+                <div class="market-item-modern green">
+                    <div class="mk-label">USD/RUB</div>
+                    <div class="mk-val" id="val-usdrub">---</div>
+                    <div class="mk-change neu">MOEX</div>
                 </div>
-                <div class="market-item">
-                    <div class="market-label">BTC/USD</div>
-                    <div class="market-value" id="val-btc">---</div>
-                    <div class="market-change">BINANCE</div>
+                <div class="market-item-modern orange">
+                    <div class="mk-label">BTC/USD</div>
+                    <div class="mk-val" id="val-btc">---</div>
+                    <div class="mk-change neu">BINANCE</div>
                 </div>
             </div>
 
             <div class="info-card bonds">
                 <div class="info-card-header">🛡️ Облигации</div>
-                <div class="info-card-sub">Ваш "Денежный Поток"</div>
+                <div class="info-card-sub-centered">Ваш "Денежный Поток"</div>
                 <div class="info-card-text">Это как дать в долг государству. Оно гарантирует возврат денег и платит проценты. Один из самых надежных способов сохранить деньги.</div>
                 <div class="info-card-footer" style="color: var(--accent-blue);">НАДЕЖНОСТЬ: ВЫСОКАЯ</div>
             </div>
 
             <div class="info-card stocks">
                 <div class="info-card-header">🚀 Акции</div>
-                <div class="info-card-sub">Ваш "Двигатель Роста"</div>
+                <div class="info-card-sub-centered">Ваш "Двигатель Роста"</div>
                 <div class="info-card-text">Вы становитесь совладельцем Сбера, Газпрома и других гигантов. Когда они зарабатывают и растут — растет и ваш капитал.</div>
                 <div class="info-card-footer" style="color: var(--accent-green);">ДОХОДНОСТЬ: ВЫСОКАЯ</div>
             </div>
 
-            <button class="btn-action" onclick="showScreen('screen-app')">
+            <button class="btn-action btn-shine" onclick="showScreen('screen-app')">
                 <svg viewBox="0 0 24 24" style="width:20px;height:20px;" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                 Начать расчет
             </button>
@@ -536,9 +581,9 @@
             <div id="echelonContainer"></div>
         </div>
 
-        <button class="btn-action" id="btnShare" onclick="shareAsImage()">
+        <button class="btn-action" id="btnShare" onclick="shareAsPDF()">
             <svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-            Поделиться портфелем
+            Поделиться PDF (Портфель)
         </button>
         <div class="footer-disclaimer">Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.</div>
         <div class="theme-toggle-container">
@@ -549,17 +594,15 @@
     <div id="screen-assets" class="screen">
         <div class="header"><h1>Аналитический Центр</h1></div>
         
-        <!-- Блок Лучшие ОФЗ (Новый дизайн) -->
+        <!-- Блок Лучшие ОФЗ -->
         <div class="section-header" style="font-size:16px; margin-bottom:15px;">🛡️ Лучшие ОФЗ</div>
-        <div id="ofz-list" style="margin-bottom: 30px;">
-            <!-- Сюда генерируются карточки ОФЗ -->
-        </div>
+        <div id="ofz-list" style="margin-bottom: 30px;"></div>
 
         <!-- Блок Ежемесячный доход с вводом количества -->
         <div class="coupon-box" style="margin-top:20px;">
             <div class="coupon-header" onclick="toggleAccordion('calc-income-wrapper')">
                 <span>📅 Ежемесячный доход</span>
-                <span style="font-size:10px;">Калькулятор</span>
+                <span class="calc-badge">Калькулятор</span>
             </div>
             <div class="coupon-content" id="calc-income-wrapper" style="padding: 10px; display:block;">
                 <div class="tax-selector-ui">
@@ -577,7 +620,7 @@
             </div>
         </div>
 
-        <!-- Таблица Эшелонов (Новый дизайн заголовков) -->
+        <!-- Таблица Эшелонов -->
         <div class="section-header">🚀 Таблица Эшелонов</div>
         <div id="echelon-table-container" style="background: var(--card-bg); border-radius: 16px; padding: 20px 5px; overflow-x: auto; box-shadow: 0 4px 15px var(--card-shadow);">
             <table style="width: 100%; border-collapse: separate; border-spacing: 4px; font-size: 11px; text-align: center;">
@@ -589,13 +632,11 @@
                         <th><div class="echelon-header-pill">IV</div></th>
                     </tr>
                 </thead>
-                <tbody id="echelon-tickers-body">
-                    <!-- Тикеры -->
-                </tbody>
+                <tbody id="echelon-tickers-body"></tbody>
             </table>
         </div>
 
-        <!-- Красивый блок информации о таргете и копировании -->
+        <!-- Инфо-блок -->
         <div class="info-notification">
             <div class="info-icon">ℹ️</div>
             <div class="info-content">
@@ -618,26 +659,21 @@
         <div id="search-results"></div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
-            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <!-- Updated Nav Structure -->
+    <div class="nav-wrapper">
+        <div class="nav-dock">
+            <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="nav-item" id="nav-app" onclick="showScreen('screen-app')">
+                <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+            </div>
+            <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
         </div>
-        <div class="nav-item" id="nav-app" onclick="showScreen('screen-app')">
-            <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-        </div>
-        <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
-        <div class="nav-item" id="nav-search" onclick="showScreen('screen-search')">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        </div>
-    </div>
-
-    <div id="photoModal">
-        <img id="modalImg" src="">
-        <div class="modal-controls">
-            <div class="ctrl-btn" onclick="document.getElementById('photoModal').style.display='none'">Отмена</div>
-            <div class="ctrl-btn blue" id="sendBtn">Переслать ➔</div>
+        <div class="nav-search-btn" id="nav-search" onclick="showScreen('screen-search')">
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         </div>
     </div>
 
@@ -649,7 +685,7 @@
         let bonds = [];
         let brokerFee = 0.0003; 
         let currentTax = 0.13;
-        let customTax = 0.13; // Налог для 3 страницы
+        let customTax = 0.13;
         let bondCouponsMap = {}; 
         let currentScreen = 'screen-home';
 
@@ -675,11 +711,7 @@
                     const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
                     const data = await res.json();
                     if(data.price) document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
-                } catch(e) {
-                    const res2 = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
-                    const data2 = await res2.json();
-                    if(data2.bitcoin) document.getElementById('val-btc').innerText = '$' + Math.round(data2.bitcoin.usd).toLocaleString();
-                }
+                } catch(e) { /* fallback */ }
 
                 // IMOEX
                 fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
@@ -691,7 +723,7 @@
                             const el = document.getElementById('change-imoex');
                             if(change !== null) {
                                 el.innerText = `${change > 0 ? '+' : ''}${change}%`;
-                                el.className = `market-change ${change >= 0 ? 'up' : 'down'}`;
+                                el.className = `mk-change ${change >= 0 ? 'pos' : 'neg'}`;
                             }
                         }
                     });
@@ -701,10 +733,8 @@
                     .then(r => r.json()).then(d => { 
                         const mData = d.marketdata.data[0]; const mCols = d.marketdata.columns;
                         const sData = d.securities.data[0]; const sCols = d.securities.columns;
-                        
                         let val = mData ? mData[mCols.indexOf('LAST')] : null;
                         if(!val && sData) val = sData[sCols.indexOf('PREVPRICE')];
-                        
                         if(val) document.getElementById('val-usdrub').innerText = val.toFixed(2) + ' ₽';
                     });
             } catch (e) { console.log("Market data error"); }
@@ -717,11 +747,15 @@
             currentScreen = screenId;
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
+            
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById('nav-search').classList.remove('active');
+
             if(screenId === 'screen-home') document.getElementById('nav-home').classList.add('active');
             if(screenId === 'screen-app') document.getElementById('nav-app').classList.add('active');
             if(screenId === 'screen-assets') document.getElementById('nav-assets').classList.add('active');
             if(screenId === 'screen-search') document.getElementById('nav-search').classList.add('active');
+            
             window.scrollTo({top: 0, behavior: 'smooth'});
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
         }
@@ -761,7 +795,6 @@
                 brokerFee = parseFloat(s.fee) || 0.0003; currentTax = parseFloat(s.tax) || 0.13;
                 document.querySelectorAll('.fee-btn').forEach(btn => btn.classList.toggle('active', parseFloat(btn.getAttribute('onclick').match(/[\d.]+/)) === brokerFee));
                 document.querySelectorAll('.tax-ui-btn').forEach(btn => {
-                    // Пропускаем кастомные кнопки для 3 страницы
                     if(!btn.id.includes('tax-custom')) {
                         btn.classList.toggle('active', parseFloat(btn.getAttribute('onclick').match(/[\d.]+/)) === currentTax);
                     }
@@ -831,12 +864,22 @@
                 for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' }); }
                 if (allStocks.length > 0) { echelons[0].assets = allStocks.slice(0, 3); echelons[1].assets = allStocks.slice(3, 6); echelons[2].assets = allStocks.slice(6, 9); echelons[3].assets = allStocks.slice(9, 12); }
                 
-                renderCustomBondCalc(); // Создаем инпуты для калькулятора на 3 странице
+                renderCustomBondCalc(); 
                 draw();
             } catch (e) { console.error(e); }
         }
 
-        // Логика для 3 страницы
+        // --- Logic for Screen 3 (Assets) ---
+        function changeQty(ticker, delta) {
+            const input = document.getElementById(`input-${ticker}`);
+            if(input) {
+                let val = parseInt(input.value) || 0;
+                val = Math.max(0, val + delta);
+                input.value = val;
+                recalcCustomCoupons();
+            }
+        }
+
         function renderCustomBondCalc() {
             const container = document.getElementById('calc-bonds-input-list');
             if(!container) return;
@@ -845,7 +888,11 @@
                 html += `
                 <div class="calc-bond-row">
                     <div class="calc-bond-name" onclick="copyToClipboard('${b.n}')">${limitName(b.n)}</div>
-                    <input type="number" class="calc-input" data-ticker="${b.t}" value="0" min="0" placeholder="0" oninput="recalcCustomCoupons()">
+                    <div class="qty-controls">
+                        <div class="qty-btn" onclick="changeQty('${b.t}', -1)">-</div>
+                        <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons()">
+                        <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
+                    </div>
                 </div>`;
             });
             container.innerHTML = html;
@@ -917,13 +964,11 @@
             const q = query.toUpperCase();
             let results = [];
 
-            // Поиск в акциях
             echelons.forEach(e => {
                 e.assets.forEach(a => {
                     if(a.t.toUpperCase().includes(q) || a.n.toUpperCase().includes(q)) results.push({...a, type: 'Акция'});
                 });
             });
-            // Поиск в облигациях
             bonds.forEach(b => {
                 if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
             });
@@ -974,7 +1019,6 @@
             }
 
             let actualSpentTotal = 0; let bondQuantities = {}; let bHtml = '';
-            // Формирование списка для Калькулятора (экран 2)
             if (bonds.length > 0) {
                 const perBondBudget = bondBudget / bonds.length;
                 let bondCalculations = bonds.map(b => { const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; return { ...b, qty, fullCostPerUnit }; });
@@ -987,7 +1031,6 @@
             }
             if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml; document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
             
-            // Дизайн списка Лучшие ОФЗ для 3-й страницы
             let ofzHtml = '';
             bonds.forEach(b => {
                 ofzHtml += `
@@ -995,7 +1038,7 @@
                     <div class="ofz-info">
                         <div class="ofz-name">
                             ${limitName(b.n)}
-                            <span class="ofz-copy-hint">copy</span>
+                            <div class="ofz-info-icon" onclick="event.stopPropagation(); alert('Простая доходность к погашению (YTM simple) — это доходность, которую вы получите, если продержите облигацию до погашения.')">i</div>
                         </div>
                         <div style="font-size:10px; color:#8e8e93;">${b.t}</div>
                     </div>
@@ -1019,7 +1062,16 @@
                 let stockCalculations = e.assets.map(a => { const fullCostPerUnit = a.p * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0; return { ...a, qty, fullCostPerUnit }; });
                 let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
                 if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
-                eHtml += `<div class="echelon-title" onclick="toggleTip(event, this)"><span>${e.title} <span class="echelon-info-icon">ⓘ</span></span><span>${Math.round(e.weight*100)}%</span><div class="echelon-tip">${e.info}</div></div><div class="asset-list">`;
+                
+                // Updated percentage badge
+                eHtml += `
+                <div class="echelon-title" onclick="toggleTip(event, this)">
+                    <span>${e.title} <span class="echelon-info-icon">ⓘ</span></span>
+                    <span class="echelon-pct-badge">${Math.round(e.weight*100)}%</span>
+                    <div class="echelon-tip">${e.info}</div>
+                </div>
+                <div class="asset-list">`;
+                
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
                     eHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${s.t}</span><span class="asset-name">${limitName(s.n)}</span><span class="qty">${s.qty} шт.</span><span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span><div class="details">Компания: <b>${s.n}</b><br>Цена: <b>${s.p} ₽</b><br>Цель: <b>${s.target.replace(' ₽','')}</b> (прогноз на период до 36 месяцев)</div></div>`;
@@ -1034,25 +1086,59 @@
             updateEchelonTable();
         }
 
-        async function shareAsImage() {
-            const btn = document.getElementById('btnShare'); const container = document.getElementById('shareContainer');
-            const brand = document.getElementById('shareBrand'); const dateEl = document.getElementById('shareDate');
-            btn.innerText = "⏳ Подготовка..."; btn.disabled = true; brand.style.display = 'block'; dateEl.innerText = new Date().toLocaleString();
-            setTimeout(() => {
-                html2canvas(container, { backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), scale: 2, logging: false, useCORS: true }).then(async canvas => {
-                    brand.style.display = 'none'; btn.innerHTML = `<svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Поделиться портфелем`; btn.disabled = false;
-                    const dataUrl = canvas.toDataURL("image/png"); document.getElementById('modalImg').src = dataUrl;
-                    document.getElementById('photoModal').style.display = 'flex'; window.scrollTo({ top: 0, behavior: 'smooth' });
-                    document.getElementById('sendBtn').onclick = async () => {
-                        const blob = await (await fetch(dataUrl)).blob(); const file = new File([blob], "portfolio.png", { type: "image/png" });
-                        document.getElementById('photoModal').style.display = 'none'; if (navigator.share) navigator.share({ files: [file], title: 'Мой портфель' });
-                    };
+        // --- PDF Generation Logic ---
+        async function shareAsPDF() {
+            const btn = document.getElementById('btnShare'); 
+            const container = document.getElementById('shareContainer');
+            const brand = document.getElementById('shareBrand'); 
+            const dateEl = document.getElementById('shareDate');
+            
+            // Prepare UI for capture
+            btn.innerText = "⏳ Создание PDF..."; btn.disabled = true; 
+            brand.style.display = 'block'; 
+            dateEl.innerText = new Date().toLocaleString();
+
+            try {
+                // 1. Capture content as canvas
+                const canvas = await html2canvas(container, { 
+                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), 
+                    scale: 2, 
+                    logging: false, 
+                    useCORS: true 
                 });
-            }, 100);
+                
+                // 2. Initialize jsPDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = doc.internal.pageSize.getWidth();
+                const pdfHeight = doc.internal.pageSize.getHeight();
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgProps = doc.getImageProperties(imgData);
+                const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                // 3. Add image to PDF. If longer than A4, we might need pages, but for now we scale fit or simple add
+                // Simple implementation: Just add the long image. For multi-page, it's more complex.
+                // We will scale it to fit width. If height > A4, it will stretch or cut. 
+                // Better approach for long mobile view: Scale to fit 1 page if possible or split.
+                // Let's scale to width and let height be whatever (if < page height ok, if > user scrolls PDF)
+                // Actually jsPDF doesn't auto-scroll. We'll just put it on first page.
+                
+                doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
+                doc.save('My_Portfolio_Solomina.pdf');
+
+            } catch(e) {
+                console.error(e);
+                alert("Ошибка при создании PDF");
+            } finally {
+                // Restore UI
+                brand.style.display = 'none'; 
+                btn.innerHTML = `<svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Поделиться PDF (Портфель)`; 
+                btn.disabled = false;
+            }
         }
 
         loadData(); window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand();
     </script>
 </body>
 </html>
-
