@@ -133,37 +133,66 @@
         }
 
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
-        .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 20px; }
+        .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 25px; }
 
+        /* Красивое отображение курсов */
         .market-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 25px;
+            gap: 12px;
+            margin-bottom: 30px;
         }
         .market-item {
             background: var(--card-bg);
-            padding: 10px;
-            border-radius: 12px;
+            padding: 12px 8px;
+            border-radius: 16px;
             border: 1px solid var(--border-color);
             text-align: center;
+            box-shadow: 0 4px 10px var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 60px;
         }
-        .market-label { font-size: 10px; font-weight: bold; color: #8e8e93; text-transform: uppercase; margin-bottom: 4px; }
-        .market-value { font-size: 13px; font-weight: 800; color: var(--accent-blue); }
+        .market-label { 
+            font-size: 9px; 
+            font-weight: 800; 
+            color: #8e8e93; 
+            text-transform: uppercase; 
+            margin-bottom: 6px; 
+            letter-spacing: 0.5px;
+        }
+        .market-value { font-size: 12px; font-weight: 900; color: var(--text-main); }
+        .market-change { font-size: 9px; font-weight: 700; margin-top: 2px; }
+        .up { color: var(--accent-green); }
+        .down { color: #e74c3c; }
 
-        /* Красивые информационные блоки */
+        /* Красивые информационные блоки с полосой */
         .info-card {
             background: var(--card-bg);
-            padding: 20px;
-            border-radius: 18px;
-            margin-bottom: 15px;
+            padding: 20px 20px 20px 25px;
+            border-radius: 20px;
+            margin-bottom: 18px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 12px var(--card-shadow);
+            box-shadow: 0 6px 15px var(--card-shadow);
+            position: relative;
+            overflow: hidden;
         }
-        .info-card-header { font-size: 16px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-        .info-card-sub { font-size: 12px; font-weight: 700; color: var(--accent-blue); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .info-card-text { font-size: 13px; line-height: 1.5; color: #8e8e93; margin-bottom: 12px; }
-        .info-card-footer { font-size: 10px; font-weight: 900; letter-spacing: 1px; border-top: 1px solid var(--item-border); padding-top: 10px; }
+        .info-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+        }
+        .info-card.bonds::before { background: var(--accent-blue); }
+        .info-card.stocks::before { background: var(--accent-green); }
+
+        .info-card-header { font-size: 17px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .info-card-sub { font-size: 11px; font-weight: 700; color: var(--accent-blue); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.8px; }
+        .info-card-text { font-size: 13px; line-height: 1.6; color: #8e8e93; margin-bottom: 15px; }
+        .info-card-footer { font-size: 10px; font-weight: 900; letter-spacing: 1px; border-top: 1px solid var(--item-border); padding-top: 12px; }
 
         /* Унифицированные кнопки */
         .btn-action {
@@ -418,25 +447,28 @@
                 <div class="market-item">
                     <div class="market-label">IMOEX</div>
                     <div class="market-value" id="val-imoex">---</div>
+                    <div class="market-change" id="change-imoex"></div>
                 </div>
                 <div class="market-item">
                     <div class="market-label">USD/RUB</div>
                     <div class="market-value" id="val-usdrub">---</div>
+                    <div class="market-change">MOEX</div>
                 </div>
                 <div class="market-item">
                     <div class="market-label">BTC/USD</div>
                     <div class="market-value" id="val-btc">---</div>
+                    <div class="market-change">Binance</div>
                 </div>
             </div>
 
-            <div class="info-card">
+            <div class="info-card bonds">
                 <div class="info-card-header">🛡️ Облигации</div>
                 <div class="info-card-sub">Ваш "Денежный Поток"</div>
                 <div class="info-card-text">Это как дать в долг государству. Оно гарантирует возврат денег и платит проценты. Один из самых надежных способов сохранить деньги.</div>
                 <div class="info-card-footer" style="color: var(--accent-green);">НАДЕЖНОСТЬ: ВЫСОКАЯ</div>
             </div>
 
-            <div class="info-card">
+            <div class="info-card stocks">
                 <div class="info-card-header">🚀 Акции</div>
                 <div class="info-card-sub">Ваш "Двигатель Роста"</div>
                 <div class="info-card-text">Вы становитесь совладельцем Сбера, Газпрома и других гигантов. Когда они зарабатывают и растут — растет и ваш капитал.</div>
@@ -604,12 +636,15 @@
 
         async function updateMarketData() {
             try {
-                // BITCOIN from Binance
+                // BITCOIN from Binance - Исправлено
                 fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
                     .then(r => r.json())
                     .then(d => { 
-                        if(d.price) document.getElementById('val-btc').innerText = '$' + Math.round(d.price).toLocaleString(); 
-                    });
+                        if(d && d.price) {
+                            const p = parseFloat(d.price);
+                            document.getElementById('val-btc').innerText = '$' + Math.round(p).toLocaleString(); 
+                        }
+                    }).catch(e => console.log("BTC Error", e));
 
                 // IMOEX from MOEX
                 fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
@@ -620,9 +655,12 @@
                         const val = data[cols.indexOf('CURRENTVALUE')];
                         const change = data[cols.indexOf('LASTCHANGEPRC')];
                         if(val) {
-                            let text = Math.round(val).toLocaleString();
-                            if(change) text += ` (${change > 0 ? '+' : ''}${change}%)`;
-                            document.getElementById('val-imoex').innerText = text;
+                            document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
+                            if(change) {
+                                const el = document.getElementById('change-imoex');
+                                el.innerText = `${change > 0 ? '+' : ''}${change}%`;
+                                el.className = `market-change ${change >= 0 ? 'up' : 'down'}`;
+                            }
                         }
                     });
 
