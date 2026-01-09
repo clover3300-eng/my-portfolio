@@ -438,7 +438,7 @@
 
             <div class="info-card">
                 <div class="info-card-header">🚀 Акции</div>
-                <div class="info-card-sub">Ваш двигатель роста</div>
+                <div class="info-card-sub">Ваш "Двигатель Роста"</div>
                 <div class="info-card-text">Вы становитесь совладельцем Сбера, Газпрома и других гигантов. Когда они зарабатывают и растут — растет и ваш капитал.</div>
                 <div class="info-card-footer" style="color: #f39c12;">ПОТЕНЦИАЛ ДОХОДА: ОЧЕНЬ ВЫСОКИЙ</div>
             </div>
@@ -592,7 +592,6 @@
             const min = now.getMinutes();
             const dot = document.getElementById('market-status-dot');
             
-            // Пн-Пт 10:00 - 18:50 (примерное время)
             const isWeekday = day >= 1 && day <= 5;
             const isWorkingHours = (hour > 10 || (hour === 10 && min >= 0)) && (hour < 18 || (hour === 18 && min <= 50));
             
@@ -605,19 +604,41 @@
 
         async function updateMarketData() {
             try {
+                // BITCOIN from Binance
                 fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
                     .then(r => r.json())
-                    .then(d => { document.getElementById('val-btc').innerText = '$' + Math.round(d.price).toLocaleString(); });
+                    .then(d => { 
+                        if(d.price) document.getElementById('val-btc').innerText = '$' + Math.round(d.price).toLocaleString(); 
+                    });
 
-                fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata&marketdata.columns=LAST')
-                    .then(r => r.json())
-                    .then(d => { document.getElementById('val-imoex').innerText = Math.round(d.marketdata.data[0][0]).toLocaleString(); });
-
-                fetch('https://iss.moex.com/iss/engines/currency/markets/selt/securities/USD000UTSTOM.json?iss.meta=off&iss.only=marketdata&marketdata.columns=LAST')
+                // IMOEX from MOEX
+                fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
                     .then(r => r.json())
                     .then(d => { 
-                        let val = d.marketdata.data[0][0] || '---';
-                        document.getElementById('val-usdrub').innerText = val !== '---' ? val.toFixed(2) + ' ₽' : '---';
+                        const cols = d.marketdata.columns;
+                        const data = d.marketdata.data[0];
+                        const val = data[cols.indexOf('CURRENTVALUE')];
+                        const change = data[cols.indexOf('LASTCHANGEPRC')];
+                        if(val) {
+                            let text = Math.round(val).toLocaleString();
+                            if(change) text += ` (${change > 0 ? '+' : ''}${change}%)`;
+                            document.getElementById('val-imoex').innerText = text;
+                        }
+                    });
+
+                // USD from MOEX
+                fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
+                    .then(r => r.json())
+                    .then(d => { 
+                        const mData = d.marketdata.data[0];
+                        const mCols = d.marketdata.columns;
+                        const sData = d.securities.data[0];
+                        const sCols = d.securities.columns;
+                        
+                        let val = mData ? mData[mCols.indexOf('LAST')] : null;
+                        if(!val) val = sData[sCols.indexOf('PREVPRICE')];
+                        
+                        if(val) document.getElementById('val-usdrub').innerText = val.toFixed(2) + ' ₽';
                     });
             } catch (e) { console.log("Market data error"); }
         }
