@@ -547,63 +547,63 @@
 
         async function updateMarketData() {
     try {
-        // Параллельные запросы для ускорения
-        const [btcResponse, imoexResponse, usdResponse] = await Promise.all([
-            fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'),
-            fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata'),
-            fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
-        ]);
-
-        // Обработка BTC
+        // BTC/USD через прямой API Binance
+        const btcResponse = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
         if (btcResponse.ok) {
             const data = await btcResponse.json();
-            const btcElement = document.getElementById('val-btc');
-            if (btcElement && data.price) {
-                btcElement.innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
+            if (data.price) {
+                const btcElement = document.getElementById('val-btc');
+                if (btcElement) {
+                    btcElement.innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
+                }
             }
+        } else {
+            const btcElement = document.getElementById('val-btc');
+            if (btcElement) btcElement.innerText = "Ошибка";
         }
 
-        // Обработка IMOEX
+        // IMOEX
+        const imoexResponse = await fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata');
         if (imoexResponse.ok) {
             const d = await imoexResponse.json();
             const cols = d.marketdata.columns;
             const data = d.marketdata.data[0];
             const val = data[cols.indexOf('CURRENTVALUE')];
             const change = data[cols.indexOf('LASTCHANGEPRC')];
-            
-            const imoexElement = document.getElementById('val-imoex');
-            const changeElement = document.getElementById('change-imoex');
-            
-            if (imoexElement && val) {
-                imoexElement.innerText = Math.round(val).toLocaleString();
-            }
-            if (changeElement && change !== undefined) {
-                changeElement.innerText = `${change > 0 ? '+' : ''}${change}%`;
-                changeElement.className = `market-change ${change >= 0 ? 'up' : 'down'}`;
+            if (val) {
+                const imoexElement = document.getElementById('val-imoex');
+                const changeElement = document.getElementById('change-imoex');
+                
+                if (imoexElement) {
+                    imoexElement.innerText = Math.round(val).toLocaleString();
+                }
+                if (changeElement) {
+                    changeElement.innerText = `${change > 0 ? '+' : ''}${change}%`;
+                    changeElement.className = `market-change ${change >= 0 ? 'up' : 'down'}`;
+                }
             }
         }
 
-        // Обработка USD/RUB
+        // USD/RUB через альтернативный эндпоинт MOEX
+        const usdResponse = await fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off');
         if (usdResponse.ok) {
             const d = await usdResponse.json();
             const sData = d.securities.data;
             const lastIdx = d.securities.columns.indexOf('PREVPRICE');
-            const usdElement = document.getElementById('val-usdrub');
-            
-            if (usdElement && sData && sData[0] && lastIdx !== -1) {
-                usdElement.innerText = sData[0][lastIdx].toFixed(2) + ' ₽';
+            if (sData && sData[0]) {
+                const usdElement = document.getElementById('val-usdrub');
+                if (usdElement) {
+                    usdElement.innerText = sData[0][lastIdx].toFixed(2) + ' ₽';
+                }
             }
         }
-
     } catch (e) {
         console.error("Market data error", e);
-        // Устанавливаем значения ошибок
-        const elements = ['val-btc', 'val-imoex', 'val-usdrub', 'change-imoex'];
+        // Устанавливаем значения ошибок для всех элементов
+        const elements = ['val-btc', 'val-imoex', 'val-usdrub'];
         elements.forEach(id => {
             const el = document.getElementById(id);
-            if (el && !el.innerText.includes('₽') && !el.innerText.includes('$')) {
-                el.innerText = "Ошибка";
-            }
+            if (el) el.innerText = "Ошибка";
         });
     }
 }
