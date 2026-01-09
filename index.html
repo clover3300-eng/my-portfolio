@@ -673,11 +673,17 @@
             const stockBudget = (inputSum * stockPct) / 100;
 
             if(document.getElementById('labelBondsPct')) {
-                document.getElementById('labelBondsPct').innerText = bondPct; document.getElementById('labelStocksPct').innerText = stockPct;
-                document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct); document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
-                document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
-                document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
-            }
+            document.getElementById('labelBondsPct').innerText = bondPct;
+            document.getElementById('labelStocksPct').innerText = stockPct;
+            // Обновляем текст в подзаголовке
+            document.getElementById('dynamicSubtitle').innerText = `Система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
+    
+            document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
+            document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
+            document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
+            document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
+            }    
+
 
             let actualSpentTotal = 0; let bondQuantities = {}; let bHtml = '';
             if (bonds.length > 0) {
