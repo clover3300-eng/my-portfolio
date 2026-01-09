@@ -17,12 +17,14 @@
             --accent-green: #2ecc71;
             --accent-gradient: linear-gradient(135deg, #3498db, #2980b9);
             --green-gradient: linear-gradient(135deg, #2ecc71, #27ae60);
+            --graphite-gradient: linear-gradient(135deg, #2d3436, #000000);
             --input-color: #3a506b;
             --card-shadow: rgba(0,0,0,0.06);
             --border-color: rgba(0,0,0,0.04);
             --item-border: #f0f0f0;
-            --nav-bg: rgba(255, 255, 255, 0.85);
+            --nav-bg: rgba(255, 255, 255, 0.95);
             --nav-border: rgba(255, 255, 255, 0.5);
+            --nav-icon-inactive: #bdc3c7; 
             --coupon-blue-bg: rgba(52, 152, 219, 0.08);
             --badge-blue-bg: rgba(52, 152, 219, 0.15);
             --badge-green-bg: rgba(46, 204, 113, 0.15);
@@ -36,12 +38,14 @@
             --accent-green: #4ade80;
             --accent-gradient: linear-gradient(135deg, #38bdf8, #0ea5e9);
             --green-gradient: linear-gradient(135deg, #4ade80, #22c55e);
+            --graphite-gradient: linear-gradient(135deg, #1e293b, #0f172a);
             --input-color: #f8fafc;
             --card-shadow: rgba(0,0,0,0.4);
             --border-color: rgba(255,255,255,0.05);
             --item-border: #334155;
-            --nav-bg: rgba(30, 41, 59, 0.85);
+            --nav-bg: rgba(30, 41, 59, 0.95);
             --nav-border: rgba(255, 255, 255, 0.1);
+            --nav-icon-inactive: #475569;
             --coupon-blue-bg: rgba(56, 189, 248, 0.1);
             --badge-blue-bg: rgba(56, 189, 248, 0.15);
             --badge-green-bg: rgba(74, 222, 128, 0.15);
@@ -106,7 +110,7 @@
         .mk-change.neg { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
         .mk-change.neu { background: rgba(0,0,0,0.05); color: #8e8e93; }
 
-        /* Info Cards (Redesigned) */
+        /* Info Cards */
         .info-card {
             background: var(--card-bg); padding: 20px; border-radius: 20px; margin-bottom: 15px;
             border: 1px solid var(--border-color); box-shadow: 0 5px 15px var(--card-shadow); 
@@ -119,6 +123,10 @@
 
         .info-card-header { font-size: 18px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
         
+        /* Цвета заголовков на главной */
+        .bonds .info-card-header { color: var(--accent-blue); }
+        .stocks .info-card-header { color: var(--accent-green); }
+
         .info-card-sub-clean { 
             font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; 
             margin: 0 0 10px 0; opacity: 0.7;
@@ -144,20 +152,18 @@
         }
         .btn-action:active { opacity: 0.7; transform: scale(0.98); }
 
-        .btn-shine {
-            position: relative; background: var(--accent-gradient); color: white; border: none; overflow: hidden;
-            box-shadow: 0 12px 25px rgba(52, 152, 219, 0.4); margin-top: 25px;
-            padding: 18px; font-size: 16px; border-radius: 18px;
+        /* Современная темная кнопка */
+        .btn-graphite {
+            position: relative; background: var(--graphite-gradient); color: white; border: none; overflow: hidden;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3); margin-top: 25px;
+            padding: 20px; font-size: 16px; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
         }
-        .btn-shine::after {
-            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.1) 60%, rgba(255,255,255,0) 100%);
-            transform: rotate(30deg); transition: transform 0.5s; animation: shine 3s infinite;
-        }
-        @keyframes shine { 0% { transform: translateX(-100%) rotate(30deg); } 20% { transform: translateX(100%) rotate(30deg); } 100% { transform: translateX(100%) rotate(30deg); } }
+        .btn-graphite svg { width: 32px; height: 32px; fill: white; }
+        .btn-graphite:active { transform: scale(0.98); }
 
         .start-expl {
-            font-size: 11px; color: #8e8e93; text-align: center; margin-top: 12px; padding: 0 10px; line-height: 1.5;
+            font-size: 11px; color: #8e8e93; text-align: center; margin-top: 15px; padding: 0 10px; line-height: 1.5;
         }
 
         .header { text-align: center; margin-bottom: 20px; }
@@ -250,7 +256,7 @@
             display: inline-flex; align-items: center; justify-content: center;
             width: 14px; height: 14px; background: #999; color: white;
             border-radius: 50%; font-size: 9px; margin-left: 6px; cursor: pointer;
-            opacity: 0.4; /* Более прозрачные */
+            opacity: 0.4;
         }
         .echelon-tip {
             display: none; position: absolute; top: 100%; left: 12px; right: 12px;
@@ -267,8 +273,8 @@
         .coupon-header {
             padding: 14px; background: var(--coupon-blue-bg); color: var(--accent-blue);
             font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer; align-items: center;
+            position: relative; /* Для позиционирования подсказки */
         }
-        /* Фикс для всплывающей плашки дождя */
         .coupon-title-area {
             display: flex; align-items: center; position: relative;
         }
@@ -316,14 +322,14 @@
             -webkit-backdrop-filter: blur(25px) saturate(180%);
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border);
-            cursor: pointer; color: var(--nav-icon); transition: all 0.2s;
+            cursor: pointer; color: var(--nav-icon-inactive); transition: all 0.2s;
         }
         .nav-search-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
         .nav-search-btn:active { transform: scale(0.9); }
 
         .nav-item {
             display: flex; align-items: center; justify-content: center; width: 44px; height: 44px;
-            border-radius: 15px; cursor: pointer; transition: all 0.2s; color: var(--nav-icon);
+            border-radius: 15px; cursor: pointer; transition: all 0.2s; color: var(--nav-icon-inactive);
         }
         .nav-item.active { color: var(--accent-blue); background: rgba(52, 152, 219, 0.1); }
         .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -341,25 +347,30 @@
             padding: 14px 16px;
             margin-bottom: 10px;
             border: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 80px 80px; /* Name | Price | Yield */
             align-items: center;
             box-shadow: 0 4px 10px var(--card-shadow);
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             position: relative; overflow: hidden;
+            gap: 5px;
         }
         .ofz-card-modern::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent-blue); }
         .ofz-card-modern:active { transform: scale(0.98); }
         .ofz-main-info { display: flex; flex-direction: column; gap: 4px; }
-        .ofz-name-lg { font-weight: 700; font-size: 14px; color: var(--text-main); }
+        .ofz-name-lg { font-weight: 700; font-size: 13px; color: var(--text-main); line-height: 1.2; }
         .ofz-ticker-sm { font-size: 10px; color: #8e8e93; font-weight: 600; text-transform: uppercase; }
+        
+        .ofz-price { font-size: 12px; font-weight: 600; color: var(--text-main); text-align: right; }
+        
         .ofz-yield-badge { 
-            font-weight: 800; font-size: 14px; color: var(--accent-green); 
-            background: rgba(46, 204, 113, 0.1); padding: 6px 10px; border-radius: 10px; 
-            display: flex; align-items: center; gap: 4px;
+            font-weight: 800; font-size: 13px; color: var(--accent-green); 
+            background: rgba(46, 204, 113, 0.1); padding: 6px 8px; border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center; gap: 2px;
+            margin-left: auto;
         }
-        .ofz-arrow { width: 12px; height: 12px; fill: currentColor; }
+        .ofz-arrow { width: 10px; height: 10px; fill: currentColor; }
 
         /* Modern Calculator Badge */
         .calc-badge-modern {
@@ -388,6 +399,13 @@
             background: transparent; color: var(--text-main); outline: none; padding: 0;
         }
         
+        /* Крестик для сброса */
+        .btn-row-reset {
+            width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+            color: #e74c3c; cursor: pointer; margin-left: 8px; opacity: 0.7;
+        }
+        .btn-row-reset:active { opacity: 1; transform: scale(0.9); }
+        
         .result-list-container { margin-top: 15px; background: rgba(0,0,0,0.02); border-radius: 8px; padding: 10px; }
 
         /* Small Info Icon */
@@ -400,11 +418,16 @@
             font-size: 11px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px; cursor: pointer;
         }
         
-        /* Tooltip Box */
+        /* Tooltip Box - Прямо под дождем, светлая плашка */
         .tooltip-box {
-            position: absolute; background: #333; color: white; padding: 6px 10px; border-radius: 6px;
-            font-size: 10px; top: -35px; left: 100%; margin-left: 5px; white-space: nowrap;
+            position: absolute; 
+            top: 100%; left: 0; margin-top: 5px; /* Снизу */
+            background: #ffffff; color: #2c3e50; 
+            padding: 8px 12px; border-radius: 8px;
+            font-size: 11px; font-weight: normal;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05);
             opacity: 0; visibility: hidden; transition: opacity 0.2s; pointer-events: none; z-index: 10;
+            white-space: nowrap;
         }
         .tooltip-container { position: relative; display: inline-flex; align-items: center; }
         .tooltip-container.show .tooltip-box { opacity: 1; visibility: visible; }
@@ -438,8 +461,8 @@
         .search-result-item { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--item-border); }
         
         .btn-reset-modern {
-            padding: 6px 12px; border: none; background: rgba(231, 76, 60, 0.1); color: #e74c3c;
-            border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; 
+            padding: 8px 14px; border: none; background: rgba(231, 76, 60, 0.1); color: #e74c3c;
+            border-radius: 12px; font-size: 11px; font-weight: bold; cursor: pointer; 
             margin-top: 10px; display: inline-flex; align-items: center; gap: 5px;
         }
         .btn-reset-modern:active { opacity: 0.7; }
@@ -463,7 +486,7 @@
                 <div class="market-item-modern blue">
                     <div class="mk-label">IMOEX</div>
                     <div class="mk-val" id="val-imoex">---</div>
-                    <div class="mk-change neu" id="change-imoex">---</div>
+                    <div class="mk-change neu" style="opacity:0;">---</div> <!-- Hidden as requested -->
                 </div>
                 <div class="market-item-modern green">
                     <div class="mk-label">USD/RUB</div>
@@ -473,7 +496,7 @@
                 <div class="market-item-modern orange">
                     <div class="mk-label">BTC/USD</div>
                     <div class="mk-val" id="val-btc">---</div>
-                    <div class="mk-change neu">BINANCE</div>
+                    <div class="mk-change neu" style="opacity:0;">---</div> <!-- Hidden as requested -->
                 </div>
             </div>
 
@@ -491,14 +514,13 @@
                 <div class="info-card-badge badge-green">ДОХОДНОСТЬ: ВЫСОКАЯ</div>
             </div>
 
-            <button class="btn-action btn-shine" onclick="showScreen('screen-app')">
-                <svg viewBox="0 0 24 24" style="width:20px;height:20px;" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <button class="btn-graphite" onclick="showScreen('screen-app')">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                 Начать расчет
             </button>
             <p class="start-expl">
                 При нажатии на эту кнопку Вам будет предложен список из 8 Облигаций Федерального Займа и 12 Акций Публичных Компаний к Покупке
             </p>
-            <button class="btn-action" style="margin-top: 15px; border-style: dashed;" onclick="window.Telegram.WebApp.showAlert('Здесь будет переход к тесту на Риск-Профиль!')">Определить свой Риск-Профиль</button>
         </div>
     </div>
 
@@ -629,10 +651,12 @@
                 <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">Введите кол-во штук купленных:</div>
                 <div id="calc-bonds-input-list"></div>
                 
-                <button class="btn-reset-modern" onclick="resetCustomCalc()">
-                    <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                    Очистить все
-                </button>
+                <div style="display:flex; justify-content: flex-end;">
+                    <button class="btn-reset-modern" onclick="resetCustomCalc()">
+                        <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        Очистить все
+                    </button>
+                </div>
 
                 <div class="result-list-container">
                     <div style="font-weight:bold; font-size:12px; margin-bottom:8px; color:var(--accent-blue);">Ваши выплаты:</div>
@@ -742,14 +766,9 @@
                 fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
                     .then(r => r.json()).then(d => { 
                         const cols = d.marketdata.columns; const data = d.marketdata.data[0];
-                        const val = data[cols.indexOf('CURRENTVALUE')]; const change = data[cols.indexOf('LASTCHANGEPRC')];
+                        const val = data[cols.indexOf('CURRENTVALUE')]; 
                         if(val) {
                             document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
-                            const el = document.getElementById('change-imoex');
-                            if(change !== null) {
-                                el.innerText = `${change > 0 ? '+' : ''}${change}%`;
-                                el.className = `mk-change ${change >= 0 ? 'pos' : 'neg'}`;
-                            }
                         }
                     });
 
@@ -913,6 +932,14 @@
                 recalcCustomCoupons();
             }
         }
+        
+        function resetOne(ticker) {
+             const input = document.getElementById(`input-${ticker}`);
+             if(input) {
+                 input.value = 0;
+                 recalcCustomCoupons();
+             }
+        }
 
         function renderCustomBondCalc() {
             const container = document.getElementById('calc-bonds-input-list');
@@ -926,6 +953,9 @@
                         <div class="qty-btn" onclick="changeQty('${b.t}', -1)">-</div>
                         <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons()">
                         <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
+                    </div>
+                    <div class="btn-row-reset" onclick="resetOne('${b.t}')">
+                        <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </div>
                 </div>`;
             });
@@ -1081,6 +1111,7 @@
                         <div class="ofz-name-lg">${limitName(b.n)}</div>
                         <div class="ofz-ticker-sm">${b.t}</div>
                     </div>
+                    <div class="ofz-price">${b.p} ₽</div>
                     <div class="ofz-yield-badge" title="Простая доходность">
                         ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                     </div>
@@ -1126,7 +1157,7 @@
             updateEchelonTable();
         }
 
-        // --- Improved PDF Generation ---
+        // --- Improved PDF Generation (Logic) ---
         async function shareAsPDF() {
             const btn = document.getElementById('btnShare'); 
             const container = document.getElementById('shareContainer');
@@ -1160,21 +1191,40 @@
                 });
                 
                 doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                doc.save('MdmSolomina_Portfolio.pdf');
+                const pdfBlob = doc.output('blob');
+                
+                // Пытаемся использовать нативное меню "Поделиться" (Telegram откроет свое меню)
+                if (navigator.share && navigator.canShare) {
+                    const file = new File([pdfBlob], "Solomina_Portfolio.pdf", { type: "application/pdf" });
+                    if (navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'Мой портфель 50/50',
+                            text: 'Расчет от Madame Solomi’na'
+                        });
+                        // Возврат состояния кнопки сразу после закрытия меню (успех или отмена)
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        brand.style.display = 'none';
+                        return;
+                    }
+                }
 
-                // Имитация "отправки" и возврата состояния, так как в веб-версии 
-                // мы просто скачиваем файл. Кнопка возвращается в исходное состояние.
+                // Fallback: Если share не поддерживается (десктоп), просто скачиваем
+                doc.save('Solomina_Portfolio.pdf');
+                
                 setTimeout(() => {
-                    btn.innerHTML = `✅ Файл готов!`;
+                    btn.innerHTML = `✅ Файл скачан`;
                     setTimeout(() => {
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                     }, 2000);
-                }, 1000);
+                }, 500);
 
             } catch(e) {
                 console.error(e);
-                alert("Ошибка при создании PDF");
+                alert("Не удалось открыть меню отправки. Файл будет скачан.");
+                doc.save('Solomina_Portfolio.pdf'); // Аварийное скачивание
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             } finally {
