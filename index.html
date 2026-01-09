@@ -546,36 +546,40 @@
         }
 
         async function updateMarketData() {
-            try {
-                fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
-                    .then(res => res.json()).then(data => {
-                        if (data && data.price) document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
-                    });
-                fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
-                    .then(r => r.json()).then(d => { 
-                        const cols = d.marketdata.columns; const data = d.marketdata.data[0];
-                        const val = data[cols.indexOf('CURRENTVALUE')]; const change = data[cols.indexOf('LASTCHANGEPRC')];
-                        if(val) {
-                            document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
-                            if(change !== null) {
-                                const el = document.getElementById('change-imoex');
-                                el.innerText = `${change > 0 ? '+' : ''}${change}%`;
-                                el.className = `market-change ${change >= 0 ? 'up' : 'down'}`;
-                            }
-                        }
-                    });
-                fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
-                    .then(r => r.json()).then(d => { 
-                        const mData = d.marketdata.data[0]; const mCols = d.marketdata.columns;
-                        const sData = d.securities.data[0]; const sCols = d.securities.columns;
-                        let val = mData ? mData[mCols.indexOf('LAST')] : sData[sCols.indexOf('PREVPRICE')];
-                        if(val) document.getElementById('val-usdrub').innerText = val.toFixed(2) + ' ₽';
-                    });
-            } catch (e) { console.log("Market data error"); }
-        }
+    try {
+        // BTC/USD через прямой API Binance
+        fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
+            .then(res => res.json())
+            .then(data => {
+                if (data.price) {
+                    document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
+                }
+            }).catch(() => { document.getElementById('val-btc').innerText = "Ошибка"; });
 
-        setInterval(updateMarketData, 30000); setInterval(updateMarketStatus, 60000);
-        updateMarketData(); updateMarketStatus();
+        // IMOEX
+        fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
+            .then(r => r.json()).then(d => { 
+                const cols = d.marketdata.columns; const data = d.marketdata.data[0];
+                const val = data[cols.indexOf('CURRENTVALUE')]; const change = data[cols.indexOf('LASTCHANGEPRC')];
+                if(val) {
+                    document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
+                    const el = document.getElementById('change-imoex');
+                    el.innerText = `${change > 0 ? '+' : ''}${change}%`;
+                    el.className = `market-change ${change >= 0 ? 'up' : 'down'}`;
+                }
+            });
+
+        // USD/RUB через альтернативный эндпоинт MOEX
+        fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
+            .then(r => r.json()).then(d => {
+                const sData = d.securities.data;
+                const lastIdx = d.securities.columns.indexOf('PREVPRICE');
+                if(sData && sData[0]) {
+                    document.getElementById('val-usdrub').innerText = sData[0][lastIdx].toFixed(2) + ' ₽';
+                }
+            });
+    } catch (e) { console.error("Market data error", e); }
+}
 
         function showScreen(screenId) {
             currentScreen = screenId;
