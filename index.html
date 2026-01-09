@@ -113,7 +113,24 @@
             letter-spacing: 1px;
         }
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
-        .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 30px; }
+        .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 20px; }
+
+        /* Market Ticker */
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .market-item {
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .market-label { font-size: 10px; font-weight: bold; color: #8e8e93; text-transform: uppercase; margin-bottom: 4px; }
+        .market-value { font-size: 13px; font-weight: 800; color: var(--accent-blue); }
 
         .terminal-card {
             background: var(--card-bg);
@@ -127,7 +144,7 @@
         }
         .terminal-card-icon { font-size: 20px; }
 
-        /* Унифицированные кнопки (как купонный дождь) */
+        /* Унифицированные кнопки */
         .btn-action {
             display: block;
             width: 100%;
@@ -373,6 +390,21 @@
             <div class="home-title">Добро Пожаловать! 🎉</div>
             <div class="home-desc">Это мини-помощник по выбору российских активов. Помогаем делать Иксы! 😁</div>
             
+            <div class="market-grid">
+                <div class="market-item">
+                    <div class="market-label">IMOEX</div>
+                    <div class="market-value" id="val-imoex">---</div>
+                </div>
+                <div class="market-item">
+                    <div class="market-label">USD/RUB</div>
+                    <div class="market-value" id="val-usdrub">---</div>
+                </div>
+                <div class="market-item">
+                    <div class="market-label">BTC/USD</div>
+                    <div class="market-value" id="val-btc">---</div>
+                </div>
+            </div>
+
             <div class="terminal-card">
                 <div class="terminal-card-icon">📈</div>
                 <div style="font-size: 13px;">Анализ акций РФ в реальном времени</div>
@@ -523,6 +555,32 @@
             { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
             { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
+
+        // Market Data Fetching
+        async function updateMarketData() {
+            try {
+                // BTC from Binance
+                fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
+                    .then(r => r.json())
+                    .then(d => { document.getElementById('val-btc').innerText = '$' + Math.round(d.price).toLocaleString(); });
+
+                // IMOEX from MOEX API
+                fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata&marketdata.columns=LAST')
+                    .then(r => r.json())
+                    .then(d => { document.getElementById('val-imoex').innerText = Math.round(d.marketdata.data[0][0]).toLocaleString(); });
+
+                // USD from MOEX (Approx via USDRUB_TOM)
+                fetch('https://iss.moex.com/iss/engines/currency/markets/selt/securities/USD000UTSTOM.json?iss.meta=off&iss.only=marketdata&marketdata.columns=LAST')
+                    .then(r => r.json())
+                    .then(d => { 
+                        let val = d.marketdata.data[0][0] || '---';
+                        document.getElementById('val-usdrub').innerText = val !== '---' ? val.toFixed(2) + ' ₽' : '---';
+                    });
+            } catch (e) { console.log("Market data error"); }
+        }
+
+        setInterval(updateMarketData, 30000);
+        updateMarketData();
 
         function showScreen(screenId) {
             currentScreen = screenId;
