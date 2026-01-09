@@ -18,9 +18,9 @@
             --border-color: rgba(0,0,0,0.02);
             --item-border: #f0f0f0;
             --tag-bg: #e1e8ed;
+            --nav-bg: rgba(255, 255, 255, 0.8);
         }
 
-        /* Принудительный темный режим при активации класса .dark-mode */
         body.dark-mode {
             --bg-color: #0f172a;
             --card-bg: #1e293b;
@@ -32,6 +32,7 @@
             --border-color: rgba(255,255,255,0.05);
             --item-border: #334155;
             --tag-bg: #334155;
+            --nav-bg: rgba(30, 41, 59, 0.8);
         }
 
         @media (prefers-color-scheme: dark) {
@@ -46,10 +47,10 @@
                 --border-color: rgba(255,255,255,0.05);
                 --item-border: #334155;
                 --tag-bg: #334155;
+                --nav-bg: rgba(30, 41, 59, 0.8);
             }
         }
 
-        /* Принудительный светлый режим */
         body.light-mode {
             --bg-color: #f4f7f9;
             --card-bg: #ffffff;
@@ -61,6 +62,7 @@
             --border-color: rgba(0,0,0,0.02);
             --item-border: #f0f0f0;
             --tag-bg: #e1e8ed;
+            --nav-bg: rgba(255, 255, 255, 0.8);
         }
 
         body {
@@ -69,7 +71,7 @@
             color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
             -webkit-tap-highlight-color: transparent;
-            padding-bottom: 80px;
+            padding-bottom: 100px;
             transition: background 0.3s, color 0.3s;
         }
 
@@ -243,10 +245,46 @@
 
         .theme-toggle-container {
             display: flex; justify-content: center; margin-top: 15px; opacity: 0.5;
+            margin-bottom: 20px;
         }
         .theme-toggle-btn {
             background: transparent; border: none; font-size: 20px; cursor: pointer; padding: 10px;
         }
+
+        /* Навигационное меню снизу */
+        .bottom-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            z-index: 900;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: bold;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        .nav-item span { font-size: 18px; }
+
     </style>
 </head>
 <body onclick="hideAllTips(event)">
@@ -257,7 +295,7 @@
             <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
         </div>
 
-        <div class="calc-box">
+        <div class="calc-box" id="calcSection">
             <div class="calc-top">
                 <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
                     <span class="input-label">Сумма Инвестиций</span>
@@ -306,7 +344,7 @@
                 <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
                 <div id="shareDate" style="font-size: 10px; color: #888;"></div>
             </div>
-            <div class="section-header">1. Денежный Поток</div>
+            <div class="section-header" id="portfolioSection">1. Денежный Поток</div>
             <div class="allocation-info">
                 <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
                 <span class="percent-tag"><span class="bond-pct-text">50</span>% от капитала</span>
@@ -314,7 +352,7 @@
             <div id="listBonds" class="asset-list"></div>
 
             <div class="coupon-box" id="couponBox">
-                <div class="coupon-header" onclick="document.getElementById('couponContent').classList.toggle('active')">
+                <div class="coupon-header" id="rainSection" onclick="document.getElementById('couponContent').classList.toggle('active')">
                     <span>🌦 Купонный Дождь</span>
                     <span id="couponTotalHeader">0 ₽</span>
                 </div>
@@ -344,6 +382,21 @@
 
         <div class="theme-toggle-container">
             <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            <span>🧮</span>Калькулятор
+        </div>
+        <div class="nav-item" onclick="document.getElementById('portfolioSection').scrollIntoView({behavior: 'smooth'})">
+            <span>💼</span>Портфель
+        </div>
+        <div class="nav-item" onclick="document.getElementById('rainSection').scrollIntoView({behavior: 'smooth'}); document.getElementById('couponContent').classList.add('active')">
+            <span>🌦</span>Выплаты
+        </div>
+        <div class="nav-item" onclick="shareAsImage()">
+            <span>📸</span>Фото
         </div>
     </div>
 
