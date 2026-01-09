@@ -488,25 +488,52 @@
                 </div>
         </div>
 
-        <div class="section-header">🚀 Таблица Эшелонов</div>
-        <div id="echelon-table-container" style="background: var(--card-bg); border-radius: 16px; padding: 15px 5px; overflow-x: auto;">
-            <table style="width: 100%; border-collapse: separate; border-spacing: 2px; font-size: 11px; text-align: center;">
-                <thead>
-                    <tr>
-                        <th><div class="echelon-header">I</div></th>
-                        <th><div class="echelon-header">II</div></th>
-                        <th><div class="echelon-header">III</div></th>
-                        <th><div class="echelon-header">IV</div></th>
-                    </tr>
-                </thead>
-                <tbody id="echelon-tickers-body">
-                    </tbody>
-            </table>
+        <div id="screen-assets" class="screen">
+    <div style="text-align: center; margin-bottom: 25px;">
+        <h1 style="margin: 0; font-size: 22px;">Аналитический Центр</h1>
+        <p style="font-size: 13px; color: #8e8e93; margin-top: 5px;"> Madame Solomi’na Terminal </p>
+    </div>
+    
+    <div style="font-weight: 800; font-size: 16px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+        🛡️ Топ ОФЗ для покупки
+    </div>
+
+    <div id="ofz-list-modern"></div>
+
+    <div class="info-banner">
+        <b>💡 Подсказка:</b> Нажмите на название облигации или тикер акции, чтобы мгновенно скопировать его.
+    </div>
+
+    <div style="background: var(--card-bg); border-radius: 20px; padding: 20px; border: 1px solid var(--border-color); margin-top: 25px;">
+        <div style="font-weight: 800; margin-bottom: 15px; font-size: 16px;">📅 Калькулятор выплат</div>
+        
+        <div class="tax-selector" style="display: flex; gap: 5px; margin-bottom: 15px;">
+            <button class="tax-btn active" onclick="setCalcTax(0, this)">Налог 0%</button>
+            <button class="tax-btn" onclick="setCalcTax(0.13, this)">НДФЛ 13%</button>
+            <button class="tax-btn" onclick="setCalcTax(0.15, this)">НДФЛ 15%</button>
         </div>
-        <div style="font-size:10px; color:#8e8e93; margin-top:8px; text-align:center;">
-            Нажмите на тикер для копирования<br>
-            * Цель - ориентир сроком до 36 месяцев
+
+        <div id="ofz-calc-inputs">
+            </div>
+
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 2px dashed var(--item-border);">
+            <div style="display: flex; justify-content: space-between; font-weight: 800;">
+                <span>Итого к получению:</span>
+                <span id="calc-total-sum" style="color: var(--accent-blue); font-size: 18px;">0 ₽</span>
+            </div>
         </div>
+    </div>
+
+    <div class="echelon-header-modern">🚀 I Эшелон (Голубые фишки) <span>30%</span></div>
+    <div id="echelon-1-list"></div>
+
+    <div class="echelon-header-modern echelon-2">🚀 II Эшелон (Рост) <span>40%</span></div>
+    <div id="echelon-2-list"></div>
+
+    <div class="info-banner" style="background: rgba(46, 204, 113, 0.08); border-left-color: var(--accent-green);">
+        📌 <b>Таргет по акциям:</b> Это аналитический ориентир (целевая цена) сроком <b>до 36 месяцев</b>. Не является индивидуальной рекомендацией.
+    </div>
+</div>
 
         <button class="btn-action" style="margin-top: 20px;" onclick="showScreen('screen-search')">🔍 Поиск по тикеру</button>
         <div class="theme-toggle-container" style="margin-top: 40px;">
