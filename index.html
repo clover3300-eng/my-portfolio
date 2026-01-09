@@ -13,6 +13,7 @@
             --text-main: #2c3e50;
             --accent-blue: #3498db;
             --accent-green: #2ecc71;
+            --accent-red: #e74c3c;
             --input-color: #3a506b;
             --card-shadow: rgba(0,0,0,0.04);
             --border-color: rgba(0,0,0,0.02);
@@ -30,6 +31,7 @@
             --text-main: #f1f5f9;
             --accent-blue: #38bdf8;
             --accent-green: #4ade80;
+            --accent-red: #fb7185;
             --input-color: #f8fafc;
             --card-shadow: rgba(0,0,0,0.3);
             --border-color: rgba(255,255,255,0.05);
@@ -48,6 +50,7 @@
                 --text-main: #f1f5f9;
                 --accent-blue: #38bdf8;
                 --accent-green: #4ade80;
+                --accent-red: #fb7185;
                 --input-color: #f8fafc;
                 --card-shadow: rgba(0,0,0,0.3);
                 --border-color: rgba(255,255,255,0.05);
@@ -66,6 +69,7 @@
             --text-main: #2c3e50;
             --accent-blue: #3498db;
             --accent-green: #2ecc71;
+            --accent-red: #e74c3c;
             --input-color: #3a506b;
             --card-shadow: rgba(0,0,0,0.04);
             --border-color: rgba(0,0,0,0.02);
@@ -96,100 +100,79 @@
         }
 
         /* Дизайн Главного экрана Terminal */
-        .terminal-header {
-            padding: 30px 10px;
-            text-align: left;
-        }
+        .terminal-header { padding: 20px 10px; text-align: left; }
         .terminal-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            background: var(--accent-blue);
-            color: white;
-            font-size: 10px;
-            font-weight: 900;
-            border-radius: 4px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            letter-spacing: 1px;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; background: var(--accent-blue);
+            color: white; font-size: 10px; font-weight: 900;
+            border-radius: 4px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px;
         }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: blink 1.5s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
         .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 20px; }
 
         /* Market Ticker */
-        .market-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 25px;
-        }
+        .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
         .market-item {
-            background: var(--card-bg);
-            padding: 10px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            text-align: center;
+            background: var(--card-bg); padding: 12px 8px; border-radius: 14px;
+            border: 1px solid var(--border-color); text-align: center;
+            box-shadow: 0 4px 12px var(--card-shadow);
         }
-        .market-label { font-size: 10px; font-weight: bold; color: #8e8e93; text-transform: uppercase; margin-bottom: 4px; }
-        .market-value { font-size: 13px; font-weight: 800; color: var(--accent-blue); }
+        .market-label { font-size: 9px; font-weight: bold; color: #8e8e93; text-transform: uppercase; margin-bottom: 4px; }
+        .market-value { font-size: 13px; font-weight: 800; color: var(--text-main); }
+        .market-change { font-size: 9px; font-weight: bold; margin-top: 2px; }
+        .up { color: var(--accent-green); }
+        .down { color: var(--accent-red); }
+
+        /* Quote Box */
+        .quote-box {
+            background: var(--coupon-blue-bg); padding: 15px; border-radius: 16px;
+            margin-bottom: 25px; border-left: 4px solid var(--accent-blue);
+        }
+        .quote-text { font-style: italic; font-size: 13px; color: var(--text-main); margin-bottom: 5px; opacity: 0.8; }
+        .quote-author { font-size: 10px; font-weight: bold; text-transform: uppercase; color: var(--accent-blue); }
 
         .terminal-card {
-            background: var(--card-bg);
-            padding: 16px;
-            border-radius: 16px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            background: var(--card-bg); padding: 16px; border-radius: 16px;
+            margin-bottom: 12px; border: 1px solid var(--border-color);
+            display: flex; align-items: center; gap: 15px;
         }
         .terminal-card-icon { font-size: 20px; }
 
         /* Унифицированные кнопки */
         .btn-action {
-            display: block;
-            width: 100%;
-            padding: 16px;
-            margin-top: 12px;
-            background: var(--coupon-blue-bg);
-            color: var(--accent-blue);
-            border: 1px solid var(--accent-blue);
-            border-radius: 16px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
+            display: block; width: 100%; padding: 16px; margin-top: 12px;
+            background: var(--coupon-blue-bg); color: var(--accent-blue);
+            border: 1px solid var(--accent-blue); border-radius: 16px;
+            font-size: 14px; font-weight: bold; cursor: pointer; text-align: center;
             transition: all 0.2s;
         }
         .btn-action:active { opacity: 0.7; transform: scale(0.98); }
 
-        /* Остальные стили */
+        /* Остальные стили (структура не меняется) */
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 4px; }
-        
         .calc-box {
             background: var(--card-bg); padding: 24px; border-radius: 24px;
             box-shadow: 0 15px 35px var(--card-shadow); margin-bottom: 25px;
             border: 1px solid var(--border-color);
         }
-        
         .calc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .input-container { flex: 1; }
         .input-label { font-size: 13px; color: #8e8e93; font-weight: 600; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         .input-wrapper { display: flex; align-items: baseline; gap: 8px; }
-
         input#sumInput { 
             border: none; font-size: 34px; font-weight: 700; width: 100%; 
             outline: none; color: var(--input-color); background: transparent;
             margin: 0; padding: 0; line-height: 1;
         }
-
         .currency { font-size: 28px; color: #d1d1d6; font-weight: 500; }
-
         .usage-bar-container { margin-bottom: 20px; }
         .usage-label { font-size: 10px; color: #8e8e93; display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: bold; }
         .usage-track { height: 4px; background: #eee; border-radius: 2px; overflow: hidden; }
         #usageFill { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.3s; }
-
         .fee-selector { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--item-border); }
         .fee-label { font-size: 11px; color: #8e8e93; font-weight: bold; margin-bottom: 8px; display: block; text-transform: uppercase; }
         .fee-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -199,7 +182,6 @@
             cursor: pointer; transition: all 0.2s;
         }
         .fee-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
-
         .chart-mini {
             width: 60px; height: 60px; border-radius: 18px; 
             background: conic-gradient(var(--accent-blue) 0% 50%, var(--accent-green) 50% 100%);
@@ -208,185 +190,61 @@
             transition: background 0.3s; cursor: pointer;
         }
         .chart-mini::after { content: attr(data-pct); font-size: 10px; font-weight: 900; color: white; }
-
         .ratio-control { padding-top: 5px; }
-        .ratio-slider {
-            -webkit-appearance: none; width: 100%; height: 6px; border-radius: 5px;
-            background: #e0e0e0; outline: none; margin: 15px 0;
-        }
+        .ratio-slider { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 5px; background: #e0e0e0; outline: none; margin: 15px 0; }
         .ratio-slider::-webkit-slider-thumb {
             -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
             background: var(--accent-blue); cursor: pointer; border: 3px solid white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
-
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
-        
-        .asset-item {
-            display: grid; 
-            grid-template-columns: 85px 1fr 75px 80px;
-            padding: 12px; border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center;
-        }
-        
+        .asset-item { display: grid; grid-template-columns: 85px 1fr 75px 80px; padding: 12px; border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center; }
         .ticker { font-weight: bold; color: var(--text-main); }
         .asset-name { color: #8e8e93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
         .qty { text-align: right; padding-right: 8px; font-weight: bold; color: var(--accent-blue); }
         .price-total { text-align: right; color: var(--text-main); font-weight: 500; }
-
-        .details {
-            grid-column: 1 / -1; display: none; background: rgba(0,0,0,0.02);
-            padding: 10px 12px; border-top: 1px solid var(--item-border); font-size: 11px;
-            color: #8e8e93; line-height: 1.6;
-        }
+        .details { grid-column: 1 / -1; display: none; background: rgba(0,0,0,0.02); padding: 10px 12px; border-top: 1px solid var(--item-border); font-size: 11px; color: #8e8e93; line-height: 1.6; }
         .asset-item.active .details { display: block; }
-
         .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; }
         .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        
-        .percent-tag { 
-            background: var(--accent-blue); 
-            padding: 5px 12px; 
-            border-radius: 20px; 
-            font-weight: 800; 
-            font-size: 11px; 
-            color: white; 
-            box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3);
-            white-space: nowrap;
-        }
-        
-        .echelon-title { 
-            padding: 10px 12px; font-size: 12px; font-weight: bold; 
-            background: rgba(0,0,0,0.05); color: #8e8e93; display: flex; 
-            justify-content: space-between; align-items: center;
-            position: relative;
-        }
-        .echelon-info-icon {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 14px; height: 14px; background: #999; color: white;
-            border-radius: 50%; font-size: 9px; margin-left: 6px; cursor: pointer;
-        }
-        .echelon-tip {
-            display: none; position: absolute; top: 100%; left: 12px; right: 12px;
-            background: #3a506b; color: white; padding: 10px; border-radius: 8px;
-            font-size: 11px; z-index: 10; font-weight: normal; line-height: 1.3;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
+        .percent-tag { background: var(--accent-blue); padding: 5px 12px; border-radius: 20px; font-weight: 800; font-size: 11px; color: white; box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3); white-space: nowrap; }
+        .echelon-title { padding: 10px 12px; font-size: 12px; font-weight: bold; background: rgba(0,0,0,0.05); color: #8e8e93; display: flex; justify-content: space-between; align-items: center; position: relative; }
+        .echelon-info-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; background: #999; color: white; border-radius: 50%; font-size: 9px; margin-left: 6px; cursor: pointer; }
+        .echelon-tip { display: none; position: absolute; top: 100%; left: 12px; right: 12px; background: #3a506b; color: white; padding: 10px; border-radius: 8px; font-size: 11px; z-index: 10; font-weight: normal; line-height: 1.3; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .echelon-title.show-tip .echelon-tip { display: block; }
-
-        .coupon-box {
-            background: var(--card-bg); border-radius: 16px; margin-top: 10px;
-            border: 1px solid var(--accent-blue); overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .coupon-header {
-            padding: 14px; background: var(--coupon-blue-bg); color: var(--accent-blue);
-            font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer;
-        }
+        .coupon-box { background: var(--card-bg); border-radius: 16px; margin-top: 10px; border: 1px solid var(--accent-blue); overflow: hidden; margin-bottom: 20px; }
+        .coupon-header { padding: 14px; background: var(--coupon-blue-bg); color: var(--accent-blue); font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer; }
         .coupon-content { display: none; padding: 0 12px 12px; }
         .coupon-content.active { display: block; }
-        
-        .coupon-row {
-            display: grid;
-            grid-template-columns: 85px 1fr 50px 70px;
-            gap: 5px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--item-border);
-            font-size: 11px;
-            align-items: center;
-        }
-        .coupon-row b { color: var(--text-main); }
-
-        .tax-selector-ui {
-            display: flex; background: var(--bg-color); border-radius: 10px;
-            padding: 3px; margin: 12px 0; gap: 2px;
-        }
-        .tax-ui-btn {
-            flex: 1; border: none; background: transparent; padding: 6px;
-            font-size: 11px; font-weight: bold; color: #8e8e93; border-radius: 8px;
-            cursor: pointer; transition: all 0.2s;
-        }
+        .coupon-row { display: grid; grid-template-columns: 85px 1fr 50px 70px; gap: 5px; padding: 10px 0; border-bottom: 1px solid var(--item-border); font-size: 11px; align-items: center; }
+        .tax-selector-ui { display: flex; background: var(--bg-color); border-radius: 10px; padding: 3px; margin: 12px 0; gap: 2px; }
+        .tax-ui-btn { flex: 1; border: none; background: transparent; padding: 6px; font-size: 11px; font-weight: bold; color: #8e8e93; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
         .tax-ui-btn.active { background: var(--card-bg); color: var(--accent-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-
-        #photoModal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; flex-direction: column;
-        }
+        #photoModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; flex-direction: column; }
         #photoModal img { max-width: 85%; max-height: 70%; border-radius: 12px; }
         .modal-controls { display: flex; gap: 15px; margin-top: 25px; }
-        .ctrl-btn { 
-            background: white; color: black; padding: 12px 20px; border-radius: 12px; 
-            font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;
-        }
+        .ctrl-btn { background: white; color: black; padding: 12px 20px; border-radius: 12px; font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px; }
         .ctrl-btn.blue { background: var(--accent-blue); color: white; }
+        .footer-disclaimer { text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px; }
+        .theme-toggle-container { display: flex; justify-content: center; margin-top: 15px; opacity: 0.5; margin-bottom: 20px; }
+        .theme-toggle-btn { background: transparent; border: none; font-size: 20px; cursor: pointer; padding: 10px; }
 
-        .footer-disclaimer {
-            text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px;
-        }
-
-        .theme-toggle-container {
-            display: flex; justify-content: center; margin-top: 15px; opacity: 0.5;
-            margin-bottom: 20px;
-        }
-        .theme-toggle-btn {
-            background: transparent; border: none; font-size: 20px; cursor: pointer; padding: 10px;
-        }
-
-        /* Узкое меню */
-        .bottom-nav {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 220px;
-            background: var(--nav-bg);
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border-radius: 25px;
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            border: 1px solid var(--nav-border);
-            z-index: 900;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--nav-icon);
-        }
+        /* Навигация */
+        .bottom-nav { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 220px; background: var(--nav-bg); backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); border-radius: 25px; display: flex; justify-content: space-around; padding: 8px 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border); z-index: 900; }
+        .nav-item { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 15px; cursor: pointer; transition: all 0.2s; color: var(--nav-icon); }
         .nav-item.active { color: var(--accent-blue); }
-
-        .nav-item svg {
-            width: 22px;
-            height: 22px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .nav-item:active {
-            transform: scale(0.9);
-            background: rgba(255,255,255,0.2);
-        }
-
+        .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     </style>
 </head>
 <body onclick="hideAllTips(event)">
 
     <div id="screen-home" class="screen active">
         <div class="terminal-header">
-            <div class="terminal-badge">Madame Solomi’na Terminal</div>
+            <div class="terminal-badge">
+                <span class="status-dot"></span>
+                Madame Solomi’na Terminal LIVE
+            </div>
             <div class="home-title">Добро Пожаловать! 🎉</div>
             <div class="home-desc">Это мини-помощник по выбору российских активов. Помогаем делать Иксы! 😁</div>
             
@@ -394,15 +252,23 @@
                 <div class="market-item">
                     <div class="market-label">IMOEX</div>
                     <div class="market-value" id="val-imoex">---</div>
+                    <div class="market-change" id="change-imoex">0.00%</div>
                 </div>
                 <div class="market-item">
                     <div class="market-label">USD/RUB</div>
                     <div class="market-value" id="val-usdrub">---</div>
+                    <div class="market-change" id="change-usdrub">0.00%</div>
                 </div>
                 <div class="market-item">
                     <div class="market-label">BTC/USD</div>
                     <div class="market-value" id="val-btc">---</div>
+                    <div class="market-change" id="change-btc">0.00%</div>
                 </div>
+            </div>
+
+            <div class="quote-box">
+                <div class="quote-text" id="dailyQuote">"Инвестирование должно напоминать наблюдение за тем, как сохнет краска или растет трава."</div>
+                <div class="quote-author" id="quoteAuthor">— Пол Самуэльсон</div>
             </div>
 
             <div class="terminal-card">
@@ -549,6 +415,14 @@
         let bondCouponsMap = {}; 
         let currentScreen = 'screen-home';
 
+        const quotes = [
+            {t: "Рынок акций наполнен людьми, которые знают цену всего, но не знают ценности ничего.", a: "Филип Фишер"},
+            {t: "Инвестируй в себя. Твой интеллект — это актив, который никто не может отобрать.", a: "Уоррен Баффет"},
+            {t: "Главная проблема инвестора — и даже его злейший враг — это он сам.", a: "Бенджамин Грэм"},
+            {t: "Покупай, когда на улицах льется кровь, даже если она твоя собственная.", a: "Ротшильд"},
+            {t: "Лучшее время для инвестиций было вчера. Второе лучшее время — сегодня.", a: "Китайская пословица"}
+        ];
+
         let echelons = [
             { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
             { title: 'II Эшелон', weight: 0.40, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ, НО ВЫПЛАТЫ РАЗНЯТСЯ' },
@@ -556,31 +430,57 @@
             { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
 
-        // Market Data Fetching
+        // Improved Market Data Fetching
         async function updateMarketData() {
             try {
                 // BTC from Binance
-                fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
-                    .then(r => r.json())
-                    .then(d => { document.getElementById('val-btc').innerText = '$' + Math.round(d.price).toLocaleString(); });
-
-                // IMOEX from MOEX API
-                fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata&marketdata.columns=LAST')
-                    .then(r => r.json())
-                    .then(d => { document.getElementById('val-imoex').innerText = Math.round(d.marketdata.data[0][0]).toLocaleString(); });
-
-                // USD from MOEX (Approx via USDRUB_TOM)
-                fetch('https://iss.moex.com/iss/engines/currency/markets/selt/securities/USD000UTSTOM.json?iss.meta=off&iss.only=marketdata&marketdata.columns=LAST')
+                fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT')
                     .then(r => r.json())
                     .then(d => { 
-                        let val = d.marketdata.data[0][0] || '---';
-                        document.getElementById('val-usdrub').innerText = val !== '---' ? val.toFixed(2) + ' ₽' : '---';
+                        document.getElementById('val-btc').innerText = '$' + Math.round(d.lastPrice).toLocaleString();
+                        const ch = parseFloat(d.priceChangePercent).toFixed(2);
+                        const el = document.getElementById('change-btc');
+                        el.innerText = (ch > 0 ? '+' : '') + ch + '%';
+                        el.className = 'market-change ' + (ch > 0 ? 'up' : 'down');
                     });
-            } catch (e) { console.log("Market data error"); }
+
+                // IMOEX from MOEX
+                fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata&marketdata.columns=LAST,LASTCHANGEPRCNT')
+                    .then(r => r.json())
+                    .then(d => { 
+                        const data = d.marketdata.data[0];
+                        document.getElementById('val-imoex').innerText = Math.round(data[0]).toLocaleString();
+                        const ch = data[1] ? data[1].toFixed(2) : "0.00";
+                        const el = document.getElementById('change-imoex');
+                        el.innerText = (ch > 0 ? '+' : '') + ch + '%';
+                        el.className = 'market-change ' + (ch > 0 ? 'up' : 'down');
+                    });
+
+                // USD/RUB from MOEX
+                fetch('https://iss.moex.com/iss/engines/currency/markets/selt/securities/USD000UTSTOM.json?iss.meta=off&iss.only=marketdata&marketdata.columns=LAST,LASTCHANGEPRCNT')
+                    .then(r => r.json())
+                    .then(d => { 
+                        const data = d.marketdata.data[0];
+                        if(data[0]) {
+                            document.getElementById('val-usdrub').innerText = data[0].toFixed(2) + ' ₽';
+                            const ch = data[1] ? data[1].toFixed(2) : "0.00";
+                            const el = document.getElementById('change-usdrub');
+                            el.innerText = (ch > 0 ? '+' : '') + ch + '%';
+                            el.className = 'market-change ' + (ch > 0 ? 'up' : 'down');
+                        }
+                    });
+            } catch (e) { console.log("Market error"); }
         }
 
-        setInterval(updateMarketData, 30000);
+        function setDailyQuote() {
+            const q = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById('dailyQuote').innerText = `"${q.t}"`;
+            document.getElementById('quoteAuthor').innerText = `— ${q.a}`;
+        }
+
+        setInterval(updateMarketData, 60000);
         updateMarketData();
+        setDailyQuote();
 
         function showScreen(screenId) {
             currentScreen = screenId;
@@ -597,37 +497,23 @@
             const body = document.body;
             const btn = document.getElementById('themeBtn');
             if (body.classList.contains('dark-mode')) {
-                body.classList.remove('dark-mode');
-                body.classList.add('light-mode');
-                btn.innerText = '🌙';
-                localStorage.setItem('user_theme', 'light');
+                body.classList.remove('dark-mode'); body.classList.add('light-mode');
+                btn.innerText = '🌙'; localStorage.setItem('user_theme', 'light');
             } else {
-                body.classList.remove('light-mode');
-                body.classList.add('dark-mode');
-                btn.innerText = '☀️';
-                localStorage.setItem('user_theme', 'dark');
+                body.classList.remove('light-mode'); body.classList.add('dark-mode');
+                btn.innerText = '☀️'; localStorage.setItem('user_theme', 'dark');
             }
         }
 
         function initTheme() {
             const savedTheme = localStorage.getItem('user_theme');
             const btn = document.getElementById('themeBtn');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                btn.innerText = '☀️';
-            } else if (savedTheme === 'light') {
-                document.body.classList.add('light-mode');
-                btn.innerText = '🌙';
-            }
+            if (savedTheme === 'dark') { document.body.classList.add('dark-mode'); btn.innerText = '☀️'; }
+            else if (savedTheme === 'light') { document.body.classList.add('light-mode'); btn.innerText = '🌙'; }
         }
 
         function saveSettings() {
-            const settings = {
-                sum: document.getElementById('sumInput').value,
-                ratio: document.getElementById('ratioSlider').value,
-                fee: brokerFee,
-                tax: currentTax
-            };
+            const settings = { sum: document.getElementById('sumInput').value, ratio: document.getElementById('ratioSlider').value, fee: brokerFee, tax: currentTax };
             localStorage.setItem('invest_settings', JSON.stringify(settings));
         }
 
@@ -649,7 +535,6 @@
         }
 
         function resetRatio() {
-            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
             document.getElementById('ratioSlider').value = 50;
             draw();
         }
@@ -693,10 +578,7 @@
                 const data = await res.json();
                 const cols = data.securities.columns;
                 const row = data.securities.data[0];
-                bondCouponsMap[code] = {
-                    date: row[cols.indexOf('NEXTCOUPON')],
-                    value: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0
-                };
+                bondCouponsMap[code] = { date: row[cols.indexOf('NEXTCOUPON')], value: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0 };
                 return { nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0, matDate: row[cols.indexOf('MATDATE')] || '—' };
             } catch (e) { return { nkd: 0, matDate: '—' }; }
         }
@@ -743,14 +625,12 @@
             const bondBudget = (inputSum * bondPct) / 100;
             const stockBudget = (inputSum * stockPct) / 100;
 
-            if(document.getElementById('labelBondsPct')) {
-                document.getElementById('labelBondsPct').innerText = bondPct;
-                document.getElementById('labelStocksPct').innerText = stockPct;
-                document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
-                document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
-                document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
-                document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
-            }
+            document.getElementById('labelBondsPct').innerText = bondPct;
+            document.getElementById('labelStocksPct').innerText = stockPct;
+            document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
+            document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
+            document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
+            document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
 
             let actualSpentTotal = 0;
             let bondQuantities = {};
@@ -763,20 +643,14 @@
                     let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0;
                     return { ...b, qty, fullCostPerUnit };
                 });
-                let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
-                if (leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
-                    bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
-                }
                 bondCalculations.forEach(b => {
                     actualSpentTotal += (b.qty * b.fullCostPerUnit);
                     bondQuantities[b.t] = b.qty;
                     bHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${shortenTicker(b.t)}</span><span class="asset-name">${limitName(b.n)}</span><span class="qty">${b.qty} шт.</span><span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span><div class="details">Полное название: <b>${b.n}</b><br>Код: <b>${b.t}</b> | Цена: <b>${b.p} ₽</b><br>НКД: <b>${b.nkd.toFixed(2)} ₽</b> | Дата погашения: <b>${b.matDate}</b><br>Простая Доходность к Погашению: <b>${b.y.replace(' ₽','')}</b></div></div>`;
                 });
             }
-            if(document.getElementById('listBonds')) {
-                document.getElementById('listBonds').innerHTML = bHtml;
-                document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString();
-            }
+            document.getElementById('listBonds').innerHTML = bHtml;
+            document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString();
 
             let rainHtml = '';
             let totalRain = 0;
@@ -784,18 +658,15 @@
                 const info = bondCouponsMap[ticker];
                 const qty = bondQuantities[ticker];
                 if (!info || !info.date || qty <= 0) return null;
-                const netAmount = (info.value * qty) * (1 - currentTax);
-                return { date: info.date, name: bonds.find(b => b.t === ticker)?.n || ticker, qty, amount: netAmount };
+                return { date: info.date, name: bonds.find(b => b.t === ticker)?.n || ticker, qty, amount: (info.value * qty) * (1 - currentTax) };
             }).filter(x => x !== null).sort((a,b) => new Date(a.date) - new Date(b.date));
 
             rainData.forEach(r => {
                 totalRain += r.amount;
                 rainHtml += `<div class="coupon-row"><div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div><div style="color:#8e8e93">${limitName(r.name)}</div><div style="text-align:center">${r.qty}шт.</div><div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div></div>`;
             });
-            if(document.getElementById('couponList')) {
-                document.getElementById('couponList').innerHTML = rainHtml || 'Нет данных о ближайших купонах';
-                document.getElementById('couponTotalHeader').innerText = Math.round(totalRain).toLocaleString() + ' ₽';
-            }
+            document.getElementById('couponList').innerHTML = rainHtml || 'Нет данных о ближайших купонах';
+            document.getElementById('couponTotalHeader').innerText = Math.round(totalRain).toLocaleString() + ' ₽';
 
             let eHtml = '';
             echelons.forEach(e => {
@@ -806,10 +677,6 @@
                     let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0;
                     return { ...a, qty, fullCostPerUnit };
                 });
-                let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
-                if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
-                    stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
-                }
                 eHtml += `<div class="echelon-title" onclick="toggleTip(event, this)"><span>${e.title} <span class="echelon-info-icon">ⓘ</span></span><span>${Math.round(e.weight*100)}%</span><div class="echelon-tip">${e.info}</div></div><div class="asset-list">`;
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
@@ -817,12 +684,10 @@
                 });
                 eHtml += `</div>`;
             });
-            if(document.getElementById('echelonContainer')) {
-                document.getElementById('echelonContainer').innerHTML = eHtml;
-                document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
-                document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
-                document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
-            }
+            document.getElementById('echelonContainer').innerHTML = eHtml;
+            document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
+            document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
+            document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
         }
 
         async function shareAsImage() {
@@ -831,21 +696,14 @@
             const brand = document.getElementById('shareBrand');
             const dateEl = document.getElementById('shareDate');
             btn.innerText = "⏳ Подготовка...";
-            btn.disabled = true;
-            brand.style.display = 'block';
+            btn.disabled = true; brand.style.display = 'block';
             dateEl.innerText = new Date().toLocaleString();
             setTimeout(() => {
-                html2canvas(container, {
-                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'),
-                    scale: 2, logging: false, useCORS: true
-                }).then(async canvas => {
-                    brand.style.display = 'none';
-                    btn.innerText = "📸 Поделиться портфелем";
-                    btn.disabled = false;
+                html2canvas(container, { backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), scale: 2, useCORS: true }).then(async canvas => {
+                    brand.style.display = 'none'; btn.innerText = "📸 Поделиться портфелем"; btn.disabled = false;
                     const dataUrl = canvas.toDataURL("image/png");
                     document.getElementById('modalImg').src = dataUrl;
                     document.getElementById('photoModal').style.display = 'flex';
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
                     document.getElementById('sendBtn').onclick = async () => {
                         const blob = await (await fetch(dataUrl)).blob();
                         const file = new File([blob], "portfolio.png", { type: "image/png" });
