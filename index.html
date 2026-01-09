@@ -1,3 +1,26 @@
+Вот обновленный полный код.
+
+**Что изменено согласно вашим требованиям:**
+
+1.  **Главная страница (Info Cards)**:
+    *   Убраны пунктирные линии у подзаголовков.
+    *   Текст описания растянут по ширине (`text-align: justify`).
+    *   "НАДЕЖНОСТЬ" и "ДОХОДНОСТЬ" теперь оформлены красивыми цветными плашками (Badge) внизу карточки.
+2.  **Блок "Лучшие ОФЗ"**:
+    *   Дизайн стал еще чище. Доходность выделена крупнее, добавлена иконка стрелки, карточка стала компактнее и стильнее.
+3.  **Ежемесячный доход (Калькулятор)**:
+    *   Убрано лишнее пространство.
+    *   Плашка "Калькулятор" стала современной (градиент, скругление).
+    *   Кнопки `+` и `-` теперь выглядят как современные "Soft UI" элементы (приятные на ощупь квадраты со скруглением).
+4.  **Купонный дождь**:
+    *   Кнопки налогов переименованы в "Без налога", "НДФЛ 13%", "НДФЛ 15%".
+    *   Добавлена иконка `i`. При клике плавно появляется подсказка "Это ближайшие выплаты купонов".
+5.  **PDF Экспорт**:
+    *   Логика генерации переписана. Теперь PDF создается не в формате А4 (где всё сплющивается), а **подстраивается под размер контента**. Получается идеальный длинный цифровой чек/документ высокого качества, который удобно читать и отправлять.
+
+### Полный код (index.html)
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,7 +29,7 @@
     <title>Terminal Madame Solomi’na</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <!-- Подключаем jsPDF для генерации PDF -->
+    <!-- Подключаем jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
@@ -24,6 +47,8 @@
             --nav-bg: rgba(255, 255, 255, 0.85);
             --nav-border: rgba(255, 255, 255, 0.5);
             --coupon-blue-bg: rgba(52, 152, 219, 0.08);
+            --badge-blue-bg: rgba(52, 152, 219, 0.15);
+            --badge-green-bg: rgba(46, 204, 113, 0.15);
         }
 
         body.dark-mode {
@@ -41,6 +66,8 @@
             --nav-bg: rgba(30, 41, 59, 0.85);
             --nav-border: rgba(255, 255, 255, 0.1);
             --coupon-blue-bg: rgba(56, 189, 248, 0.1);
+            --badge-blue-bg: rgba(56, 189, 248, 0.15);
+            --badge-green-bg: rgba(74, 222, 128, 0.15);
         }
 
         body {
@@ -76,7 +103,7 @@
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
         .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 25px; }
 
-        /* --- New Market Grid Design --- */
+        /* Market Grid */
         .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
         .market-item-modern {
             background: var(--card-bg); 
@@ -102,28 +129,34 @@
         .mk-change.neg { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
         .mk-change.neu { background: rgba(0,0,0,0.05); color: #8e8e93; }
 
-        /* --- Info Cards --- */
+        /* Info Cards (Updated) */
         .info-card {
-            background: var(--card-bg); padding: 22px; border-radius: 20px; margin-bottom: 18px;
-            border: 1px solid var(--border-color); box-shadow: 0 6px 15px var(--card-shadow); position: relative;
+            background: var(--card-bg); padding: 24px; border-radius: 24px; margin-bottom: 20px;
+            border: 1px solid var(--border-color); box-shadow: 0 10px 25px var(--card-shadow); position: relative;
         }
-        .info-card.bonds { box-shadow: 0 10px 20px rgba(52, 152, 219, 0.05), 0 4px 10px var(--card-shadow); }
-        .info-card.stocks { box-shadow: 0 10px 20px rgba(46, 204, 113, 0.05), 0 4px 10px var(--card-shadow); }
-        .info-card-header { font-size: 17px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .info-card-header { font-size: 18px; font-weight: 800; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
         
-        /* Centered phrases */
-        .info-card-sub-centered { 
+        /* Updated phrases without lines */
+        .info-card-sub-clean { 
             font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; 
-            margin: 10px 0 15px 0; padding: 5px 0; border-top: 1px dashed var(--item-border); border-bottom: 1px dashed var(--item-border);
-            text-align: center; width: 100%;
+            margin: 0 0 15px 0; opacity: 0.8;
         }
-        .bonds .info-card-sub-centered { color: var(--accent-blue); }
-        .stocks .info-card-sub-centered { color: var(--accent-green); }
+        .bonds .info-card-sub-clean { color: var(--accent-blue); }
+        .stocks .info-card-sub-clean { color: var(--accent-green); }
         
-        .info-card-text { font-size: 13px; line-height: 1.6; color: #8e8e93; margin-bottom: 15px; }
-        .info-card-footer { font-size: 10px; font-weight: 900; letter-spacing: 1px; border-top: 1px solid var(--item-border); padding-top: 12px; }
+        /* Justified text */
+        .info-card-text { font-size: 13px; line-height: 1.7; color: #8e8e93; margin-bottom: 20px; text-align: justify; }
+        
+        /* New Footer Badges */
+        .info-card-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 8px 16px; border-radius: 12px; font-size: 11px; font-weight: 900; letter-spacing: 0.5px;
+            width: 100%; box-sizing: border-box; text-align: center;
+        }
+        .badge-blue { background: var(--badge-blue-bg); color: var(--accent-blue); }
+        .badge-green { background: var(--badge-green-bg); color: var(--accent-green); }
 
-        /* --- Buttons --- */
+        /* Buttons */
         .btn-action {
             display: flex; align-items: center; justify-content: center; width: 100%; padding: 16px; margin-top: 12px;
             background: var(--coupon-blue-bg); color: var(--accent-blue);
@@ -132,14 +165,9 @@
         }
         .btn-action:active { opacity: 0.7; transform: scale(0.98); }
 
-        /* Start Calc Button - Improved */
         .btn-shine {
-            position: relative;
-            background: var(--accent-gradient);
-            color: white; border: none;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
-            margin-top: 25px;
+            position: relative; background: var(--accent-gradient); color: white; border: none; overflow: hidden;
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3); margin-top: 25px;
         }
         .btn-shine::after {
             content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -229,7 +257,6 @@
             display: flex; justify-content: space-between; align-items: center; position: relative;
         }
         
-        /* New Echelon Percent Badge */
         .echelon-pct-badge {
             background: var(--card-bg); color: var(--accent-blue);
             border: 1px solid var(--accent-blue); padding: 2px 8px; border-radius: 10px; font-size: 10px;
@@ -291,7 +318,7 @@
         .theme-toggle-container { display: flex; justify-content: center; margin-top: 15px; opacity: 0.5; margin-bottom: 20px; }
         .theme-toggle-btn { background: transparent; border: none; font-size: 20px; cursor: pointer; padding: 10px; }
 
-        /* --- Updated Navigation Layout --- */
+        /* Nav */
         .nav-wrapper {
             position: fixed; bottom: 25px; left: 0; width: 100%; 
             display: flex; justify-content: center; gap: 10px;
@@ -327,108 +354,97 @@
 
 
         /* ========================
-           ASSETS PAGE STYLES (Screen 3)
+           ASSETS PAGE STYLES (Screen 3) & IMPROVED UI
            ======================== */
         
-        .ofz-card {
+        /* Improved OFZ Card */
+        .ofz-card-modern {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 8px;
-            border: 1px solid var(--item-border);
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-left: 4px solid var(--accent-blue); 
-            box-shadow: 0 2px 4px var(--card-shadow);
+            box-shadow: 0 4px 10px var(--card-shadow);
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative; overflow: hidden;
         }
-        .ofz-card:active { transform: scale(0.98); }
-        .ofz-info { display: flex; flex-direction: column; gap: 2px; }
-        .ofz-name { font-weight: bold; font-size: 13px; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
-        .ofz-copy-hint { font-size: 9px; color: #8e8e93; font-weight: normal; border: 1px solid #eee; padding: 1px 4px; border-radius: 4px; }
-        .ofz-yield { font-weight: 800; font-size: 13px; color: var(--accent-green); background: rgba(46, 204, 113, 0.1); padding: 4px 8px; border-radius: 8px; }
+        .ofz-card-modern::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent-blue); }
+        .ofz-card-modern:active { transform: scale(0.98); }
+        .ofz-main-info { display: flex; flex-direction: column; gap: 4px; }
+        .ofz-name-lg { font-weight: 700; font-size: 14px; color: var(--text-main); }
+        .ofz-ticker-sm { font-size: 10px; color: #8e8e93; font-weight: 600; text-transform: uppercase; }
+        .ofz-yield-badge { 
+            font-weight: 800; font-size: 14px; color: var(--accent-green); 
+            background: rgba(46, 204, 113, 0.1); padding: 6px 10px; border-radius: 10px; 
+            display: flex; align-items: center; gap: 4px;
+        }
+        .ofz-arrow { width: 12px; height: 12px; fill: currentColor; }
 
-        /* Tooltip icon for OFZ */
-        .ofz-info-icon {
-            display: inline-flex; width: 14px; height: 14px; border-radius: 50%; border: 1px solid #ccc;
-            font-size: 9px; align-items: center; justify-content: center; color: #888; margin-left: 6px;
-        }
-
-        /* Echelon Table Headers */
-        .echelon-header-pill {
-            background: var(--accent-blue);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 800;
-            display: inline-block;
-            box-shadow: 0 3px 6px rgba(52, 152, 219, 0.3);
-            margin-bottom: 10px;
-            opacity: 0.6; /* Transparency requested */
-        }
-        .echelon-cell { 
-            padding: 12px 6px; 
-            border-bottom: 1px solid var(--item-border); 
-            cursor: pointer; 
-            transition: background 0.2s; 
-            vertical-align: top;
-        }
-        .echelon-cell:active { background: rgba(0,0,0,0.05); }
-
-        /* Info Notification */
-        .info-notification {
-            background: var(--card-bg);
-            border: 1px solid var(--accent-blue);
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-        .info-icon {
-            font-size: 16px;
-            background: var(--coupon-blue-bg);
-            width: 30px; height: 30px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--accent-blue);
-            flex-shrink: 0;
-        }
-        .info-content { font-size: 11px; color: var(--text-main); line-height: 1.5; }
-        .info-highlight { color: var(--accent-blue); font-weight: bold; }
-
-        /* Calculator Styling */
-        .calc-badge {
-            font-size: 10px; background: #333; color: white; padding: 2px 6px; border-radius: 4px; 
-            text-transform: uppercase; letter-spacing: 0.5px;
+        /* Modern Calculator Badge */
+        .calc-badge-modern {
+            font-size: 10px; background: linear-gradient(135deg, #34495e, #2c3e50); color: white; 
+            padding: 4px 10px; border-radius: 20px; font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); letter-spacing: 0.5px;
         }
 
+        /* Improved Monthly Income Row */
         .calc-bond-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 0; border-bottom: 1px dashed var(--item-border);
+            padding: 8px 0; border-bottom: 1px dashed var(--item-border); /* Compact */
         }
-        .calc-bond-name { font-size: 12px; font-weight: bold; color: var(--text-main); flex: 1; }
+        .calc-bond-name { font-size: 12px; font-weight: bold; color: var(--text-main); flex: 1; margin-right: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* New input controls */
-        .qty-controls { display: flex; align-items: center; gap: 8px; }
+        /* Modern Qty Controls */
+        .qty-controls { display: flex; align-items: center; gap: 4px; background: var(--bg-color); padding: 2px; border-radius: 8px; }
         .qty-btn { 
-            width: 24px; height: 24px; border-radius: 50%; border: 1px solid #ccc; background: var(--bg-color); 
-            display: flex; align-items: center; justify-content: center; font-weight: bold; color: #555;
-            cursor: pointer;
+            width: 26px; height: 26px; border-radius: 6px; background: var(--card-bg); 
+            display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent-blue);
+            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s;
         }
-        .qty-btn:active { background: #ddd; }
+        .qty-btn:active { transform: scale(0.9); background: #eee; }
         .calc-input {
-            width: 40px; border: none; font-size: 14px; font-weight: bold; text-align: center;
-            background: transparent; color: var(--text-main); outline: none;
+            width: 36px; border: none; font-size: 13px; font-weight: bold; text-align: center;
+            background: transparent; color: var(--text-main); outline: none; padding: 0;
         }
         
         .result-list-container { margin-top: 15px; background: rgba(0,0,0,0.02); border-radius: 8px; padding: 10px; }
 
-        /* Toast notification */
+        /* Small Info Icon */
+        .info-i-btn {
+            display: inline-flex; width: 16px; height: 16px; border-radius: 50%; background: rgba(0,0,0,0.1); color: #666;
+            font-size: 10px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px; cursor: pointer;
+        }
+        
+        /* Tooltip Box */
+        .tooltip-box {
+            position: absolute; background: #333; color: white; padding: 6px 10px; border-radius: 6px;
+            font-size: 10px; top: -35px; left: 50%; transform: translateX(-50%); white-space: nowrap;
+            opacity: 0; visibility: hidden; transition: opacity 0.2s; pointer-events: none; z-index: 10;
+        }
+        .tooltip-container { position: relative; display: inline-flex; align-items: center; }
+        .tooltip-container.show .tooltip-box { opacity: 1; visibility: visible; }
+
+        /* Other Styles */
+        .echelon-header-pill {
+            background: var(--accent-blue); color: white; padding: 6px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: 800; display: inline-block;
+            box-shadow: 0 3px 6px rgba(52, 152, 219, 0.3); margin-bottom: 10px; opacity: 0.6;
+        }
+        .echelon-cell { padding: 12px 6px; border-bottom: 1px solid var(--item-border); cursor: pointer; transition: background 0.2s; vertical-align: top; }
+        .echelon-cell:active { background: rgba(0,0,0,0.05); }
+
+        .info-notification {
+            background: var(--card-bg); border: 1px solid var(--accent-blue); border-radius: 12px; padding: 15px;
+            margin-top: 15px; display: flex; align-items: flex-start; gap: 12px;
+        }
+        .info-icon { font-size: 16px; background: var(--coupon-blue-bg); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent-blue); flex-shrink: 0; }
+        .info-content { font-size: 11px; color: var(--text-main); line-height: 1.5; }
+        .info-highlight { color: var(--accent-blue); font-weight: bold; }
+
         .toast {
             visibility: hidden; min-width: 200px; background-color: #333; color: #fff; text-align: center;
             border-radius: 8px; padding: 12px; position: fixed; z-index: 1000; bottom: 100px; left: 50%;
@@ -436,7 +452,6 @@
         }
         .toast.show { visibility: visible; opacity: 1; }
 
-        /* Search Styles */
         .search-container { padding: 10px 0; }
         .search-input { width: 100%; padding: 16px; border-radius: 16px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main); font-size: 16px; outline: none; margin-bottom: 15px; box-sizing: border-box; }
         .search-result-item { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--item-border); }
@@ -455,7 +470,6 @@
             <div class="home-title">Добро Пожаловать! 🎉</div>
             <div class="home-desc">Это мини-помощник по выбору российских активов. Помогаем делать Иксы! 😁</div>
             
-            <!-- New Market Grid -->
             <div class="market-grid">
                 <div class="market-item-modern blue">
                     <div class="mk-label">IMOEX</div>
@@ -476,16 +490,16 @@
 
             <div class="info-card bonds">
                 <div class="info-card-header">🛡️ Облигации</div>
-                <div class="info-card-sub-centered">Ваш "Денежный Поток"</div>
+                <div class="info-card-sub-clean">Ваш "Денежный Поток"</div>
                 <div class="info-card-text">Это как дать в долг государству. Оно гарантирует возврат денег и платит проценты. Один из самых надежных способов сохранить деньги.</div>
-                <div class="info-card-footer" style="color: var(--accent-blue);">НАДЕЖНОСТЬ: ВЫСОКАЯ</div>
+                <div class="info-card-badge badge-blue">НАДЕЖНОСТЬ: ВЫСОКАЯ</div>
             </div>
 
             <div class="info-card stocks">
                 <div class="info-card-header">🚀 Акции</div>
-                <div class="info-card-sub-centered">Ваш "Двигатель Роста"</div>
+                <div class="info-card-sub-clean">Ваш "Двигатель Роста"</div>
                 <div class="info-card-text">Вы становитесь совладельцем Сбера, Газпрома и других гигантов. Когда они зарабатывают и растут — растет и ваш капитал.</div>
-                <div class="info-card-footer" style="color: var(--accent-green);">ДОХОДНОСТЬ: ВЫСОКАЯ</div>
+                <div class="info-card-badge badge-green">ДОХОДНОСТЬ: ВЫСОКАЯ</div>
             </div>
 
             <button class="btn-action btn-shine" onclick="showScreen('screen-app')">
@@ -560,7 +574,13 @@
 
             <div class="coupon-box" id="couponBox">
                 <div class="coupon-header" id="rainSection" onclick="document.getElementById('couponContent').classList.toggle('active')">
-                    <span>🌦 Купонный Дождь</span>
+                    <div style="display:flex; align-items:center;">
+                        <span>🌦 Купонный Дождь</span>
+                        <div class="tooltip-container" id="rain-tooltip">
+                            <div class="info-i-btn" onclick="event.stopPropagation(); toggleRainTooltip()">i</div>
+                            <div class="tooltip-box">Это ближайшие выплаты купонов</div>
+                        </div>
+                    </div>
                     <span id="couponTotalHeader">0 ₽</span>
                 </div>
                 <div class="coupon-content" id="couponContent">
@@ -594,21 +614,21 @@
     <div id="screen-assets" class="screen">
         <div class="header"><h1>Аналитический Центр</h1></div>
         
-        <!-- Блок Лучшие ОФЗ -->
+        <!-- Improved OFZ Block -->
         <div class="section-header" style="font-size:16px; margin-bottom:15px;">🛡️ Лучшие ОФЗ</div>
         <div id="ofz-list" style="margin-bottom: 30px;"></div>
 
-        <!-- Блок Ежемесячный доход с вводом количества -->
+        <!-- Improved Monthly Income Block -->
         <div class="coupon-box" style="margin-top:20px;">
             <div class="coupon-header" onclick="toggleAccordion('calc-income-wrapper')">
                 <span>📅 Ежемесячный доход</span>
-                <span class="calc-badge">Калькулятор</span>
+                <span class="calc-badge-modern">Калькулятор</span>
             </div>
             <div class="coupon-content" id="calc-income-wrapper" style="padding: 10px; display:block;">
                 <div class="tax-selector-ui">
-                    <button class="tax-ui-btn" id="tax-custom-0" onclick="setCustomTax(0, this)">0%</button>
-                    <button class="tax-ui-btn active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">13%</button>
-                    <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">15%</button>
+                    <button class="tax-ui-btn" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
+                    <button class="tax-ui-btn active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">НДФЛ 13%</button>
+                    <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
                 </div>
                 <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">Введите кол-во штук купленных:</div>
                 <div id="calc-bonds-input-list"></div>
@@ -659,7 +679,6 @@
         <div id="search-results"></div>
     </div>
 
-    <!-- Updated Nav Structure -->
     <div class="nav-wrapper">
         <div class="nav-dock">
             <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
@@ -765,6 +784,11 @@
             if(el.style.display === 'none') el.style.display = 'block';
             else el.style.display = 'none';
         }
+        
+        function toggleRainTooltip() {
+            document.getElementById('rain-tooltip').classList.toggle('show');
+            setTimeout(() => { document.getElementById('rain-tooltip').classList.remove('show'); }, 3000);
+        }
 
         function toggleTheme() {
             const body = document.body; const btn = document.getElementById('themeBtn');
@@ -830,7 +854,7 @@
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
         function toggleTip(event, el) { event.stopPropagation(); const isActive = el.classList.contains('show-tip'); hideAllTips(); if (!isActive) el.classList.add('show-tip'); }
-        function hideAllTips(event) { document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip')); if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } }
+        function hideAllTips(event) { document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip')); document.getElementById('rain-tooltip').classList.remove('show'); if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } }
         function toggleRow(el) { el.classList.toggle('active'); }
 
         function copyToClipboard(text) {
@@ -1031,18 +1055,18 @@
             }
             if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml; document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
             
+            // New OFZ Card Design
             let ofzHtml = '';
             bonds.forEach(b => {
                 ofzHtml += `
-                <div class="ofz-card" onclick="copyToClipboard('${b.n}')">
-                    <div class="ofz-info">
-                        <div class="ofz-name">
-                            ${limitName(b.n)}
-                            <div class="ofz-info-icon" onclick="event.stopPropagation(); alert('Простая доходность к погашению (YTM simple) — это доходность, которую вы получите, если продержите облигацию до погашения.')">i</div>
-                        </div>
-                        <div style="font-size:10px; color:#8e8e93;">${b.t}</div>
+                <div class="ofz-card-modern" onclick="copyToClipboard('${b.n}')">
+                    <div class="ofz-main-info">
+                        <div class="ofz-name-lg">${limitName(b.n)}</div>
+                        <div class="ofz-ticker-sm">${b.t}</div>
                     </div>
-                    <div class="ofz-yield" title="Простая доходность к погашению">${b.y}</div>
+                    <div class="ofz-yield-badge" title="Простая доходность">
+                        ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                    </div>
                 </div>`;
             });
             if(document.getElementById('ofz-list')) document.getElementById('ofz-list').innerHTML = ofzHtml;
@@ -1063,7 +1087,6 @@
                 let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
                 if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
                 
-                // Updated percentage badge
                 eHtml += `
                 <div class="echelon-title" onclick="toggleTip(event, this)">
                     <span>${e.title} <span class="echelon-info-icon">ⓘ</span></span>
@@ -1086,52 +1109,47 @@
             updateEchelonTable();
         }
 
-        // --- PDF Generation Logic ---
+        // --- Improved PDF Generation (Perfect Fit) ---
         async function shareAsPDF() {
             const btn = document.getElementById('btnShare'); 
             const container = document.getElementById('shareContainer');
             const brand = document.getElementById('shareBrand'); 
             const dateEl = document.getElementById('shareDate');
             
-            // Prepare UI for capture
-            btn.innerText = "⏳ Создание PDF..."; btn.disabled = true; 
+            btn.innerText = "⏳ Генерация PDF..."; btn.disabled = true; 
             brand.style.display = 'block'; 
             dateEl.innerText = new Date().toLocaleString();
 
             try {
-                // 1. Capture content as canvas
+                // High quality capture
                 const canvas = await html2canvas(container, { 
                     backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), 
-                    scale: 2, 
+                    scale: 3, 
                     logging: false, 
                     useCORS: true 
                 });
                 
-                // 2. Initialize jsPDF
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = doc.internal.pageSize.getWidth();
-                const pdfHeight = doc.internal.pageSize.getHeight();
-                
                 const imgData = canvas.toDataURL('image/png');
-                const imgProps = doc.getImageProperties(imgData);
-                const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-                // 3. Add image to PDF. If longer than A4, we might need pages, but for now we scale fit or simple add
-                // Simple implementation: Just add the long image. For multi-page, it's more complex.
-                // We will scale it to fit width. If height > A4, it will stretch or cut. 
-                // Better approach for long mobile view: Scale to fit 1 page if possible or split.
-                // Let's scale to width and let height be whatever (if < page height ok, if > user scrolls PDF)
-                // Actually jsPDF doesn't auto-scroll. We'll just put it on first page.
                 
-                doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
-                doc.save('My_Portfolio_Solomina.pdf');
+                // Calculate dimensions to creating a "One Long Page" digital receipt style PDF
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+                
+                const { jsPDF } = window.jspdf;
+                // Create PDF with exact pixel dimensions of the image
+                const doc = new jsPDF({
+                    orientation: 'p',
+                    unit: 'px',
+                    format: [imgWidth, imgHeight]
+                });
+                
+                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                doc.save('MdmSolomina_Portfolio.pdf');
 
             } catch(e) {
                 console.error(e);
                 alert("Ошибка при создании PDF");
             } finally {
-                // Restore UI
                 brand.style.display = 'none'; 
                 btn.innerHTML = `<svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Поделиться PDF (Портфель)`; 
                 btn.disabled = false;
@@ -1142,3 +1160,4 @@
     </script>
 </body>
 </html>
+```
