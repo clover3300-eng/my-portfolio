@@ -106,8 +106,7 @@
         
         .mk-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 0.5px; }
         .mk-val { 
-            font-size: 15px; font-weight: 500; /* Не жирный */
-            color: var(--text-main); 
+            font-size: 15px; font-weight: 900; color: var(--text-main); 
             background: rgba(0,0,0,0.03); padding: 4px 8px; border-radius: 8px;
             min-width: 60px; text-align: center;
         }
@@ -219,19 +218,21 @@
 
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
-        
-        /* Updated Asset Item for Page 2 to match Page 3 Style */
         .asset-item {
-            padding: 14px; border-bottom: 1px solid var(--item-border); 
-            display: flex; flex-direction: column; cursor: pointer;
+            display: grid; grid-template-columns: 85px 1fr 75px 80px; padding: 12px; 
+            border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center;
         }
-        .asset-row-main { display: grid; grid-template-columns: 85px 1fr auto; align-items: center; gap: 8px; }
-        
-        .ticker { font-weight: bold; color: var(--text-main); font-size: 12px; }
-        .asset-name { color: #8e8e93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
-        .asset-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
-        .qty { font-weight: bold; color: var(--accent-blue); font-size: 12px; }
-        .price-total { color: var(--text-main); font-weight: 500; font-size: 12px; }
+        .ticker { font-weight: bold; color: var(--text-main); }
+        .asset-name { color: #8e8e93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
+        .qty { text-align: right; padding-right: 8px; font-weight: bold; color: var(--accent-blue); }
+        .price-total { text-align: right; color: var(--text-main); font-weight: 500; }
+
+        .details {
+            grid-column: 1 / -1; display: none; background: rgba(0,0,0,0.02);
+            padding: 10px 12px; border-top: 1px solid var(--item-border); font-size: 11px;
+            color: #8e8e93; line-height: 1.6;
+        }
+        .asset-item.active .details { display: block; }
 
         /* Highlighted Section Headers */
         .section-header-highlight {
@@ -240,8 +241,8 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             display: flex; align-items: center; justify-content: space-between;
         }
-        /* Both Blue */
         .hl-blue { background: var(--accent-gradient); }
+        .hl-green { background: var(--green-gradient); }
 
         .section-header-styled {
             margin: 25px 0 12px; background: var(--header-gradient);
@@ -250,14 +251,8 @@
             color: var(--text-main); box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
         }
 
-        .money-highlight {
-            background: rgba(52, 152, 219, 0.08); border: 1px dashed var(--accent-blue);
-            border-radius: 12px; padding: 12px; margin-bottom: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 13px; color: var(--text-main);
-        }
-        .money-val { font-size: 16px; font-weight: 900; color: var(--accent-blue); }
-
+        .section-header { margin: 25px 0 10px; font-weight: bold; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+        .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .percent-tag { 
             background: var(--accent-blue); padding: 5px 12px; border-radius: 20px; 
             font-weight: 800; font-size: 11px; color: white; box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3); white-space: nowrap;
@@ -346,16 +341,15 @@
         .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .nav-item:active { transform: scale(0.9); }
 
-        /* Modern Theme Toggle */
+        /* Theme Toggle Right of Loupe */
         .theme-toggle-mini {
-            width: 26px; height: 26px; border-radius: 50%;
+            width: 24px; height: 24px; border-radius: 50%;
             background: var(--card-bg); color: var(--text-main); 
-            border: 1px solid var(--border-color); 
+            border: 1px solid var(--border-color); font-size: 14px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; position: absolute; top: -10px; right: -12px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 910;
         }
-        .theme-toggle-mini svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
 
         /* ========================
            ASSETS PAGE STYLES & IMPROVED UI
@@ -369,7 +363,7 @@
             margin-bottom: 10px;
             border: 1px solid var(--border-color);
             display: grid;
-            grid-template-columns: 1fr auto auto; /* Name | Price | Yield */
+            grid-template-columns: 1fr auto auto auto; /* Name | NKD | Price | Yield */
             align-items: center;
             box-shadow: 0 4px 10px var(--card-shadow);
             cursor: pointer;
@@ -383,7 +377,7 @@
         .ofz-name-lg { font-weight: 700; font-size: 13px; color: var(--text-main); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ofz-ticker-sm { font-size: 10px; color: #8e8e93; font-weight: 600; text-transform: uppercase; }
         
-        .ofz-nkd-badge { font-size: 10px; color: #95a5a6; font-weight: 700; background: rgba(0,0,0,0.03); padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+        .ofz-nkd { font-size: 11px; color: #95a5a6; font-weight: 500; text-align: right; }
         .ofz-price { font-size: 12px; font-weight: 700; color: #7f8c8d; text-align: right; background: rgba(0,0,0,0.04); padding: 4px 8px; border-radius: 8px; }
         
         .ofz-yield-badge { 
@@ -393,16 +387,16 @@
         }
         .ofz-arrow { width: 10px; height: 10px; fill: currentColor; }
         
-        /* Details Accordion (Shared for Page 2 and 3) */
-        .asset-details-panel {
+        /* OFZ Details Accordion */
+        .ofz-details-panel {
             display: none; background: rgba(0,0,0,0.02);
             padding: 12px; border-radius: 0 0 16px 16px; margin-top: -10px; margin-bottom: 10px;
             border: 1px solid var(--border-color); border-top: none;
             font-size: 11px; color: var(--text-secondary);
         }
-        .asset-details-panel.active { display: block; animation: fadeIn 0.3s; }
-        .asset-detail-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); align-items: center; }
-        .asset-detail-val { font-weight: bold; color: var(--text-main); text-align: right; }
+        .ofz-details-panel.active { display: block; animation: fadeIn 0.3s; }
+        .ofz-detail-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); }
+        .ofz-detail-val { font-weight: bold; color: var(--text-main); }
 
         /* Modern Calculator Badge */
         .calc-badge-modern {
@@ -417,13 +411,7 @@
             padding: 10px 0; border-bottom: 1px dashed var(--item-border); gap: 5px;
         }
         .calc-bond-name { font-size: 12px; font-weight: 800; color: var(--text-main); flex: 1; margin-right: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
-        .calc-combined-info {
-            display: flex; align-items: center;
-            background: rgba(52, 152, 219, 0.1); border-radius: 8px; overflow: hidden; margin-right: 5px;
-        }
-        .calc-price-part { padding: 4px 6px; font-size: 10px; font-weight: bold; color: #576574; border-right: 1px solid rgba(0,0,0,0.05); }
-        .calc-yield-part { padding: 4px 6px; font-size: 10px; font-weight: 800; color: var(--accent-green); background: rgba(46, 204, 113, 0.15); }
+        .calc-yield-tag { font-size: 10px; background: rgba(46, 204, 113, 0.1); color: var(--accent-green); padding: 2px 6px; border-radius: 6px; font-weight: bold; margin-right: 5px; }
 
         /* Modern Qty Controls */
         .qty-controls { display: flex; align-items: center; gap: 4px; background: var(--bg-color); padding: 2px; border-radius: 8px; }
@@ -455,7 +443,7 @@
             font-size: 11px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px; cursor: pointer;
         }
         
-        /* Tooltip Box */
+        /* Tooltip Box - Прямо под дождем, центрировано под иконкой */
         .tooltip-box {
             position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
             background: #ffffff; color: #2c3e50; 
@@ -486,13 +474,6 @@
             font-size: 12px; color: var(--text-secondary); background: var(--card-bg);
             padding: 15px; border-radius: 12px; margin-bottom: 20px; line-height: 1.5;
             border: 1px solid var(--border-color);
-        }
-        
-        .echelon-header-pill {
-            background: linear-gradient(135deg, #2c3e50, #000000); color: #f1c40f; 
-            padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 900; 
-            display: inline-block; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            border: 1px solid rgba(241, 196, 15, 0.3);
         }
 
     </style>
@@ -606,9 +587,9 @@
             </div>
             
             <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
-            <div class="money-highlight">
-                <span>ВЫДЕЛИТЬ:</span>
-                <span class="money-val" id="valBonds">50 000 ₽</span>
+            <div class="allocation-info">
+                <span>Выделить: <b id="valBonds">50 000</b> ₽</span>
+                <span class="percent-tag"><span class="bond-pct-text">50</span>% от капитала</span>
             </div>
             <div id="listBonds" class="asset-list"></div>
 
@@ -633,10 +614,10 @@
                 </div>
             </div>
 
-            <div class="section-header-highlight hl-blue">2. Растущая часть</div>
-            <div class="money-highlight">
-                <span>ВЫДЕЛИТЬ:</span>
-                <span class="money-val" id="valStocks">50 000 ₽</span>
+            <div class="section-header-highlight hl-green">2. Растущая часть</div>
+            <div class="allocation-info">
+                <span>Выделить: <b id="valStocks">50 000</b> ₽</span>
+                <span class="percent-tag"><span class="stock-pct-text">50</span>% от капитала</span>
             </div>
             <div id="echelonContainer"></div>
         </div>
@@ -675,10 +656,7 @@
                     <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
                 </div>
                 
-                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">
-                    Введите кол-во штук купленных. <br>
-                    <span style="font-size:9px;">*Цена в плашке указана с учетом НКД (Цена+НКД)</span>
-                </div>
+                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">Введите кол-во штук купленных:</div>
                 <div id="calc-bonds-input-list"></div>
                 
                 <button class="btn-reset-wide" onclick="resetCustomCalc()">
@@ -737,9 +715,7 @@
         </div>
         <div class="nav-search-btn" id="nav-search" onclick="showScreen('screen-search')">
             <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <button class="theme-toggle-mini" onclick="event.stopPropagation(); toggleTheme()" id="themeBtn">
-                <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            </button>
+            <button class="theme-toggle-mini" onclick="event.stopPropagation(); toggleTheme()" id="themeBtn">🌙</button>
         </div>
     </div>
 
@@ -773,19 +749,24 @@
 
         async function updateMarketData() {
             try {
+                // BITCOIN
                 try {
                     const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
                     const data = await res.json();
                     if(data.price) document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
                 } catch(e) { /* fallback */ }
 
+                // IMOEX
                 fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
                     .then(r => r.json()).then(d => { 
                         const cols = d.marketdata.columns; const data = d.marketdata.data[0];
                         const val = data[cols.indexOf('CURRENTVALUE')]; 
-                        if(val) document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
+                        if(val) {
+                            document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
+                        }
                     });
 
+                // USD/RUB
                 fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
                     .then(r => r.json()).then(d => { 
                         const mData = d.marketdata.data[0]; const mCols = d.marketdata.columns;
@@ -801,10 +782,12 @@
         updateMarketData(); updateMarketStatus();
 
         function showScreen(screenId) {
+            // Auto close monthly income when leaving screen-assets
             if (currentScreen === 'screen-assets' && screenId !== 'screen-assets') {
                 const inc = document.getElementById('calc-income-wrapper');
                 if(inc) inc.style.display = 'none';
             }
+
             currentScreen = screenId;
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
@@ -828,13 +811,15 @@
         }
         
         function toggleRainTooltip() {
+            // Only show if accordion is expanded
             const content = document.getElementById('couponContent');
             if (!content || !content.classList.contains('active')) return;
+
             document.getElementById('rain-tooltip').classList.toggle('show');
             setTimeout(() => { document.getElementById('rain-tooltip').classList.remove('show'); }, 3000);
         }
         
-        function toggleDetails(id) {
+        function toggleOfzDetails(id) {
             const el = document.getElementById(id);
             if(el) el.classList.toggle('active');
         }
@@ -846,25 +831,16 @@
         function toggleTheme() {
             const body = document.body; const btn = document.getElementById('themeBtn');
             if (body.classList.contains('dark-mode')) {
-                body.classList.remove('dark-mode'); body.classList.add('light-mode'); 
-                btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-                localStorage.setItem('user_theme', 'light');
+                body.classList.remove('dark-mode'); body.classList.add('light-mode'); btn.innerText = '🌙'; localStorage.setItem('user_theme', 'light');
             } else {
-                body.classList.remove('light-mode'); body.classList.add('dark-mode'); 
-                btn.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
-                localStorage.setItem('user_theme', 'dark');
+                body.classList.remove('light-mode'); body.classList.add('dark-mode'); btn.innerText = '☀️'; localStorage.setItem('user_theme', 'dark');
             }
         }
 
         function initTheme() {
             const savedTheme = localStorage.getItem('user_theme'); const btn = document.getElementById('themeBtn');
-            if (savedTheme === 'dark') { 
-                document.body.classList.add('dark-mode'); 
-                btn.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
-            } else { 
-                document.body.classList.add('light-mode'); 
-                btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-            }
+            if (savedTheme === 'dark') { document.body.classList.add('dark-mode'); btn.innerText = '☀️'; }
+            else { document.body.classList.add('light-mode'); btn.innerText = '🌙'; }
         }
 
         function saveSettings() {
@@ -932,8 +908,11 @@
             try {
                 const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
                 const data = await res.json(); const cols = data.securities.columns; const row = data.securities.data[0];
+                
+                // Store coupons map
                 bondCouponsMap[code] = { date: row[cols.indexOf('NEXTCOUPON')], value: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0 };
                 
+                // Detailed info for Page 3
                 const couponPeriod = parseFloat(row[cols.indexOf('COUPONPERIOD')]) || 0;
                 const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
                 
@@ -967,6 +946,7 @@
             } catch (e) { console.error(e); }
         }
 
+        // --- Logic for Screen 3 (Assets) ---
         function changeQty(ticker, delta) {
             const input = document.getElementById(`input-${ticker}`);
             if(input) {
@@ -979,7 +959,10 @@
         
         function resetOne(ticker) {
              const input = document.getElementById(`input-${ticker}`);
-             if(input) { input.value = 0; recalcCustomCoupons(); }
+             if(input) {
+                 input.value = 0;
+                 recalcCustomCoupons();
+             }
         }
 
         function renderCustomBondCalc() {
@@ -987,14 +970,10 @@
             if(!container) return;
             let html = '';
             bonds.forEach(b => {
-                const fullPrice = Math.round((b.p + b.nkd)*10)/10;
                 html += `
                 <div class="calc-bond-row">
                     <div class="calc-bond-name" onclick="copyToClipboard('${b.n}')">${limitName(b.n)}</div>
-                    <div class="calc-combined-info">
-                        <div class="calc-price-part">${fullPrice} ₽</div>
-                        <div class="calc-yield-part">${b.y.replace(' ₽','')}</div>
-                    </div>
+                    <div class="calc-yield-tag">${b.y}</div>
                     <div class="qty-controls">
                         <div class="qty-btn" onclick="changeQty('${b.t}', -1)">-</div>
                         <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons()">
@@ -1019,23 +998,37 @@
             const inputs = document.querySelectorAll('.calc-input');
             let rainData = [];
             let total = 0;
+
             inputs.forEach(input => {
                 const qty = parseInt(input.value) || 0;
                 const ticker = input.getAttribute('data-ticker');
                 if(qty > 0 && bondCouponsMap[ticker]) {
                     const info = bondCouponsMap[ticker];
                     const netAmount = (info.value * qty) * (1 - customTax);
-                    rainData.push({ date: info.date, name: bonds.find(b => b.t === ticker)?.n || ticker, qty, amount: netAmount });
+                    rainData.push({ 
+                        date: info.date, 
+                        name: bonds.find(b => b.t === ticker)?.n || ticker, 
+                        qty: qty, 
+                        amount: netAmount 
+                    });
                 }
             });
+
             rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
+
             let html = '';
             if(rainData.length === 0) {
                 html = 'Введите количество купленных облигаций выше.';
             } else {
                 rainData.forEach(r => {
                     total += r.amount;
-                    html += `<div class="coupon-row"><div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div><div style="color:#8e8e93">${limitName(r.name)}</div><div style="text-align:center">${r.qty}шт.</div><div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div></div>`;
+                    html += `
+                    <div class="coupon-row">
+                        <div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div>
+                        <div style="color:#8e8e93">${limitName(r.name)}</div>
+                        <div style="text-align:center">${r.qty}шт.</div>
+                        <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
+                    </div>`;
                 });
                 html += `<div style="text-align:right; margin-top:10px; font-weight:bold;">Итого: ${Math.round(total).toLocaleString()} ₽</div>`;
             }
@@ -1063,24 +1056,41 @@
             const resContainer = document.getElementById('search-results');
             resContainer.innerHTML = '';
             if(!query || query.length < 2) return;
+            
             const q = query.toUpperCase();
             let results = [];
+
             echelons.forEach(e => {
-                e.assets.forEach(a => { if(a.t.toUpperCase().includes(q) || a.n.toUpperCase().includes(q)) results.push({...a, type: 'Акция'}); });
+                e.assets.forEach(a => {
+                    if(a.t.toUpperCase().includes(q) || a.n.toUpperCase().includes(q)) results.push({...a, type: 'Акция'});
+                });
             });
             bonds.forEach(b => {
                 if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
             });
-            if(results.length === 0) { resContainer.innerHTML = '<div style="text-align:center; color:#888; padding:20px;">Ничего не найдено</div>'; return; }
+
+            if(results.length === 0) {
+                resContainer.innerHTML = '<div style="text-align:center; color:#888; padding:20px;">Ничего не найдено</div>';
+                return;
+            }
+
             results.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'search-result-item';
                 div.innerHTML = `
-                    <div style="display:flex; justify-content:space-between;"><b>${item.t}</b><span style="font-size:10px; background:var(--accent-blue); color:white; padding:2px 6px; border-radius:4px;">${item.type}</span></div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <b>${item.t}</b>
+                        <span style="font-size:10px; background:var(--accent-blue); color:white; padding:2px 6px; border-radius:4px;">${item.type}</span>
+                    </div>
                     <div style="font-size:12px; color:#888; margin:4px 0;">${item.n}</div>
                     <div style="font-weight:bold;">${item.p} ₽</div>
                 `;
-                div.onclick = () => { alert(`${item.type}: ${item.n}`); };
+                div.onclick = () => {
+                    const info = item.type === 'Акция' 
+                    ? `Компания: ${item.n}\nЦена: ${item.p} ₽\nЦель: ${item.target}`
+                    : `Облигация: ${item.n}\nЦена: ${item.p} ₽\nДоходность: ${item.y}`;
+                    alert(info);
+                };
                 resContainer.appendChild(div);
             });
         }
@@ -1097,6 +1107,7 @@
                 document.getElementById('labelBondsPct').innerText = bondPct;
                 document.getElementById('labelStocksPct').innerText = stockPct;
                 document.getElementById('dynamicSubtitle').innerText = `Система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
+                
                 document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
                 document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
                 document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
@@ -1111,49 +1122,33 @@
                 if (leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
                 bondCalculations.forEach(b => {
                     actualSpentTotal += (b.qty * b.fullCostPerUnit); bondQuantities[b.t] = b.qty;
-                    bHtml += `
-                    <div class="ofz-card-modern" onclick="toggleDetails('page2-${b.t}')">
-                        <div class="ofz-main-info">
-                            <div class="ofz-name-lg">${limitName(b.n)}</div>
-                            <div class="ofz-ticker-sm">${b.t}</div>
-                        </div>
-                        <div class="qty" style="margin-left:auto">${b.qty} шт</div>
-                        <div class="ofz-yield-badge" style="margin-left:5px">${b.y}</div>
-                    </div>
-                    <div id="page2-${b.t}" class="asset-details-panel">
-                        <div class="asset-detail-row"><span>Полное наименование:</span> <span class="asset-detail-val">${b.n}</span></div>
-                        <div class="asset-detail-row"><span>Код:</span> <span class="asset-detail-val">${b.t}</span></div>
-                        <div class="asset-detail-row"><span>Дата погашения:</span> <span class="asset-detail-val">${b.matDate}</span></div>
-                        <div class="asset-detail-row"><span>Цена:</span> <span class="asset-detail-val">${b.p} ₽</span></div>
-                        <div class="asset-detail-row"><span>НКД:</span> <span class="asset-detail-val">${Math.round(b.nkd*10)/10} ₽</span></div>
-                        <div class="asset-detail-row"><span>Простая Доходность к Погашению:</span> <span class="asset-detail-val">${b.y.replace(' ₽','')}</span></div>
-                    </div>
-                    `;
+                    bHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${shortenTicker(b.t)}</span><span class="asset-name">${limitName(b.n)}</span><span class="qty">${b.qty} шт.</span><span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span><div class="details">Полное название: <b>${b.n}</b><br>Код: <b>${b.t}</b> | Цена: <b>${b.p} ₽</b><br>НКД: <b>${b.nkd.toFixed(2)} ₽</b> | Дата погашения: <b>${b.matDate}</b><br>Простая Доходность к Погашению: <b>${b.y.replace(' ₽','')}</b></div></div>`;
                 });
             }
-            if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml; document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString() + ' ₽'; }
+            if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml; document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
             
+            // New OFZ Card Design
             let ofzHtml = '';
             bonds.forEach(b => {
                 const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
                 ofzHtml += `
-                <div class="ofz-card-modern" onclick="toggleDetails('details-${b.t}')">
+                <div class="ofz-card-modern" onclick="toggleOfzDetails('details-${b.t}')">
                     <div class="ofz-main-info">
                         <div class="ofz-name-lg">${limitName(b.n)}</div>
                         <div class="ofz-ticker-sm">${b.t}</div>
                     </div>
-                    <div class="ofz-nkd-badge">НКД: ${Math.round(b.nkd*10)/10}</div>
+                    <div class="ofz-nkd">${Math.round(b.nkd*10)/10}</div>
                     <div class="ofz-price">${b.p} ₽</div>
-                    <div class="ofz-yield-badge">${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
+                    <div class="ofz-yield-badge" title="Простая доходность">
+                        ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                    </div>
                 </div>
-                <div id="details-${b.t}" class="asset-details-panel">
-                    <div class="asset-detail-row"><span>Дата погашения:</span> <span class="asset-detail-val">${details.matDate}</span></div>
-                    <div class="asset-detail-row"><span>НКД:</span> <span class="asset-detail-val">${Math.round(b.nkd*10)/10} ₽</span></div>
-                    <div class="asset-detail-row"><span>Код:</span> <span class="asset-detail-val">${b.t}</span></div>
-                    <div class="asset-detail-row"><span>Размер купона:</span> <span class="asset-detail-val">${details.couponValue} ₽</span></div>
-                    <div class="asset-detail-row"><span>Дата ближайшего купона:</span> <span class="asset-detail-val">${details.nextCoupon}</span></div>
-                    <div class="asset-detail-row"><span>Доходность купона:</span> <span class="asset-detail-val">${details.couponYield}%</span></div>
-                    <div class="asset-detail-row"><span>Выплат в год:</span> <span class="asset-detail-val">${details.freq}</span></div>
+                <div id="details-${b.t}" class="ofz-details-panel">
+                    <div class="ofz-detail-row"><span>Дата погашения:</span> <span class="ofz-detail-val">${details.matDate}</span></div>
+                    <div class="ofz-detail-row"><span>Размер купона:</span> <span class="ofz-detail-val">${details.couponValue} ₽</span></div>
+                    <div class="ofz-detail-row"><span>Дата ближайшего купона:</span> <span class="ofz-detail-val">${details.nextCoupon}</span></div>
+                    <div class="ofz-detail-row"><span>Доходность купона:</span> <span class="ofz-detail-val">${details.couponYield}%</span></div>
+                    <div class="ofz-detail-row"><span>Выплат в год:</span> <span class="ofz-detail-val">${details.freq}</span></div>
                 </div>
                 `;
             });
@@ -1185,22 +1180,12 @@
                 
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
-                    eHtml += `<div class="asset-item" onclick="toggleRow(this)">
-                        <div class="asset-row-main">
-                            <span class="ticker">${s.t}</span>
-                            <span class="asset-name">${limitName(s.n)}</span>
-                            <div class="asset-right">
-                                <span class="qty">${s.qty} шт.</span>
-                                <span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
-                            </div>
-                        </div>
-                        <div class="details">Компания: <b>${s.n}</b><br>Цена: <b>${s.p} ₽</b><br>Цель: <b>${s.target.replace(' ₽','')}</b> (прогноз на период до 36 месяцев)</div>
-                    </div>`;
+                    eHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${s.t}</span><span class="asset-name">${limitName(s.n)}</span><span class="qty">${s.qty} шт.</span><span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span><div class="details">Компания: <b>${s.n}</b><br>Цена: <b>${s.p} ₽</b><br>Цель: <b>${s.target.replace(' ₽','')}</b> (прогноз на период до 36 месяцев)</div></div>`;
                 });
                 eHtml += `</div>`;
             });
             if(document.getElementById('echelonContainer')) {
-                document.getElementById('echelonContainer').innerHTML = eHtml; document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString() + ' ₽';
+                document.getElementById('echelonContainer').innerHTML = eHtml; document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
                 document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
                 document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
             }
@@ -1212,27 +1197,70 @@
             const container = document.getElementById('shareContainer');
             const brand = document.getElementById('shareBrand'); 
             const dateEl = document.getElementById('shareDate');
+            
             const originalText = btn.innerHTML;
-            btn.innerText = "⏳ Генерация PDF..."; btn.disabled = true; 
-            brand.style.display = 'block'; dateEl.innerText = new Date().toLocaleString();
+            btn.innerText = "⏳ Генерация PDF..."; 
+            btn.disabled = true; 
+            
+            brand.style.display = 'block'; 
+            dateEl.innerText = new Date().toLocaleString();
+
             try {
-                const canvas = await html2canvas(container, { backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), scale: 2, logging: false, useCORS: true });
+                const canvas = await html2canvas(container, { 
+                    backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), 
+                    scale: 2, 
+                    logging: false, 
+                    useCORS: true 
+                });
+                
                 const imgData = canvas.toDataURL('image/png');
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+                
                 const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({ orientation: 'p', unit: 'px', format: [canvas.width, canvas.height] });
-                doc.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+                const doc = new jsPDF({
+                    orientation: 'p',
+                    unit: 'px',
+                    format: [imgWidth, imgHeight]
+                });
+                
+                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
                 const pdfBlob = doc.output('blob');
+                
                 if (navigator.share && navigator.canShare) {
                     const file = new File([pdfBlob], "Solomina_Portfolio.pdf", { type: "application/pdf" });
                     if (navigator.canShare({ files: [file] })) {
-                        await navigator.share({ files: [file], title: 'Мой портфель 50/50', text: 'Расчет от Madame Solomi’na' });
-                        btn.innerHTML = originalText; btn.disabled = false; brand.style.display = 'none'; return;
+                        await navigator.share({
+                            files: [file],
+                            title: 'Мой портфель 50/50',
+                            text: 'Расчет от Madame Solomi’na'
+                        });
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        brand.style.display = 'none';
+                        return;
                     }
                 }
+
                 doc.save('Solomina_Portfolio.pdf');
-                setTimeout(() => { btn.innerHTML = `✅ Файл скачан`; setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000); }, 500);
-            } catch(e) { console.error(e); alert("Не удалось открыть меню отправки. Файл будет скачан."); doc.save('Solomina_Portfolio.pdf'); btn.innerHTML = originalText; btn.disabled = false; } 
-            finally { brand.style.display = 'none'; }
+                
+                setTimeout(() => {
+                    btn.innerHTML = `✅ Файл скачан`;
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                    }, 2000);
+                }, 500);
+
+            } catch(e) {
+                console.error(e);
+                alert("Не удалось открыть меню отправки. Файл будет скачан.");
+                doc.save('Solomina_Portfolio.pdf');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            } finally {
+                brand.style.display = 'none'; 
+            }
         }
 
         loadData(); window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand();
