@@ -95,96 +95,43 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Дизайн Главного экрана Terminal */
-        .terminal-header {
-            padding: 30px 10px;
-            text-align: left;
-        }
+        .terminal-header { padding: 30px 10px; text-align: left; }
         .terminal-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            background: var(--accent-blue);
-            color: white;
-            font-size: 10px;
-            font-weight: 900;
-            border-radius: 4px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            letter-spacing: 1px;
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+            background: var(--accent-blue); color: white; font-size: 10px; font-weight: 900;
+            border-radius: 4px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px;
         }
 
-        /* Индикатор рынка */
-        .market-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-            background: #ccc;
-        }
+        .market-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: #ccc; }
         .dot-online { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; animation: pulse 2s infinite; }
         .dot-offline { background: #e74c3c; }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
         .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 25px; }
 
-        /* Красивое отображение курсов */
-        .market-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 30px;
-        }
+        .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
         .market-item {
-            background: var(--card-bg);
-            padding: 12px 8px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            text-align: center;
-            box-shadow: 0 4px 10px var(--card-shadow);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 60px;
+            background: var(--card-bg); padding: 12px 8px; border-radius: 16px; border: 1px solid var(--border-color);
+            text-align: center; box-shadow: 0 4px 10px var(--card-shadow); display: flex; flex-direction: column;
+            justify-content: center; min-height: 60px;
         }
-        .market-label { 
-            font-size: 9px; 
-            font-weight: 800; 
-            color: #8e8e93; 
-            text-transform: uppercase; 
-            margin-bottom: 6px; 
-            letter-spacing: 0.5px;
-        }
+        .market-label { font-size: 9px; font-weight: 800; color: #8e8e93; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         .market-value { font-size: 12px; font-weight: 900; color: var(--text-main); }
         .market-change { font-size: 9px; font-weight: 700; margin-top: 2px; height: 13px; }
         .up { color: var(--accent-green); }
         .down { color: #e74c3c; }
 
-        /* Красивые информационные блоки */
         .info-card {
-            background: var(--card-bg);
-            padding: 22px;
-            border-radius: 20px;
-            margin-bottom: 18px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 6px 15px var(--card-shadow);
-            position: relative;
+            background: var(--card-bg); padding: 22px; border-radius: 20px; margin-bottom: 18px;
+            border: 1px solid var(--border-color); box-shadow: 0 6px 15px var(--card-shadow); position: relative;
         }
         .info-card.bonds { box-shadow: 0 10px 20px rgba(52, 152, 219, 0.05), 0 4px 10px var(--card-shadow); }
         .info-card.stocks { box-shadow: 0 10px 20px rgba(46, 204, 113, 0.05), 0 4px 10px var(--card-shadow); }
-
         .info-card-header { font-size: 17px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
         .info-card-sub { font-size: 11px; font-weight: 700; color: var(--accent-blue); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.8px; }
         .bonds .info-card-sub { color: var(--accent-blue); }
         .stocks .info-card-sub { color: var(--accent-green); }
-
         .info-card-text { font-size: 13px; line-height: 1.6; color: #8e8e93; margin-bottom: 15px; }
         .info-card-footer { font-size: 10px; font-weight: 900; letter-spacing: 1px; border-top: 1px solid var(--item-border); padding-top: 12px; }
 
@@ -201,21 +148,16 @@
         
         .calc-box {
             background: var(--card-bg); padding: 24px; border-radius: 24px;
-            box-shadow: 0 15px 35px var(--card-shadow); margin-bottom: 25px;
-            border: 1px solid var(--border-color);
+            box-shadow: 0 15px 35px var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color);
         }
-        
         .calc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .input-container { flex: 1; }
         .input-label { font-size: 13px; color: #8e8e93; font-weight: 600; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         .input-wrapper { display: flex; align-items: baseline; gap: 8px; }
-
         input#sumInput { 
-            border: none; font-size: 34px; font-weight: 700; width: 100%; 
-            outline: none; color: var(--input-color); background: transparent;
-            margin: 0; padding: 0; line-height: 1;
+            border: none; font-size: 34px; font-weight: 700; width: 100%; outline: none; 
+            color: var(--input-color); background: transparent; margin: 0; padding: 0; line-height: 1;
         }
-
         .currency { font-size: 28px; color: #d1d1d6; font-weight: 500; }
 
         .usage-bar-container { margin-bottom: 20px; }
@@ -227,9 +169,8 @@
         .fee-label { font-size: 11px; color: #8e8e93; font-weight: bold; margin-bottom: 8px; display: block; text-transform: uppercase; }
         .fee-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
         .fee-btn {
-            padding: 6px 10px; border-radius: 8px; border: 1px solid #e1e8ed;
-            background: var(--card-bg); font-size: 11px; font-weight: 600; color: #5d7185;
-            cursor: pointer; transition: all 0.2s;
+            padding: 6px 10px; border-radius: 8px; border: 1px solid #e1e8ed; background: var(--card-bg);
+            font-size: 11px; font-weight: 600; color: #5d7185; cursor: pointer; transition: all 0.2s;
         }
         .fee-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
 
@@ -256,8 +197,8 @@
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item {
-            display: grid; grid-template-columns: 85px 1fr 75px 80px;
-            padding: 12px; border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center;
+            display: grid; grid-template-columns: 85px 1fr 75px 80px; padding: 12px; 
+            border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center;
         }
         .ticker { font-weight: bold; color: var(--text-main); }
         .asset-name { color: #8e8e93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
@@ -275,14 +216,12 @@
         .allocation-info { font-size: 13px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .percent-tag { 
             background: var(--accent-blue); padding: 5px 12px; border-radius: 20px; 
-            font-weight: 800; font-size: 11px; color: white; box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3);
-            white-space: nowrap;
+            font-weight: 800; font-size: 11px; color: white; box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3); white-space: nowrap;
         }
         
         .echelon-title { 
-            padding: 10px 12px; font-size: 12px; font-weight: bold; 
-            background: rgba(0,0,0,0.05); color: #8e8e93; display: flex; 
-            justify-content: space-between; align-items: center; position: relative;
+            padding: 10px 12px; font-size: 12px; font-weight: bold; background: rgba(0,0,0,0.05); color: #8e8e93; 
+            display: flex; justify-content: space-between; align-items: center; position: relative;
         }
         .echelon-info-icon {
             display: inline-flex; align-items: center; justify-content: center;
@@ -496,6 +435,39 @@
         </div>
     </div>
 
+    <div id="screen-assets" class="screen">
+        <div class="section-header">🛡️ Лучшие ОФЗ</div>
+        <div id="ofz-list" class="asset-list">
+            </div>
+
+        <div class="coupon-box">
+            <div class="coupon-header">
+                <span>📅 Ежемесячный доход</span>
+                <span id="monthly-income-total">Расчет...</span>
+            </div>
+            <div class="coupon-content active" id="monthly-income-list" style="padding: 10px;">
+                </div>
+        </div>
+
+        <div class="section-header">🚀 Таблица Эшелонов</div>
+        <div id="echelon-table-container" style="background: var(--card-bg); border-radius: 16px; padding: 10px; overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: center;">
+                <thead>
+                    <tr style="color: #8e8e93; border-bottom: 1px solid var(--item-border);">
+                        <th style="padding: 10px;">I</th><th style="padding: 10px;">II</th><th style="padding: 10px;">III</th><th style="padding: 10px;">IV</th>
+                    </tr>
+                </thead>
+                <tbody id="echelon-tickers-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <button class="btn-action" style="margin-top: 20px;" onclick="searchTicker()">🔍 Поиск по тикеру</button>
+        <div class="theme-toggle-container" style="margin-top: 40px;">
+            <button class="theme-toggle-btn" onclick="toggleTheme()">🌙</button>
+        </div>
+    </div>
+
     <div class="bottom-nav">
         <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
             <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -503,7 +475,7 @@
         <div class="nav-item" id="nav-app" onclick="showScreen('screen-app')">
             <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
         </div>
-        <div class="nav-item" onclick="if(currentScreen==='screen-home') showScreen('screen-app'); setTimeout(() => document.getElementById('rainSection').scrollIntoView({behavior: 'smooth'}), 100); document.getElementById('couponContent').classList.add('active')">
+        <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
             <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
         <div class="nav-item" onclick="if(currentScreen==='screen-home') showScreen('screen-app'); setTimeout(() => shareAsImage(), 100)">
@@ -547,31 +519,45 @@
 
         async function updateMarketData() {
             try {
+                // BTC/USD через прямой API Binance
                 fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
-                    .then(res => res.json()).then(data => {
-                        if (data && data.price) document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
-                    });
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.price) {
+                            document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
+                        }
+                    }).catch(() => { document.getElementById('val-btc').innerText = "---"; });
+
+                // IMOEX
                 fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
                     .then(r => r.json()).then(d => { 
                         const cols = d.marketdata.columns; const data = d.marketdata.data[0];
                         const val = data[cols.indexOf('CURRENTVALUE')]; const change = data[cols.indexOf('LASTCHANGEPRC')];
                         if(val) {
                             document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
+                            const el = document.getElementById('change-imoex');
                             if(change !== null) {
-                                const el = document.getElementById('change-imoex');
                                 el.innerText = `${change > 0 ? '+' : ''}${change}%`;
                                 el.className = `market-change ${change >= 0 ? 'up' : 'down'}`;
                             }
                         }
                     });
+
+                // USD/RUB
                 fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
-                    .then(r => r.json()).then(d => { 
-                        const mData = d.marketdata.data[0]; const mCols = d.marketdata.columns;
-                        const sData = d.securities.data[0]; const sCols = d.securities.columns;
-                        let val = mData ? mData[mCols.indexOf('LAST')] : sData[sCols.indexOf('PREVPRICE')];
-                        if(val) document.getElementById('val-usdrub').innerText = val.toFixed(2) + ' ₽';
+                    .then(r => r.json()).then(d => {
+                        const sData = d.securities.data;
+                        const lastIdx = d.securities.columns.indexOf('PREVPRICE'); // Используем PREVPRICE для надежности вне сессии
+                        const lastTradeIdx = d.marketdata.data[0] ? d.marketdata.columns.indexOf('LAST') : -1;
+                        let price = d.marketdata.data[0] && d.marketdata.data[0][lastTradeIdx] ? d.marketdata.data[0][lastTradeIdx] : null;
+                        
+                        if(!price && sData && sData[0]) price = sData[0][lastIdx];
+
+                        if(price) {
+                            document.getElementById('val-usdrub').innerText = price.toFixed(2) + ' ₽';
+                        }
                     });
-            } catch (e) { console.log("Market data error"); }
+            } catch (e) { console.error("Market data error", e); }
         }
 
         setInterval(updateMarketData, 30000); setInterval(updateMarketStatus, 60000);
@@ -584,6 +570,7 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             if(screenId === 'screen-home') document.getElementById('nav-home').classList.add('active');
             if(screenId === 'screen-app') document.getElementById('nav-app').classList.add('active');
+            if(screenId === 'screen-assets') document.getElementById('nav-assets').classList.add('active');
             window.scrollTo({top: 0, behavior: 'smooth'});
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
         }
@@ -664,6 +651,53 @@
             } catch (e) { console.error(e); }
         }
 
+        function searchTicker() {
+            const t = prompt("Введите тикер компании (например, SBER):");
+            if (!t) return;
+            let found = null;
+            
+            // Поиск в акциях
+            echelons.forEach(e => {
+                const asset = e.assets.find(a => a.t.toUpperCase() === t.toUpperCase());
+                if (asset) found = { ...asset, type: 'stock' };
+            });
+            // Поиск в облигациях
+            if (!found) {
+                const bond = bonds.find(b => b.t.toUpperCase() === t.toUpperCase());
+                if (bond) found = { ...bond, type: 'bond' };
+            }
+
+            if (found) {
+                const info = found.type === 'stock' 
+                    ? `Компания: ${found.n}\nЦена: ${found.p} ₽\nЦель: ${found.target}`
+                    : `Облигация: ${found.n}\nЦена: ${found.p} ₽\nДоходность: ${found.y}`;
+                
+                window.Telegram.WebApp.showConfirm(`${info}\n\nПерейти к расчету?`, (ok) => {
+                    if(ok) showScreen('screen-app');
+                });
+            } else {
+                window.Telegram.WebApp.showAlert("Тикер не найден в базе Terminal.");
+            }
+        }
+
+        function updateEchelonTable() {
+            const body = document.getElementById('echelon-tickers-body');
+            if(!body) return;
+            let html = '';
+            // Находим макс длину колонки
+            const maxRows = Math.max(...echelons.map(e => e.assets.length));
+            
+            for(let i=0; i<maxRows; i++) {
+                html += '<tr>';
+                for(let j=0; j<4; j++) {
+                    const tick = echelons[j].assets[i]?.t || '-';
+                    html += `<td>${tick}</td>`;
+                }
+                html += '</tr>';
+            }
+            body.innerHTML = html;
+        }
+
         function draw() {
             saveSettings();
             const inputSum = parseFloat(document.getElementById('sumInput').value) || 0;
@@ -673,17 +707,15 @@
             const stockBudget = (inputSum * stockPct) / 100;
 
             if(document.getElementById('labelBondsPct')) {
-            document.getElementById('labelBondsPct').innerText = bondPct;
-            document.getElementById('labelStocksPct').innerText = stockPct;
-            // Обновляем текст в подзаголовке
-            document.getElementById('dynamicSubtitle').innerText = `Система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
-    
-            document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
-            document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
-            document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
-            document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
-        }    
-
+                document.getElementById('labelBondsPct').innerText = bondPct;
+                document.getElementById('labelStocksPct').innerText = stockPct;
+                document.getElementById('dynamicSubtitle').innerText = `Система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
+                
+                document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
+                document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
+                document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
+                document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
+            }
 
             let actualSpentTotal = 0; let bondQuantities = {}; let bHtml = '';
             if (bonds.length > 0) {
@@ -697,14 +729,24 @@
                 });
             }
             if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml; document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
+            
+            // Заполнение списка ОФЗ на странице 3
+            if(document.getElementById('ofz-list')) { document.getElementById('ofz-list').innerHTML = bHtml; }
 
             let rainHtml = ''; let totalRain = 0;
             const rainData = Object.keys(bondQuantities).map(ticker => {
                 const info = bondCouponsMap[ticker]; const qty = bondQuantities[ticker]; if (!info || !info.date || qty <= 0) return null;
                 const netAmount = (info.value * qty) * (1 - currentTax); return { date: info.date, name: bonds.find(b => b.t === ticker)?.n || ticker, qty, amount: netAmount };
             }).filter(x => x !== null).sort((a,b) => new Date(a.date) - new Date(b.date));
+            
             rainData.forEach(r => { totalRain += r.amount; rainHtml += `<div class="coupon-row"><div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div><div style="color:#8e8e93">${limitName(r.name)}</div><div style="text-align:center">${r.qty}шт.</div><div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div></div>`; });
+            
             if(document.getElementById('couponList')) { document.getElementById('couponList').innerHTML = rainHtml || 'Нет данных о ближайших купонах'; document.getElementById('couponTotalHeader').innerText = Math.round(totalRain).toLocaleString() + ' ₽'; }
+            // Заполнение дождя на странице 3
+            if(document.getElementById('monthly-income-list')) { 
+                document.getElementById('monthly-income-list').innerHTML = rainHtml || 'Нет данных'; 
+                document.getElementById('monthly-income-total').innerText = Math.round(totalRain).toLocaleString() + ' ₽';
+            }
 
             let eHtml = '';
             echelons.forEach(e => {
@@ -724,6 +766,7 @@
                 document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
                 document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
             }
+            updateEchelonTable();
         }
 
         async function shareAsImage() {
