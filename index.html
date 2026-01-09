@@ -100,7 +100,10 @@
         }
 
         /* Дизайн Главного экрана Terminal */
-        .terminal-header { padding: 30px 10px; text-align: left; }
+        .terminal-header {
+            padding: 20px 10px;
+            text-align: left;
+        }
         .terminal-badge {
             display: inline-flex;
             align-items: center;
@@ -114,17 +117,16 @@
             margin-bottom: 12px;
             letter-spacing: 1px;
         }
-        .status-dot {
+        .market-status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #ccc;
             margin-right: 8px;
-            display: inline-block;
+            background: #999;
             box-shadow: 0 0 5px rgba(0,0,0,0.2);
         }
-        .status-dot.online { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
-        .status-dot.offline { background: #e74c3c; }
+        .dot-online { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+        .dot-offline { background: #e74c3c; }
 
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
         .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 20px; }
@@ -139,28 +141,31 @@
         .market-item {
             background: var(--card-bg);
             padding: 12px 8px;
-            border-radius: 14px;
+            border-radius: 16px;
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
-        .market-label { font-size: 9px; font-weight: 800; color: #8e8e93; text-transform: uppercase; margin-bottom: 4px; }
+        .market-label { font-size: 10px; font-weight: bold; color: #8e8e93; text-transform: uppercase; margin-bottom: 6px; }
         .market-value { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
-        .market-change { font-size: 10px; font-weight: 700; }
-        .up { color: var(--accent-green); }
-        .down { color: var(--accent-red); }
+        .market-change { font-size: 10px; font-weight: bold; }
+        .change-up { color: var(--accent-green); }
+        .change-down { color: var(--accent-red); }
 
-        /* Chart Index Container */
-        .index-chart-container {
+        /* Chart Styles */
+        .chart-card {
             background: var(--card-bg);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border: 1px solid var(--border-color);
         }
         .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        #imoexCanvas { width: 100%; height: 60px; }
+        .chart-container { width: 100%; height: 100px; position: relative; }
+        .chart-svg { width: 100%; height: 100%; overflow: visible; }
+        .chart-path { fill: none; stroke: var(--accent-blue); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .chart-area { fill: linear-gradient(to bottom, rgba(52, 152, 219, 0.2), transparent); }
 
         .terminal-card {
             background: var(--card-bg);
@@ -349,7 +354,7 @@
             background: white; color: black; padding: 12px 20px; border-radius: 12px; 
             font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px;
         }
-        .ctrl-btn.blue { background: var(--accent-blue); color: white; }
+        .ctrl-btn blue { background: var(--accent-blue); color: white; }
 
         .footer-disclaimer {
             text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px;
@@ -417,7 +422,7 @@
     <div id="screen-home" class="screen active">
         <div class="terminal-header">
             <div class="terminal-badge">
-                <span id="marketStatus" class="status-dot"></span>
+                <div id="market-dot" class="market-status-dot"></div>
                 Madame Solomi’na Terminal
             </div>
             <div class="home-title">Добро Пожаловать! 🎉</div>
@@ -427,26 +432,37 @@
                 <div class="market-item">
                     <div class="market-label">IMOEX</div>
                     <div class="market-value" id="val-imoex">---</div>
-                    <div class="market-change" id="chg-imoex">0.00%</div>
+                    <div class="market-change" id="chg-imoex">---</div>
                 </div>
                 <div class="market-item">
                     <div class="market-label">USD/RUB</div>
                     <div class="market-value" id="val-usdrub">---</div>
-                    <div class="market-change" id="chg-usdrub">0.00%</div>
+                    <div class="market-change" id="chg-usdrub">---</div>
                 </div>
                 <div class="market-item">
                     <div class="market-label">BTC/USD</div>
                     <div class="market-value" id="val-btc">---</div>
-                    <div class="market-change" id="chg-btc">0.00%</div>
+                    <div class="market-change" id="chg-btc">---</div>
                 </div>
             </div>
 
-            <div class="index-chart-container">
+            <div class="chart-card">
                 <div class="chart-header">
-                    <span style="font-size: 11px; font-weight: bold; color:#8e8e93;">ДИНАМИКА ИНДЕКСА (24H)</span>
-                    <span id="chartVal" style="font-size: 12px; font-weight: 800;">IMOEX</span>
+                    <div style="font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">Индекс Мосбиржи (Месяц)</div>
+                    <div id="chart-price-current" style="font-size: 12px; font-weight: 800; color: var(--accent-blue);">Загрузка...</div>
                 </div>
-                <canvas id="imoexCanvas"></canvas>
+                <div class="chart-container">
+                    <svg id="imoex-chart-svg" class="chart-svg" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="gradientArea" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="var(--accent-blue)" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="var(--accent-blue)" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                        <path id="chart-path-area" fill="url(#gradientArea)"></path>
+                        <path id="chart-path-line" class="chart-path"></path>
+                    </svg>
+                </div>
             </div>
 
             <div class="terminal-card">
@@ -600,98 +616,104 @@
             { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
 
-        // Market Data Functions
-        async function fetchMarketData() {
-            // 1. IMOEX from MOEX API
-            try {
-                const moexRes = await fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata');
-                const moexData = await moexRes.json();
-                const marketData = moexData.marketdata.data[0];
-                const last = marketData[moexData.marketdata.columns.indexOf('CURRENTVALUE')];
-                const changePrc = marketData[moexData.marketdata.columns.indexOf('LASTCHANGEPRC')];
-                
-                document.getElementById('val-imoex').innerText = Math.round(last).toLocaleString();
-                updateChangeUI('chg-imoex', changePrc);
-                drawSparkline(last);
-            } catch(e) { console.error("MOEX error"); }
-
-            // 2. BTC/USD from Bybit API (very stable)
-            try {
-                const btcRes = await fetch('https://api.bybit.com/v5/market/tickers?category=spot&symbol=BTCUSDT');
-                const btcData = await btcRes.json();
-                const btc = btcData.result.list[0];
-                document.getElementById('val-btc').innerText = '$' + Math.round(btc.lastPrice).toLocaleString();
-                const btcChg = ((btc.lastPrice - btc.prevPrice24h) / btc.prevPrice24h * 100);
-                updateChangeUI('chg-btc', btcChg);
-            } catch(e) { console.error("BTC error"); }
-
-            // 3. USD/RUB from Bybit API (P2P/Spot proxy is most stable for RUB now)
-            try {
-                const usdRes = await fetch('https://api.bybit.com/v5/market/tickers?category=spot&symbol=USDTUBDT'); // Cross rate
-                const usdData = await usdRes.json();
-                const usd = usdData.result.list[0];
-                const price = parseFloat(usd.lastPrice).toFixed(2);
-                document.getElementById('val-usdrub').innerText = price + ' ₽';
-                const usdChg = ((usd.lastPrice - usd.prevPrice24h) / usd.prevPrice24h * 100);
-                updateChangeUI('chg-usdrub', usdChg);
-            } catch(e) {
-                // Fallback USD if crypto spot pair fails
-                document.getElementById('val-usdrub').innerText = '92.45 ₽';
-            }
-        }
-
-        function updateChangeUI(id, val) {
-            const el = document.getElementById(id);
-            if (!val) return;
-            const prefix = val > 0 ? '+' : '';
-            el.innerText = `${prefix}${parseFloat(val).toFixed(2)}%`;
-            el.className = `market-change ${val >= 0 ? 'up' : 'down'}`;
-        }
-
-        // Market Status Dot
-        function updateMarketStatus() {
+        // Market Data Fetching Professional
+        function updateStatusDot() {
             const now = new Date();
             const day = now.getDay();
             const hour = now.getHours();
             const min = now.getMinutes();
-            const time = hour * 60 + min;
-            
-            const isOpen = (day >= 1 && day <= 5) && (time >= 600 && time <= 1130); // 10:00 - 18:50
-            const dot = document.getElementById('marketStatus');
-            dot.className = isOpen ? 'status-dot online' : 'status-dot offline';
-        }
-
-        // Simple Sparkline for IMOEX
-        let indexHistory = [3100, 3120, 3110, 3150, 3140, 3180, 3160, 3200]; // Mock initial
-        function drawSparkline(newVal) {
-            const canvas = document.getElementById('imoexCanvas');
-            const ctx = canvas.getContext('2d');
-            if (newVal) {
-                indexHistory.push(newVal);
-                if (indexHistory.length > 20) indexHistory.shift();
+            const isWeekend = (day === 0 || day === 6);
+            const isWorkingHours = (hour > 10 || (hour === 10 && min >= 0)) && (hour < 18 || (hour === 18 && min <= 50));
+            const dot = document.getElementById('market-dot');
+            if (!isWeekend && isWorkingHours) {
+                dot.className = 'market-status-dot dot-online';
+            } else {
+                dot.className = 'market-status-dot dot-offline';
             }
-            
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const max = Math.max(...indexHistory);
-            const min = Math.min(...indexHistory);
-            const range = max - min || 1;
-            
-            ctx.beginPath();
-            ctx.strokeStyle = '#3498db';
-            ctx.lineWidth = 2;
-            ctx.lineJoin = 'round';
-            
-            indexHistory.forEach((v, i) => {
-                const x = (i / (indexHistory.length - 1)) * canvas.width;
-                const y = canvas.height - ((v - min) / range) * canvas.height;
-                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            });
-            ctx.stroke();
         }
 
-        setInterval(() => { fetchMarketData(); updateMarketStatus(); }, 30000);
-        fetchMarketData();
-        updateMarketStatus();
+        async function updateMarketData() {
+            try {
+                // BTC from Binance
+                fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT')
+                    .then(r => r.json())
+                    .then(d => { 
+                        document.getElementById('val-btc').innerText = '$' + Math.round(d.lastPrice).toLocaleString();
+                        const pct = parseFloat(d.priceChangePercent).toFixed(2);
+                        const el = document.getElementById('chg-btc');
+                        el.innerText = (pct > 0 ? '+' : '') + pct + '%';
+                        el.className = 'market-change ' + (pct >= 0 ? 'change-up' : 'change-down');
+                    });
+
+                // IMOEX from MOEX
+                fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata&marketdata.columns=LAST,LASTCHANGEPRC,LASTCHANGE')
+                    .then(r => r.json())
+                    .then(d => { 
+                        const data = d.marketdata.data[0];
+                        const last = data[0];
+                        const pct = data[1];
+                        document.getElementById('val-imoex').innerText = Math.round(last).toLocaleString();
+                        document.getElementById('chart-price-current').innerText = Math.round(last).toLocaleString();
+                        const el = document.getElementById('chg-imoex');
+                        el.innerText = (pct > 0 ? '+' : '') + pct + '%';
+                        el.className = 'market-change ' + (pct >= 0 ? 'change-up' : 'change-down');
+                    });
+
+                // USD/RUB from MOEX
+                fetch('https://iss.moex.com/iss/engines/currency/markets/selt/securities/USD000UTSTOM.json?iss.meta=off&iss.only=marketdata&marketdata.columns=LAST,LASTCHANGEPRC')
+                    .then(r => r.json())
+                    .then(d => { 
+                        const data = d.marketdata.data[0];
+                        if (data[0]) {
+                            document.getElementById('val-usdrub').innerText = data[0].toFixed(2) + ' ₽';
+                            const pct = data[1] ? data[1].toFixed(2) : 0;
+                            const el = document.getElementById('chg-usdrub');
+                            el.innerText = (pct > 0 ? '+' : '') + pct + '%';
+                            el.className = 'market-change ' + (pct >= 0 ? 'change-up' : 'change-down');
+                        }
+                    });
+            } catch (e) { console.log("Market data error"); }
+        }
+
+        async function fetchChartData() {
+            try {
+                const res = await fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX/history.json?iss.meta=off&from=' + new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+                const json = await res.json();
+                const history = json.history.data;
+                const prices = history.map(h => h[json.history.columns.indexOf('CLOSE')]).filter(p => p !== null);
+                drawChart(prices);
+            } catch (e) { console.error("Chart fetch error", e); }
+        }
+
+        function drawChart(data) {
+            const svg = document.getElementById('imoex-chart-svg');
+            const pathLine = document.getElementById('chart-path-line');
+            const pathArea = document.getElementById('chart-path-area');
+            if (!data.length) return;
+
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min;
+            const width = 300; // Виртуальные единицы
+            const height = 100;
+
+            let points = data.map((p, i) => {
+                const x = (i / (data.length - 1)) * width;
+                const y = height - ((p - min) / range) * height;
+                return `${x},${y}`;
+            });
+
+            const d = "M " + points.join(" L ");
+            pathLine.setAttribute("d", d);
+            pathArea.setAttribute("d", d + ` L ${width},${height} L 0,${height} Z`);
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        }
+
+        setInterval(updateMarketData, 30000);
+        setInterval(updateStatusDot, 60000);
+        updateMarketData();
+        updateStatusDot();
+        fetchChartData();
 
         function showScreen(screenId) {
             currentScreen = screenId;
