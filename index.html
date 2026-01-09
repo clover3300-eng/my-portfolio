@@ -136,10 +136,10 @@
         .info-card-footer { font-size: 10px; font-weight: 900; letter-spacing: 1px; border-top: 1px solid var(--item-border); padding-top: 12px; }
 
         .btn-action {
-            display: block; width: 100%; padding: 16px; margin-top: 12px;
+            display: flex; align-items: center; justify-content: center; width: 100%; padding: 16px; margin-top: 12px;
             background: var(--coupon-blue-bg); color: var(--accent-blue);
             border: 1px solid var(--accent-blue); border-radius: 16px;
-            font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; transition: all 0.2s;
+            font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s; gap: 8px;
         }
         .btn-action:active { opacity: 0.7; transform: scale(0.98); }
 
@@ -293,6 +293,17 @@
         .nav-item.active { color: var(--accent-blue); }
         .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .nav-item:active { transform: scale(0.9); background: rgba(255,255,255,0.2); }
+
+        /* Стили для 3 страницы */
+        .ofz-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center; }
+        .ofz-name { font-weight: bold; color: var(--text-main); }
+        .ofz-yield { font-weight: bold; color: var(--accent-green); }
+        .tooltip-icon { display: inline-flex; width: 12px; height: 12px; background: #99aab5; color: white; border-radius: 50%; font-size: 9px; align-items: center; justify-content: center; margin-left: 4px; cursor: pointer; }
+
+        /* Стили для поиска */
+        .search-container { padding: 10px 0; }
+        .search-input { width: 100%; padding: 16px; border-radius: 16px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main); font-size: 16px; outline: none; margin-bottom: 15px; box-sizing: border-box; }
+        .search-result-item { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--item-border); }
     </style>
 </head>
 <body onclick="hideAllTips(event)">
@@ -320,7 +331,7 @@
                 <div class="market-item">
                     <div class="market-label">BTC/USD</div>
                     <div class="market-value" id="val-btc">---</div>
-                    <div class="market-change">BINANCE</div>
+                    <div class="market-change">CRYPTO</div>
                 </div>
             </div>
 
@@ -428,7 +439,10 @@
             <div id="echelonContainer"></div>
         </div>
 
-        <button class="btn-action" id="btnShare" onclick="shareAsImage()">📸 Поделиться портфелем</button>
+        <button class="btn-action" id="btnShare" onclick="shareAsImage()">
+            <svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            Поделиться портфелем
+        </button>
         <div class="footer-disclaimer">Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.</div>
         <div class="theme-toggle-container">
             <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
@@ -436,36 +450,43 @@
     </div>
 
     <div id="screen-assets" class="screen">
-        <div class="section-header">🛡️ Лучшие ОФЗ</div>
+        <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>🛡️ Лучшие ОФЗ</span>
+            <span style="font-size:10px; color:#8e8e93;">Название / <span title="Простая Доходность к Погашению" onclick="alert('Простая Доходность к Погашению')">Доходность ❓</span></span>
+        </div>
         <div id="ofz-list" class="asset-list">
             </div>
 
-        <div class="coupon-box">
-            <div class="coupon-header">
+        <div class="coupon-box" style="margin-top:20px;">
+            <div class="coupon-header" onclick="toggleAccordion('monthly-income-list')">
                 <span>📅 Ежемесячный доход</span>
                 <span id="monthly-income-total">Расчет...</span>
             </div>
-            <div class="coupon-content active" id="monthly-income-list" style="padding: 10px;">
+            <div class="coupon-content" id="monthly-income-list" style="padding: 10px; display:none;">
                 </div>
         </div>
 
         <div class="section-header">🚀 Таблица Эшелонов</div>
         <div id="echelon-table-container" style="background: var(--card-bg); border-radius: 16px; padding: 10px; overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 12px; text-align: center;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: center;">
                 <thead>
                     <tr style="color: #8e8e93; border-bottom: 1px solid var(--item-border);">
-                        <th style="padding: 10px;">I</th><th style="padding: 10px;">II</th><th style="padding: 10px;">III</th><th style="padding: 10px;">IV</th>
+                        <th style="padding: 8px;">I Эшелон</th><th style="padding: 8px;">II Эшелон</th><th style="padding: 8px;">III Эшелон</th><th style="padding: 8px;">IV Эшелон</th>
                     </tr>
                 </thead>
                 <tbody id="echelon-tickers-body">
                     </tbody>
             </table>
         </div>
+        <div style="font-size:10px; color:#8e8e93; margin-top:5px; text-align:center;">Отображается: Тикер и Цель</div>
+    </div>
 
-        <button class="btn-action" style="margin-top: 20px;" onclick="searchTicker()">🔍 Поиск по тикеру</button>
-        <div class="theme-toggle-container" style="margin-top: 40px;">
-            <button class="theme-toggle-btn" onclick="toggleTheme()">🌙</button>
+    <div id="screen-search" class="screen">
+        <div class="header"><h1>Поиск Актива</h1></div>
+        <div class="search-container">
+            <input type="text" class="search-input" id="tickerSearchInput" placeholder="Тикер, название или ISIN..." oninput="performSearch(this.value)">
         </div>
+        <div id="search-results"></div>
     </div>
 
     <div class="bottom-nav">
@@ -478,8 +499,8 @@
         <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
             <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
-        <div class="nav-item" onclick="if(currentScreen==='screen-home') showScreen('screen-app'); setTimeout(() => shareAsImage(), 100)">
-            <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <div class="nav-item" id="nav-search" onclick="showScreen('screen-search')">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         </div>
     </div>
 
@@ -519,14 +540,17 @@
 
         async function updateMarketData() {
             try {
-                // BTC/USD через прямой API Binance
-                fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT')
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.price) {
-                            document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
-                        }
-                    }).catch(() => { document.getElementById('val-btc').innerText = "---"; });
+                // BITCOIN - Сначала Binance, если ошибка - CoinGecko
+                try {
+                    const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+                    const data = await res.json();
+                    if(data.price) document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
+                } catch(e) {
+                    // Fallback to CoinGecko
+                    const res2 = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+                    const data2 = await res2.json();
+                    document.getElementById('val-btc').innerText = '$' + Math.round(data2.bitcoin.usd).toLocaleString();
+                }
 
                 // IMOEX
                 fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
@@ -535,8 +559,8 @@
                         const val = data[cols.indexOf('CURRENTVALUE')]; const change = data[cols.indexOf('LASTCHANGEPRC')];
                         if(val) {
                             document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
-                            const el = document.getElementById('change-imoex');
                             if(change !== null) {
+                                const el = document.getElementById('change-imoex');
                                 el.innerText = `${change > 0 ? '+' : ''}${change}%`;
                                 el.className = `market-change ${change >= 0 ? 'up' : 'down'}`;
                             }
@@ -545,19 +569,13 @@
 
                 // USD/RUB
                 fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
-                    .then(r => r.json()).then(d => {
-                        const sData = d.securities.data;
-                        const lastIdx = d.securities.columns.indexOf('PREVPRICE'); // Используем PREVPRICE для надежности вне сессии
-                        const lastTradeIdx = d.marketdata.data[0] ? d.marketdata.columns.indexOf('LAST') : -1;
-                        let price = d.marketdata.data[0] && d.marketdata.data[0][lastTradeIdx] ? d.marketdata.data[0][lastTradeIdx] : null;
-                        
-                        if(!price && sData && sData[0]) price = sData[0][lastIdx];
-
-                        if(price) {
-                            document.getElementById('val-usdrub').innerText = price.toFixed(2) + ' ₽';
-                        }
+                    .then(r => r.json()).then(d => { 
+                        const mData = d.marketdata.data[0]; const mCols = d.marketdata.columns;
+                        const sData = d.securities.data[0]; const sCols = d.securities.columns;
+                        let val = mData ? mData[mCols.indexOf('LAST')] : sData[sCols.indexOf('PREVPRICE')];
+                        if(val) document.getElementById('val-usdrub').innerText = val.toFixed(2) + ' ₽';
                     });
-            } catch (e) { console.error("Market data error", e); }
+            } catch (e) { console.log("Market data error"); }
         }
 
         setInterval(updateMarketData, 30000); setInterval(updateMarketStatus, 60000);
@@ -571,8 +589,15 @@
             if(screenId === 'screen-home') document.getElementById('nav-home').classList.add('active');
             if(screenId === 'screen-app') document.getElementById('nav-app').classList.add('active');
             if(screenId === 'screen-assets') document.getElementById('nav-assets').classList.add('active');
+            if(screenId === 'screen-search') document.getElementById('nav-search').classList.add('active');
             window.scrollTo({top: 0, behavior: 'smooth'});
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        }
+
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            if(el.style.display === 'none') el.style.display = 'block';
+            else el.style.display = 'none';
         }
 
         function toggleTheme() {
@@ -651,51 +676,61 @@
             } catch (e) { console.error(e); }
         }
 
-        function searchTicker() {
-            const t = prompt("Введите тикер компании (например, SBER):");
-            if (!t) return;
-            let found = null;
-            
-            // Поиск в акциях
-            echelons.forEach(e => {
-                const asset = e.assets.find(a => a.t.toUpperCase() === t.toUpperCase());
-                if (asset) found = { ...asset, type: 'stock' };
-            });
-            // Поиск в облигациях
-            if (!found) {
-                const bond = bonds.find(b => b.t.toUpperCase() === t.toUpperCase());
-                if (bond) found = { ...bond, type: 'bond' };
-            }
-
-            if (found) {
-                const info = found.type === 'stock' 
-                    ? `Компания: ${found.n}\nЦена: ${found.p} ₽\nЦель: ${found.target}`
-                    : `Облигация: ${found.n}\nЦена: ${found.p} ₽\nДоходность: ${found.y}`;
-                
-                window.Telegram.WebApp.showConfirm(`${info}\n\nПерейти к расчету?`, (ok) => {
-                    if(ok) showScreen('screen-app');
-                });
-            } else {
-                window.Telegram.WebApp.showAlert("Тикер не найден в базе Terminal.");
-            }
-        }
-
         function updateEchelonTable() {
             const body = document.getElementById('echelon-tickers-body');
             if(!body) return;
             let html = '';
-            // Находим макс длину колонки
             const maxRows = Math.max(...echelons.map(e => e.assets.length));
-            
             for(let i=0; i<maxRows; i++) {
                 html += '<tr>';
                 for(let j=0; j<4; j++) {
-                    const tick = echelons[j].assets[i]?.t || '-';
-                    html += `<td>${tick}</td>`;
+                    const asset = echelons[j].assets[i];
+                    if(asset) html += `<td style="border-right:1px solid var(--border-color); padding:8px 0;"><b>${asset.t}</b><br><span style="color:var(--accent-green)">${asset.target.replace(' ₽','')}</span></td>`;
+                    else html += `<td style="border-right:1px solid var(--border-color);"></td>`;
                 }
                 html += '</tr>';
             }
             body.innerHTML = html;
+        }
+
+        function performSearch(query) {
+            const resContainer = document.getElementById('search-results');
+            resContainer.innerHTML = '';
+            if(!query || query.length < 2) return;
+            
+            const q = query.toUpperCase();
+            let results = [];
+
+            // Поиск в акциях
+            echelons.forEach(e => {
+                e.assets.forEach(a => {
+                    if(a.t.toUpperCase().includes(q) || a.n.toUpperCase().includes(q)) results.push({...a, type: 'Акция'});
+                });
+            });
+            // Поиск в облигациях
+            bonds.forEach(b => {
+                if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
+            });
+
+            if(results.length === 0) {
+                resContainer.innerHTML = '<div style="text-align:center; color:#888; padding:20px;">Ничего не найдено</div>';
+                return;
+            }
+
+            results.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'search-result-item';
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between;">
+                        <b>${item.t}</b>
+                        <span style="font-size:10px; background:var(--accent-blue); color:white; padding:2px 6px; border-radius:4px;">${item.type}</span>
+                    </div>
+                    <div style="font-size:12px; color:#888; margin:4px 0;">${item.n}</div>
+                    <div style="font-weight:bold;">${item.p} ₽</div>
+                `;
+                div.onclick = () => alert(JSON.stringify(item, null, 2)); // Или другое действие
+                resContainer.appendChild(div);
+            });
         }
 
         function draw() {
@@ -718,6 +753,7 @@
             }
 
             let actualSpentTotal = 0; let bondQuantities = {}; let bHtml = '';
+            // Формирование списка для Калькулятора (экран 2)
             if (bonds.length > 0) {
                 const perBondBudget = bondBudget / bonds.length;
                 let bondCalculations = bonds.map(b => { const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; return { ...b, qty, fullCostPerUnit }; });
@@ -730,21 +766,23 @@
             }
             if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml; document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
             
-            // Заполнение списка ОФЗ на странице 3
-            if(document.getElementById('ofz-list')) { document.getElementById('ofz-list').innerHTML = bHtml; }
+            // Специальный список ОФЗ для 3-й страницы (только Имя и Доходность)
+            let ofzHtml = '';
+            bonds.forEach(b => {
+                ofzHtml += `<div class="ofz-row"><span class="ofz-name">${limitName(b.n)}</span><span class="ofz-yield">${b.y}</span></div>`;
+            });
+            if(document.getElementById('ofz-list')) document.getElementById('ofz-list').innerHTML = ofzHtml;
 
             let rainHtml = ''; let totalRain = 0;
             const rainData = Object.keys(bondQuantities).map(ticker => {
                 const info = bondCouponsMap[ticker]; const qty = bondQuantities[ticker]; if (!info || !info.date || qty <= 0) return null;
                 const netAmount = (info.value * qty) * (1 - currentTax); return { date: info.date, name: bonds.find(b => b.t === ticker)?.n || ticker, qty, amount: netAmount };
             }).filter(x => x !== null).sort((a,b) => new Date(a.date) - new Date(b.date));
-            
             rainData.forEach(r => { totalRain += r.amount; rainHtml += `<div class="coupon-row"><div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div><div style="color:#8e8e93">${limitName(r.name)}</div><div style="text-align:center">${r.qty}шт.</div><div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div></div>`; });
             
             if(document.getElementById('couponList')) { document.getElementById('couponList').innerHTML = rainHtml || 'Нет данных о ближайших купонах'; document.getElementById('couponTotalHeader').innerText = Math.round(totalRain).toLocaleString() + ' ₽'; }
-            // Заполнение дождя на странице 3
             if(document.getElementById('monthly-income-list')) { 
-                document.getElementById('monthly-income-list').innerHTML = rainHtml || 'Нет данных'; 
+                document.getElementById('monthly-income-list').innerHTML = rainHtml || '<div style="text-align:center; color:#888;">Нет данных</div>'; 
                 document.getElementById('monthly-income-total').innerText = Math.round(totalRain).toLocaleString() + ' ₽';
             }
 
@@ -775,7 +813,7 @@
             btn.innerText = "⏳ Подготовка..."; btn.disabled = true; brand.style.display = 'block'; dateEl.innerText = new Date().toLocaleString();
             setTimeout(() => {
                 html2canvas(container, { backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), scale: 2, logging: false, useCORS: true }).then(async canvas => {
-                    brand.style.display = 'none'; btn.innerText = "📸 Поделиться портфелем"; btn.disabled = false;
+                    brand.style.display = 'none'; btn.innerHTML = `<svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> Поделиться портфелем`; btn.disabled = false;
                     const dataUrl = canvas.toDataURL("image/png"); document.getElementById('modalImg').src = dataUrl;
                     document.getElementById('photoModal').style.display = 'flex'; window.scrollTo({ top: 0, behavior: 'smooth' });
                     document.getElementById('sendBtn').onclick = async () => {
