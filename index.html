@@ -105,7 +105,7 @@
         .market-item-modern.orange::before { background: #f39c12; }
         
         .mk-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 0.5px; }
-        /* UPDATED: Font weight reduced from 900 to 600 as requested */
+        /* Font weight reduced from 900 to 600 */
         .mk-val { 
             font-size: 15px; font-weight: 600; color: var(--text-main); 
             background: rgba(0,0,0,0.03); padding: 4px 8px; border-radius: 8px;
@@ -227,6 +227,14 @@
         .asset-name { color: #8e8e93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
         .qty { text-align: right; padding-right: 8px; font-weight: bold; color: var(--accent-blue); }
         .price-total { text-align: right; color: var(--text-main); font-weight: 500; }
+        
+        /* NEW: Badge for Yield in List */
+        .asset-yield-badge {
+            background: rgba(46, 204, 113, 0.15); color: var(--accent-green);
+            font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 8px;
+            display: inline-block;
+        }
+        .asset-yield-badge.blue { background: rgba(52, 152, 219, 0.15); color: var(--accent-blue); }
 
         /* NEW: Details style for Bonds List */
         .details {
@@ -246,7 +254,6 @@
             display: flex; align-items: center; justify-content: space-between;
         }
         .hl-blue { background: var(--accent-gradient); }
-        /* Removed hl-green to force blue on both */
 
         .section-header-styled {
             margin: 25px 0 12px; background: var(--header-gradient);
@@ -255,19 +262,16 @@
             color: var(--text-main); box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
         }
 
-        /* NEW: Connected Allocation Badge */
+        /* NEW: Split Allocation Badge Style */
         .allocation-info-connected {
-            display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
-        }
-        .alloc-connect-wrapper {
-            display: flex; align-items: center;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px; width: 100%;
         }
         .alloc-left {
             background: var(--card-bg);
             border: 1px solid var(--accent-blue);
-            border-right: none;
-            border-radius: 20px 0 0 20px;
-            padding: 5px 10px 5px 12px;
+            border-radius: 20px;
+            padding: 5px 12px;
             font-size: 13px; color: var(--text-main);
             height: 24px; display: flex; align-items: center;
         }
@@ -275,11 +279,10 @@
             background: var(--accent-blue);
             color: white;
             padding: 6px 12px;
-            border-radius: 0 20px 20px 0; /* Connected look */
+            border-radius: 20px; /* Fully rounded */
             font-weight: 800; font-size: 11px;
-            box-shadow: 2px 0 6px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.2);
             height: 24px; display: flex; align-items: center;
-            z-index: 1;
         }
 
         .echelon-title { 
@@ -534,7 +537,7 @@
 </head>
 <body onclick="hideAllTips(event)">
 
-
+    <div id="toast" class="toast">Скопировано!</div>
 
     <div id="screen-home" class="screen active">
         <div class="terminal-header">
@@ -641,12 +644,10 @@
             </div>
             
             <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
-            <!-- Updated Allocation Info with connected look -->
+            <!-- Updated Allocation Info: Split Left/Right -->
             <div class="allocation-info-connected">
-                <div class="alloc-connect-wrapper">
-                    <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">50 000</b>&nbsp;₽</div>
-                    <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
-                </div>
+                <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">50 000</b>&nbsp;₽</div>
+                <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
             </div>
             <div id="listBonds" class="asset-list"></div>
 
@@ -673,12 +674,10 @@
 
             <!-- Changed color to BLUE as requested -->
             <div class="section-header-highlight hl-blue">2. Растущая часть</div>
-            <!-- Updated Allocation Info -->
+            <!-- Updated Allocation Info: Split Left/Right -->
             <div class="allocation-info-connected">
-                <div class="alloc-connect-wrapper">
-                    <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">50 000</b>&nbsp;₽</div>
-                    <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
-                </div>
+                <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">50 000</b>&nbsp;₽</div>
+                <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
             </div>
             <div id="echelonContainer"></div>
         </div>
@@ -1032,7 +1031,6 @@
             let html = '';
             bonds.forEach(b => {
                 const priceWithNkd = Math.round(b.p + b.nkd);
-                // Unified Badge Layout
                 html += `
                 <div class="calc-bond-row">
                     <div class="unified-badge-container">
@@ -1040,7 +1038,6 @@
                         <div class="ub-price">${priceWithNkd} ₽</div>
                         <div class="ub-yield">${b.y.replace('%', '')}%</div>
                     </div>
-                    
                     <div class="qty-controls">
                         <div class="qty-btn" onclick="changeQty('${b.t}', -1)">-</div>
                         <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons()">
@@ -1189,11 +1186,11 @@
                 if (leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
                 bondCalculations.forEach(b => {
                     actualSpentTotal += (b.qty * b.fullCostPerUnit); bondQuantities[b.t] = b.qty;
-                    // UPDATED: Structured Details List for Bonds (Page 2)
+                    // UPDATED: Bonds list (Col 1: Name, Col 2: Yield Badge)
                     bHtml += `
                     <div class="asset-item" onclick="toggleRow(this)">
-                        <span class="ticker">${shortenTicker(b.t)}</span>
-                        <span class="asset-name">${limitName(b.n)}</span>
+                        <span class="ticker" style="font-weight:700; font-size:11px;">${limitName(b.n)}</span>
+                        <span class="asset-name"><span class="asset-yield-badge">${b.y}</span></span>
                         <span class="qty">${b.qty} шт.</span>
                         <span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span>
                         <div class="details">
@@ -1209,7 +1206,6 @@
             }
             if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml; document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
             
-            // Updated OFZ List (Page 3) with NKD and Code in substrings
             let ofzHtml = '';
             bonds.forEach(b => {
                 const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
@@ -1264,7 +1260,15 @@
                 
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
-                    eHtml += `<div class="asset-item" onclick="toggleRow(this)"><span class="ticker">${s.t}</span><span class="asset-name">${limitName(s.n)}</span><span class="qty">${s.qty} шт.</span><span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span><div class="details">Компания: <b>${s.n}</b><br>Цена: <b>${s.p} ₽</b><br>Цель: <b>${s.target.replace(' ₽','')}</b> (прогноз на период до 36 месяцев)</div></div>`;
+                    // UPDATED: Stocks list (Col 1: Ticker, Col 2: Target Badge)
+                    eHtml += `
+                    <div class="asset-item" onclick="toggleRow(this)">
+                        <span class="ticker">${s.t}</span>
+                        <span class="asset-name"><span class="asset-yield-badge blue">${s.target.replace(' ₽','')}</span></span>
+                        <span class="qty">${s.qty} шт.</span>
+                        <span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
+                        <div class="details">Компания: <b>${s.n}</b><br>Цена: <b>${s.p} ₽</b><br>Цель: <b>${s.target.replace(' ₽','')}</b> (прогноз на период до 36 месяцев)</div>
+                    </div>`;
                 });
                 eHtml += `</div>`;
             });
