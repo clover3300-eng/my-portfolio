@@ -710,66 +710,69 @@
         </div>
 
         <!-- NEW BUTTON FOR PORTFOLIO FORMATION -->
-        <button class="btn-graphite" style="margin-bottom: 25px;" onclick="revealPortfolio()">
-            <svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+        <button class="btn-graphite" style="margin-bottom: 25px;" onclick="draw(); showScreen('screen-portfolio')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             Сформировать Портфель
         </button>
+    </div>
 
-        <div id="portfolioResultWrapper" style="display: none; animation: fadeIn 0.5s;">
-            <div id="shareContainer">
-                <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
-                    <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
-                    <div id="shareDate" style="font-size: 10px; color: #888;"></div>
-                </div>
-                
-                <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
-                <div class="allocation-info-connected">
-                    <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">50 000</b>&nbsp;₽</div>
-                    <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
-                </div>
-                <div id="listBonds" class="asset-list"></div>
+    <!-- NEW SCREEN 4: PORTFOLIO RESULTS -->
+    <div id="screen-portfolio" class="screen">
+        <div class="header"><h1>Ваш Портфель</h1></div>
+        
+        <div id="shareContainer">
+            <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
+                <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
+                <div id="shareDate" style="font-size: 10px; color: #888;"></div>
+            </div>
+            
+            <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
+            <div class="allocation-info-connected">
+                <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">50 000</b>&nbsp;₽</div>
+                <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
+            </div>
+            <div id="listBonds" class="asset-list"></div>
 
-                <div class="coupon-box" id="couponBox">
-                    <div class="coupon-header" id="rainSection" onclick="document.getElementById('couponContent').classList.toggle('active')">
-                        <div class="coupon-title-area">
-                            <span>🌦 Купонный Дождь</span>
-                            <div class="tooltip-container" id="rain-tooltip">
-                                <div class="info-i-btn" onclick="event.stopPropagation(); toggleRainTooltip()">i</div>
-                                <div class="tooltip-box">Это ближайшие выплаты купонов</div>
-                            </div>
+            <div class="coupon-box" id="couponBox">
+                <div class="coupon-header" id="rainSection" onclick="document.getElementById('couponContent').classList.toggle('active')">
+                    <div class="coupon-title-area">
+                        <span>🌦 Купонный Дождь</span>
+                        <div class="tooltip-container" id="rain-tooltip">
+                            <div class="info-i-btn" onclick="event.stopPropagation(); toggleRainTooltip()">i</div>
+                            <div class="tooltip-box">Это ближайшие выплаты купонов</div>
                         </div>
-                        <span id="couponTotalHeader">0 ₽</span>
                     </div>
-                    <div class="coupon-content" id="couponContent">
-                        <div class="tax-selector-ui" id="taxGroup">
-                            <button class="tax-ui-btn" onclick="setTax(0, this)">Без налога</button>
-                            <button class="tax-ui-btn active" onclick="setTax(0.13, this)">НДФЛ 13%</button>
-                            <button class="tax-ui-btn" onclick="setTax(0.15, this)">НДФЛ 15%</button>
-                        </div>
-                        <div id="couponList">Загрузка данных...</div>
+                    <span id="couponTotalHeader">0 ₽</span>
+                </div>
+                <div class="coupon-content" id="couponContent">
+                    <div class="tax-selector-ui" id="taxGroup">
+                        <button class="tax-ui-btn" onclick="setTax(0, this)">Без налога</button>
+                        <button class="tax-ui-btn active" onclick="setTax(0.13, this)">НДФЛ 13%</button>
+                        <button class="tax-ui-btn" onclick="setTax(0.15, this)">НДФЛ 15%</button>
                     </div>
+                    <div id="couponList">Загрузка данных...</div>
                 </div>
-                
-                <div class="section-connector">
-                    <div class="connector-line">
-                        <div class="connector-dot"></div>
-                    </div>
+            </div>
+            
+            <div class="section-connector">
+                <div class="connector-line">
+                    <div class="connector-dot"></div>
                 </div>
-
-                <div class="section-header-highlight hl-blue">2. Растущая часть</div>
-                <div class="allocation-info-connected">
-                    <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">50 000</b>&nbsp;₽</div>
-                    <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
-                </div>
-                <div id="echelonContainer"></div>
             </div>
 
-            <button class="btn-action" id="btnShare" onclick="shareAsPDF()">
-                <svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-                Поделиться PDF (Портфель)
-            </button>
-            <div class="footer-disclaimer">Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.</div>
+            <div class="section-header-highlight hl-blue">2. Растущая часть</div>
+            <div class="allocation-info-connected">
+                <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">50 000</b>&nbsp;₽</div>
+                <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
+            </div>
+            <div id="echelonContainer"></div>
         </div>
+
+        <button class="btn-action" id="btnShare" onclick="shareAsPDF()">
+            <svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            Поделиться PDF (Портфель)
+        </button>
+        <div class="footer-disclaimer">Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.</div>
     </div>
 
     <div id="screen-assets" class="screen">
@@ -870,6 +873,10 @@
             <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
                 <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
+            <!-- NEW NAV ITEM: PORTFOLIO -->
+            <div class="nav-item" id="nav-portfolio" onclick="showScreen('screen-portfolio')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
         </div>
         <div class="nav-search-btn" id="nav-search" onclick="showScreen('screen-search')">
             <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -962,6 +969,7 @@
             if(screenId === 'screen-home') document.getElementById('nav-home').classList.add('active');
             if(screenId === 'screen-app') document.getElementById('nav-app').classList.add('active');
             if(screenId === 'screen-assets') document.getElementById('nav-assets').classList.add('active');
+            if(screenId === 'screen-portfolio') document.getElementById('nav-portfolio').classList.add('active');
             if(screenId === 'screen-search') document.getElementById('nav-search').classList.add('active');
             
             window.scrollTo({top: 0, behavior: 'smooth'});
@@ -1059,13 +1067,6 @@
             document.getElementById('tax-custom-15').classList.remove('active');
             btn.classList.add('active');
             recalcCustomCoupons();
-        }
-        
-        function revealPortfolio() {
-            const el = document.getElementById('portfolioResultWrapper');
-            el.style.display = 'block';
-            el.scrollIntoView({ behavior: 'smooth' });
-            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
         }
 
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
