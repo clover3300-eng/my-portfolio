@@ -1,3 +1,11 @@
+Вот полный код с внесенными изменениями согласно вашим требованиям:
+
+1.  **Вторая страница (screen-app):** Добавлена кнопка "Сформировать Портфель". Блоки ниже (`shareContainer` и кнопки) скрыты в `div id="portfolioResultWrapper"` и появляются только после нажатия.
+2.  **Третья страница (ОФЗ):** В карточках теперь отображается доходность из таблицы (`b.y`), а внутри (в деталях) осталась расчетная текущая купонная доходность.
+3.  **Третья страница (Калькулятор):** Удален столбец цены, столбец доходности расширен (изменены CSS Grid и HTML генерация).
+4.  **Третья страница (Эшелоны):** Добавлен текстовый блок-превью перед таблицей.
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -423,10 +431,10 @@
         .list-header-row.ofz-cols span:first-child { text-align: left; }
         .list-header-row.ofz-cols span:nth-child(2), .list-header-row.ofz-cols span:nth-child(3) { text-align: center; }
         
-        /* UPDATED: Calculator Headers matching grid - Corrected Order */
+        /* UPDATED: Calculator Headers - Removed Price column, expanded Yield */
         .list-header-row.calc-cols {
             display: grid;
-            grid-template-columns: 1fr 60px 50px 70px; /* Name | Price | Yield | Controls */
+            grid-template-columns: 1fr 110px 70px; /* Name | Yield | Controls */
             gap: 8px;
             text-align: center; margin-bottom: 8px;
         }
@@ -481,10 +489,10 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2); letter-spacing: 0.5px;
         }
 
-        /* UPDATED: Calculator Row - Swapped Yield and Controls, Clean Grid */
+        /* UPDATED: Calculator Row - Removed Price, Expanded Yield */
         .calc-bond-row {
             display: grid;
-            grid-template-columns: 1fr 60px 50px 70px; /* Name | Price | Yield | Controls */
+            grid-template-columns: 1fr 110px 70px; /* Name | Yield | Controls */
             align-items: center;
             padding: 10px 0; border-bottom: 1px dashed var(--item-border); gap: 8px;
         }
@@ -502,7 +510,7 @@
         }
         .ub-yield {
             background: rgba(46, 204, 113, 0.2); color: #27ae60; padding: 4px 8px; white-space: nowrap;
-            border-radius: 6px; font-size: 11px; text-align: center;
+            border-radius: 6px; font-size: 11px; text-align: center; width: 100%;
         }
         .dark-mode .ub-name { background: #1e293b; color: #f1f5f9; border-color: #334155; }
         .dark-mode .ub-price { background: #475569; color: #94a3b8; }
@@ -709,59 +717,67 @@
             </div>
         </div>
 
-        <div id="shareContainer">
-            <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
-                <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
-                <div id="shareDate" style="font-size: 10px; color: #888;"></div>
-            </div>
-            
-            <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
-            <div class="allocation-info-connected">
-                <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">50 000</b>&nbsp;₽</div>
-                <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
-            </div>
-            <div id="listBonds" class="asset-list"></div>
-
-            <div class="coupon-box" id="couponBox">
-                <div class="coupon-header" id="rainSection" onclick="document.getElementById('couponContent').classList.toggle('active')">
-                    <div class="coupon-title-area">
-                        <span>🌦 Купонный Дождь</span>
-                        <div class="tooltip-container" id="rain-tooltip">
-                            <div class="info-i-btn" onclick="event.stopPropagation(); toggleRainTooltip()">i</div>
-                            <div class="tooltip-box">Это ближайшие выплаты купонов</div>
-                        </div>
-                    </div>
-                    <span id="couponTotalHeader">0 ₽</span>
-                </div>
-                <div class="coupon-content" id="couponContent">
-                    <div class="tax-selector-ui" id="taxGroup">
-                        <button class="tax-ui-btn" onclick="setTax(0, this)">Без налога</button>
-                        <button class="tax-ui-btn active" onclick="setTax(0.13, this)">НДФЛ 13%</button>
-                        <button class="tax-ui-btn" onclick="setTax(0.15, this)">НДФЛ 15%</button>
-                    </div>
-                    <div id="couponList">Загрузка данных...</div>
-                </div>
-            </div>
-            
-            <div class="section-connector">
-                <div class="connector-line">
-                    <div class="connector-dot"></div>
-                </div>
-            </div>
-
-            <div class="section-header-highlight hl-blue">2. Растущая часть</div>
-            <div class="allocation-info-connected">
-                <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">50 000</b>&nbsp;₽</div>
-                <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
-            </div>
-            <div id="echelonContainer"></div>
-        </div>
-
-        <button class="btn-action" id="btnShare" onclick="shareAsPDF()">
-            <svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-            Поделиться PDF (Портфель)
+        <!-- NEW BUTTON FOR PORTFOLIO FORMATION -->
+        <button class="btn-graphite" style="margin-bottom: 25px;" onclick="revealPortfolio()">
+            <svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+            Сформировать Портфель
         </button>
-        <div class="footer-disclaimer">Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.</div>
+
+        <div id="portfolioResultWrapper" style="display: none; animation: fadeIn 0.5s;">
+            <div id="shareContainer">
+                <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
+                    <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
+                    <div id="shareDate" style="font-size: 10px; color: #888;"></div>
+                </div>
+                
+                <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
+                <div class="allocation-info-connected">
+                    <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">50 000</b>&nbsp;₽</div>
+                    <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
+                </div>
+                <div id="listBonds" class="asset-list"></div>
+
+                <div class="coupon-box" id="couponBox">
+                    <div class="coupon-header" id="rainSection" onclick="document.getElementById('couponContent').classList.toggle('active')">
+                        <div class="coupon-title-area">
+                            <span>🌦 Купонный Дождь</span>
+                            <div class="tooltip-container" id="rain-tooltip">
+                                <div class="info-i-btn" onclick="event.stopPropagation(); toggleRainTooltip()">i</div>
+                                <div class="tooltip-box">Это ближайшие выплаты купонов</div>
+                            </div>
+                        </div>
+                        <span id="couponTotalHeader">0 ₽</span>
+                    </div>
+                    <div class="coupon-content" id="couponContent">
+                        <div class="tax-selector-ui" id="taxGroup">
+                            <button class="tax-ui-btn" onclick="setTax(0, this)">Без налога</button>
+                            <button class="tax-ui-btn active" onclick="setTax(0.13, this)">НДФЛ 13%</button>
+                            <button class="tax-ui-btn" onclick="setTax(0.15, this)">НДФЛ 15%</button>
+                        </div>
+                        <div id="couponList">Загрузка данных...</div>
+                    </div>
+                </div>
+                
+                <div class="section-connector">
+                    <div class="connector-line">
+                        <div class="connector-dot"></div>
+                    </div>
+                </div>
+
+                <div class="section-header-highlight hl-blue">2. Растущая часть</div>
+                <div class="allocation-info-connected">
+                    <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">50 000</b>&nbsp;₽</div>
+                    <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
+                </div>
+                <div id="echelonContainer"></div>
+            </div>
+
+            <button class="btn-action" id="btnShare" onclick="shareAsPDF()">
+                <svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                Поделиться PDF (Портфель)
+            </button>
+            <div class="footer-disclaimer">Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.</div>
+        </div>
     </div>
 
     <div id="screen-assets" class="screen">
@@ -801,7 +817,6 @@
                 
                 <div class="list-header-row calc-cols">
                     <span>Название</span>
-                    <span>Цена+НКД</span>
                     <span>Дох.</span>
                     <span>Кол-во</span>
                 </div>
@@ -821,6 +836,9 @@
         </div>
 
         <div class="section-header-styled">🚀 Таблица Эшелонов</div>
+        <p class="start-expl" style="text-align:left; margin-bottom: 10px;">
+            В этой таблице представлены тикеры компаний, разбитые по уровням надежности и дивидендной политики.
+        </p>
         <div id="echelon-table-container" style="background: var(--card-bg); border-radius: 16px; padding: 20px 5px; overflow-x: auto; box-shadow: 0 4px 15px var(--card-shadow);">
             <table class="echelon-table-styled">
                 <thead>
@@ -1050,6 +1068,13 @@
             btn.classList.add('active');
             recalcCustomCoupons();
         }
+        
+        function revealPortfolio() {
+            const el = document.getElementById('portfolioResultWrapper');
+            el.style.display = 'block';
+            el.scrollIntoView({ behavior: 'smooth' });
+            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        }
 
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
@@ -1155,7 +1180,6 @@
                     <div class="unified-badge-container">
                         <div class="ub-name">${limitName(b.n)}</div>
                     </div>
-                    <div class="ub-price">${priceWithNkd} ₽</div>
                     <div class="ub-yield">${b.y.replace('%', '')}%</div>
                     <div class="qty-controls">
                         <div class="qty-btn" onclick="changeQty('${b.t}', -1)">-</div>
@@ -1336,7 +1360,7 @@
                                      ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) 
                                      : '0.00';
                 
-                // OFZ Card Updated Layout: Name | Price (No Rub) | NKD | Yield (Calculated)
+                // OFZ Card Updated Layout: Name | Price | NKD | Yield (From CSV/Table)
                 ofzHtml += `
                 <div class="ofz-card-modern" onclick="toggleOfzDetails('details-${b.t}')">
                     <div class="ofz-main-info">
@@ -1345,8 +1369,8 @@
                     </div>
                     <div class="ofz-price">${b.p}</div>
                     <div class="ofz-nkd-badge">${Math.round(b.nkd*10)/10}</div>
-                    <div class="ofz-yield-badge" title="Текущая купонная доходность">
-                        ${calculatedCY}% <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                    <div class="ofz-yield-badge" title="Доходность к погашению">
+                        ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                     </div>
                 </div>
                 <div id="details-${b.t}" class="ofz-details-panel">
@@ -1476,3 +1500,4 @@
     </script>
 </body>
 </html>
+```
