@@ -302,7 +302,6 @@
             margin: 2px;
         }
         
-        /* IMPROVED SECTION CONNECTOR */
         .section-transition {
             display: flex; align-items: center; justify-content: center; gap: 10px;
             margin: 15px 0 25px; opacity: 1; position: relative;
@@ -317,41 +316,51 @@
             border: 1px solid var(--accent-blue);
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 10px rgba(52, 152, 219, 0.2);
-            z-index: 5;
+            z-index: 5; font-size: 20px; line-height: 1;
         }
         
-        .echelon-title { 
-            padding: 10px 12px; font-size: 12px; font-weight: bold; background: rgba(0,0,0,0.05); color: #8e8e93; 
-            display: flex; justify-content: space-between; align-items: center; position: relative;
+        /* New Echelon Separator Style */
+        .echelon-separator-modern {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 0; margin-top: 15px; margin-bottom: 5px;
+            border-bottom: 2px solid var(--item-border);
+            cursor: pointer;
         }
-        .echelon-pct-badge {
-            background: var(--card-bg); color: var(--accent-blue);
-            border: 1px solid var(--accent-blue); padding: 2px 8px; border-radius: 10px; font-size: 10px;
-        }
-        .echelon-info-icon {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 14px; height: 14px; background: #999; color: white;
-            border-radius: 50%; font-size: 9px; margin-left: 6px; cursor: pointer; opacity: 0.4;
-        }
+        .esm-left { display: flex; align-items: center; gap: 8px; }
+        .esm-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .esm-title { font-weight: 800; font-size: 12px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
+        .esm-pct { font-size: 11px; font-weight: bold; color: var(--accent-blue); background: rgba(52,152,219,0.1); padding: 2px 6px; border-radius: 6px; }
+        .esm-info { font-size: 14px; color: #ccc; }
+        
         .echelon-tip {
-            display: none; position: absolute; top: 100%; left: 12px; right: 12px;
+            display: none; position: absolute; left: 12px; right: 12px; margin-top: -5px;
             background: #3a506b; color: white; padding: 10px; border-radius: 8px;
             font-size: 11px; z-index: 10; font-weight: normal; line-height: 1.3;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        .echelon-title.show-tip .echelon-tip { display: block; }
+        .echelon-separator-modern.show-tip + .echelon-tip { display: block; }
 
         .coupon-box {
             background: var(--card-bg); border-radius: 16px; margin-top: 10px;
             border: 1px solid var(--accent-blue); overflow: hidden; margin-bottom: 10px;
             position: relative; z-index: 2;
         }
+        
+        /* UPDATED COUPON HEADER LAYOUT */
         .coupon-header {
-            padding: 14px; background: var(--coupon-blue-bg); color: var(--accent-blue);
+            padding: 12px 14px; background: var(--coupon-blue-bg); color: var(--accent-blue);
             font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer; align-items: center;
             position: relative;
         }
-        .coupon-title-area { display: flex; align-items: center; position: relative; gap: 8px; }
+        .coupon-title-wrapper {
+            display: flex; align-items: flex-start; gap: 10px;
+        }
+        .coupon-icon-lg { font-size: 20px; line-height: 1.2; }
+        .coupon-text-col { display: flex; flex-direction: column; line-height: 1.1; }
+        .coupon-main-text { font-size: 14px; font-weight: 800; }
+        .coupon-sub-text { font-size: 14px; font-weight: 800; }
+        .coupon-preview-mini { font-size: 9px; opacity: 0.7; font-weight: normal; margin-top: 2px; }
+
         .coupon-content { display: none; padding: 0 12px 12px; }
         .coupon-content.active { display: block; }
         
@@ -366,9 +375,6 @@
             padding: 10px 0; border-bottom: 1px solid var(--item-border); font-size: 11px; align-items: center;
         }
         .coupon-row b { color: var(--text-main); }
-        .coupon-preview-text {
-            font-size: 10px; color: var(--text-secondary); opacity: 0.8; font-weight: normal; margin-left: 5px;
-        }
         .arrow-icon {
             width: 14px; height: 14px; fill: currentColor; transition: transform 0.3s;
         }
@@ -445,9 +451,10 @@
         .list-header-row.ofz-cols span:first-child { text-align: left; }
         .list-header-row.ofz-cols span:nth-child(2), .list-header-row.ofz-cols span:nth-child(3) { text-align: center; }
         
+        /* ADJUSTED COLUMNS: 1fr | 60px | 120px */
         .list-header-row.calc-cols {
             display: grid;
-            grid-template-columns: 1fr 110px 70px;
+            grid-template-columns: 1fr 60px 120px;
             gap: 8px;
             text-align: center; margin-bottom: 8px;
         }
@@ -504,7 +511,7 @@
 
         .calc-bond-row {
             display: grid;
-            grid-template-columns: 1fr 110px 70px; 
+            grid-template-columns: 1fr 60px 120px; 
             align-items: center;
             padding: 10px 0; border-bottom: 1px dashed var(--item-border); gap: 8px;
         }
@@ -573,15 +580,20 @@
         }
 
         .echelon-header-pill {
-            background: linear-gradient(135deg, #a8c0ff, #3f2b96);
-            color: white; border-radius: 20px; padding: 4px 10px; 
-            font-size: 12px; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: inline-block; min-width: 20px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(5px);
+            color: #555; border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 50%; width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin: 0 auto;
         }
-        th:nth-child(1) .echelon-header-pill { background: linear-gradient(135deg, #2ecc71, #27ae60); }
-        th:nth-child(2) .echelon-header-pill { background: linear-gradient(135deg, #3498db, #2980b9); }
-        th:nth-child(3) .echelon-header-pill { background: linear-gradient(135deg, #f1c40f, #f39c12); }
-        th:nth-child(4) .echelon-header-pill { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .dark-mode .echelon-header-pill { background: rgba(30,41,59,0.8); color: #ccc; border-color: rgba(255,255,255,0.1); }
+        
+        th:nth-child(1) .echelon-header-pill { color: #27ae60; border-color: #2ecc71; box-shadow: 0 2px 8px rgba(46, 204, 113, 0.2); }
+        th:nth-child(2) .echelon-header-pill { color: #2980b9; border-color: #3498db; box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2); }
+        th:nth-child(3) .echelon-header-pill { color: #f39c12; border-color: #f1c40f; box-shadow: 0 2px 8px rgba(241, 196, 15, 0.2); }
+        th:nth-child(4) .echelon-header-pill { color: #c0392b; border-color: #e74c3c; box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2); }
 
         .echelon-table-styled {
             width: 100%; border-collapse: separate; border-spacing: 0;
@@ -657,11 +669,23 @@
             background: radial-gradient(circle, rgba(52,152,219,0.1) 0%, transparent 70%);
             border-radius: 50%; transform: translate(30%, -30%);
         }
-        .summary-main { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px; }
-        .summ-label { font-size: 11px; color: #8e8e93; font-weight: 700; text-transform: uppercase; }
-        .summ-val { font-size: 20px; font-weight: 800; color: var(--text-main); }
-        .summary-sub { text-align: right; font-size: 11px; color: #95a5a6; margin-bottom: 15px; }
-        .summary-divider { height: 1px; background: dashed var(--item-border); margin: 0 0 15px; }
+        
+        .summary-top-modern {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed var(--item-border);
+        }
+        .stm-left { display: flex; flex-direction: column; }
+        .stm-label { font-size: 10px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .stm-val { font-size: 24px; font-weight: 800; color: var(--text-main); line-height: 1; }
+        .stm-icon-box { 
+            width: 40px; height: 40px; border-radius: 12px; background: var(--header-light-gradient);
+            color: var(--accent-blue); display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(52,152,219,0.15);
+        }
+        
+        .summary-fee-row {
+            display: flex; justify-content: space-between; font-size: 11px; color: #8e8e93; margin-bottom: 15px;
+        }
         
         .summary-prediction { background: rgba(46, 204, 113, 0.05); border-radius: 12px; padding: 12px; border: 1px solid rgba(46, 204, 113, 0.1); }
         .pred-title { font-size: 10px; color: #27ae60; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
@@ -798,20 +822,26 @@
 
         <div id="portfolio-content" style="display:none;">
             <div id="shareContainer">
-                <!-- NEW SUMMARY BLOCK -->
                 <div class="summary-card">
-                    <div class="summary-main">
-                        <span class="summ-label">Ваши Инвестиции</span>
-                        <span class="summ-val" id="summ-invested">0 ₽</span>
+                    <div class="summary-top-modern">
+                        <div class="stm-left">
+                            <span class="stm-label">Ваши Инвестиции</span>
+                            <span class="stm-val" id="summ-invested">0 ₽</span>
+                        </div>
+                        <div class="stm-icon-box">
+                            <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        </div>
                     </div>
-                    <div class="summary-sub">
-                        <span>Комиссия брокера: <span id="summ-fee">0 ₽</span></span>
+                    
+                    <div class="summary-fee-row">
+                        <span>Комиссия брокера</span>
+                        <span id="summ-fee" style="font-weight:bold; color:var(--text-main);">0 ₽</span>
                     </div>
                     
                     <div class="summary-prediction">
                         <div class="pred-title">Сумма через 3 года (Прогноз):</div>
                         <div class="pred-total" id="summ-total-3y">0 ₽</div>
-                        <div class="summary-divider" style="background: rgba(0,0,0,0.1); margin: 8px 0;"></div>
+                        <div style="height:1px; background:rgba(0,0,0,0.05); margin:8px 0;"></div>
                         <div class="pred-breakdown">
                             <div class="pb-row">
                                 <span><span class="dot-bond">●</span> Денежный поток от Облигаций:</span>
@@ -843,9 +873,13 @@
 
                 <div class="coupon-box" id="couponBox">
                     <div class="coupon-header" id="rainSection" onclick="toggleCouponSection()">
-                        <div class="coupon-title-area">
-                            <span>🌦 Купонный Дождь</span>
-                            <span class="coupon-preview-text">Информация о ближайших выплатах</span>
+                        <div class="coupon-title-wrapper">
+                            <div class="coupon-icon-lg">🌦</div>
+                            <div class="coupon-text-col">
+                                <span class="coupon-main-text">Купонный</span>
+                                <span class="coupon-sub-text">Дождь</span>
+                                <span class="coupon-preview-mini">Информация о ближайших выплатах</span>
+                            </div>
                         </div>
                         <svg class="arrow-icon" id="couponArrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
                     </div>
@@ -865,12 +899,10 @@
                     </div>
                 </div>
                 
-                <!-- NEW TRANSITION -->
+                <!-- INFINITY TRANSITION -->
                 <div class="section-transition">
                     <div class="st-line"></div>
-                    <div class="st-icon">
-                        <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-                    </div>
+                    <div class="st-icon">∞</div>
                     <div class="st-line rev"></div>
                 </div>
 
@@ -964,7 +996,6 @@
             </table>
         </div>
         
-        <!-- NEW ARROW BUTTON -->
         <div class="expand-arrow-btn" id="expandArrowBtn" onclick="toggleEchelonTable(this)">
             <div class="eab-line"></div>
             <div class="eab-icon-box">
@@ -995,11 +1026,12 @@
             <div class="nav-item" id="nav-app" onclick="showScreen('screen-app')">
                 <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
             </div>
-            <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
-                <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
+            <!-- SWAPPED ITEMS -->
             <div class="nav-item" id="nav-portfolio" onclick="showScreen('screen-portfolio')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+            <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
         </div>
         <div class="nav-search-btn" id="nav-search" onclick="showScreen('screen-search')">
@@ -1204,7 +1236,7 @@
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
         function toggleTip(event, el) { event.stopPropagation(); const isActive = el.classList.contains('show-tip'); hideAllTips(); if (!isActive) el.classList.add('show-tip'); }
         function hideAllTips(event) { 
-            document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip'));
+            document.querySelectorAll('.echelon-separator-modern').forEach(el => el.classList.remove('show-tip'));
             if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } }
         function toggleRow(el) { el.classList.toggle('active'); }
 
@@ -1453,7 +1485,6 @@
                     actualSpentTotal += (b.qty * b.fullCostPerUnit); bondQuantities[b.t] = b.qty;
                     const bondYieldVal = parseFloat(b.y.replace('%', '')) || 0;
                     const investedInBond = b.qty * b.p;
-                    // Simple 3 year income projection: Invested * Yield% * 3
                     totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
                     
                     bHtml += `
@@ -1525,13 +1556,25 @@
                 let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
                 if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
                 
+                // NEW ECHELON SEPARATOR
+                let dotColor = 'gray';
+                if(e.title.includes('I ')) dotColor = '#2ecc71';
+                else if(e.title.includes('II ')) dotColor = '#3498db';
+                else if(e.title.includes('III ')) dotColor = '#f39c12';
+                else if(e.title.includes('IV ')) dotColor = '#e74c3c';
+                
                 eHtml += `
-                <div class="echelon-title" onclick="toggleTip(event, this)">
-                    <span>${e.title} <span class="echelon-info-icon">ⓘ</span></span>
-                    <span class="echelon-pct-badge">${Math.round(e.weight*100)}%</span>
-                    <div class="echelon-tip">${e.info}</div>
+                <div class="echelon-separator-modern" onclick="toggleTip(event, this)">
+                    <div class="esm-left">
+                        <div class="esm-dot" style="background:${dotColor}"></div>
+                        <span class="esm-title">${e.title}</span>
+                        <span class="esm-pct">${Math.round(e.weight*100)}%</span>
+                    </div>
+                    <div class="esm-info">ⓘ</div>
                 </div>
+                <div class="echelon-tip">${e.info}</div>
                 <div class="asset-list">`;
+                
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
                     const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
@@ -1556,7 +1599,6 @@
                 document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
                 document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
                 
-                // Update Summary Block
                 document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString() + ' ₽';
                 document.getElementById('summ-fee').innerText = Math.round(feeVal).toLocaleString() + ' ₽';
                 document.getElementById('summ-bond-income').innerText = '+' + Math.round(totalBondProjectedIncome).toLocaleString() + ' ₽';
