@@ -17,6 +17,8 @@
             --accent-green: #2ecc71;
             --accent-gradient: linear-gradient(135deg, #3498db, #2980b9);
             --header-gradient: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            /* NEW: Lighter gradient for section headers */
+            --header-light-gradient: linear-gradient(135deg, #e3f2fd, #f0f9ff); 
             --graphite-color: #303D4F;
             --input-color: #3a506b;
             --card-shadow: rgba(0,0,0,0.06);
@@ -39,6 +41,7 @@
             --accent-green: #4ade80;
             --accent-gradient: linear-gradient(135deg, #38bdf8, #0ea5e9);
             --header-gradient: linear-gradient(135deg, #1e293b, #2d3748);
+            --header-light-gradient: linear-gradient(135deg, #1e293b, #334155);
             --graphite-color: #303D4F;
             --input-color: #f8fafc;
             --card-shadow: rgba(0,0,0,0.4);
@@ -62,28 +65,13 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* TOAST FIX */
         .toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2ecc71;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: #2ecc71; color: white; padding: 10px 20px; border-radius: 20px;
+            font-size: 12px; font-weight: bold; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
         }
-        .toast.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        .toast.show { opacity: 1; visibility: visible; }
 
         .screen { display: none; animation: fadeIn 0.4s ease; }
         .screen.active { display: block; }
@@ -165,7 +153,6 @@
         }
         .btn-action:active { opacity: 0.7; transform: scale(0.98); }
 
-        /* Start Button Animation */
         @keyframes shimmerBtn {
             0% { box-shadow: 0 12px 25px rgba(48, 61, 79, 0.3); transform: scale(1); }
             50% { box-shadow: 0 12px 30px rgba(48, 61, 79, 0.5); transform: scale(1.01); }
@@ -178,9 +165,8 @@
             box-shadow: 0 12px 25px rgba(48, 61, 79, 0.3); margin-top: 25px;
             padding: 20px; font-size: 16px; border-radius: 20px;
             display: flex; align-items: center; justify-content: center; gap: 12px;
-            width: 100%; box-sizing: border-box;
-            font-weight: 900; /* BOLD */
-            animation: shimmerBtn 3s infinite ease-in-out; /* ANIMATION */
+            width: 100%; box-sizing: border-box; font-weight: 900;
+            animation: shimmerBtn 3s infinite ease-in-out;
         }
         .btn-graphite svg { width: 32px; height: 32px; fill: none; stroke: white; stroke-width: 2; }
         .btn-graphite:active { transform: scale(0.98); animation: none; }
@@ -250,7 +236,6 @@
         .qty { text-align: right; padding-right: 8px; font-weight: bold; color: var(--accent-blue); }
         .price-total { text-align: right; color: var(--text-main); font-weight: 500; }
         
-        /* NEW: Badge for Yield in List - WIDE & CENTERED */
         .asset-yield-badge {
             background: rgba(46, 204, 113, 0.15); color: var(--accent-green);
             font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 8px;
@@ -258,7 +243,6 @@
         }
         .asset-yield-badge.blue { background: rgba(52, 152, 219, 0.15); color: var(--accent-blue); }
 
-        /* NEW: Details style for Bonds List */
         .details {
             grid-column: 1 / -1; display: none; background: rgba(0,0,0,0.02);
             padding: 12px; border-top: 1px solid var(--item-border); font-size: 11px;
@@ -268,16 +252,17 @@
         .detail-row { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(0,0,0,0.05); padding: 2px 0; }
         .detail-row span:last-child { color: var(--text-main); font-weight: 600; }
 
-        /* Highlighted Section Headers */
+        /* Highlighted Section Headers - LIGHTER */
         .section-header-highlight {
             margin: 25px 0 12px; padding: 12px 16px; border-radius: 16px;
-            font-weight: 800; font-size: 16px; color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-weight: 800; font-size: 16px; 
+            background: var(--header-light-gradient); /* Light Gradient */
+            color: var(--text-main); /* Dark Text */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid rgba(52, 152, 219, 0.2);
             display: flex; align-items: center; justify-content: space-between;
         }
-        .hl-blue { background: var(--accent-gradient); }
+        .hl-blue { /* Class kept for structure */ }
 
-        /* MODERNIZED SECTION HEADER (Echelons) */
         .section-header-styled {
             margin: 25px 0 12px;
             background: linear-gradient(135deg, #ffffff, #f0f2f5);
@@ -291,27 +276,30 @@
             color: #f1f5f9; border-color: rgba(255,255,255,0.1);
         }
 
-        /* NEW: Split Allocation Badge Style - CONNECTED */
+        /* Allocation Info - ROUNDED LEFT PILL, UNITY */
         .allocation-info-connected {
             display: flex; align-items: stretch; justify-content: space-between;
             margin-bottom: 12px; width: 100%;
             background: var(--card-bg);
             border: 1px solid var(--accent-blue);
-            border-radius: 20px; overflow: hidden;
+            border-radius: 20px; /* Container fully rounded */
+            padding: 0;
+            position: relative; overflow: hidden;
         }
         .alloc-left {
             padding: 8px 16px;
             font-size: 13px; color: var(--text-main);
             display: flex; align-items: center;
-            flex: 1; border: none;
+            flex: 1; border: none; background: transparent;
         }
         .alloc-right {
             background: var(--accent-blue); color: white;
             padding: 8px 16px;
             font-weight: 800; font-size: 11px;
             display: flex; align-items: center;
-            border-left: 1px solid rgba(255,255,255,0.2);
             white-space: nowrap;
+            border-radius: 20px; /* Fully rounded pill */
+            margin: 2px; /* Slight margin to show "inside" */
         }
 
         .echelon-title { 
@@ -347,6 +335,8 @@
         .coupon-title-area { display: flex; align-items: center; position: relative; }
         .coupon-content { display: none; padding: 0 12px 12px; }
         .coupon-content.active { display: block; }
+        
+        /* UPDATED: Coupon Row Grid for Calculator */
         .coupon-row {
             display: grid; grid-template-columns: 85px 1fr 50px 70px; gap: 5px;
             padding: 10px 0; border-bottom: 1px solid var(--item-border); font-size: 11px; align-items: center;
@@ -366,7 +356,6 @@
 
         .footer-disclaimer { text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px; }
 
-        /* Nav */
         .nav-wrapper {
             position: fixed; bottom: 25px; left: 0; width: 100%; 
             display: flex; justify-content: center; gap: 10px;
@@ -397,7 +386,6 @@
         .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .nav-item:active { transform: scale(0.9); }
 
-        /* Theme Toggle Right of Loupe */
         .theme-toggle-mini {
             width: 24px; height: 24px; border-radius: 50%;
             background: var(--card-bg); color: var(--text-main); 
@@ -416,23 +404,29 @@
             display: grid; padding: 0 16px; margin-bottom: 5px;
             font-size: 9px; font-weight: 700; color: #95a5a6; text-transform: uppercase; letter-spacing: 0.5px;
         }
+        /* SWAPPED NKD AND PRICE, CENTER ALIGNED HEADERS */
         .list-header-row.ofz-cols {
             grid-template-columns: 1fr 60px 60px 70px; gap: 8px; text-align: right;
         }
         .list-header-row.ofz-cols span:first-child { text-align: left; }
+        .list-header-row.ofz-cols span:nth-child(2), .list-header-row.ofz-cols span:nth-child(3) { text-align: center; }
         
+        /* UPDATED: Calculator Headers matching grid */
         .list-header-row.calc-cols {
-            grid-template-columns: 1fr 1fr 50px; text-align: right; margin-bottom: 8px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 50px; 
+            gap: 5px;
+            text-align: right; margin-bottom: 8px;
         }
         .list-header-row.calc-cols span:first-child { text-align: left; }
 
-        /* Updated OFZ Card */
+        /* OFZ Card - Grid Updated: Name | Price | NKD | Yield */
         .ofz-card-modern {
             background: var(--card-bg); border-radius: 16px;
             padding: 14px 16px; margin-bottom: 10px;
             border: 1px solid var(--border-color);
             display: grid;
-            grid-template-columns: 1fr 60px 60px 70px; /* Name | NKD | Price | Yield */
+            grid-template-columns: 1fr 60px 60px 70px; 
             align-items: center; gap: 8px;
             box-shadow: 0 4px 10px var(--card-shadow);
             cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
@@ -460,7 +454,6 @@
         }
         .ofz-arrow { width: 10px; height: 10px; fill: currentColor; }
         
-        /* OFZ Details Accordion */
         .ofz-details-panel {
             display: none; background: rgba(0,0,0,0.02);
             padding: 12px; border-radius: 0 0 16px 16px; margin-top: -10px; margin-bottom: 10px;
@@ -471,7 +464,6 @@
         .ofz-detail-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); }
         .ofz-detail-val { font-weight: bold; color: var(--text-main); }
 
-        /* Modern Calculator Badge */
         .calc-badge-modern {
             font-size: 10px; background: linear-gradient(135deg, #34495e, #2c3e50); color: white; 
             padding: 4px 10px; border-radius: 20px; font-weight: 700;
@@ -479,38 +471,44 @@
         }
 
         /* Improved Monthly Income Row with Unified Badge */
+        /* Updated: using GRID to align with headers */
         .calc-bond-row {
-            display: flex; justify-content: space-between; align-items: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr 50px;
+            align-items: center;
             padding: 10px 0; border-bottom: 1px dashed var(--item-border); gap: 5px;
         }
         .unified-badge-container {
-            display: flex; align-items: center; flex: 1; margin-right: 5px; overflow: hidden;
+            display: flex; align-items: center; width: 100%; overflow: hidden;
             border-radius: 8px; font-size: 10px; font-weight: bold;
         }
+        /* Updated: Light background for bond name badge */
         .ub-name {
-            background: #eef2f6; color: var(--text-main); padding: 4px 8px; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;
+            background: #ffffff; color: var(--text-main); padding: 4px 8px; border: 1px solid #dfe6e9;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius: 6px; width: 100%;
+        }
+        .ub-price-container {
+            display: flex; align-items: center; gap: 5px; justify-content: flex-end;
         }
         .ub-price {
-            background: #dfe6e9; color: #636e72; padding: 4px 8px; 
-            white-space: nowrap; border-left: 1px solid rgba(255,255,255,0.5);
+            background: #dfe6e9; color: #636e72; padding: 4px 8px; border-radius: 6px;
+            white-space: nowrap; 
         }
         .ub-yield {
             background: rgba(46, 204, 113, 0.2); color: #27ae60; padding: 4px 8px; white-space: nowrap;
         }
-        .dark-mode .ub-name { background: #334155; color: #f1f5f9; }
-        .dark-mode .ub-price { background: #475569; color: #94a3b8; border-color: rgba(255,255,255,0.1); }
+        .dark-mode .ub-name { background: #1e293b; color: #f1f5f9; border-color: #334155; }
+        .dark-mode .ub-price { background: #475569; color: #94a3b8; }
 
-        /* Modern Qty Controls */
-        .qty-controls { display: flex; align-items: center; gap: 4px; background: var(--bg-color); padding: 2px; border-radius: 8px; }
+        .qty-controls { display: flex; align-items: center; gap: 2px; }
         .qty-btn { 
-            width: 26px; height: 26px; border-radius: 6px; background: var(--card-bg); 
+            width: 20px; height: 20px; border-radius: 4px; background: var(--card-bg); 
             display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent-blue);
-            cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.2s;
+            cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 12px;
         }
         .qty-btn:active { transform: scale(0.9); background: #eee; }
         .calc-input {
-            width: 36px; border: none; font-size: 13px; font-weight: bold; text-align: center;
+            width: 30px; border: none; font-size: 12px; font-weight: bold; text-align: center;
             background: transparent; color: var(--text-main); outline: none; padding: 0;
         }
         .btn-row-reset {
@@ -521,7 +519,6 @@
         
         .result-list-container { margin-top: 15px; background: rgba(0,0,0,0.02); border-radius: 8px; padding: 10px; }
 
-        /* Small Info Icon */
         .info-i-btn {
             display: inline-flex; width: 16px; height: 16px; border-radius: 50%; background: rgba(0,0,0,0.1); color: #666;
             font-size: 10px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px;
@@ -533,7 +530,6 @@
             cursor: pointer;
         }
         
-        /* Tooltip Box */
         .tooltip-box {
             position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
             background: #ffffff; color: #2c3e50; 
@@ -566,14 +562,12 @@
             border: 1px solid var(--border-color);
         }
 
-        /* NEW: Echelon Header Pills */
         .echelon-header-pill {
             background: linear-gradient(135deg, #a8c0ff, #3f2b96);
             color: white; border-radius: 20px; padding: 4px 10px; 
             font-size: 12px; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             display: inline-block; min-width: 20px;
         }
-        /* Variants for Echelons */
         th:nth-child(1) .echelon-header-pill { background: linear-gradient(135deg, #2ecc71, #27ae60); }
         th:nth-child(2) .echelon-header-pill { background: linear-gradient(135deg, #3498db, #2980b9); }
         th:nth-child(3) .echelon-header-pill { background: linear-gradient(135deg, #f1c40f, #f39c12); }
@@ -747,8 +741,8 @@
         
         <div id="ofz-list-headers" class="list-header-row ofz-cols">
             <span>Название</span>
-            <span>НКД</span>
             <span>Цена</span>
+            <span>НКД</span>
             <span>Доходность</span>
         </div>
         <div id="ofz-list" style="margin-bottom: 30px;"></div>
@@ -849,12 +843,16 @@
         let bondDetailsMap = {};
         let currentScreen = 'screen-home';
 
+        // Calculator echelons (for Page 2)
         let echelons = [
             { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
             { title: 'II Эшелон', weight: 0.40, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ, НО ВЫПЛАТЫ РАЗНЯТСЯ' },
             { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
             { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
+
+        // New Table Data Container (for Page 3)
+        let echelonTableData = [[], [], [], []];
 
         function updateMarketStatus() {
             const now = new Date();
@@ -1057,16 +1055,37 @@
                 const response = await fetch(CSV_URL);
                 const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
+                
+                // BONDS (existing logic)
                 let bondList = [];
                 for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
                 }
                 const bondPromises = bondList.map(async (b) => { const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; });
                 bonds = await Promise.all(bondPromises);
+                
+                // CALCULATOR STOCKS (existing logic, cols 10-13)
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
                 }
                 if (allStocks.length > 0) { echelons[0].assets = allStocks.slice(0, 3);
                     echelons[1].assets = allStocks.slice(3, 6); echelons[2].assets = allStocks.slice(6, 9); echelons[3].assets = allStocks.slice(9, 12);
+                }
+
+                // NEW: ECHELON TABLE DATA (Columns Q-X, Rows 3-14)
+                // Q=16, R=17 | S=18, T=19 | U=20, V=21 | W=22, X=23
+                // Rows indices 2 to 13 correspond to spreadsheet rows 3 to 14
+                echelonTableData = [[], [], [], []];
+                for (let i = 2; i <= 13; i++) {
+                    if (rows[i]) {
+                        // Echelon 1
+                        if(rows[i][16]) echelonTableData[0].push({ t: rows[i][16], target: rows[i][17] || '' });
+                        // Echelon 2
+                        if(rows[i][18]) echelonTableData[1].push({ t: rows[i][18], target: rows[i][19] || '' });
+                        // Echelon 3
+                        if(rows[i][20]) echelonTableData[2].push({ t: rows[i][20], target: rows[i][21] || '' });
+                        // Echelon 4
+                        if(rows[i][22]) echelonTableData[3].push({ t: rows[i][22], target: rows[i][23] || '' });
+                    }
                 }
                 
                 renderCustomBondCalc();
@@ -1102,16 +1121,17 @@
                 <div class="calc-bond-row">
                     <div class="unified-badge-container">
                         <div class="ub-name">${limitName(b.n)}</div>
-                        <div class="ub-price">${priceWithNkd} ₽</div>
-                        <div class="ub-yield">${b.y.replace('%', '')}%</div>
                     </div>
-                    <div class="qty-controls">
-                        <div class="qty-btn" onclick="changeQty('${b.t}', -1)">-</div>
-                        <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons()">
-                        <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
+                    <div class="ub-price-container">
+                         <div class="ub-price">${priceWithNkd} ₽</div>
+                         <div class="qty-controls">
+                            <div class="qty-btn" onclick="changeQty('${b.t}', -1)">-</div>
+                            <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons()">
+                            <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
+                        </div>
                     </div>
-                    <div class="btn-row-reset" onclick="resetOne('${b.t}')">
-                        <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <div style="text-align:right">
+                         <div class="ub-yield">${b.y.replace('%', '')}%</div>
                     </div>
                 </div>`;
             });
@@ -1170,11 +1190,12 @@
             const body = document.getElementById('echelon-tickers-body');
             if(!body) return;
             let html = '';
-            const maxRows = Math.max(...echelons.map(e => e.assets.length));
+            // Use new echelonTableData
+            const maxRows = Math.max(...echelonTableData.map(col => col.length));
             for(let i=0; i<maxRows; i++) {
                 html += '<tr>';
                 for(let j=0; j<4; j++) {
-                    const asset = echelons[j].assets[i];
+                    const asset = echelonTableData[j][i];
                     if(asset) html += `<td class="echelon-cell" onclick="copyToClipboard('${asset.t}')"><b>${asset.t}</b><br><span style="color:var(--accent-green)">${asset.target.replace(' ₽','')}</span></td>`;
                     else html += `<td class="echelon-cell"></td>`;
                 }
@@ -1253,7 +1274,6 @@
                 
                 bondCalculations.forEach(b => {
                     actualSpentTotal += (b.qty * b.fullCostPerUnit); bondQuantities[b.t] = b.qty;
-                    // UPDATED: Bonds list (Wide Yield Badge)
                     bHtml += `
                     <div class="asset-item" onclick="toggleRow(this)">
                         <span class="ticker" style="font-weight:700; font-size:11px;">${limitName(b.n)}</span>
@@ -1277,14 +1297,15 @@
             let ofzHtml = '';
             bonds.forEach(b => {
                 const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
+                // OFZ Card Updated Layout: Name | Price | NKD | Yield
                 ofzHtml += `
                 <div class="ofz-card-modern" onclick="toggleOfzDetails('details-${b.t}')">
                     <div class="ofz-main-info">
                         <div class="ofz-name-lg">${limitName(b.n)}</div>
                         <div class="ofz-ticker-sm">${b.t}</div>
                     </div>
-                    <div class="ofz-nkd-badge">${Math.round(b.nkd*10)/10}</div>
                     <div class="ofz-price">${b.p} ₽</div>
+                    <div class="ofz-nkd-badge">${Math.round(b.nkd*10)/10}</div>
                     <div class="ofz-yield-badge" title="Простая доходность">
                         ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                     </div>
