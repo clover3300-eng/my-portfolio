@@ -96,10 +96,11 @@
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
         .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 25px; }
 
-        .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
+        .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
         .market-item-modern {
-            background: var(--card-bg); border-radius: 18px; padding: 16px 8px;
-            position: relative; overflow: hidden; box-shadow: 0 4px 12px var(--card-shadow);
+            background: linear-gradient(145deg, var(--card-bg), rgba(255,255,255,0.8));
+            border-radius: 20px; padding: 16px 10px;
+            position: relative; overflow: hidden; box-shadow: 0 8px 20px var(--card-shadow);
             border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .market-item-modern::before {
@@ -109,11 +110,11 @@
         .market-item-modern.green::before { background: var(--accent-green); }
         .market-item-modern.orange::before { background: #f39c12; }
         
-        .mk-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 0.5px; }
+        .mk-label { font-size: 10px; font-weight: 800; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; }
         .mk-val { 
-            font-size: 15px; font-weight: 600; color: var(--text-main); 
-            background: rgba(0,0,0,0.03); padding: 4px 8px; border-radius: 8px;
-            min-width: 60px; text-align: center;
+            font-size: 16px; font-weight: 800; color: var(--text-main); 
+            background: rgba(0,0,0,0.03); padding: 6px 10px; border-radius: 10px;
+            min-width: 70px; text-align: center; letter-spacing: -0.5px;
         }
         
         /* Info Cards */
@@ -358,7 +359,6 @@
         .coupon-icon-lg { font-size: 20px; line-height: 1.2; }
         .coupon-text-col { display: flex; flex-direction: column; line-height: 1.1; }
         .coupon-main-text { font-size: 14px; font-weight: 800; }
-        .coupon-sub-text { font-size: 14px; font-weight: 800; }
         .coupon-preview-mini { font-size: 9px; opacity: 0.7; font-weight: normal; margin-top: 2px; }
 
         .coupon-content { display: none; padding: 0 12px 12px; }
@@ -835,7 +835,7 @@
                     
                     <div class="summary-fee-row">
                         <span>Комиссия брокера</span>
-                        <span id="summ-fee" style="font-weight:bold; color:var(--text-main);">0 ₽</span>
+                        <span id="summ-fee" style="font-weight:bold; color:var(--text-main);">0.03%</span>
                     </div>
                     
                     <div class="summary-prediction">
@@ -876,8 +876,7 @@
                         <div class="coupon-title-wrapper">
                             <div class="coupon-icon-lg">🌦</div>
                             <div class="coupon-text-col">
-                                <span class="coupon-main-text">Купонный</span>
-                                <span class="coupon-sub-text">Дождь</span>
+                                <span class="coupon-main-text">Купонный Дождь</span>
                                 <span class="coupon-preview-mini">Информация о ближайших выплатах</span>
                             </div>
                         </div>
@@ -907,11 +906,17 @@
                 </div>
 
                 <div class="section-header-highlight hl-blue">2. Растущая часть</div>
+                <div class="section-desc-small">
+                    Ниже представлены Акции Публичных Компаний распределенные на 4 эшелона по уровню риска и дивидендной политике.
+                </div>
                 <div class="allocation-info-connected">
                     <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">0</b>&nbsp;₽</div>
                     <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
                 </div>
                 <div id="echelonContainer"></div>
+                <div class="footer-disclaimer" style="margin-top:10px; margin-bottom:20px; text-align:left; color:#7f8c8d; background:rgba(0,0,0,0.02); padding:10px; border-radius:8px;">
+                    <b style="color:#2ecc71">Важно:</b> В Растущей части основные средства мы держим в первых двух Эшелонах, так как они обеспечивают баланс надежности и потенциальной доходности.
+                </div>
             </div>
 
             <button class="btn-action" id="btnShare" onclick="shareAsPDF()">
@@ -941,7 +946,19 @@
             <span>НКД</span>
             <span>Доходность</span>
         </div>
-        <div id="ofz-list" style="margin-bottom: 30px;"></div>
+        
+        <!-- WRAPPED OFZ LIST FOR EXPANSION -->
+        <div id="ofz-wrapper" class="echelon-wrapper collapsed">
+             <div id="ofz-list"></div>
+        </div>
+        
+        <div class="expand-arrow-btn" id="expandArrowOfz" onclick="toggleOfzTable(this)">
+            <div class="eab-line"></div>
+            <div class="eab-icon-box">
+                <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="eab-line"></div>
+        </div>
 
         <div class="coupon-box" style="margin-top:20px;">
             <div class="coupon-header" onclick="toggleAccordion('calc-income-wrapper')">
@@ -1148,6 +1165,12 @@
 
         function toggleEchelonTable(btn) {
             const wrapper = document.getElementById('echelon-wrapper');
+            wrapper.classList.toggle('collapsed');
+            btn.classList.toggle('open');
+        }
+
+        function toggleOfzTable(btn) {
+            const wrapper = document.getElementById('ofz-wrapper');
             wrapper.classList.toggle('collapsed');
             btn.classList.toggle('open');
         }
@@ -1538,15 +1561,6 @@
             });
             if(document.getElementById('ofz-list')) document.getElementById('ofz-list').innerHTML = ofzHtml;
 
-            let rainHtml = ''; let totalRain = 0;
-            const rainData = Object.keys(bondQuantities).map(ticker => {
-                const info = bondCouponsMap[ticker]; const qty = bondQuantities[ticker]; if (!info || !info.date || qty <= 0) return null;
-                const netAmount = (info.value * qty) * (1 - currentTax); return { date: info.date, name: bonds.find(b => b.t === ticker)?.n || ticker, qty, amount: netAmount };
-            }).filter(x => x !== null).sort((a,b) => new Date(a.date) - new Date(b.date));
-            rainData.forEach(r => { totalRain += r.amount; rainHtml += `<div class="coupon-row"><div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div><div style="color:#8e8e93">${limitName(r.name)}</div><div style="text-align:center">${r.qty}шт.</div><div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div></div>`; });
-            if(document.getElementById('couponList')) { document.getElementById('couponList').innerHTML = rainHtml || 'Нет данных о ближайших купонах'; document.getElementById('couponTotalHeader').innerText = Math.round(totalRain).toLocaleString() + ' ₽';
-            }
-
             let eHtml = '';
             let totalStockProjectedGrowth = 0;
 
@@ -1556,7 +1570,6 @@
                 let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
                 if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
                 
-                // NEW ECHELON SEPARATOR
                 let dotColor = 'gray';
                 if(e.title.includes('I ')) dotColor = '#2ecc71';
                 else if(e.title.includes('II ')) dotColor = '#3498db';
@@ -1568,7 +1581,10 @@
                     <div class="esm-left">
                         <div class="esm-dot" style="background:${dotColor}"></div>
                         <span class="esm-title">${e.title}</span>
-                        <span class="esm-pct">${Math.round(e.weight*100)}%</span>
+                        <span class="esm-pct">
+                            ${Math.round(e.weight*100)}% 
+                            <span style="opacity:0.6; font-weight:normal">(${Math.round(echelonBudget).toLocaleString()} ₽)</span>
+                        </span>
                     </div>
                     <div class="esm-info">ⓘ</div>
                 </div>
@@ -1600,7 +1616,12 @@
                 document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
                 
                 document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString() + ' ₽';
-                document.getElementById('summ-fee').innerText = Math.round(feeVal).toLocaleString() + ' ₽';
+                
+                // Set broker fee label
+                const activeFeeBtn = document.querySelector('.fee-btn.active');
+                const feeText = activeFeeBtn ? activeFeeBtn.innerText : '0.03%';
+                document.getElementById('summ-fee').innerText = feeText;
+                
                 document.getElementById('summ-bond-income').innerText = '+' + Math.round(totalBondProjectedIncome).toLocaleString() + ' ₽';
                 document.getElementById('summ-stock-growth').innerText = '+' + Math.round(totalStockProjectedGrowth).toLocaleString() + ' ₽';
                 
