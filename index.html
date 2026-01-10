@@ -166,6 +166,7 @@
             display: flex; align-items: center; justify-content: center; gap: 12px;
             width: 100%; box-sizing: border-box; font-weight: 900;
             animation: shimmerBtn 3s infinite ease-in-out;
+            cursor: pointer;
         }
         .btn-graphite svg { width: 32px; height: 32px; fill: none; stroke: white; stroke-width: 2; }
         .btn-graphite:active { transform: scale(0.98); animation: none; }
@@ -252,14 +253,16 @@
         .detail-row span:last-child { color: var(--text-main); font-weight: 600; }
 
         .section-header-highlight {
-            margin: 25px 0 12px; padding: 12px 16px; border-radius: 16px;
+            margin: 25px 0 8px; padding: 12px 16px; border-radius: 16px;
             font-weight: 800; font-size: 16px; 
             background: var(--header-light-gradient);
             color: var(--text-main);
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid rgba(52, 152, 219, 0.2);
             display: flex; align-items: center; justify-content: space-between;
         }
-        .hl-blue { /* Class kept for structure */ }
+        .section-desc-small {
+            font-size: 11px; color: #8e8e93; margin-bottom: 12px; padding: 0 5px; line-height: 1.4;
+        }
 
         .section-header-styled {
             margin: 25px 0 12px;
@@ -337,7 +340,7 @@
 
         .coupon-box {
             background: var(--card-bg); border-radius: 16px; margin-top: 10px;
-            border: 1px solid var(--accent-blue); overflow: hidden; margin-bottom: 20px;
+            border: 1px solid var(--accent-blue); overflow: hidden; margin-bottom: 25px;
             position: relative; z-index: 2;
         }
         .coupon-header {
@@ -345,7 +348,7 @@
             font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer; align-items: center;
             position: relative;
         }
-        .coupon-title-area { display: flex; align-items: center; position: relative; }
+        .coupon-title-area { display: flex; align-items: center; position: relative; gap: 8px; }
         .coupon-content { display: none; padding: 0 12px 12px; }
         .coupon-content.active { display: block; }
         
@@ -354,6 +357,16 @@
             padding: 10px 0; border-bottom: 1px solid var(--item-border); font-size: 11px; align-items: center;
         }
         .coupon-row b { color: var(--text-main); }
+        .coupon-preview-text {
+            font-size: 10px; color: var(--text-secondary); opacity: 0.8; font-weight: normal; margin-left: 5px;
+        }
+        .arrow-icon {
+            width: 12px; height: 12px; fill: currentColor; transition: transform 0.3s;
+        }
+        .coupon-content.active + .coupon-header .arrow-icon, 
+        .coupon-header[onclick*="toggle"] .arrow-icon.rotated {
+            transform: rotate(180deg);
+        }
 
         .tax-selector-ui {
             display: flex; background: var(--bg-color); border-radius: 10px;
@@ -525,27 +538,11 @@
         
         .result-list-container { margin-top: 15px; background: rgba(0,0,0,0.02); border-radius: 8px; padding: 10px; }
 
-        .info-i-btn {
-            display: inline-flex; width: 16px; height: 16px; border-radius: 50%; background: rgba(0,0,0,0.1); color: #666;
-            font-size: 10px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px;
-            cursor: pointer;
-        }
         .info-i-blue {
             display: inline-flex; width: 16px; height: 16px; border-radius: 50%; background: var(--accent-blue); color: white;
             font-size: 11px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px;
             cursor: pointer;
         }
-        
-        .tooltip-box {
-            position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
-            background: #ffffff; color: #2c3e50; 
-            padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: normal;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05);
-            opacity: 0; visibility: hidden; transition: opacity 0.2s; pointer-events: none; z-index: 10;
-            white-space: nowrap;
-        }
-        .tooltip-container { position: relative; display: inline-flex; align-items: center; justify-content: center; }
-        .tooltip-container.show .tooltip-box { opacity: 1; visibility: visible; }
 
         .search-container { padding: 10px 0; }
         .search-input { width: 100%; padding: 16px; border-radius: 16px; border: 1px solid var(--border-color);
@@ -592,7 +589,6 @@
             text-align: center; vertical-align: middle;
         }
         .echelon-table-styled tr:last-child td { border-bottom: none; }
-        /* Alternating row subtle background */
         .echelon-table-styled tr:nth-child(even) { background-color: rgba(0,0,0,0.015); }
         
         .et-ticker {
@@ -604,6 +600,37 @@
             background: rgba(46, 204, 113, 0.1); padding: 2px 6px; border-radius: 6px;
         }
 
+        /* Echelon Expand Logic */
+        .echelon-wrapper {
+            position: relative;
+            background: var(--card-bg); border-radius: 16px; 
+            padding: 20px 5px; overflow: hidden; 
+            box-shadow: 0 4px 15px var(--card-shadow);
+            transition: max-height 0.4s ease;
+        }
+        .echelon-wrapper.collapsed {
+            max-height: 240px; /* Header + approx 3 rows */
+        }
+        .echelon-wrapper.collapsed::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 60px;
+            background: linear-gradient(to bottom, transparent, var(--card-bg));
+            pointer-events: none;
+        }
+        .expand-line-btn {
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; padding: 10px 0; margin-top: -10px; cursor: pointer;
+            color: var(--accent-blue); font-size: 11px; font-weight: bold;
+            position: relative; z-index: 5;
+        }
+        .expand-line-btn:active { opacity: 0.7; }
+
+        .portfolio-empty {
+            padding: 40px 20px; text-align: center; color: var(--text-secondary);
+        }
+        .portfolio-empty-icon {
+            font-size: 40px; margin-bottom: 15px; opacity: 0.5;
+        }
+        
     </style>
 </head>
 <body onclick="hideAllTips(event)">
@@ -654,7 +681,7 @@
                 Начать расчет
             </button>
             <p class="start-expl">
-                При нажатии на эту кнопку Вам будет предложен список из 8 Облигаций Федерального Займа и 12 Акций Публичных Компаний к Покупке
+                 Нажмите, чтобы перейти к вводу суммы и настройке параметров вашего будущего портфеля.
             </p>
         </div>
     </div>
@@ -710,69 +737,86 @@
         </div>
 
         <!-- NEW BUTTON FOR PORTFOLIO FORMATION -->
-        <button class="btn-graphite" style="margin-bottom: 25px;" onclick="draw(); showScreen('screen-portfolio')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <button class="btn-graphite" style="margin-bottom: 25px;" onclick="calculateAndShowPortfolio()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7.5 5.6L10 7 8.6 4.5 10 2 7.5 3.4 5 2 6.4 4.5 5 7zM19.5 15.4L22 14l-2.5-1.4L21 10l-2.5 1.4L16 10l1.4 2.6L16 14l2.5 1.4zM22 2l-2.5 1.4L21 6l-1.5-2.6L16 2l1.4 2.5L16 7l2.5-1.4L21 7 19.5 4.6z M2 22l6-6-1.5-1.5-6 6V22h1.5z m11-11l-2.5-2.5-6.5 6.5 2.5 2.5 6.5-6.5z"/>
+            </svg>
             Сформировать Портфель
         </button>
+        <p class="start-expl">
+            При нажатии на эту кнопку Вам будет предложен список из 8 Облигаций Федерального Займа и 12 Акций Публичных Компаний к Покупке
+        </p>
     </div>
 
     <!-- NEW SCREEN 4: PORTFOLIO RESULTS -->
     <div id="screen-portfolio" class="screen">
         <div class="header"><h1>Ваш Портфель</h1></div>
         
-        <div id="shareContainer">
-            <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
-                <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
-                <div id="shareDate" style="font-size: 10px; color: #888;"></div>
-            </div>
-            
-            <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
-            <div class="allocation-info-connected">
-                <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">50 000</b>&nbsp;₽</div>
-                <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
-            </div>
-            <div id="listBonds" class="asset-list"></div>
-
-            <div class="coupon-box" id="couponBox">
-                <div class="coupon-header" id="rainSection" onclick="document.getElementById('couponContent').classList.toggle('active')">
-                    <div class="coupon-title-area">
-                        <span>🌦 Купонный Дождь</span>
-                        <div class="tooltip-container" id="rain-tooltip">
-                            <div class="info-i-btn" onclick="event.stopPropagation(); toggleRainTooltip()">i</div>
-                            <div class="tooltip-box">Это ближайшие выплаты купонов</div>
-                        </div>
-                    </div>
-                    <span id="couponTotalHeader">0 ₽</span>
-                </div>
-                <div class="coupon-content" id="couponContent">
-                    <div class="tax-selector-ui" id="taxGroup">
-                        <button class="tax-ui-btn" onclick="setTax(0, this)">Без налога</button>
-                        <button class="tax-ui-btn active" onclick="setTax(0.13, this)">НДФЛ 13%</button>
-                        <button class="tax-ui-btn" onclick="setTax(0.15, this)">НДФЛ 15%</button>
-                    </div>
-                    <div id="couponList">Загрузка данных...</div>
-                </div>
-            </div>
-            
-            <div class="section-connector">
-                <div class="connector-line">
-                    <div class="connector-dot"></div>
-                </div>
-            </div>
-
-            <div class="section-header-highlight hl-blue">2. Растущая часть</div>
-            <div class="allocation-info-connected">
-                <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">50 000</b>&nbsp;₽</div>
-                <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
-            </div>
-            <div id="echelonContainer"></div>
+        <div id="portfolio-empty" class="portfolio-empty">
+            <div class="portfolio-empty-icon">📂</div>
+            <div>Расчет еще не производился.<br>Перейдите в терминал и сформируйте портфель.</div>
+            <button class="btn-action" style="margin-top:20px; border-style:dashed;" onclick="showScreen('screen-app')">Перейти к расчету</button>
         </div>
 
-        <button class="btn-action" id="btnShare" onclick="shareAsPDF()">
-            <svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-            Поделиться PDF (Портфель)
-        </button>
-        <div class="footer-disclaimer">Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.</div>
+        <div id="portfolio-content" style="display:none;">
+            <div id="shareContainer">
+                <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
+                    <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
+                    <div id="shareDate" style="font-size: 10px; color: #888;"></div>
+                </div>
+                
+                <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
+                <div class="section-desc-small">
+                    Здесь представлен к покупке список из 8 Облигаций Федерального займа с постоянным купоном, которые генерируют 16 выплат купонов в год.
+                </div>
+                
+                <div class="allocation-info-connected">
+                    <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">50 000</b>&nbsp;₽</div>
+                    <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
+                </div>
+                <div id="listBonds" class="asset-list"></div>
+
+                <div class="coupon-box" id="couponBox">
+                    <div class="coupon-header" id="rainSection" onclick="toggleCouponSection()">
+                        <div class="coupon-title-area">
+                            <span>🌦 Купонный Дождь</span>
+                            <span class="coupon-preview-text">Информация о ближайших выплатах</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span id="couponTotalHeader">0 ₽</span>
+                            <svg class="arrow-icon" id="couponArrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                        </div>
+                    </div>
+                    <div class="coupon-content" id="couponContent">
+                        <div class="tax-selector-ui" id="taxGroup">
+                            <button class="tax-ui-btn" onclick="setTax(0, this)">Без налога</button>
+                            <button class="tax-ui-btn active" onclick="setTax(0.13, this)">НДФЛ 13%</button>
+                            <button class="tax-ui-btn" onclick="setTax(0.15, this)">НДФЛ 15%</button>
+                        </div>
+                        <div id="couponList">Загрузка данных...</div>
+                    </div>
+                </div>
+                
+                <div class="section-connector">
+                    <div class="connector-line">
+                        <div class="connector-dot"></div>
+                    </div>
+                </div>
+
+                <div class="section-header-highlight hl-blue">2. Растущая часть</div>
+                <div class="allocation-info-connected">
+                    <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">50 000</b>&nbsp;₽</div>
+                    <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
+                </div>
+                <div id="echelonContainer"></div>
+            </div>
+
+            <button class="btn-action" id="btnShare" onclick="shareAsPDF()">
+                <svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                Поделиться PDF (Портфель)
+            </button>
+            <div class="footer-disclaimer">Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.</div>
+        </div>
     </div>
 
     <div id="screen-assets" class="screen">
@@ -834,7 +878,9 @@
         <p class="start-expl" style="text-align:left; margin-bottom: 10px;">
             В этой таблице представлены тикеры компаний, разбитые по уровням надежности и дивидендной политики.
         </p>
-        <div id="echelon-table-container" style="background: var(--card-bg); border-radius: 16px; padding: 20px 5px; overflow-x: auto; box-shadow: 0 4px 15px var(--card-shadow);">
+        
+        <!-- NEW ECHELON WRAPPER WITH TOGGLE -->
+        <div id="echelon-wrapper" class="echelon-wrapper collapsed">
             <table class="echelon-table-styled">
                 <thead>
                     <tr>
@@ -846,6 +892,9 @@
                 </thead>
                 <tbody id="echelon-tickers-body"></tbody>
             </table>
+        </div>
+        <div class="expand-line-btn" onclick="toggleEchelonTable(this)">
+            ⎯⎯⎯ Развернуть таблицу ⎯⎯⎯
         </div>
 
         <button class="btn-action" style="margin-top: 25px;" onclick="showScreen('screen-search')">
@@ -898,6 +947,7 @@
         let bondCouponsMap = {}; 
         let bondDetailsMap = {};
         let currentScreen = 'screen-home';
+        let isPortfolioCalculated = false;
 
         // Calculator echelons (for Page 2)
         let echelons = [
@@ -976,17 +1026,35 @@
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
         }
 
+        function calculateAndShowPortfolio() {
+            draw();
+            isPortfolioCalculated = true;
+            document.getElementById('portfolio-empty').style.display = 'none';
+            document.getElementById('portfolio-content').style.display = 'block';
+            showScreen('screen-portfolio');
+        }
+
         function toggleAccordion(id) {
             const el = document.getElementById(id);
             if(el.style.display === 'none') el.style.display = 'block';
             else el.style.display = 'none';
         }
-        
-        function toggleRainTooltip() {
+
+        function toggleCouponSection() {
             const content = document.getElementById('couponContent');
-            if (!content || !content.classList.contains('active')) return;
-            document.getElementById('rain-tooltip').classList.toggle('show');
-            setTimeout(() => { document.getElementById('rain-tooltip').classList.remove('show'); }, 3000);
+            const arrow = document.getElementById('couponArrow');
+            content.classList.toggle('active');
+            arrow.classList.toggle('rotated');
+        }
+
+        function toggleEchelonTable(btn) {
+            const wrapper = document.getElementById('echelon-wrapper');
+            wrapper.classList.toggle('collapsed');
+            if(wrapper.classList.contains('collapsed')) {
+                btn.innerText = '⎯⎯⎯ Развернуть таблицу ⎯⎯⎯';
+            } else {
+                btn.innerText = '⎯⎯⎯ Свернуть таблицу ⎯⎯⎯';
+            }
         }
         
         function toggleOfzDetails(id) {
@@ -1072,8 +1140,9 @@
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
         function toggleTip(event, el) { event.stopPropagation(); const isActive = el.classList.contains('show-tip'); hideAllTips(); if (!isActive) el.classList.add('show-tip'); }
-        function hideAllTips(event) { document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip'));
-            document.getElementById('rain-tooltip').classList.remove('show'); if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } }
+        function hideAllTips(event) { 
+            document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip'));
+            if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } }
         function toggleRow(el) { el.classList.toggle('active'); }
 
         function copyToClipboard(text) {
@@ -1346,14 +1415,9 @@
             let ofzHtml = '';
             bonds.forEach(b => {
                 const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
-                
-                // CALCULATION LOGIC: (Coupon * Freq / Price) * 100
-                // We use b.p (Price) and details.couponValue and details.freq
                 const calculatedCY = (b.p > 0 && details.couponValue && details.freq) 
                                      ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) 
                                      : '0.00';
-                
-                // OFZ Card Updated Layout: Name | Price | NKD | Yield (From CSV/Table)
                 ofzHtml += `
                 <div class="ofz-card-modern" onclick="toggleOfzDetails('details-${b.t}')">
                     <div class="ofz-main-info">
