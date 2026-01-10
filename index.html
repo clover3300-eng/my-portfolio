@@ -767,8 +767,9 @@
     <div id="screen-assets" class="screen">
         <div class="header"><h1>Ребалансировка</h1></div>
         <div class="rebalance-intro">
-            <b>Ребалансировка</b> — это процесс, когда по какой-либо причине Вы решаете продать актив из Вашего Портфеля, и на смену ему хотите приобрести другой актив, который дает доходность выше.<br><br>
-            Ниже представлены варианты для самостоятельного ребалансирования своего Портфеля.
+            <b>Ребалансировка</b> — это пересмотр состава активов для увеличения доходности. Мы продаем то, что уже отыграло свой рост или дает низкий доход, и покупаем более выгодные инструменты.
+
+Используйте список ниже, чтобы найти лучшие идеи для замены.
         </div>
         
         <div class="section-header-styled">
@@ -796,12 +797,12 @@
                     <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
                 </div>
                 
-                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">Введите кол-во штук купленных:</div>
+                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">Введите свои данные</div>
                 
                 <div class="list-header-row calc-cols">
                     <span>Название</span>
                     <span>Цена+НКД</span>
-                    <span>Доходность</span>
+                    <span>Дох.</span>
                     <span>Кол-во</span>
                 </div>
                 
@@ -1312,7 +1313,7 @@
                         <span class="qty">${b.qty} шт.</span>
                         <span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span>
                         <div class="details">
-                            <div class="detail-row"><span>Полное наименование:</span> <span>${b.n}</span></div>
+                            <div class="detail-row"><span>Полное Наименование:</span> <span>${b.n}</span></div>
                             <div class="detail-row"><span>Код:</span> <span>${b.t}</span></div>
                             <div class="detail-row"><span>Дата погашения:</span> <span>${b.matDate}</span></div>
                             <div class="detail-row"><span>Цена:</span> <span>${b.p} ₽</span></div>
@@ -1392,7 +1393,7 @@
                         <span class="asset-name"><span class="asset-yield-badge blue">${s.target.replace(' ₽','')}</span></span>
                         <span class="qty">${s.qty} шт.</span>
                         <span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
-                        <div class="details">Компания: <b>${s.n}</b><br>Цена: <b>${s.p} ₽</b><br>Цель: <b>${s.target.replace(' ₽','')}</b> (прогноз на период до 36 месяцев)</div>
+                        <div class="details">Компания: <b>${s.n}</b><br>Цена: <b>${s.p} ₽</b><br>Цель: <b>${s.target.replace(' ₽','')}</b> [ Прогноз на период до 36 месяцев ]</div>
                     </div>`;
                 });
                 eHtml += `</div>`;
