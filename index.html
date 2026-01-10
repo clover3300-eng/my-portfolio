@@ -24,7 +24,7 @@
             --item-border: #f0f0f0;
             --nav-bg: rgba(255, 255, 255, 0.95);
             --nav-border: rgba(255, 255, 255, 0.5);
-            --nav-icon-inactive: #bdc3c7; 
+            --nav-icon-inactive: #bdc3c7;
             --coupon-blue-bg: rgba(52, 152, 219, 0.08);
             --badge-blue-bg: rgba(52, 152, 219, 0.15);
             --badge-green-bg: rgba(46, 204, 113, 0.15);
@@ -62,6 +62,29 @@
             transition: background 0.3s, color 0.3s;
         }
 
+        /* TOAST FIX */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2ecc71;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
         .screen { display: none; animation: fadeIn 0.4s ease; }
         .screen.active { display: block; }
 
@@ -74,7 +97,8 @@
         .terminal-badge {
             display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
             background: var(--accent-blue); color: white; font-size: 10px; font-weight: 900;
-            border-radius: 4px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px;
+            border-radius: 4px; text-transform: uppercase;
+            margin-bottom: 12px; letter-spacing: 1px;
         }
 
         .market-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: #ccc; }
@@ -85,27 +109,20 @@
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
         .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 25px; }
 
-        /* Market Grid Updated */
         .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
         .market-item-modern {
-            background: var(--card-bg); 
-            border-radius: 18px; 
-            padding: 16px 8px;
-            position: relative; overflow: hidden;
-            box-shadow: 0 4px 12px var(--card-shadow);
-            border: 1px solid var(--border-color);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--card-bg); border-radius: 18px; padding: 16px 8px;
+            position: relative; overflow: hidden; box-shadow: 0 4px 12px var(--card-shadow);
+            border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .market-item-modern::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
-            background: var(--item-border);
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--item-border);
         }
         .market-item-modern.blue::before { background: var(--accent-blue); }
         .market-item-modern.green::before { background: var(--accent-green); }
         .market-item-modern.orange::before { background: #f39c12; }
         
         .mk-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; letter-spacing: 0.5px; }
-        /* Font weight reduced from 900 to 600 */
         .mk-val { 
             font-size: 15px; font-weight: 600; color: var(--text-main); 
             background: rgba(0,0,0,0.03); padding: 4px 8px; border-radius: 8px;
@@ -116,8 +133,7 @@
         .info-card {
             background: var(--card-bg); padding: 20px; border-radius: 20px; margin-bottom: 15px;
             border: 1px solid var(--border-color); box-shadow: 0 5px 15px var(--card-shadow); 
-            position: relative; overflow: hidden;
-            transition: transform 0.2s;
+            position: relative; overflow: hidden; transition: transform 0.2s;
         }
         .info-card:active { transform: scale(0.99); }
         .info-card.bonds { border-left: 4px solid var(--accent-blue); background: linear-gradient(to right, rgba(52, 152, 219, 0.03), var(--card-bg)); }
@@ -127,10 +143,7 @@
         .bonds .info-card-header { color: var(--accent-blue); }
         .stocks .info-card-header { color: var(--accent-green); }
 
-        .info-card-sub-clean { 
-            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; 
-            margin: 0 0 10px 0; opacity: 0.7;
-        }
+        .info-card-sub-clean { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px 0; opacity: 0.7; }
         .bonds .info-card-sub-clean { color: var(--accent-blue); }
         .stocks .info-card-sub-clean { color: var(--accent-green); }
         
@@ -152,19 +165,27 @@
         }
         .btn-action:active { opacity: 0.7; transform: scale(0.98); }
 
+        /* Start Button Animation */
+        @keyframes shimmerBtn {
+            0% { box-shadow: 0 12px 25px rgba(48, 61, 79, 0.3); transform: scale(1); }
+            50% { box-shadow: 0 12px 30px rgba(48, 61, 79, 0.5); transform: scale(1.01); }
+            100% { box-shadow: 0 12px 25px rgba(48, 61, 79, 0.3); transform: scale(1); }
+        }
+
         .btn-graphite {
-            position: relative; background: var(--graphite-color); color: white; border: none; overflow: hidden;
+            position: relative;
+            background: var(--graphite-color); color: white; border: none; overflow: hidden;
             box-shadow: 0 12px 25px rgba(48, 61, 79, 0.3); margin-top: 25px;
             padding: 20px; font-size: 16px; border-radius: 20px;
             display: flex; align-items: center; justify-content: center; gap: 12px;
-            width: 100%; box-sizing: border-box; 
+            width: 100%; box-sizing: border-box;
+            font-weight: 900; /* BOLD */
+            animation: shimmerBtn 3s infinite ease-in-out; /* ANIMATION */
         }
         .btn-graphite svg { width: 32px; height: 32px; fill: none; stroke: white; stroke-width: 2; }
-        .btn-graphite:active { transform: scale(0.98); }
+        .btn-graphite:active { transform: scale(0.98); animation: none; }
 
-        .start-expl {
-            font-size: 11px; color: #8e8e93; text-align: center; margin-top: 15px; padding: 0 10px; line-height: 1.5;
-        }
+        .start-expl { font-size: 11px; color: #8e8e93; text-align: center; margin-top: 15px; padding: 0 10px; line-height: 1.5; }
 
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 4px; }
@@ -220,7 +241,8 @@
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item {
-            display: grid; grid-template-columns: 85px 1fr 75px 80px; padding: 12px; 
+            display: grid;
+            grid-template-columns: 85px 1fr 75px 80px; padding: 12px; 
             border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center;
         }
         .ticker { font-weight: bold; color: var(--text-main); }
@@ -228,11 +250,11 @@
         .qty { text-align: right; padding-right: 8px; font-weight: bold; color: var(--accent-blue); }
         .price-total { text-align: right; color: var(--text-main); font-weight: 500; }
         
-        /* NEW: Badge for Yield in List */
+        /* NEW: Badge for Yield in List - WIDE & CENTERED */
         .asset-yield-badge {
             background: rgba(46, 204, 113, 0.15); color: var(--accent-green);
             font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 8px;
-            display: inline-block;
+            display: flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box;
         }
         .asset-yield-badge.blue { background: rgba(52, 152, 219, 0.15); color: var(--accent-blue); }
 
@@ -255,34 +277,41 @@
         }
         .hl-blue { background: var(--accent-gradient); }
 
+        /* MODERNIZED SECTION HEADER (Echelons) */
         .section-header-styled {
-            margin: 25px 0 12px; background: var(--header-gradient);
-            padding: 12px 16px; border-radius: 16px;
-            font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: space-between;
-            color: var(--text-main); box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
+            margin: 25px 0 12px;
+            background: linear-gradient(135deg, #ffffff, #f0f2f5);
+            padding: 14px 16px; border-radius: 16px;
+            font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: space-between;
+            color: var(--graphite-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.5);
+        }
+        .dark-mode .section-header-styled {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            color: #f1f5f9; border-color: rgba(255,255,255,0.1);
         }
 
-        /* NEW: Split Allocation Badge Style */
+        /* NEW: Split Allocation Badge Style - CONNECTED */
         .allocation-info-connected {
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex; align-items: stretch; justify-content: space-between;
             margin-bottom: 12px; width: 100%;
-        }
-        .alloc-left {
             background: var(--card-bg);
             border: 1px solid var(--accent-blue);
-            border-radius: 20px;
-            padding: 5px 12px;
+            border-radius: 20px; overflow: hidden;
+        }
+        .alloc-left {
+            padding: 8px 16px;
             font-size: 13px; color: var(--text-main);
-            height: 24px; display: flex; align-items: center;
+            display: flex; align-items: center;
+            flex: 1; border: none;
         }
         .alloc-right {
-            background: var(--accent-blue);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px; /* Fully rounded */
+            background: var(--accent-blue); color: white;
+            padding: 8px 16px;
             font-weight: 800; font-size: 11px;
-            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.2);
-            height: 24px; display: flex; align-items: center;
+            display: flex; align-items: center;
+            border-left: 1px solid rgba(255,255,255,0.2);
+            white-space: nowrap;
         }
 
         .echelon-title { 
@@ -368,7 +397,7 @@
         .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .nav-item:active { transform: scale(0.9); }
 
-        /* Theme Toggle Right of Loupe - IMPROVED ICONS */
+        /* Theme Toggle Right of Loupe */
         .theme-toggle-mini {
             width: 24px; height: 24px; border-radius: 50%;
             background: var(--card-bg); color: var(--text-main); 
@@ -383,21 +412,31 @@
            ASSETS PAGE STYLES & IMPROVED UI
            ======================== */
         
+        .list-header-row {
+            display: grid; padding: 0 16px; margin-bottom: 5px;
+            font-size: 9px; font-weight: 700; color: #95a5a6; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .list-header-row.ofz-cols {
+            grid-template-columns: 1fr 60px 60px 70px; gap: 8px; text-align: right;
+        }
+        .list-header-row.ofz-cols span:first-child { text-align: left; }
+        
+        .list-header-row.calc-cols {
+            grid-template-columns: 1fr 1fr 50px; text-align: right; margin-bottom: 8px;
+        }
+        .list-header-row.calc-cols span:first-child { text-align: left; }
+
         /* Updated OFZ Card */
         .ofz-card-modern {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
+            background: var(--card-bg); border-radius: 16px;
+            padding: 14px 16px; margin-bottom: 10px;
             border: 1px solid var(--border-color);
             display: grid;
-            grid-template-columns: 1fr auto auto auto; /* Name | NKD | Price | Yield */
-            align-items: center;
+            grid-template-columns: 1fr 60px 60px 70px; /* Name | NKD | Price | Yield */
+            align-items: center; gap: 8px;
             box-shadow: 0 4px 10px var(--card-shadow);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
             position: relative; overflow: hidden;
-            gap: 8px;
         }
         .ofz-card-modern::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent-blue); }
         .ofz-card-modern:active { transform: scale(0.98); }
@@ -405,8 +444,14 @@
         .ofz-name-lg { font-weight: 700; font-size: 13px; color: var(--text-main); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .ofz-ticker-sm { font-size: 10px; color: #8e8e93; font-weight: 600; text-transform: uppercase; }
         
-        .ofz-nkd { font-size: 11px; color: #95a5a6; font-weight: 500; text-align: right; }
-        .ofz-price { font-size: 12px; font-weight: 700; color: #7f8c8d; text-align: right; background: rgba(0,0,0,0.04); padding: 4px 8px; border-radius: 8px; }
+        .ofz-nkd-badge {
+            font-size: 12px; font-weight: 700; color: #7f8c8d; text-align: center;
+            background: rgba(0,0,0,0.04); padding: 4px 8px; border-radius: 8px;
+        }
+        .ofz-price { 
+            font-size: 12px; font-weight: 700; color: #7f8c8d; text-align: center; 
+            background: rgba(0,0,0,0.04); padding: 4px 8px; border-radius: 8px; 
+        }
         
         .ofz-yield-badge { 
             font-weight: 800; font-size: 13px; color: var(--accent-green); 
@@ -451,8 +496,7 @@
             white-space: nowrap; border-left: 1px solid rgba(255,255,255,0.5);
         }
         .ub-yield {
-            background: rgba(46, 204, 113, 0.2); color: #27ae60; padding: 4px 8px; 
-            white-space: nowrap;
+            background: rgba(46, 204, 113, 0.2); color: #27ae60; padding: 4px 8px; white-space: nowrap;
         }
         .dark-mode .ub-name { background: #334155; color: #f1f5f9; }
         .dark-mode .ub-price { background: #475569; color: #94a3b8; border-color: rgba(255,255,255,0.1); }
@@ -480,19 +524,20 @@
         /* Small Info Icon */
         .info-i-btn {
             display: inline-flex; width: 16px; height: 16px; border-radius: 50%; background: rgba(0,0,0,0.1); color: #666;
-            font-size: 10px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px; cursor: pointer;
+            font-size: 10px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px;
+            cursor: pointer;
         }
         .info-i-blue {
             display: inline-flex; width: 16px; height: 16px; border-radius: 50%; background: var(--accent-blue); color: white;
-            font-size: 11px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px; cursor: pointer;
+            font-size: 11px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px;
+            cursor: pointer;
         }
         
         /* Tooltip Box */
         .tooltip-box {
             position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
             background: #ffffff; color: #2c3e50; 
-            padding: 8px 12px; border-radius: 8px;
-            font-size: 11px; font-weight: normal;
+            padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: normal;
             box-shadow: 0 5px 20px rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.05);
             opacity: 0; visibility: hidden; transition: opacity 0.2s; pointer-events: none; z-index: 10;
             white-space: nowrap;
@@ -501,15 +546,16 @@
         .tooltip-container.show .tooltip-box { opacity: 1; visibility: visible; }
 
         .search-container { padding: 10px 0; }
-        .search-input { width: 100%; padding: 16px; border-radius: 16px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main); font-size: 16px; outline: none; margin-bottom: 15px; box-sizing: border-box; }
+        .search-input { width: 100%; padding: 16px; border-radius: 16px; border: 1px solid var(--border-color);
+            background: var(--card-bg); color: var(--text-main); font-size: 16px; outline: none; margin-bottom: 15px; box-sizing: border-box;
+        }
         .search-result-item { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--item-border); }
         
         .btn-reset-wide {
             width: 100%; box-sizing: border-box;
             padding: 12px; border: none; background: #f1f2f6; color: #7f8c8d;
-            border-radius: 12px; font-size: 12px; font-weight: bold; cursor: pointer; 
-            margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: background 0.2s;
+            border-radius: 12px; font-size: 12px; font-weight: bold; cursor: pointer; margin-top: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;
         }
         .btn-reset-wide:active { background: #e0e0e0; }
         .dark-mode .btn-reset-wide { background: #2d3748; color: #cbd5e0; }
@@ -545,6 +591,7 @@
                 <span id="market-status-dot" class="market-dot"></span>
                 <span>MADAME SOLOMI’NA: TERMINAL</span>
             </div>
+            
             <div class="home-title">Добро Пожаловать! 🎉</div>
             <div class="home-desc">Это мини-помощник по выбору российских активов. Помогаем делать Иксы! 😁</div>
             
@@ -644,7 +691,6 @@
             </div>
             
             <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
-            <!-- Updated Allocation Info: Split Left/Right -->
             <div class="allocation-info-connected">
                 <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">50 000</b>&nbsp;₽</div>
                 <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
@@ -672,9 +718,7 @@
                 </div>
             </div>
 
-            <!-- Changed color to BLUE as requested -->
             <div class="section-header-highlight hl-blue">2. Растущая часть</div>
-            <!-- Updated Allocation Info: Split Left/Right -->
             <div class="allocation-info-connected">
                 <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">50 000</b>&nbsp;₽</div>
                 <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
@@ -700,6 +744,13 @@
             <span>🛡️ Лучшие ОФЗ</span>
             <span class="info-i-blue" onclick="showYieldInfo()">i</span>
         </div>
+        
+        <div id="ofz-list-headers" class="list-header-row ofz-cols">
+            <span>Название</span>
+            <span>НКД</span>
+            <span>Цена</span>
+            <span>Доходность</span>
+        </div>
         <div id="ofz-list" style="margin-bottom: 30px;"></div>
 
         <div class="coupon-box" style="margin-top:20px;">
@@ -715,6 +766,13 @@
                 </div>
                 
                 <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">Введите кол-во штук купленных:</div>
+                
+                <div class="list-header-row calc-cols">
+                    <span>Название</span>
+                    <span>Цена+НКД</span>
+                    <span>Доходность</span>
+                </div>
+                
                 <div id="calc-bonds-input-list"></div>
                 
                 <button class="btn-reset-wide" onclick="resetCustomCalc()">
@@ -745,8 +803,8 @@
         </div>
 
         <button class="btn-action" style="margin-top: 25px;" onclick="showScreen('screen-search')">
-            <svg style="width:16px;height:16px; margin-right:8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            Поиск по тикеру
+            <svg style="width:16px;height:16px; margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            Поиск по Тикеру
         </button>
     </div>
 
@@ -799,7 +857,8 @@
         ];
 
         function updateMarketStatus() {
-            const now = new Date(); const day = now.getDay(); const hour = now.getHours(); const min = now.getMinutes();
+            const now = new Date();
+            const day = now.getDay(); const hour = now.getHours(); const min = now.getMinutes();
             const dot = document.getElementById('market-status-dot');
             const isWeekday = day >= 1 && day <= 5;
             const isWorkingHours = (hour > 10 || (hour === 10 && min >= 0)) && (hour < 18 || (hour === 18 && min <= 50));
@@ -824,7 +883,6 @@
                             document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
                         }
                     });
-
                 // USD/RUB
                 fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
                     .then(r => r.json()).then(d => { 
@@ -837,7 +895,8 @@
             } catch (e) { console.log("Market data error"); }
         }
 
-        setInterval(updateMarketData, 30000); setInterval(updateMarketStatus, 60000);
+        setInterval(updateMarketData, 30000);
+        setInterval(updateMarketStatus, 60000);
         updateMarketData(); updateMarketStatus();
 
         function showScreen(screenId) {
@@ -885,24 +944,27 @@
         }
 
         function toggleTheme() {
-            const body = document.body; const btn = document.getElementById('themeBtn');
+            const body = document.body;
+            const btn = document.getElementById('themeBtn');
             const sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
             const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-            
             if (body.classList.contains('dark-mode')) {
-                body.classList.remove('dark-mode'); body.classList.add('light-mode'); btn.innerHTML = moonIcon; localStorage.setItem('user_theme', 'light');
+                body.classList.remove('dark-mode'); body.classList.add('light-mode');
+                btn.innerHTML = moonIcon; localStorage.setItem('user_theme', 'light');
             } else {
-                body.classList.remove('light-mode'); body.classList.add('dark-mode'); btn.innerHTML = sunIcon; localStorage.setItem('user_theme', 'dark');
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode'); btn.innerHTML = sunIcon; localStorage.setItem('user_theme', 'dark');
             }
         }
 
         function initTheme() {
-            const savedTheme = localStorage.getItem('user_theme'); const btn = document.getElementById('themeBtn');
+            const savedTheme = localStorage.getItem('user_theme');
+            const btn = document.getElementById('themeBtn');
             const sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
             const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-
             if (savedTheme === 'dark') { document.body.classList.add('dark-mode'); btn.innerHTML = sunIcon; }
-            else { document.body.classList.add('light-mode'); btn.innerHTML = moonIcon; }
+            else { document.body.classList.add('light-mode');
+            btn.innerHTML = moonIcon; }
         }
 
         function saveSettings() {
@@ -932,11 +994,12 @@
         }
 
         function setFee(val, btn) {
-            brokerFee = val; document.querySelectorAll('.fee-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); draw();
+            brokerFee = val;
+            document.querySelectorAll('.fee-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); draw();
         }
 
         function setTax(val, btn) {
-            currentTax = val; 
+            currentTax = val;
             document.querySelectorAll('#taxGroup .tax-ui-btn').forEach(b => b.classList.remove('active')); 
             btn.classList.add('active'); 
             draw();
@@ -954,7 +1017,8 @@
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
         function toggleTip(event, el) { event.stopPropagation(); const isActive = el.classList.contains('show-tip'); hideAllTips(); if (!isActive) el.classList.add('show-tip'); }
-        function hideAllTips(event) { document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip')); document.getElementById('rain-tooltip').classList.remove('show'); if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } }
+        function hideAllTips(event) { document.querySelectorAll('.echelon-title').forEach(el => el.classList.remove('show-tip'));
+            document.getElementById('rain-tooltip').classList.remove('show'); if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } }
         function toggleRow(el) { el.classList.toggle('active'); }
 
         function copyToClipboard(text) {
@@ -970,13 +1034,11 @@
             try {
                 const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
                 const data = await res.json(); const cols = data.securities.columns; const row = data.securities.data[0];
-                
                 // Store coupons map
                 bondCouponsMap[code] = { date: row[cols.indexOf('NEXTCOUPON')], value: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0 };
                 
                 const couponPeriod = parseFloat(row[cols.indexOf('COUPONPERIOD')]) || 0;
                 const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
-                
                 bondDetailsMap[code] = {
                     matDate: row[cols.indexOf('MATDATE')] || '—',
                     couponValue: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0,
@@ -984,25 +1046,30 @@
                     couponYield: row[cols.indexOf('COUPONPERCENT')] || '—',
                     freq: freq
                 };
-
                 return { nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0, matDate: row[cols.indexOf('MATDATE')] || '—' };
             } catch (e) { return { nkd: 0, matDate: '—' }; }
         }
 
         async function loadData() {
-            initTheme(); loadSettings();
+            initTheme();
+            loadSettings();
             try {
-                const response = await fetch(CSV_URL); const text = await response.text();
+                const response = await fetch(CSV_URL);
+                const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
                 let bondList = [];
-                for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' }); }
+                for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
+                }
                 const bondPromises = bondList.map(async (b) => { const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; });
                 bonds = await Promise.all(bondPromises);
                 let allStocks = [];
-                for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' }); }
-                if (allStocks.length > 0) { echelons[0].assets = allStocks.slice(0, 3); echelons[1].assets = allStocks.slice(3, 6); echelons[2].assets = allStocks.slice(6, 9); echelons[3].assets = allStocks.slice(9, 12); }
+                for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
+                }
+                if (allStocks.length > 0) { echelons[0].assets = allStocks.slice(0, 3);
+                    echelons[1].assets = allStocks.slice(3, 6); echelons[2].assets = allStocks.slice(6, 9); echelons[3].assets = allStocks.slice(9, 12);
+                }
                 
-                renderCustomBondCalc(); 
+                renderCustomBondCalc();
                 draw();
             } catch (e) { console.error(e); }
         }
@@ -1123,7 +1190,6 @@
             
             const q = query.toUpperCase();
             let results = [];
-
             echelons.forEach(e => {
                 e.assets.forEach(a => {
                     if(a.t.toUpperCase().includes(q) || a.n.toUpperCase().includes(q)) results.push({...a, type: 'Акция'});
@@ -1132,7 +1198,6 @@
             bonds.forEach(b => {
                 if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
             });
-
             if(results.length === 0) {
                 resContainer.innerHTML = '<div style="text-align:center; color:#888; padding:20px;">Ничего не найдено</div>';
                 return;
@@ -1178,15 +1243,17 @@
                 document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
             }
 
-            let actualSpentTotal = 0; let bondQuantities = {}; let bHtml = '';
+            let actualSpentTotal = 0; let bondQuantities = {};
+            let bHtml = '';
             if (bonds.length > 0) {
                 const perBondBudget = bondBudget / bonds.length;
                 let bondCalculations = bonds.map(b => { const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; return { ...b, qty, fullCostPerUnit }; });
                 let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
                 if (leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
+                
                 bondCalculations.forEach(b => {
                     actualSpentTotal += (b.qty * b.fullCostPerUnit); bondQuantities[b.t] = b.qty;
-                    // UPDATED: Bonds list (Col 1: Name, Col 2: Yield Badge)
+                    // UPDATED: Bonds list (Wide Yield Badge)
                     bHtml += `
                     <div class="asset-item" onclick="toggleRow(this)">
                         <span class="ticker" style="font-weight:700; font-size:11px;">${limitName(b.n)}</span>
@@ -1204,7 +1271,8 @@
                     </div>`;
                 });
             }
-            if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml; document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
+            if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml;
+                document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
             
             let ofzHtml = '';
             bonds.forEach(b => {
@@ -1215,7 +1283,7 @@
                         <div class="ofz-name-lg">${limitName(b.n)}</div>
                         <div class="ofz-ticker-sm">${b.t}</div>
                     </div>
-                    <div class="ofz-nkd">${Math.round(b.nkd*10)/10}</div>
+                    <div class="ofz-nkd-badge">${Math.round(b.nkd*10)/10}</div>
                     <div class="ofz-price">${b.p} ₽</div>
                     <div class="ofz-yield-badge" title="Простая доходность">
                         ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
@@ -1227,7 +1295,7 @@
                     <div class="ofz-detail-row"><span>Дата погашения:</span> <span class="ofz-detail-val">${details.matDate}</span></div>
                     <div class="ofz-detail-row"><span>Размер купона:</span> <span class="ofz-detail-val">${details.couponValue} ₽</span></div>
                     <div class="ofz-detail-row"><span>Дата ближайшего купона:</span> <span class="ofz-detail-val">${details.nextCoupon}</span></div>
-                    <div class="ofz-detail-row"><span>Доходность купона:</span> <span class="ofz-detail-val">${details.couponYield}%</span></div>
+                    <div class="ofz-detail-row"><span>Текущая купонная доходность:</span> <span class="ofz-detail-val">${details.couponYield}%</span></div>
                     <div class="ofz-detail-row"><span>Выплат в год:</span> <span class="ofz-detail-val">${details.freq}</span></div>
                 </div>
                 `;
@@ -1240,8 +1308,8 @@
                 const netAmount = (info.value * qty) * (1 - currentTax); return { date: info.date, name: bonds.find(b => b.t === ticker)?.n || ticker, qty, amount: netAmount };
             }).filter(x => x !== null).sort((a,b) => new Date(a.date) - new Date(b.date));
             rainData.forEach(r => { totalRain += r.amount; rainHtml += `<div class="coupon-row"><div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div><div style="color:#8e8e93">${limitName(r.name)}</div><div style="text-align:center">${r.qty}шт.</div><div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div></div>`; });
-            
-            if(document.getElementById('couponList')) { document.getElementById('couponList').innerHTML = rainHtml || 'Нет данных о ближайших купонах'; document.getElementById('couponTotalHeader').innerText = Math.round(totalRain).toLocaleString() + ' ₽'; }
+            if(document.getElementById('couponList')) { document.getElementById('couponList').innerHTML = rainHtml || 'Нет данных о ближайших купонах'; document.getElementById('couponTotalHeader').innerText = Math.round(totalRain).toLocaleString() + ' ₽';
+            }
 
             let eHtml = '';
             echelons.forEach(e => {
@@ -1257,10 +1325,8 @@
                     <div class="echelon-tip">${e.info}</div>
                 </div>
                 <div class="asset-list">`;
-                
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
-                    // UPDATED: Stocks list (Col 1: Ticker, Col 2: Target Badge)
                     eHtml += `
                     <div class="asset-item" onclick="toggleRow(this)">
                         <span class="ticker">${s.t}</span>
@@ -1273,7 +1339,8 @@
                 eHtml += `</div>`;
             });
             if(document.getElementById('echelonContainer')) {
-                document.getElementById('echelonContainer').innerHTML = eHtml; document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
+                document.getElementById('echelonContainer').innerHTML = eHtml;
+                document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
                 document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
                 document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
             }
@@ -1281,7 +1348,7 @@
         }
 
         async function shareAsPDF() {
-            const btn = document.getElementById('btnShare'); 
+            const btn = document.getElementById('btnShare');
             const container = document.getElementById('shareContainer');
             const brand = document.getElementById('shareBrand'); 
             const dateEl = document.getElementById('shareDate');
@@ -1292,7 +1359,6 @@
             
             brand.style.display = 'block'; 
             dateEl.innerText = new Date().toLocaleString();
-
             try {
                 const canvas = await html2canvas(container, { 
                     backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), 
@@ -1300,7 +1366,6 @@
                     logging: false, 
                     useCORS: true 
                 });
-                
                 const imgData = canvas.toDataURL('image/png');
                 const imgWidth = canvas.width;
                 const imgHeight = canvas.height;
@@ -1311,10 +1376,8 @@
                     unit: 'px',
                     format: [imgWidth, imgHeight]
                 });
-                
                 doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
                 const pdfBlob = doc.output('blob');
-                
                 if (navigator.share && navigator.canShare) {
                     const file = new File([pdfBlob], "Solomina_Portfolio.pdf", { type: "application/pdf" });
                     if (navigator.canShare({ files: [file] })) {
@@ -1331,7 +1394,6 @@
                 }
 
                 doc.save('Solomina_Portfolio.pdf');
-                
                 setTimeout(() => {
                     btn.innerHTML = `✅ Файл скачан`;
                     setTimeout(() => {
@@ -1339,7 +1401,6 @@
                         btn.disabled = false;
                     }, 2000);
                 }, 500);
-
             } catch(e) {
                 console.error(e);
                 alert("Не удалось открыть меню отправки. Файл будет скачан.");
@@ -1347,7 +1408,7 @@
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             } finally {
-                brand.style.display = 'none'; 
+                brand.style.display = 'none';
             }
         }
 
