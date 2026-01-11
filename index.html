@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Terminal Madame Solomi’na</title>
+    <title>Terminal Madame Solomi'na</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -88,7 +88,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .terminal-header { padding: 30px 10px; text-align: left; }
+        .terminal-header { padding: 10px 10px 30px; text-align: left; }
         .terminal-badge {
             display: inline-flex;
             align-items: center; gap: 6px; padding: 4px 10px;
@@ -234,7 +234,32 @@
             background: var(--accent-blue); cursor: pointer; border: 3px solid white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .slider-hint { font-size: 10px; color: #8e8e93; text-align: center; margin-top: 8px; font-style: italic; }
+        .slider-hint-wrapper { 
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-top: 8px; 
+        }
+        .slider-hint { font-size: 10px; color: #8e8e93; text-align: center; }
+        .preset-dropdown-btn {
+            width: 24px; height: 24px; border-radius: 50%; background: var(--accent-blue);
+            color: white; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: transform 0.3s;
+        }
+        .preset-dropdown-btn.open { transform: rotate(180deg); }
+        .preset-dropdown-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+        
+        .preset-options {
+            display: none; margin-top: 12px; background: var(--bg-color);
+            border-radius: 12px; padding: 8px; gap: 6px;
+        }
+        .preset-options.show { display: flex; flex-wrap: wrap; justify-content: center; }
+        .preset-btn {
+            padding: 8px 14px; border-radius: 20px; border: 1px solid var(--accent-blue);
+            background: var(--card-bg); color: var(--accent-blue);
+            font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+        }
+        .preset-btn:hover, .preset-btn:active {
+            background: var(--accent-blue); color: white;
+        }
 
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
@@ -300,6 +325,32 @@
         }
         .info-expanded-block.show { display: block; }
         .info-expanded-block strong { color: var(--text-main); }
+        
+        /* Echelon Info Graphic Styles */
+        .echelon-info-graphic {
+            display: flex; flex-direction: column; gap: 12px; margin-top: 10px;
+        }
+        .eig-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 12px;
+            background: var(--bg-color); border-left: 4px solid;
+        }
+        .eig-item.e1 { border-color: #2ecc71; }
+        .eig-item.e2 { border-color: #3498db; }
+        .eig-item.e3 { border-color: #f1c40f; }
+        .eig-item.e4 { border-color: #e67e22; }
+        .eig-icon {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0;
+        }
+        .eig-item.e1 .eig-icon { background: rgba(46,204,113,0.15); }
+        .eig-item.e2 .eig-icon { background: rgba(52,152,219,0.15); }
+        .eig-item.e3 .eig-icon { background: rgba(241,196,15,0.15); }
+        .eig-item.e4 .eig-icon { background: rgba(230,126,34,0.15); }
+        .eig-text { flex: 1; }
+        .eig-title { font-weight: 800; font-size: 12px; color: var(--text-main); margin-bottom: 2px; }
+        .eig-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
 
         .allocation-info-connected {
             display: flex; align-items: stretch; justify-content: space-between;
@@ -338,20 +389,24 @@
         .esm-left { display: flex; align-items: center; gap: 8px; }
         .esm-dot { width: 8px; height: 8px; border-radius: 50%; }
         .esm-title { font-weight: 800; font-size: 12px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
+        .esm-info-btn {
+            width: 18px; height: 18px; border-radius: 50%; background: var(--accent-blue); color: white;
+            font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; margin-right: 4px;
+        }
         .esm-pct { 
             font-size: 12px; font-weight: normal; color: var(--accent-blue); 
             background: rgba(52,152,219,0.1); padding: 4px 8px; border-radius: 8px; 
             display: flex; align-items: center; gap: 6px;
         }
-        .esm-info { font-size: 14px; color: #ccc; }
         
         .echelon-tip {
-            display: none; position: absolute; left: 12px; right: 12px; margin-top: -5px;
+            display: none; 
             background: #3a506b; color: white; padding: 10px; border-radius: 8px;
-            font-size: 11px; z-index: 10; font-weight: normal; line-height: 1.3;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-size: 11px; font-weight: normal; line-height: 1.3;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); margin-bottom: 10px;
         }
-        .echelon-separator-modern.show-tip + .echelon-tip { display: block; }
+        .echelon-tip.show { display: block; animation: fadeIn 0.2s ease; }
 
         .coupon-box {
             background: var(--card-bg); border-radius: 16px; margin-top: 10px;
@@ -413,7 +468,7 @@
         /* NAVIGATION UPDATE */
         .nav-wrapper {
             position: fixed; bottom: 25px; left: 0; width: 100%; 
-            display: flex; justify-content: center; gap: 15px;
+            display: flex; justify-content: center; gap: 10px;
             padding: 0 15px; box-sizing: border-box; z-index: 900;
         }
         .nav-dock {
@@ -436,10 +491,21 @@
         .nav-search-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
         .nav-search-btn:active { transform: scale(0.9); }
         
+        .nav-dollar-btn-standalone {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: var(--nav-bg); backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border);
+            cursor: pointer; color: #27ae60; font-weight: bold; font-size: 22px;
+            transition: all 0.2s;
+        }
+        .nav-dollar-btn-standalone:active { transform: scale(0.9); }
+        
         /* EXPANDED SEARCH BAR UI */
         .nav-search-expanded {
             position: absolute; bottom: 0; left: 15px; right: 15px;
-            height: 66px; /* Similar height to dock including padding */
+            height: 66px;
             background: var(--nav-bg);
             backdrop-filter: blur(25px) saturate(180%);
             -webkit-backdrop-filter: blur(25px) saturate(180%);
@@ -457,7 +523,6 @@
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0; cursor: pointer; border: 1px solid rgba(46, 204, 113, 0.3);
             font-weight: bold; font-size: 20px; transition: transform 0.2s;
-            margin-right: 10px; /* Separator */
         }
         .nav-dollar-btn:active { transform: scale(0.9); }
         
@@ -550,7 +615,7 @@
         }
 
         .calc-bond-row {
-            display: grid; grid-template-columns: 1fr 60px 120px; align-items: center;
+            display: grid; grid-template-columns: 1fr 60px 140px; align-items: center;
             padding: 10px 0; border-bottom: 1px dashed var(--item-border); gap: 8px;
         }
         .unified-badge-container { display: flex; align-items: center; width: 100%; overflow: hidden; border-radius: 8px; font-size: 10px; font-weight: bold; }
@@ -569,19 +634,20 @@
         .dark-mode .ub-name { background: #1e293b; color: #f1f5f9; border-color: #334155; }
         .dark-mode .ub-price { background: #475569; color: #94a3b8; }
 
-        .qty-controls { display: flex; align-items: center; gap: 2px; justify-content: flex-end; }
+        .qty-controls { display: flex; align-items: center; gap: 4px; justify-content: flex-end; }
         .qty-btn { 
-            width: 20px; height: 20px; border-radius: 4px; background: var(--card-bg); 
+            width: 28px; height: 28px; border-radius: 6px; background: var(--card-bg); 
             display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--accent-blue);
-            cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 12px;
+            cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 16px;
+            border: 1px solid var(--border-color);
         }
         .qty-btn:active { transform: scale(0.9); background: #eee; }
         .calc-input {
-            width: 25px; border: none; font-size: 12px; font-weight: bold; text-align: center;
+            width: 30px; border: none; font-size: 13px; font-weight: bold; text-align: center;
             background: transparent; color: var(--text-main); outline: none; padding: 0;
         }
         .btn-row-reset {
-            width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+            width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
             color: #e74c3c; cursor: pointer; opacity: 0.7;
         }
         
@@ -647,7 +713,7 @@
         .echelon-wrapper.collapsed { max-height: 240px; }
         
         /* FIX FOR OFZ WRAPPER SPACES */
-        #ofz-wrapper.collapsed { max-height: 180px; } /* Fitted height */
+        #ofz-wrapper.collapsed { max-height: 180px; }
         
         .echelon-wrapper.collapsed::after {
             content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 60px;
@@ -686,26 +752,36 @@
         }
         
         .summary-top-modern {
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex; flex-direction: column; gap: 12px;
             margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed var(--item-border);
         }
-        .stm-left { display: flex; flex-direction: column; width: 100%; }
-        .stm-label { font-size: 10px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-        
         .stm-row-main {
             display: flex; align-items: center; justify-content: space-between; width: 100%;
         }
+        .stm-left-col { display: flex; flex-direction: column; }
+        .stm-label { font-size: 10px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
         .stm-val { font-size: 24px; font-weight: 800; color: var(--text-main); line-height: 1; }
+        
+        .portfolio-icon-box {
+            width: 48px; height: 48px; border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent-blue), #2980b9);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(52,152,219,0.3);
+        }
+        .portfolio-icon-box svg { width: 26px; height: 26px; stroke: white; fill: none; stroke-width: 1.5; }
+        
         .fee-pill {
-            background: var(--card-bg); border: 1px solid #eee; padding: 4px 10px; border-radius: 20px;
-            font-size: 11px; font-weight: bold; color: #8e8e93; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background: var(--bg-color); border: 1px solid var(--item-border); padding: 6px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: bold; color: #8e8e93; display: inline-block;
         }
         
-        .summary-ratio-line {
-            display: flex; align-items: center; gap: 8px; font-size: 11px; margin-top: 8px; font-weight: bold;
+        .summary-ratio-block {
+            display: flex; flex-direction: column; gap: 6px; margin-top: 4px;
         }
-        .srl-item { display: flex; align-items: center; gap: 4px; }
-        .srl-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .srl-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
+        .srl-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .srl-label { color: var(--text-secondary); }
+        .srl-val { color: var(--text-main); font-weight: 800; }
         
         .summary-fee-row { display: flex; justify-content: space-between; font-size: 11px; color: #8e8e93; margin-bottom: 15px; }
         
@@ -737,17 +813,24 @@
         .news-title { font-size: 13px; font-weight: bold; line-height: 1.4; margin-bottom: 6px; }
         .news-snippet { font-size: 11px; color: #8e8e93; line-height: 1.5; }
         
+        .search-empty-state {
+            text-align: center; padding: 40px 20px; color: var(--text-secondary);
+        }
+        .search-empty-state .icon { font-size: 48px; margin-bottom: 15px; opacity: 0.5; }
+        .search-empty-state .title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+        .search-empty-state .desc { font-size: 12px; line-height: 1.5; }
+        
     </style>
 </head>
 <body onclick="hideAllTips(event)">
 
-    <div id="toast" class="toast">Скопировано!</div>
+<div id="toast" class="toast">Скопировано!</div>
 
     <div id="screen-home" class="screen active">
         <div class="terminal-header">
             <div class="terminal-badge">
                 <span id="market-status-dot" class="market-dot"></span>
-                <span>MADAME SOLOMI’NA: TERMINAL</span>
+                <span>MADAME SOLOMI'NA: TERMINAL</span>
             </div>
             
             <div class="home-title">Добро Пожаловать! 🎉</div>
@@ -767,7 +850,7 @@
                 <div class="info-card-badge badge-green">ДОХОДНОСТЬ: ВЫСОКАЯ</div>
             </div>
 
-            <button class="btn-graphite" onclick="showScreen('screen-app')">
+            <button class="btn-graphite" onclick="startCalculation()">
                 <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                 Начать расчет
             </button>
@@ -824,7 +907,18 @@
                     <span>Акции <span id="labelStocksPct">50</span>%</span>
                 </div>
                 <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
-                <div class="slider-hint">Вы можете установить свое Соотношение</div>
+                <div class="slider-hint-wrapper">
+                    <span class="slider-hint">Вы можете установить свое Соотношение</span>
+                    <div class="preset-dropdown-btn" id="presetDropdownBtn" onclick="togglePresetDropdown()">
+                        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                </div>
+                <div class="preset-options" id="presetOptions">
+                    <button class="preset-btn" onclick="setPresetRatio(20)">20/80</button>
+                    <button class="preset-btn" onclick="setPresetRatio(40)">40/60</button>
+                    <button class="preset-btn" onclick="setPresetRatio(60)">60/40</button>
+                    <button class="preset-btn" onclick="setPresetRatio(80)">80/20</button>
+                </div>
             </div>
         </div>
 
@@ -852,17 +946,30 @@
             <div id="shareContainer">
                 <div class="summary-card">
                     <div class="summary-top-modern">
-                        <div class="stm-left">
-                            <span class="stm-label">Инвестиции</span>
-                            <div class="stm-row-main">
+                        <div class="stm-row-main">
+                            <div class="stm-left-col">
+                                <span class="stm-label">Инвестиции</span>
                                 <span class="stm-val" id="summ-invested">0 ₽</span>
-                                <div class="fee-pill">Комиссия: <span id="summ-fee">0.03%</span></div>
                             </div>
-                            <div class="summary-ratio-line">
-                                <div class="srl-item"><div class="srl-dot" style="background:var(--accent-blue)"></div> Облигации <span id="srl-bond-pct">50%</span></div>
-                                <div class="srl-item"><div class="srl-dot" style="background:var(--accent-green)"></div> Акции <span id="srl-stock-pct">50%</span></div>
+                            <div class="portfolio-icon-box">
+                                <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                             </div>
                         </div>
+                        
+                        <div class="summary-ratio-block">
+                            <div class="srl-item">
+                                <div class="srl-dot" style="background:var(--accent-blue)"></div>
+                                <span class="srl-label">Облигации:</span>
+                                <span class="srl-val" id="srl-bond-pct">50%</span>
+                            </div>
+                            <div class="srl-item">
+                                <div class="srl-dot" style="background:var(--accent-green)"></div>
+                                <span class="srl-label">Акции:</span>
+                                <span class="srl-val" id="srl-stock-pct">50%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="fee-pill">Комиссия: <span id="summ-fee">0.03%</span></div>
                     </div>
                     
                     <div class="summary-prediction">
@@ -966,7 +1073,7 @@
         
         <div class="section-header-styled">
             <span>🛡️ Лучшие ОФЗ</span>
-            <span class="info-i-blue" onclick="toggleInfoBlock('ofz-info-block')">i</span>
+            <span class="info-i-blue" onclick="event.stopPropagation(); toggleInfoBlock('ofz-info-block')">i</span>
         </div>
         <div id="ofz-info-block" class="info-expanded-block">
             <strong>Простая Доходность к Погашению</strong> — это среднегодовая доходность, которую получает инвестор, продержавший облигацию до погашения. Указаны самые ликвидные выпуски ОФЗ-ПД.
@@ -993,13 +1100,39 @@
 
         <div class="section-header-styled" style="cursor:default">
             <span>🚀 Таблица Эшелонов</span>
-            <span class="info-i-blue" onclick="toggleInfoBlock('echelon-info-block')">i</span>
+            <span class="info-i-blue" onclick="event.stopPropagation(); toggleInfoBlock('echelon-info-block')">i</span>
         </div>
         <div id="echelon-info-block" class="info-expanded-block">
-            <p style="margin:0 0 5px"><strong>I Эшелон:</strong> Компании, которые платят дивиденды и стараются их повышать.</p>
-            <p style="margin:0 0 5px"><strong>II Эшелон:</strong> Компании, которые платят дивиденды, но выплаты разнятся.</p>
-            <p style="margin:0 0 5px"><strong>III Эшелон:</strong> Компании, которые могут платить, но не платят.</p>
-            <p style="margin:0"><strong>IV Эшелон:</strong> Компании, которые не платят дивидендов.</p>
+            <div class="echelon-info-graphic">
+                <div class="eig-item e1">
+                    <div class="eig-icon">💎</div>
+                    <div class="eig-text">
+                        <div class="eig-title">I Эшелон</div>
+                        <div class="eig-desc">Компании, которые платят дивиденды и стараются их повышать</div>
+                    </div>
+                </div>
+                <div class="eig-item e2">
+                    <div class="eig-icon">📊</div>
+                    <div class="eig-text">
+                        <div class="eig-title">II Эшелон</div>
+                        <div class="eig-desc">Компании, которые платят дивиденды, но выплаты разнятся</div>
+                    </div>
+                </div>
+                <div class="eig-item e3">
+                    <div class="eig-icon">⚡</div>
+                    <div class="eig-text">
+                        <div class="eig-title">III Эшелон</div>
+                        <div class="eig-desc">Компании, которые могут платить, но не платят</div>
+                    </div>
+                </div>
+                <div class="eig-item e4">
+                    <div class="eig-icon">🚀</div>
+                    <div class="eig-text">
+                        <div class="eig-title">IV Эшелон</div>
+                        <div class="eig-desc">Компании, которые не платят дивидендов</div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <p class="start-expl" style="text-align:left; margin-bottom: 10px;">
@@ -1080,26 +1213,20 @@
                 </div>
             </div>
         </div>
-        
-        <div class="section-header-styled">Результаты поиска</div>
-        <div id="search-results">
-            <div style="text-align:center; color:#888; padding:20px;">Введите запрос в строку поиска ниже</div>
-        </div>
     </div>
     
     <div id="screen-company" class="screen">
         <div class="company-header">
-            <div class="back-btn" onclick="goToAssetsFromSearch()">
+            <div class="back-btn" onclick="goBackFromCompany()">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </div>
             <div class="company-title">О Компании</div>
         </div>
         
-        <div id="company-content">
-            </div>
+        <div id="company-content"></div>
     </div>
 
-    <div class="nav-wrapper">
+    <div class="nav-wrapper" id="navWrapper">
         <div class="nav-dock" id="standardNav">
             <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -1115,6 +1242,8 @@
             </div>
         </div>
 
+        <div class="nav-dollar-btn-standalone" id="nav-dollar" onclick="goToAssetsScreen()">$</div>
+
         <div class="nav-search-btn" id="nav-search" onclick="expandSearch()">
             <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             <button class="theme-toggle-mini" onclick="event.stopPropagation(); toggleTheme()" id="themeBtn">
@@ -1124,14 +1253,14 @@
 
         <div class="nav-search-expanded" id="expandedNav">
             <div class="nav-dollar-btn" onclick="goToAssetsFromSearch()">$</div>
-            <input type="text" class="nav-search-input-bar" id="tickerSearchInput" placeholder="Тикер, название или ISIN..." oninput="performSearch(this.value)">
+            <input type="text" class="nav-search-input-bar" id="tickerSearchInput" placeholder="Тикер, название или ISIN..." onkeyup="handleSearchKeyup(event)">
             <div class="nav-item" onclick="collapseSearch()">
                 <svg viewBox="0 0 24 24" style="width:24px;height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </div>
         </div>
     </div>
 
-    <script>
+<script>
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
         const GID = '1213653337'; 
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
@@ -1144,6 +1273,7 @@
         let bondDetailsMap = {};
         let currentScreen = 'screen-home';
         let isPortfolioCalculated = false;
+        let isFirstVisit = true;
 
         let echelons = [
             { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
@@ -1152,6 +1282,25 @@
             { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
         let echelonTableData = [[], [], [], []];
+
+        function checkFirstVisit() {
+            const visited = localStorage.getItem('user_visited');
+            if (visited) {
+                isFirstVisit = false;
+                document.getElementById('navWrapper').style.display = 'flex';
+                showScreen('screen-app');
+            } else {
+                isFirstVisit = true;
+                document.getElementById('navWrapper').style.display = 'none';
+            }
+        }
+
+        function startCalculation() {
+            localStorage.setItem('user_visited', 'true');
+            isFirstVisit = false;
+            document.getElementById('navWrapper').style.display = 'flex';
+            showScreen('screen-app');
+        }
 
         function updateMarketStatus() {
             const now = new Date();
@@ -1164,18 +1313,26 @@
 
         async function updateMarketData() {
             try {
+                // Bitcoin
                 try {
                     const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
                     const data = await res.json();
-                    if(data.price) document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
-                } catch(e) { }
+                    if(data && data.price) {
+                        document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
+                    }
+                } catch(e) { 
+                    console.log("BTC fetch error:", e);
+                }
 
+                // IMOEX
                 fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
                     .then(r => r.json()).then(d => { 
                         const cols = d.marketdata.columns; const data = d.marketdata.data[0];
                         const val = data[cols.indexOf('CURRENTVALUE')]; 
                         if(val) document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
-                    });
+                    }).catch(e => console.log("IMOEX error"));
+
+                // USD/RUB
                 fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
                     .then(r => r.json()).then(d => { 
                         const mData = d.marketdata.data[0]; const mCols = d.marketdata.columns;
@@ -1183,7 +1340,7 @@
                         let val = mData ? mData[mCols.indexOf('LAST')] : null;
                         if(!val && sData) val = sData[sCols.indexOf('PREVPRICE')];
                         if(val) document.getElementById('val-usdrub').innerText = val.toFixed(2) + ' ₽';
-                    });
+                    }).catch(e => console.log("USD error"));
             } catch (e) { console.log("Market data error"); }
         }
 
@@ -1192,7 +1349,6 @@
         updateMarketData(); updateMarketStatus();
 
         function showScreen(screenId) {
-            // Если переходим не на Интересное или О компании, сворачиваем поиск
             if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
                 collapseSearch(false);
             }
@@ -1218,10 +1374,10 @@
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
         }
 
-        /* NAVIGATION LOGIC FOR SEARCH & DOLLAR BTN */
         function expandSearch() {
             document.getElementById('standardNav').classList.add('hidden');
-            document.getElementById('nav-search').classList.add('hidden'); // Also hide the search btn wrapper
+            document.getElementById('nav-search').style.display = 'none';
+            document.getElementById('nav-dollar').style.display = 'none';
             document.getElementById('expandedNav').classList.add('active');
             showScreen('screen-interesting');
             setTimeout(() => {
@@ -1232,22 +1388,45 @@
         function collapseSearch(goHome = true) {
             document.getElementById('expandedNav').classList.remove('active');
             document.getElementById('standardNav').classList.remove('hidden');
-            document.getElementById('nav-search').classList.remove('hidden');
+            document.getElementById('nav-search').style.display = 'flex';
+            document.getElementById('nav-dollar').style.display = 'flex';
             document.getElementById('tickerSearchInput').blur();
-            // Clear search results
             document.getElementById('tickerSearchInput').value = '';
-            document.getElementById('search-results').innerHTML = '<div style="text-align:center; color:#888; padding:20px;">Введите запрос в строку поиска ниже</div>';
             
             if(goHome) showScreen('screen-home');
         }
 
+        function goToAssetsScreen() {
+            showScreen('screen-assets');
+        }
+
         function goToAssetsFromSearch() {
-            if(currentScreen === 'screen-company') {
-                 showScreen('screen-interesting');
-            } else {
-                 collapseSearch(false);
-                 showScreen('screen-assets');
+            collapseSearch(false);
+            showScreen('screen-assets');
+        }
+
+        function goBackFromCompany() {
+            showScreen('screen-interesting');
+        }
+
+        function handleSearchKeyup(event) {
+            if(event.keyCode === 13) {
+                performSearch(event.target.value);
             }
+        }
+
+        function togglePresetDropdown() {
+            const btn = document.getElementById('presetDropdownBtn');
+            const options = document.getElementById('presetOptions');
+            btn.classList.toggle('open');
+            options.classList.toggle('show');
+        }
+
+        function setPresetRatio(bondPct) {
+            document.getElementById('ratioSlider').value = bondPct;
+            document.getElementById('presetOptions').classList.remove('show');
+            document.getElementById('presetDropdownBtn').classList.remove('open');
+            draw();
         }
 
         function calculateAndShowPortfolio() {
@@ -1289,8 +1468,19 @@
         }
         
         function toggleInfoBlock(id) {
+            event.stopPropagation();
             const el = document.getElementById(id);
             el.classList.toggle('show');
+        }
+
+        function toggleEchelonTip(event, tipId) {
+            event.stopPropagation();
+            const allTips = document.querySelectorAll('.echelon-tip');
+            allTips.forEach(t => {
+                if(t.id !== tipId) t.classList.remove('show');
+            });
+            const tip = document.getElementById(tipId);
+            if(tip) tip.classList.toggle('show');
         }
 
         function showYieldInfo() {
@@ -1317,8 +1507,7 @@
             const sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
             const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
             if (savedTheme === 'dark') { document.body.classList.add('dark-mode'); btn.innerHTML = sunIcon; }
-            else { document.body.classList.add('light-mode');
-            btn.innerHTML = moonIcon; }
+            else { document.body.classList.add('light-mode'); btn.innerHTML = moonIcon; }
         }
 
         function saveSettings() {
@@ -1370,11 +1559,10 @@
 
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
-        function toggleTip(event, el) { event.stopPropagation();
-        const isActive = el.classList.contains('show-tip'); hideAllTips(); if (!isActive) el.classList.add('show-tip'); }
         function hideAllTips(event) { 
-            document.querySelectorAll('.echelon-separator-modern').forEach(el => el.classList.remove('show-tip'));
-            if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } }
+            document.querySelectorAll('.echelon-tip').forEach(el => el.classList.remove('show'));
+            if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } 
+        }
         function toggleRow(el) { el.classList.toggle('active'); }
 
         function copyToClipboard(text) {
@@ -1382,8 +1570,7 @@
                 const toast = document.getElementById('toast');
                 toast.innerText = `Скопировано: ${text}`;
                 toast.className = "toast show";
-                setTimeout(() => { 
-                    toast.className = toast.className.replace("show", ""); }, 2000);
+                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2000);
             });
         }
         
@@ -1394,8 +1581,7 @@
         
         function openTradingView(e, ticker) {
             e.stopPropagation();
-            // Using standard MOEX format or general RU search
-            const url = `https://ru.tradingview.com/chart/?symbol=RUS:${ticker}`;
+            const url = `https://ru.tradingview.com/chart/?symbol=MOEX:${ticker}`;
             window.open(url, '_blank');
         }
 
@@ -1421,6 +1607,7 @@
         async function loadData() {
             initTheme();
             loadSettings();
+            checkFirstVisit();
             try {
                 const response = await fetch(CSV_URL);
                 const text = await response.text();
@@ -1484,7 +1671,7 @@
                     </div>
                     <div class="ub-yield">${b.y.replace('%', '')}%</div>
                     <div class="qty-controls">
-                        <div class="qty-btn" onclick="changeQty('${b.t}', -1)">-</div>
+                        <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
                         <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons()">
                         <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
                         <div class="btn-row-reset" onclick="resetOne('${b.t}')">
@@ -1562,9 +1749,10 @@
         }
 
         function performSearch(query) {
-            const resContainer = document.getElementById('search-results');
-            resContainer.innerHTML = '';
-            if(!query || query.length < 2) return;
+            if(!query || query.length < 2) {
+                openCompanyPage(null, query);
+                return;
+            }
             
             const q = query.toUpperCase();
             let results = [];
@@ -1576,34 +1764,32 @@
             bonds.forEach(b => {
                 if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
             });
+            
             if(results.length === 0) {
-                resContainer.innerHTML = '<div style="text-align:center; color:#888; padding:20px;">Ничего не найдено</div>';
-                return;
+                openCompanyPage(null, query);
+            } else if(results.length === 1) {
+                openCompanyPage(results[0]);
+            } else {
+                openCompanyPage(results[0]);
             }
-
-            results.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'search-result-item';
-                div.innerHTML = `
-                    <div style="display:flex; justify-content:space-between;">
-                        <b>${item.t}</b>
-                        <span style="font-size:10px; background:var(--accent-blue); color:white; padding:2px 6px; border-radius:4px;">${item.type}</span>
-                    </div>
-                    <div style="font-size:12px; color:#888; margin:4px 0;">${item.n}</div>
-                    <div style="font-weight:bold;">${item.p} ₽</div>
-                `;
-                div.onclick = () => {
-                    openCompanyPage(item);
-                };
-                resContainer.appendChild(div);
-            });
         }
         
-        function openCompanyPage(item) {
+        function openCompanyPage(item, searchQuery = '') {
             const content = document.getElementById('company-content');
-            const isStock = item.type === 'Акция';
             
-            // Mock data generation because CSV is limited
+            if(!item) {
+                content.innerHTML = `
+                    <div class="search-empty-state">
+                        <div class="icon">🔍</div>
+                        <div class="title">Ничего не найдено</div>
+                        <div class="desc">По запросу "${searchQuery}" не найдено результатов.<br>Попробуйте изменить запрос.</div>
+                    </div>
+                `;
+                showScreen('screen-company');
+                return;
+            }
+            
+            const isStock = item.type === 'Акция';
             const target = isStock ? item.target : '-';
             const yieldVal = isStock ? 'СМ. ТАБЛИЦУ' : item.y;
             
@@ -1685,7 +1871,6 @@
                     
                     totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
                     
-                    // Collect Coupon Data for Rain
                     if(b.qty > 0 && bondCouponsMap[b.t]) {
                          const info = bondCouponsMap[b.t];
                          const netAmount = (info.value * b.qty) * (1 - currentTax);
@@ -1716,7 +1901,6 @@
             if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml;
             document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
             
-            // Render Coupon Rain Data
             if(document.getElementById('couponList')) {
                 rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
                 let couponHtml = '';
@@ -1772,6 +1956,7 @@
 
             let eHtml = '';
             let totalStockProjectedGrowth = 0;
+            let echelonIndex = 0;
             echelons.forEach(e => {
                 const echelonBudget = stockBudget * e.weight; const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
                 let stockCalculations = e.assets.map(a => { const fullCostPerUnit = a.p * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0; return { ...a, qty, fullCostPerUnit }; });
@@ -1781,22 +1966,24 @@
                 let dotColor = 'gray';
                 if(e.title.includes('I ')) dotColor = '#2ecc71';
                 else if(e.title.includes('II ')) dotColor = '#3498db';
-                else if(e.title.includes('III ')) dotColor = '#f1c40f'; // Yellow
-                else if(e.title.includes('IV ')) dotColor = '#e67e22'; // Orange
+                else if(e.title.includes('III ')) dotColor = '#f1c40f';
+                else if(e.title.includes('IV ')) dotColor = '#e67e22';
+                
+                const tipId = `echelon-tip-${echelonIndex}`;
                 
                 eHtml += `
-                <div class="echelon-separator-modern" onclick="toggleTip(event, this)">
+                <div class="echelon-separator-modern">
                     <div class="esm-left">
-                        <div class="esm-info" style="margin-right:8px; color:#ccc;">ⓘ</div>
+                        <div class="esm-info-btn" onclick="toggleEchelonTip(event, '${tipId}')">i</div>
                         <div class="esm-dot" style="background:${dotColor}"></div>
                         <span class="esm-title">${e.title}</span>
                     </div>
                     <div class="esm-pct">
+                         <span style="opacity:0.6; font-weight:normal;">${Math.round(echelonBudget).toLocaleString()} ₽</span>
                          <b>${Math.round(e.weight*100)}%</b>
-                         <span style="opacity:0.6; font-weight:normal; border-left:1px solid rgba(0,0,0,0.1); padding-left:6px; margin-left:2px;">${Math.round(echelonBudget).toLocaleString()} ₽</span>
                     </div>
                 </div>
-                <div class="echelon-tip">${e.info}</div>
+                <div class="echelon-tip" id="${tipId}">${e.info}</div>
                 <div class="asset-list">`;
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
@@ -1825,6 +2012,7 @@
                     </div>`;
                 });
                 eHtml += `</div>`;
+                echelonIndex++;
             });
             if(document.getElementById('echelonContainer')) {
                 document.getElementById('echelonContainer').innerHTML = eHtml;
@@ -1833,11 +2021,9 @@
                 document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
                 document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString() + ' ₽';
                 
-                // Ratio Display Update
                 document.getElementById('srl-bond-pct').innerText = bondPct + '%';
                 document.getElementById('srl-stock-pct').innerText = stockPct + '%';
                 
-                // Set broker fee label
                 const activeFeeBtn = document.querySelector('.fee-btn.active');
                 const feeText = activeFeeBtn ? activeFeeBtn.innerText : '0.03%';
                 document.getElementById('summ-fee').innerText = feeText;
@@ -1888,7 +2074,7 @@
                         await navigator.share({
                             files: [file],
                             title: 'Мой портфель 50/50',
-                            text: 'Расчет от Madame Solomi’na'
+                            text: 'Расчет от Madame Solomi\'na'
                         });
                         btn.innerHTML = originalText;
                         btn.disabled = false;
@@ -1908,7 +2094,6 @@
             } catch(e) {
                 console.error(e);
                 alert("Не удалось открыть меню отправки. Файл будет скачан.");
-                doc.save('Solomina_Portfolio.pdf');
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             } finally {
@@ -1916,7 +2101,11 @@
             }
         }
 
-        loadData(); window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand();
+        loadData(); 
+        if(window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready(); 
+            window.Telegram.WebApp.expand();
+        }
     </script>
 </body>
 </html>
