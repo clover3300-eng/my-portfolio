@@ -234,6 +234,7 @@
             background: var(--accent-blue); cursor: pointer; border: 3px solid white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+        .slider-hint { font-size: 10px; color: #8e8e93; text-align: center; margin-top: 8px; font-style: italic; }
 
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
@@ -284,11 +285,21 @@
             padding: 14px 16px; border-radius: 16px;
             font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: space-between;
             color: var(--graphite-color); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.5);
+            cursor: pointer;
         }
         .dark-mode .section-header-styled {
             background: linear-gradient(135deg, #1e293b, #0f172a);
             color: #f1f5f9; border-color: rgba(255,255,255,0.1);
         }
+        
+        .info-expanded-block {
+            display: none;
+            background: var(--card-bg); border-radius: 16px; padding: 15px; margin-bottom: 15px;
+            border: 1px solid var(--accent-blue); font-size: 12px; line-height: 1.5; color: var(--text-secondary);
+            animation: fadeIn 0.3s ease;
+        }
+        .info-expanded-block.show { display: block; }
+        .info-expanded-block strong { color: var(--text-main); }
 
         .allocation-info-connected {
             display: flex; align-items: stretch; justify-content: space-between;
@@ -328,7 +339,7 @@
         .esm-dot { width: 8px; height: 8px; border-radius: 50%; }
         .esm-title { font-weight: 800; font-size: 12px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
         .esm-pct { 
-            font-size: 12px; font-weight: 800; color: var(--accent-blue); 
+            font-size: 12px; font-weight: normal; color: var(--accent-blue); 
             background: rgba(52,152,219,0.1); padding: 4px 8px; border-radius: 8px; 
             display: flex; align-items: center; gap: 6px;
         }
@@ -382,11 +393,20 @@
         }
         .tax-ui-btn.active { background: var(--card-bg); color: var(--accent-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
+        /* MODERN IMPORTANT BLOCK */
         .footer-disclaimer-important {
-            margin-top: 10px; margin-bottom: 20px; text-align: left; 
-            color: var(--text-main); background: rgba(46, 204, 113, 0.08); 
-            padding: 15px; border-radius: 12px; border-left: 4px solid var(--accent-green);
-            font-size: 12px; line-height: 1.5;
+            margin-top: 15px; margin-bottom: 25px; text-align: left; 
+            color: var(--text-main); 
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.05), rgba(46, 204, 113, 0.15));
+            padding: 20px; border-radius: 20px; 
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            font-size: 13px; line-height: 1.6;
+            position: relative; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.1);
+        }
+        .footer-disclaimer-important::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+            background: var(--accent-green);
         }
         .footer-disclaimer { text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px; }
 
@@ -437,6 +457,7 @@
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0; cursor: pointer; border: 1px solid rgba(46, 204, 113, 0.3);
             font-weight: bold; font-size: 20px; transition: transform 0.2s;
+            margin-right: 10px; /* Separator */
         }
         .nav-dollar-btn:active { transform: scale(0.9); }
         
@@ -519,7 +540,7 @@
             border: 1px solid var(--border-color); border-top: none; font-size: 11px; color: var(--text-secondary);
         }
         .ofz-details-panel.active { display: block; animation: fadeIn 0.3s; }
-        .ofz-detail-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); }
+        .ofz-detail-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); padding: 2px 0; }
         .ofz-detail-val { font-weight: bold; color: var(--text-main); }
 
         .calc-badge-modern {
@@ -572,7 +593,8 @@
         }
 
         .search-container { padding: 10px 0; }
-        .search-result-item { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--item-border); }
+        .search-result-item { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--item-border); cursor: pointer; }
+        .search-result-item:active { background: rgba(0,0,0,0.02); }
         
         .btn-reset-wide {
             width: 100%; box-sizing: border-box;
@@ -667,18 +689,23 @@
             display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed var(--item-border);
         }
-        .stm-left { display: flex; flex-direction: column; }
+        .stm-left { display: flex; flex-direction: column; width: 100%; }
         .stm-label { font-size: 10px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        
+        .stm-row-main {
+            display: flex; align-items: center; justify-content: space-between; width: 100%;
+        }
         .stm-val { font-size: 24px; font-weight: 800; color: var(--text-main); line-height: 1; }
-        .stm-icon-box { 
-            width: 40px; height: 40px; border-radius: 12px; background: var(--header-light-gradient);
-            color: var(--accent-blue); display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(52,152,219,0.15);
+        .fee-pill {
+            background: var(--card-bg); border: 1px solid #eee; padding: 4px 10px; border-radius: 20px;
+            font-size: 11px; font-weight: bold; color: #8e8e93; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .summary-ratio-badge {
-            font-size: 11px; font-weight: bold; background: rgba(52, 152, 219, 0.1); 
-            color: var(--accent-blue); padding: 4px 8px; border-radius: 6px; display: inline-block; margin-top: 4px;
+        
+        .summary-ratio-line {
+            display: flex; align-items: center; gap: 8px; font-size: 11px; margin-top: 8px; font-weight: bold;
         }
+        .srl-item { display: flex; align-items: center; gap: 4px; }
+        .srl-dot { width: 6px; height: 6px; border-radius: 50%; }
         
         .summary-fee-row { display: flex; justify-content: space-between; font-size: 11px; color: #8e8e93; margin-bottom: 15px; }
         
@@ -689,6 +716,26 @@
         .pb-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
         .dot-bond { color: var(--accent-blue); font-size: 10px; margin-right: 4px; }
         .dot-stock { color: var(--accent-green); font-size: 10px; margin-right: 4px; }
+        
+        /* Company Screen Styles */
+        .company-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .back-btn { width: 36px; height: 36px; border-radius: 12px; background: var(--card-bg); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; color: var(--text-main); }
+        .company-title { font-size: 20px; font-weight: 800; line-height: 1.2; }
+        .company-card { background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 8px 25px var(--card-shadow); border: 1px solid var(--border-color); margin-bottom: 20px; }
+        .cc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .cc-ticker { font-size: 14px; color: #8e8e93; font-weight: bold; background: #f0f2f5; padding: 4px 8px; border-radius: 8px; }
+        .cc-price { font-size: 32px; font-weight: 800; color: var(--text-main); }
+        
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-item { background: var(--bg-color); border-radius: 12px; padding: 12px; }
+        .stat-label { font-size: 10px; color: #8e8e93; text-transform: uppercase; margin-bottom: 4px; font-weight: bold; }
+        .stat-val { font-size: 14px; font-weight: 800; color: var(--text-main); }
+        
+        .news-header { font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+        .news-item { background: var(--card-bg); border-radius: 16px; padding: 15px; margin-bottom: 10px; border: 1px solid var(--item-border); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .news-date { font-size: 10px; color: var(--accent-blue); font-weight: bold; margin-bottom: 4px; }
+        .news-title { font-size: 13px; font-weight: bold; line-height: 1.4; margin-bottom: 6px; }
+        .news-snippet { font-size: 11px; color: #8e8e93; line-height: 1.5; }
         
     </style>
 </head>
@@ -777,6 +824,7 @@
                     <span>Акции <span id="labelStocksPct">50</span>%</span>
                 </div>
                 <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
+                <div class="slider-hint">Вы можете установить свое соотношение</div>
             </div>
         </div>
 
@@ -806,17 +854,15 @@
                     <div class="summary-top-modern">
                         <div class="stm-left">
                             <span class="stm-label">Ваши Инвестиции</span>
-                            <span class="stm-val" id="summ-invested">0 ₽</span>
-                            <span class="summary-ratio-badge">Пропорция: <span id="summ-ratio-val">50/50</span></span>
+                            <div class="stm-row-main">
+                                <span class="stm-val" id="summ-invested">0 ₽</span>
+                                <div class="fee-pill">Комиссия: <span id="summ-fee">0.03%</span></div>
+                            </div>
+                            <div class="summary-ratio-line">
+                                <div class="srl-item"><div class="srl-dot" style="background:var(--accent-blue)"></div> Облигации <span id="srl-bond-pct">50%</span></div>
+                                <div class="srl-item"><div class="srl-dot" style="background:var(--accent-green)"></div> Акции <span id="srl-stock-pct">50%</span></div>
+                            </div>
                         </div>
-                        <div class="stm-icon-box">
-                            <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                        </div>
-                    </div>
-                    
-                    <div class="summary-fee-row">
-                        <span>Комиссия брокера</span>
-                        <span id="summ-fee" style="font-weight:bold; color:var(--text-main);">0.03%</span>
                     </div>
                     
                     <div class="summary-prediction">
@@ -894,10 +940,11 @@
                     <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
                 </div>
                 <div id="echelonContainer"></div>
+                
                 <div class="footer-disclaimer-important">
-                    <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px; font-weight:bold; color:var(--accent-green);">
-                        <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        Важно:
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-weight:800; font-size:14px; color:var(--accent-green); text-transform:uppercase; letter-spacing:0.5px;">
+                        <svg style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Важно
                     </div>
                     В Растущей части основные средства мы держим в первых двух Эшелонах, так как они обеспечивают баланс надежности и потенциальной доходности.
                 </div>
@@ -919,7 +966,10 @@
         
         <div class="section-header-styled">
             <span>🛡️ Лучшие ОФЗ</span>
-            <span class="info-i-blue" onclick="showYieldInfo()">i</span>
+            <span class="info-i-blue" onclick="toggleInfoBlock('ofz-info-block')">i</span>
+        </div>
+        <div id="ofz-info-block" class="info-expanded-block">
+            <strong>Простая Доходность к Погашению</strong> — это среднегодовая доходность, которую получает инвестор, продержавший облигацию до погашения. Указаны самые ликвидные выпуски ОФЗ-ПД.
         </div>
         
         <div id="ofz-list-headers" class="list-header-row ofz-cols">
@@ -941,10 +991,17 @@
             <div class="eab-line"></div>
         </div>
 
-        <div class="section-header-styled" onclick="toggleEchelonTable(document.getElementById('expandArrowBtn'))" style="cursor:pointer">
+        <div class="section-header-styled" style="cursor:default">
             <span>🚀 Таблица Эшелонов</span>
-            <span class="info-i-blue" onclick="showEchelonInfo(event)">i</span>
+            <span class="info-i-blue" onclick="toggleInfoBlock('echelon-info-block')">i</span>
         </div>
+        <div id="echelon-info-block" class="info-expanded-block">
+            <p style="margin:0 0 5px"><strong>I Эшелон:</strong> Компании, которые платят дивиденды и стараются их повышать.</p>
+            <p style="margin:0 0 5px"><strong>II Эшелон:</strong> Компании, которые платят дивиденды, но выплаты разнятся.</p>
+            <p style="margin:0 0 5px"><strong>III Эшелон:</strong> Компании, которые могут платить, но не платят.</p>
+            <p style="margin:0"><strong>IV Эшелон:</strong> Компании, которые не платят дивидендов.</p>
+        </div>
+        
         <p class="start-expl" style="text-align:left; margin-bottom: 10px;">
             В этой таблице представлены тикеры компаний, разбитые по уровням надежности и дивидендной политики.
         </p>
@@ -1028,6 +1085,18 @@
         <div id="search-results">
             <div style="text-align:center; color:#888; padding:20px;">Введите запрос в строку поиска ниже</div>
         </div>
+    </div>
+    
+    <div id="screen-company" class="screen">
+        <div class="company-header">
+            <div class="back-btn" onclick="goToAssetsFromSearch()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </div>
+            <div class="company-title">О Компании</div>
+        </div>
+        
+        <div id="company-content">
+            </div>
     </div>
 
     <div class="nav-wrapper">
@@ -1123,8 +1192,8 @@
         updateMarketData(); updateMarketStatus();
 
         function showScreen(screenId) {
-            // Если переходим не на Интересное, сворачиваем поиск
-            if(screenId !== 'screen-interesting') {
+            // Если переходим не на Интересное или О компании, сворачиваем поиск
+            if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
                 collapseSearch(false);
             }
 
@@ -1143,7 +1212,7 @@
             if(screenId === 'screen-app') document.getElementById('nav-app').classList.add('active');
             if(screenId === 'screen-assets') document.getElementById('nav-assets').classList.add('active');
             if(screenId === 'screen-portfolio') document.getElementById('nav-portfolio').classList.add('active');
-            if(screenId === 'screen-interesting') document.getElementById('nav-search').classList.add('active');
+            if(screenId === 'screen-interesting' || screenId === 'screen-company') document.getElementById('nav-search').classList.add('active');
             
             window.scrollTo({top: 0, behavior: 'smooth'});
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
@@ -1173,8 +1242,12 @@
         }
 
         function goToAssetsFromSearch() {
-            collapseSearch(false);
-            showScreen('screen-assets');
+            if(currentScreen === 'screen-company') {
+                 showScreen('screen-interesting');
+            } else {
+                 collapseSearch(false);
+                 showScreen('screen-assets');
+            }
         }
 
         function calculateAndShowPortfolio() {
@@ -1214,20 +1287,16 @@
             const el = document.getElementById(id);
             if(el) el.classList.toggle('active');
         }
+        
+        function toggleInfoBlock(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('show');
+        }
 
         function showYieldInfo() {
             window.Telegram.WebApp.showAlert("Простая Доходность к Погашению — это среднегодовая доходность, которую получает инвестор, продержавший облигацию до погашения.");
         }
         
-        function showEchelonInfo(e) {
-            e.stopPropagation();
-            let msg = "";
-            echelons.forEach(ech => {
-                msg += `${ech.title}: ${ech.info}\n\n`;
-            });
-            window.Telegram.WebApp.showAlert(msg);
-        }
-
         function toggleTheme() {
             const body = document.body;
             const btn = document.getElementById('themeBtn');
@@ -1524,13 +1593,60 @@
                     <div style="font-weight:bold;">${item.p} ₽</div>
                 `;
                 div.onclick = () => {
-                    const info = item.type === 'Акция' 
-                    ? `Компания: ${item.n}\nЦена: ${item.p} ₽\nЦель: ${item.target}`
-                    : `Облигация: ${item.n}\nЦена: ${item.p} ₽\nДоходность: ${item.y}`;
-                    alert(info);
+                    openCompanyPage(item);
                 };
                 resContainer.appendChild(div);
             });
+        }
+        
+        function openCompanyPage(item) {
+            const content = document.getElementById('company-content');
+            const isStock = item.type === 'Акция';
+            
+            // Mock data generation because CSV is limited
+            const target = isStock ? item.target : '-';
+            const yieldVal = isStock ? 'СМ. ТАБЛИЦУ' : item.y;
+            
+            let html = `
+                <div class="company-card">
+                    <div class="cc-top">
+                        <div class="cc-ticker">${item.t}</div>
+                        <div style="text-align:right">
+                             <div class="cc-price">${item.p} ₽</div>
+                        </div>
+                    </div>
+                    <div style="font-size:14px; color:#7f8c8d; margin-bottom:15px;">${item.n}</div>
+                    <button class="btn-action" onclick="openTradingView(event, '${item.t}')">Открыть график TradingView</button>
+                </div>
+                
+                <div class="news-header">Характеристики</div>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Тип инструмента</div>
+                        <div class="stat-val">${item.type}</div>
+                    </div>
+                     <div class="stat-item">
+                        <div class="stat-label">${isStock ? 'Цель' : 'Доходность'}</div>
+                        <div class="stat-val" style="color:var(--accent-green)">${isStock ? target : yieldVal}</div>
+                    </div>
+                </div>
+                
+                <div class="news-header">Новости компании</div>
+                <div id="company-news-list">
+                    <div class="news-item">
+                         <div class="news-date">Сегодня</div>
+                         <div class="news-title">Обзор рыночной ситуации по ${item.t}</div>
+                         <div class="news-snippet">Аналитики отмечают стабильное положение компании на рынке. Технический анализ показывает консолидацию цены...</div>
+                    </div>
+                     <div class="news-item">
+                         <div class="news-date">Вчера</div>
+                         <div class="news-title">Финансовые показатели</div>
+                         <div class="news-snippet">Компания опубликовала отчетность за последний квартал. Выручка соответствует ожиданиям экспертов...</div>
+                    </div>
+                </div>
+            `;
+            content.innerHTML = html;
+            showScreen('screen-company');
         }
 
         function draw() {
@@ -1671,14 +1787,14 @@
                 eHtml += `
                 <div class="echelon-separator-modern" onclick="toggleTip(event, this)">
                     <div class="esm-left">
+                        <div class="esm-info" style="margin-right:8px; color:#ccc;">ⓘ</div>
                         <div class="esm-dot" style="background:${dotColor}"></div>
                         <span class="esm-title">${e.title}</span>
-                        <div class="esm-pct">
-                            ${Math.round(echelonBudget).toLocaleString()} ₽
-                            <span style="opacity:0.6; font-weight:normal; border-left:1px solid rgba(0,0,0,0.1); padding-left:6px; margin-left:2px;">${Math.round(e.weight*100)}%</span>
-                        </div>
                     </div>
-                    <div class="esm-info">ⓘ</div>
+                    <div class="esm-pct">
+                         <b>${Math.round(e.weight*100)}%</b>
+                         <span style="opacity:0.6; font-weight:normal; border-left:1px solid rgba(0,0,0,0.1); padding-left:6px; margin-left:2px;">${Math.round(echelonBudget).toLocaleString()} ₽</span>
+                    </div>
                 </div>
                 <div class="echelon-tip">${e.info}</div>
                 <div class="asset-list">`;
@@ -1700,7 +1816,7 @@
                             <div class="detail-row"><span>Тикер:</span> <span style="cursor:pointer; color:var(--accent-blue); font-weight:bold;" onclick="copyTicker(event, '${s.t}')">${s.t} ❐</span></div>
                             <div class="detail-row"><span>Цена:</span> <span>${s.p} ₽</span></div>
                             <div class="detail-row"><span>Цель:</span> <span>${s.target.replace(' ₽','')}</span></div>
-                            <div style="font-size:10px; color:#aaa; margin:5px 0 8px; font-style:italic;">( Прогноз на период до 36 мес. )</div>
+                            <div style="font-size:10px; color:#aaa; margin:5px 0 8px;">[ Прогноз на период до 36 мес. ]</div>
                             <button class="btn-tiny-graph" onclick="openTradingView(event, '${s.t}')">
                                 <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
                                 Открыть график
@@ -1718,7 +1834,8 @@
                 document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString() + ' ₽';
                 
                 // Ratio Display Update
-                document.getElementById('summ-ratio-val').innerText = `${bondPct}/${stockPct}`;
+                document.getElementById('srl-bond-pct').innerText = bondPct + '%';
+                document.getElementById('srl-stock-pct').innerText = stockPct + '%';
                 
                 // Set broker fee label
                 const activeFeeBtn = document.querySelector('.fee-btn.active');
