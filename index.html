@@ -70,12 +70,6 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* REMOVE INPUT OUTLINE/BORDER */
-        input:focus, select:focus, textarea:focus, button:focus {
-            outline: none;
-            box-shadow: none; 
-        }
-
         .toast {
             position: fixed;
             top: 20px; left: 50%; transform: translateX(-50%);
@@ -197,17 +191,11 @@
             background: var(--card-bg); padding: 24px; border-radius: 24px;
             box-shadow: 0 15px 35px var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color);
         }
-        .calc-box-mini {
-            background: var(--card-bg); padding: 15px; border-radius: 16px;
-            border: 1px solid var(--accent-blue); margin-bottom: 10px;
-            display:flex; justify-content: space-between; align-items: center;
-        }
-        
         .calc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .input-container { flex: 1; }
         .input-label { font-size: 13px; color: #8e8e93; font-weight: 600; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         .input-wrapper { display: flex; align-items: baseline; gap: 8px; }
-        input[type="number"] { 
+        input#sumInput { 
             border: none; font-size: 34px; font-weight: 700; width: 100%; outline: none; 
             color: var(--input-color); background: transparent; margin: 0; padding: 0; line-height: 1;
         }
@@ -289,32 +277,7 @@
         .preset-title { font-weight: 700; font-size: 14px; }
         .preset-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
         .preset-right { font-size: 18px; font-weight: 800; color: var(--accent-blue); }
-        
-        /* MODERN PRESET EXAMPLE NOTE */
-        .preset-example-modern {
-            margin-top: 20px;
-            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(46, 204, 113, 0.05));
-            border-radius: 16px;
-            padding: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border: 1px dashed rgba(52, 152, 219, 0.3);
-        }
-        .pem-icon {
-            font-size: 24px;
-            background: var(--card-bg);
-            width: 40px; height: 40px;
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-        .pem-text {
-            font-size: 11px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-        .pem-text strong { color: var(--text-main); font-weight: 800; }
+        .preset-footer-hint { font-size: 10px; color: #8e8e93; text-align: center; margin-top: 8px; font-style: italic; }
 
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
@@ -477,7 +440,13 @@
         .esm-left { display: flex; align-items: center; gap: 8px; }
         .esm-dot { width: 8px; height: 8px; border-radius: 50%; }
         .esm-title { font-weight: 800; font-size: 12px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
-        
+
+        /* ECHELON DOTS COLOR OVERRIDE */
+        .echelon-separator-modern.echelon-1 .esm-dot { background-color: var(--accent-green); }
+        .echelon-separator-modern.echelon-2 .esm-dot { background-color: var(--accent-blue); }
+        .echelon-separator-modern.echelon-3 .esm-dot { background-color: var(--accent-yellow); }
+        .echelon-separator-modern.echelon-4 .esm-dot { background-color: var(--accent-orange); }
+
         /* LIGHT INFO BUTTON */
         .esm-info-btn-light {
             width: 18px; height: 18px; border-radius: 50%; 
@@ -600,7 +569,9 @@
             -webkit-backdrop-filter: blur(25px) saturate(180%);
             border-radius: 25px;
             display: flex; align-items: center; padding: 0 10px; gap: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border); /* Explicit border to replace default frame if any */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
+            /* REMOVED BORDER PER REQUEST */
+            border: none;
             transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 910;
         }
@@ -612,6 +583,7 @@
             font-size: 14px; outline: none; color: var(--text-main);
             box-shadow: none; -webkit-appearance: none;
         }
+        .dark-mode .nav-search-input-bar { background: rgba(255,255,255,0.1); }
         .nav-search-input-bar:focus { outline: none; }
 
         .nav-item {
@@ -653,7 +625,7 @@
         .list-header-row.ofz-cols span:nth-child(2), .list-header-row.ofz-cols span:nth-child(3) { text-align: center; }
         
         .list-header-row.calc-cols {
-            display: grid; grid-template-columns: 1fr 60px 120px; gap: 8px;
+            display: grid; grid-template-columns: 1fr 60px 140px; gap: 8px;
             text-align: center; margin-bottom: 8px;
         }
         .list-header-row.calc-cols span:first-child { text-align: left; }
@@ -705,6 +677,26 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2); letter-spacing: 0.5px;
         }
 
+        .monthly-calc-box {
+            background: var(--bg-color);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .monthly-calc-box .input-wrapper input {
+            font-size: 28px;
+        }
+
+        .calc-expl-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.5;
+            padding: 0 10px;
+            margin: 15px 0;
+        }
+
         .calc-bond-row {
             display: grid; grid-template-columns: 1fr 60px 140px; align-items: center;
             padding: 10px 0; border-bottom: 1px dashed var(--item-border); gap: 8px;
@@ -734,15 +726,26 @@
         }
         .qty-btn:active { transform: scale(0.9); background: #eee; }
         .calc-input {
-            width: 30px; border: none; font-size: 13px; font-weight: bold; text-align: center;
+            width: 44px; /* Increased width for 10000 */
+            border: none;
+            font-size: 12px; /* Adjusted font size */
+            font-weight: bold; text-align: center;
             background: transparent; color: var(--text-main); outline: none; padding: 0;
+            -moz-appearance: textfield;
         }
+        .calc-input::-webkit-outer-spin-button,
+        .calc-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
         .btn-row-reset {
             width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
             color: #e74c3c; cursor: pointer; opacity: 0.7;
         }
         
         .result-list-container { margin-top: 15px; background: rgba(0,0,0,0.02); border-radius: 8px; padding: 10px; }
+        .dark-mode .result-list-container { background: rgba(255,255,255,0.03); }
 
         .info-i-blue {
             display: inline-flex; width: 24px; height: 24px; border-radius: 50%; color: var(--accent-blue);
@@ -788,6 +791,7 @@
         .echelon-table-styled td { padding: 12px 6px; border-bottom: 1px solid var(--item-border); text-align: center; vertical-align: middle; }
         .echelon-table-styled tr:last-child td { border-bottom: none; }
         .echelon-table-styled tr:nth-child(even) { background-color: rgba(0,0,0,0.015); }
+        .dark-mode .echelon-table-styled tr:nth-child(even) { background-color: rgba(255,255,255,0.015); }
         
         .et-ticker { font-weight: 800; font-size: 11px; color: var(--text-main); display: block; margin-bottom: 4px; }
         .et-target {
@@ -804,6 +808,7 @@
         .echelon-wrapper.collapsed { max-height: 240px; }
         
         /* FIX FOR OFZ WRAPPER SPACES */
+        #ofz-wrapper { padding: 0; }
         #ofz-wrapper.collapsed { max-height: 180px; }
         
         .echelon-wrapper.collapsed::after {
@@ -816,6 +821,7 @@
             width: 100%; padding: 0; margin-top: -16px; cursor: pointer;
             position: relative; z-index: 5; height: 32px;
         }
+        #ofz-wrapper + .expand-arrow-btn { margin-top: 10px; }
         .eab-line { flex: 1; height: 1px; background: var(--item-border); }
         .eab-icon-box {
             width: 28px; height: 28px; border-radius: 50%; background: var(--card-bg);
@@ -829,50 +835,50 @@
         .portfolio-empty { padding: 40px 20px; text-align: center; color: var(--text-secondary); }
         .portfolio-empty-icon { font-size: 40px; margin-bottom: 15px; opacity: 0.5; }
         
-        /* SUMMARY CARD STYLES UPDATED */
+        /* SUMMARY CARD STYLES */
         .summary-card {
             background: linear-gradient(135deg, var(--card-bg), #f8fafd);
             border-radius: 20px; padding: 20px; margin-bottom: 25px;
             box-shadow: 0 8px 25px var(--card-shadow); border: 1px solid var(--border-color);
             position: relative; overflow: hidden;
         }
+        .dark-mode .summary-card { background: linear-gradient(135deg, var(--card-bg), #2c3a50); }
+
         .summary-card::before {
             content: ''; position: absolute; top: 0; right: 0; width: 100px; height: 100px;
             background: radial-gradient(circle, rgba(52,152,219,0.1) 0%, transparent 70%);
             border-radius: 50%; transform: translate(30%, -30%);
         }
         
-        /* UPDATED SUMMARY LAYOUT */
-        .summary-top-modern { position: relative; display: block; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed var(--item-border); }
-        .stm-header-label { font-size: 11px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
-        .stm-val-big { font-size: 26px; font-weight: 800; color: var(--text-main); line-height: 1; margin-bottom: 15px; display: block; }
-        
-        .portfolio-icon-corner {
-            position: absolute; top: 0; right: 0; 
-            width: 40px; height: 40px; background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
+        .summary-top-modern {
+            padding-bottom: 15px; border-bottom: 1px dashed var(--item-border);
         }
-
-        .stm-bar-container { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: #eee; width: 100%; margin-top: 5px; }
+        
+        .stm-header-label { font-size: 11px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stm-val-big { font-size: 26px; font-weight: 800; color: var(--text-main); line-height: 1; }
+        
+        .stm-bar-container { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: #eee; width: 100%; }
+        .dark-mode .stm-bar-container { background: rgba(0,0,0,0.2); }
         .stm-bar-bonds { background: var(--accent-blue); transition: width 0.3s; }
         .stm-bar-stocks { background: var(--accent-green); transition: width 0.3s; }
         
-        .stm-legend-row {
-            display: flex; justify-content: space-between; align-items: flex-start; margin-top: 12px;
+        .stm-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .stm-fee-lozenge { 
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            background: var(--bg-color);
+            padding: 6px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
         }
-        .stm-legend-col { display: flex; flex-direction: column; gap: 4px; }
+
+        .stm-pct-labels { display: flex; flex-direction: column; gap: 5px; font-size: 10px; font-weight: 700; }
+        .stm-pl-bond { color: var(--accent-blue); }
+        .stm-pl-stock { color: var(--accent-green); }
         
-        .stm-pl-bond { color: var(--accent-blue); font-size: 10px; font-weight: 700; }
-        .stm-pl-stock { color: var(--accent-green); font-size: 10px; font-weight: 700; }
-        
-        .stm-fee-badge {
-            background: var(--card-bg); border: 1px solid var(--item-border);
-            padding: 6px 12px; border-radius: 10px; font-size: 10px; font-weight: bold;
-            color: var(--text-secondary); box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        
-        .summary-prediction { background: rgba(46, 204, 113, 0.05); border-radius: 12px; padding: 12px; border: 1px solid rgba(46, 204, 113, 0.1); }
+        .summary-prediction { background: rgba(46, 204, 113, 0.05); border-radius: 12px; padding: 12px; border: 1px solid rgba(46, 204, 113, 0.1); margin-top: 15px; }
+        .dark-mode .summary-prediction { background: rgba(74, 222, 128, 0.05); border-color: rgba(74, 222, 128, 0.1); }
         .pred-title { font-size: 10px; color: #27ae60; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
         .pred-total { font-size: 18px; font-weight: 800; color: #27ae60; margin-bottom: 8px; }
         .pred-breakdown { font-size: 11px; color: var(--text-main); }
@@ -887,6 +893,7 @@
         .company-card { background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 8px 25px var(--card-shadow); border: 1px solid var(--border-color); margin-bottom: 20px; }
         .cc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .cc-ticker { font-size: 14px; color: #8e8e93; font-weight: bold; background: #f0f2f5; padding: 4px 8px; border-radius: 8px; }
+        .dark-mode .cc-ticker { background: #334155; color: #cbd5e1; }
         .cc-price { font-size: 32px; font-weight: 800; color: var(--text-main); }
         
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
@@ -907,49 +914,11 @@
         .search-empty-state .title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .search-empty-state .desc { font-size: 12px; line-height: 1.5; }
         
-        /* New Monthly Income Styles */
-        .calc-desc-highlight {
-            font-size: 11px; color: var(--accent-blue); background: var(--coupon-blue-bg);
-            padding: 10px; border-radius: 10px; margin-bottom: 15px; line-height: 1.4;
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 2000; display: none;
-            align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
-        }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
-        .modal-card {
-            background: var(--card-bg); padding: 25px; border-radius: 24px;
-            max-width: 320px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            text-align: center; position: relative;
-        }
-        .modal-close {
-            position: absolute; top: 15px; right: 15px; width: 30px; height: 30px;
-            background: var(--bg-color); border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary);
-        }
-        
     </style>
 </head>
 <body onclick="hideAllTips(event)">
 
 <div id="toast" class="toast">Скопировано!</div>
-
-<!-- Modal for YTM Info -->
-<div id="ytm-modal" class="modal-overlay" onclick="closeModal('ytm-modal')">
-    <div class="modal-card" onclick="event.stopPropagation()">
-        <div class="modal-close" onclick="closeModal('ytm-modal')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </div>
-        <div style="font-size:40px; margin-bottom:15px;">🎓</div>
-        <h3 style="margin:0 0 10px 0;">Простая Доходность</h3>
-        <p style="font-size:13px; color:#7f8c8d; line-height:1.6;">
-            Простая Доходность к Погашению — это среднегодовая доходность, которую получает инвестор, если продержит облигацию до даты её погашения.
-        </p>
-    </div>
-</div>
 
     <div id="screen-home" class="screen active">
         <div class="terminal-header">
@@ -1039,6 +1008,7 @@
                     </div>
                 </div>
                 
+                <!-- IMPROVED PRESET OPTIONS (Order: Bonds first as requested) -->
                 <div class="preset-options" id="presetOptions">
                     <div class="preset-btn-modern" onclick="setPresetRatio(80)">
                         <div class="preset-left">
@@ -1080,16 +1050,7 @@
                         </div>
                         <div class="preset-right">20/80</div>
                     </div>
-                    
-                    <!-- MODERN NOTE -->
-                    <div class="preset-example-modern">
-                        <div class="pem-icon">💡</div>
-                        <div class="pem-text">
-                            <strong>Пример стратегии:</strong><br>
-                            60/40 означает 60% Облигаций и 40% Акций.<br>
-                            Баланс защиты и роста.
-                        </div>
-                    </div>
+                    <div class="preset-footer-hint">Пример: 60/40 означает 60% Облигаций и 40% Акций</div>
                 </div>
             </div>
         </div>
@@ -1117,29 +1078,32 @@
         <div id="portfolio-content" style="display:none;">
             <div id="shareContainer">
                 <div class="summary-card">
-                    <!-- NEW HARMONIOUS DESIGN START -->
+                    <!-- === UPDATED PORTFOLIO SUMMARY CARD === -->
                     <div class="summary-top-modern">
                         <div class="stm-header-label">Инвестиции</div>
-                        <div class="stm-val-big" id="summ-invested">0 ₽</div>
                         
-                        <div class="portfolio-icon-corner">💼</div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px; margin-bottom: 15px;">
+                            <div class="stm-val-big" id="summ-invested">0 ₽</div>
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--text-main); opacity: 0.8;">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                        </div>
                         
                         <div class="stm-bar-container">
                             <div id="bar-bond-fill" class="stm-bar-bonds" style="width:50%"></div>
                             <div id="bar-stock-fill" class="stm-bar-stocks" style="width:50%"></div>
                         </div>
-                        
-                        <div class="stm-legend-row">
-                            <div class="stm-legend-col">
+
+                        <div class="stm-meta-row">
+                            <div class="stm-pct-labels">
                                 <span class="stm-pl-bond">Облигации <span id="srl-bond-pct">50%</span></span>
                                 <span class="stm-pl-stock">Акции <span id="srl-stock-pct">50%</span></span>
                             </div>
-                            <div class="stm-fee-badge">
-                                Комиссия: <span id="summ-fee">0.03%</span>
-                            </div>
+                            <div class="stm-fee-lozenge">Комиссия: <span id="summ-fee">0.03%</span></div>
                         </div>
                     </div>
-                    <!-- NEW HARMONIOUS DESIGN END -->
+                    <!-- === END OF UPDATE === -->
                     
                     <div class="summary-prediction">
                         <div class="pred-title">Сумма через 3 года (Прогноз):</div>
@@ -1245,8 +1209,8 @@
         </div>
         
         <div class="section-header-styled" onclick="toggleOfzTable(document.getElementById('expandArrowOfz'))">
-            <span>🛡️ Лучшие ОФЗ</span>
-            <span class="info-i-blue">
+            <span>🛡️ ОФЗ для замены</span>
+            <span class="info-i-blue" onclick="showYieldInfo(event)">
                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </span>
         </div>
@@ -1262,8 +1226,7 @@
              <div id="ofz-list"></div>
         </div>
 
-        <!-- MODIFIED CLICK HANDLER TO SHOW PREVIEW -->
-        <div class="expand-arrow-btn" id="expandArrowOfz" onclick="showOfzPreview()">
+        <div class="expand-arrow-btn" id="expandArrowOfz" onclick="toggleOfzTable(this)">
             <div class="eab-line"></div>
             <div class="eab-icon-box">
                 <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1271,14 +1234,14 @@
             <div class="eab-line"></div>
         </div>
 
-        <div class="section-header-styled" onclick="toggleEchelonTable(document.getElementById('expandArrowBtn'))">
-            <span>🚀 Таблица Эшелонов</span>
+        <div class="section-header-styled" onclick="toggleInfoBlock(this)">
+            <span>🚀 Акции для замены</span>
             <span class="info-i-blue">
                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </span>
         </div>
         
-        <div id="echelon-info-block" class="info-expanded-block show" style="margin-top:10px;">
+        <div class="info-expanded-block" style="margin-top:10px;">
             <!-- IMPROVED ECHELON INFO DESIGN -->
             <div class="echelon-info-graphic">
                 <div class="eig-item e1">
@@ -1319,7 +1282,7 @@
         <div id="echelon-wrapper" class="echelon-wrapper collapsed">
             <table class="echelon-table-styled">
                 <thead>
-                    <tr onclick="toggleEchelonTable(document.getElementById('expandArrowBtn'))">
+                    <tr>
                         <th><div class="echelon-header-pill">I</div></th>
                         <th><div class="echelon-header-pill">II</div></th>
                         <th><div class="echelon-header-pill">III</div></th>
@@ -1330,8 +1293,7 @@
             </table>
         </div>
         
-        <!-- MODIFIED CLICK HANDLER TO TOGGLE INFO BLOCK ONLY -->
-        <div class="expand-arrow-btn" id="expandArrowBtn" onclick="toggleEchelonInfoOnly(this)">
+        <div class="expand-arrow-btn" id="expandArrowBtn" onclick="toggleEchelonTable(this)">
             <div class="eab-line"></div>
             <div class="eab-icon-box">
                 <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1365,26 +1327,27 @@
             </div>
             <div class="coupon-content" id="calc-income-wrapper" style="padding: 10px; display:block;">
                 
-                <!-- NEW INPUT BLOCK FOR MONTHLY INCOME -->
-                <div class="calc-box-mini">
-                    <div class="input-container" onclick="event.stopPropagation(); document.getElementById('monthlySumInput').focus()">
-                        <span class="input-label">Сумма инвестиций</span>
+                <!-- === NEW MONTHLY INCOME CALCULATOR INPUT === -->
+                <div class="monthly-calc-box">
+                    <div class="input-container">
+                        <span class="input-label">Сумма Инвестиций</span>
                         <div class="input-wrapper">
-                            <input type="number" id="monthlySumInput" placeholder="0" oninput="calcMonthlyDist()" onclick="event.stopPropagation(); this.select()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
-                            <span class="currency">₽</span>
+                            <input type="number" id="monthlySumInput" value="100000" oninput="distributeMonthlyInvestment()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" style="background: transparent; border: none; color: var(--input-color); width: 100%; font-weight: 700;">
+                            <span class="currency" style="font-size: 24px;">₽</span>
                         </div>
                     </div>
                 </div>
                 
-                <div class="calc-desc-highlight">
-                    Калькулятор предлагает к покупке список ОФЗ благодаря которому Вы будете получать ежемесячно выплаты купонов.
-                </div>
+                <p class="calc-expl-text">Калькулятор предлагает к покупке список ОФЗ, благодаря которому Вы будете получать ежемесячно выплаты купонов.</p>
+                <!-- === END OF UPDATE === -->
 
                 <div class="tax-selector-ui">
                     <button class="tax-ui-btn" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
                     <button class="tax-ui-btn active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">НДФЛ 13%</button>
                     <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
                 </div>
+                
+                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">Введите свои данные</div>
                 
                 <div class="list-header-row calc-cols">
                     <span>Название</span>
@@ -1418,7 +1381,7 @@
         <div id="company-content"></div>
     </div>
 
-    <!-- NAVIGATION -->
+    <!-- NAVIGATION WITHOUT DOLLAR BUTTON -->
     <div class="nav-wrapper" id="navWrapper">
         <div class="nav-dock" id="standardNav">
             <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
@@ -1465,9 +1428,10 @@
         let bondCouponsMap = {}; 
         let bondDetailsMap = {};
         let currentScreen = 'screen-home';
-        let lastNavScreen = 'screen-home'; 
+        let lastNavScreen = 'screen-home'; // Added for search history
         let isPortfolioCalculated = false;
         let isFirstVisit = true;
+        let isUpdatingProgrammatically = false; // Flag to prevent calculation loops
 
         let echelons = [
             { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
@@ -1507,14 +1471,18 @@
 
         async function updateMarketData() {
             try {
+                // Bitcoin
                 try {
                     const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
                     const data = await res.json();
                     if(data && data.price) {
                         document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
                     }
-                } catch(e) { console.log("BTC fetch error", e); }
+                } catch(e) { 
+                    console.log("BTC fetch error:", e);
+                }
 
+                // IMOEX
                 fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
                     .then(r => r.json()).then(d => { 
                         const cols = d.marketdata.columns; const data = d.marketdata.data[0];
@@ -1522,6 +1490,7 @@
                         if(val) document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
                     }).catch(e => console.log("IMOEX error"));
 
+                // USD/RUB
                 fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
                     .then(r => r.json()).then(d => { 
                         const mData = d.marketdata.data[0]; const mCols = d.marketdata.columns;
@@ -1538,6 +1507,7 @@
         updateMarketData(); updateMarketStatus();
 
         function showScreen(screenId) {
+            // Logic to remember last main tab for search back button
             if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
                 lastNavScreen = screenId;
                 collapseSearch(false);
@@ -1632,33 +1602,13 @@
         function toggleEchelonTable(btn) {
             const wrapper = document.getElementById('echelon-wrapper');
             wrapper.classList.toggle('collapsed');
-            if(btn.classList) btn.classList.toggle('open');
-        }
-        
-        /* NEW FUNCTION: Toggle Only the Info Block for Echelons */
-        function toggleEchelonInfoOnly(btn) {
-            const block = document.getElementById('echelon-info-block');
-            block.classList.toggle('show');
-            if(btn.classList) btn.classList.toggle('open');
+            if(btn && btn.classList) btn.classList.toggle('open');
         }
 
         function toggleOfzTable(btn) {
             const wrapper = document.getElementById('ofz-wrapper');
             wrapper.classList.toggle('collapsed');
-            if(btn.classList) btn.classList.toggle('open');
-        }
-        
-        /* NEW FUNCTION: Show Modal for OFZ YTM */
-        function showOfzPreview() {
-            toggleModal('ytm-modal');
-        }
-        
-        function toggleModal(id) {
-            const modal = document.getElementById(id);
-            modal.classList.add('active');
-        }
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
+            if(btn && btn.classList) btn.classList.toggle('open');
         }
         
         function toggleOfzDetails(id) {
@@ -1666,10 +1616,17 @@
             if(el) el.classList.toggle('active');
         }
         
-        function toggleInfoBlock(id) {
+        function toggleInfoBlock(headerElement) {
             event.stopPropagation();
-            const el = document.getElementById(id);
-            el.classList.toggle('show');
+            // Find the next sibling that is an info block and toggle it
+            let nextEl = headerElement.nextElementSibling;
+            while(nextEl) {
+                if (nextEl.classList.contains('info-expanded-block')) {
+                    nextEl.classList.toggle('show');
+                    break;
+                }
+                nextEl = nextEl.nextElementSibling;
+            }
         }
 
         function toggleEchelonTip(event, tipId) {
@@ -1682,8 +1639,13 @@
             if(tip) tip.classList.toggle('show');
         }
 
-        function showYieldInfo() {
-            window.Telegram.WebApp.showAlert("Простая Доходность к Погашению — это среднегодовая доходность, которую получает инвестор, продержавший облигацию до погашения.");
+        function showYieldInfo(event) {
+            event.stopPropagation(); // Prevent the table from toggling
+            if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.showAlert("Простая Доходность к Погашению — это среднегодовая доходность, которую получает инвестор, продержавший облигацию до погашения.");
+            } else {
+                alert("Простая Доходность к Погашению — это среднегодовая доходность, которую получает инвестор, продержавший облигацию до погашения.");
+            }
         }
         
         function toggleTheme() {
@@ -1753,7 +1715,7 @@
             document.getElementById('tax-custom-13').classList.remove('active');
             document.getElementById('tax-custom-15').classList.remove('active');
             btn.classList.add('active');
-            recalcCustomCoupons();
+            distributeMonthlyInvestment(); // Recalculate based on new tax
         }
 
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
@@ -1839,9 +1801,12 @@
                 }
                 
                 renderCustomBondCalc();
+                distributeMonthlyInvestment();
                 draw();
             } catch (e) { console.error(e); }
         }
+
+        // --- MONTHLY INCOME CALCULATOR LOGIC ---
 
         function changeQty(ticker, delta) {
             const input = document.getElementById(`input-${ticker}`);
@@ -1849,8 +1814,7 @@
                 let val = parseInt(input.value) || 0;
                 val = Math.max(0, val + delta);
                 input.value = val;
-                recalcCustomCoupons();
-                updateMonthlySumFromQty(); // SYNC UPDATE
+                updateMonthlySumFromQuantities();
             }
         }
         
@@ -1858,9 +1822,70 @@
              const input = document.getElementById(`input-${ticker}`);
              if(input) {
                  input.value = 0;
-                 recalcCustomCoupons();
-                 updateMonthlySumFromQty(); // SYNC UPDATE
+                 updateMonthlySumFromQuantities();
              }
+        }
+        
+        function updateMonthlySumFromQuantities() {
+            if (isUpdatingProgrammatically) return;
+            let totalSum = 0;
+            bonds.forEach(bond => {
+                const input = document.getElementById(`input-${bond.t}`);
+                if (input) {
+                    const qty = parseInt(input.value) || 0;
+                    if (qty > 0) {
+                        const fullCost = (bond.p + bond.nkd) * (1 + customTax);
+                        totalSum += qty * fullCost;
+                    }
+                }
+            });
+
+            isUpdatingProgrammatically = true;
+            document.getElementById('monthlySumInput').value = Math.round(totalSum);
+            isUpdatingProgrammatically = false;
+
+            recalcCustomCoupons();
+        }
+
+        function distributeMonthlyInvestment() {
+            if (isUpdatingProgrammatically) return;
+            const sumInput = document.getElementById('monthlySumInput');
+            const sum = parseFloat(sumInput.value) || 0;
+
+            if (bonds.length === 0 || sum === 0) {
+                 bonds.forEach(bond => {
+                    const input = document.getElementById(`input-${bond.t}`);
+                    if(input) input.value = 0;
+                });
+                recalcCustomCoupons();
+                return;
+            };
+
+            const amountPerBond = sum / bonds.length;
+            let totalRemainder = sum;
+
+            bonds.forEach(bond => {
+                const fullCost = (bond.p + bond.nkd) * (1 + customTax);
+                const qty = fullCost > 0 ? Math.floor(amountPerBond / fullCost) : 0;
+                const input = document.getElementById(`input-${bond.t}`);
+                if(input) input.value = qty;
+                totalRemainder -= qty * fullCost;
+            });
+
+            // Re-invest remainder
+            if (totalRemainder > 0 && bonds.length > 0) {
+                const firstBond = bonds[0];
+                const firstBondCost = (firstBond.p + firstBond.nkd) * (1 + customTax);
+                if (firstBondCost > 0) {
+                    const extraQty = Math.floor(totalRemainder / firstBondCost);
+                    if (extraQty > 0) {
+                        const firstBondInput = document.getElementById(`input-${firstBond.t}`);
+                        firstBondInput.value = (parseInt(firstBondInput.value) || 0) + extraQty;
+                    }
+                }
+            }
+
+            recalcCustomCoupons();
         }
 
         function renderCustomBondCalc() {
@@ -1876,7 +1901,7 @@
                     <div class="ub-yield">${b.y.replace('%', '')}%</div>
                     <div class="qty-controls">
                         <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
-                        <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons(); updateMonthlySumFromQty();">
+                        <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="updateMonthlySumFromQuantities()">
                         <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
                         <div class="btn-row-reset" onclick="resetOne('${b.t}')">
                             <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -1887,59 +1912,12 @@
             container.innerHTML = html;
         }
 
-        /* NEW CALCULATION LOGIC FOR MONTHLY INCOME DIST */
-        function calcMonthlyDist() {
-            let total = parseFloat(document.getElementById('monthlySumInput').value) || 0;
-            if(bonds.length === 0) return;
-            
-            let perBond = total / bonds.length;
-            let remainders = 0;
-            
-            bonds.forEach(b => {
-                let cost = (b.p + b.nkd) * (1 + brokerFee);
-                let qty = cost > 0 ? Math.floor(perBond / cost) : 0;
-                
-                let spent = qty * cost;
-                let rem = perBond - spent;
-                remainders += rem;
-                
-                let input = document.getElementById(`input-${b.t}`);
-                if(input) input.value = qty;
-            });
-            
-            // Distribute leftovers to first bond
-            if(bonds.length > 0) {
-                let first = bonds[0];
-                let costFirst = (first.p + first.nkd) * (1 + brokerFee);
-                
-                while(costFirst > 0 && remainders >= costFirst) {
-                    let input = document.getElementById(`input-${first.t}`);
-                    if(input) input.value = parseInt(input.value) + 1;
-                    remainders -= costFirst;
-                }
-            }
-            
-            recalcCustomCoupons();
-        }
-        
-        function updateMonthlySumFromQty() {
-            let total = 0;
-            const inputs = document.querySelectorAll('.calc-input');
-            inputs.forEach(inp => {
-                let t = inp.getAttribute('data-ticker');
-                let qty = parseInt(inp.value) || 0;
-                let b = bonds.find(x => x.t === t);
-                if(b) {
-                    total += qty * (b.p + b.nkd) * (1 + brokerFee);
-                }
-            });
-            document.getElementById('monthlySumInput').value = Math.round(total);
-        }
-
         function resetCustomCalc() {
+            isUpdatingProgrammatically = true;
+            document.getElementById('monthlySumInput').value = 0;
+            isUpdatingProgrammatically = false;
             const inputs = document.querySelectorAll('.calc-input');
             inputs.forEach(input => input.value = 0);
-            document.getElementById('monthlySumInput').value = '';
             recalcCustomCoupons();
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
@@ -1967,8 +1945,9 @@
             rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
 
             let html = '';
+            const resultList = document.getElementById('calc-results-list');
             if(rainData.length === 0) {
-                html = 'Введите сумму выше или количество вручную.';
+                html = 'Введите сумму или количество купленных облигаций выше.';
             } else {
                 rainData.forEach(r => {
                     total += r.amount;
@@ -1982,8 +1961,10 @@
                 });
                 html += `<div style="text-align:right; margin-top:10px; font-weight:bold;">Итого: ${Math.round(total).toLocaleString()} ₽</div>`;
             }
-            document.getElementById('calc-results-list').innerHTML = html;
+            if(resultList) resultList.innerHTML = html;
         }
+
+        // --- END OF MONTHLY CALC LOGIC ---
 
         function updateEchelonTable() {
             const body = document.getElementById('echelon-tickers-body');
@@ -2019,6 +2000,7 @@
                 if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
             });
             
+            // UX: Clear input and close keyboard logic
             const input = document.getElementById('tickerSearchInput');
             input.value = '';
             input.blur();
@@ -2112,6 +2094,7 @@
                 document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
             }
 
+            // --- 100% LOGIC IMPLEMENTATION ---
             const bondSection = document.getElementById('section-bonds');
             const couponBox = document.getElementById('couponBox');
             const separator = document.getElementById('section-separator');
@@ -2120,6 +2103,7 @@
             const footerImportant = document.getElementById('footer-important');
             
             if(bondSection && stockSection) {
+                // Reset defaults
                 bondSection.style.display = 'block';
                 couponBox.style.display = 'block';
                 separator.style.display = 'flex';
@@ -2128,16 +2112,19 @@
                 stockHeader.innerText = "2. Растущая часть";
                 
                 if (bondPct === 0) {
-                    bondSection.style.display = 'none'; 
+                    // 100% Stocks
+                    bondSection.style.display = 'none'; // Effectively hide bonds list (though prompt said "Hide Money Flow") - user likely meant the section
                     couponBox.style.display = 'none';
                     separator.style.display = 'none';
-                    stockHeader.innerText = "1. Растущая часть";
+                    stockHeader.innerText = "1. Растущая часть"; // Rename to 1
                 } else if (bondPct === 100) {
+                    // 100% Bonds
                     stockSection.style.display = 'none';
                     footerImportant.style.display = 'none';
                     separator.style.display = 'none';
                 }
             }
+            // ---------------------------------
 
             let actualSpentTotal = 0; let bondQuantities = {};
             let totalBondProjectedIncome = 0;
@@ -2248,18 +2235,14 @@
                 let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
                 if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
                 
-                let dotColor = 'gray';
-                if(e.title.includes('I ')) dotColor = '#2ecc71';
-                else if(e.title.includes('II ')) dotColor = '#3498db';
-                else if(e.title.includes('III ')) dotColor = '#f1c40f';
-                else if(e.title.includes('IV ')) dotColor = '#e67e22';
-                
                 const tipId = `echelon-tip-${echelonIndex}`;
+                const echelonClass = `echelon-${echelonIndex + 1}`;
                 
+                // UPDATED ECHELON SEPARATOR WITH NEW DESIGN
                 eHtml += `
-                <div class="echelon-separator-modern">
+                <div class="echelon-separator-modern ${echelonClass}">
                     <div class="esm-left">
-                        <div class="esm-dot" style="background:${dotColor}"></div>
+                        <div class="esm-dot"></div>
                         <span class="esm-title">${e.title}</span>
                         <div class="esm-info-btn-light" onclick="toggleEchelonTip(event, '${tipId}')">
                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
