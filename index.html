@@ -15,6 +15,9 @@
             --text-secondary: #7f8c8d;
             --accent-blue: #3498db;
             --accent-green: #2ecc71;
+            --accent-yellow: #f1c40f;
+            --accent-orange: #e67e22;
+            --accent-red: #e74c3c;
             --accent-gradient: linear-gradient(135deg, #3498db, #2980b9);
             --header-gradient: linear-gradient(135deg, #f8f9fa, #e9ecef);
             --header-light-gradient: linear-gradient(135deg, #e3f2fd, #f0f9ff); 
@@ -38,6 +41,9 @@
             --text-secondary: #94a3b8;
             --accent-blue: #38bdf8;
             --accent-green: #4ade80;
+            --accent-yellow: #fcd34d;
+            --accent-orange: #fb923c;
+            --accent-red: #f87171;
             --accent-gradient: linear-gradient(135deg, #38bdf8, #0ea5e9);
             --header-gradient: linear-gradient(135deg, #1e293b, #2d3748);
             --header-light-gradient: linear-gradient(135deg, #1e293b, #334155);
@@ -376,12 +382,18 @@
         }
         .tax-ui-btn.active { background: var(--card-bg); color: var(--accent-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
+        .footer-disclaimer-important {
+            margin-top: 10px; margin-bottom: 20px; text-align: left; 
+            color: var(--text-main); background: rgba(46, 204, 113, 0.08); 
+            padding: 15px; border-radius: 12px; border-left: 4px solid var(--accent-green);
+            font-size: 12px; line-height: 1.5;
+        }
         .footer-disclaimer { text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px; }
 
         /* NAVIGATION UPDATE */
         .nav-wrapper {
             position: fixed; bottom: 25px; left: 0; width: 100%; 
-            display: flex; justify-content: center; gap: 10px;
+            display: flex; justify-content: center; gap: 15px;
             padding: 0 15px; box-sizing: border-box; z-index: 900;
         }
         .nav-dock {
@@ -589,8 +601,8 @@
         
         th:nth-child(1) .echelon-header-pill { color: #27ae60; border-color: #2ecc71; box-shadow: 0 2px 8px rgba(46, 204, 113, 0.2); }
         th:nth-child(2) .echelon-header-pill { color: #2980b9; border-color: #3498db; box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2); }
-        th:nth-child(3) .echelon-header-pill { color: #f39c12; border-color: #f1c40f; box-shadow: 0 2px 8px rgba(241, 196, 15, 0.2); }
-        th:nth-child(4) .echelon-header-pill { color: #c0392b; border-color: #e74c3c; box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2); }
+        th:nth-child(3) .echelon-header-pill { color: var(--accent-yellow); border-color: var(--accent-yellow); box-shadow: 0 2px 8px rgba(241, 196, 15, 0.2); }
+        th:nth-child(4) .echelon-header-pill { color: var(--accent-orange); border-color: var(--accent-orange); box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2); }
 
         .echelon-table-styled { width: 100%; border-collapse: separate; border-spacing: 0; }
         .echelon-table-styled th { padding-bottom: 15px; vertical-align: bottom; }
@@ -606,9 +618,8 @@
 
         /* Echelon Expand Logic */
         .echelon-wrapper {
-            position: relative; background: var(--card-bg); border-radius: 16px; 
+            position: relative; border-radius: 16px; 
             padding: 20px 5px; overflow: hidden; 
-            box-shadow: 0 4px 15px var(--card-shadow);
             transition: max-height 0.4s ease;
         }
         .echelon-wrapper.collapsed { max-height: 240px; }
@@ -618,7 +629,7 @@
         
         .echelon-wrapper.collapsed::after {
             content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 60px;
-            background: linear-gradient(to bottom, transparent, var(--card-bg));
+            background: linear-gradient(to bottom, transparent, var(--bg-color));
             pointer-events: none;
         }
         .expand-arrow-btn {
@@ -663,6 +674,10 @@
             width: 40px; height: 40px; border-radius: 12px; background: var(--header-light-gradient);
             color: var(--accent-blue); display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 10px rgba(52,152,219,0.15);
+        }
+        .summary-ratio-badge {
+            font-size: 11px; font-weight: bold; background: rgba(52, 152, 219, 0.1); 
+            color: var(--accent-blue); padding: 4px 8px; border-radius: 6px; display: inline-block; margin-top: 4px;
         }
         
         .summary-fee-row { display: flex; justify-content: space-between; font-size: 11px; color: #8e8e93; margin-bottom: 15px; }
@@ -792,6 +807,7 @@
                         <div class="stm-left">
                             <span class="stm-label">Ваши Инвестиции</span>
                             <span class="stm-val" id="summ-invested">0 ₽</span>
+                            <span class="summary-ratio-badge">Пропорция: <span id="summ-ratio-val">50/50</span></span>
                         </div>
                         <div class="stm-icon-box">
                             <svg style="width:20px;height:20px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
@@ -878,8 +894,12 @@
                     <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
                 </div>
                 <div id="echelonContainer"></div>
-                <div class="footer-disclaimer" style="margin-top:10px; margin-bottom:20px; text-align:left; color:#7f8c8d; background:rgba(0,0,0,0.02); padding:10px; border-radius:8px;">
-                    <b style="color:#2ecc71">Важно:</b> В Растущей части основные средства мы держим в первых двух Эшелонах, так как они обеспечивают баланс надежности и потенциальной доходности.
+                <div class="footer-disclaimer-important">
+                    <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px; font-weight:bold; color:var(--accent-green);">
+                        <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        Важно:
+                    </div>
+                    В Растущей части основные средства мы держим в первых двух Эшелонах, так как они обеспечивают баланс надежности и потенциальной доходности.
                 </div>
             </div>
 
@@ -921,41 +941,10 @@
             <div class="eab-line"></div>
         </div>
 
-        <div class="coupon-box" style="margin-top:20px;">
-            <div class="coupon-header" onclick="toggleAccordion('calc-income-wrapper')">
-                <span>📅 Ежемесячный доход</span>
-                <span class="calc-badge-modern">Калькулятор</span>
-            </div>
-            <div class="coupon-content" id="calc-income-wrapper" style="padding: 10px; display:block;">
-                <div class="tax-selector-ui">
-                    <button class="tax-ui-btn" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
-                    <button class="tax-ui-btn active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">НДФЛ 13%</button>
-                    <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
-                </div>
-                
-                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">Введите свои данные</div>
-                
-                <div class="list-header-row calc-cols">
-                    <span>Название</span>
-                    <span>Дох.</span>
-                    <span>Кол-во</span>
-                </div>
-                
-                <div id="calc-bonds-input-list"></div>
-                
-                <button class="btn-reset-wide" onclick="resetCustomCalc()">
-                    <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                    Очистить все поля
-                </button>
-
-                <div class="result-list-container">
-                    <div style="font-weight:bold; font-size:12px; margin-bottom:8px; color:var(--accent-blue);">Ваши выплаты:</div>
-                    <div id="calc-results-list" style="font-size:11px; color:#666;">Введите количество для расчета...</div>
-                </div>
-            </div>
+        <div class="section-header-styled" onclick="toggleEchelonTable(document.getElementById('expandArrowBtn'))" style="cursor:pointer">
+            <span>🚀 Таблица Эшелонов</span>
+            <span class="info-i-blue" onclick="showEchelonInfo(event)">i</span>
         </div>
-
-        <div class="section-header-styled" onclick="toggleEchelonTable(document.getElementById('expandArrowBtn'))" style="cursor:pointer">🚀 Таблица Эшелонов</div>
         <p class="start-expl" style="text-align:left; margin-bottom: 10px;">
             В этой таблице представлены тикеры компаний, разбитые по уровням надежности и дивидендной политики.
         </p>
@@ -1000,6 +989,40 @@
                 <div class="mk-val" id="val-btc">---</div>
             </div>
         </div>
+
+        <div class="coupon-box" style="margin-top:20px;">
+            <div class="coupon-header" onclick="toggleAccordion('calc-income-wrapper')">
+                <span>📅 Ежемесячный доход</span>
+                <span class="calc-badge-modern">Калькулятор</span>
+            </div>
+            <div class="coupon-content" id="calc-income-wrapper" style="padding: 10px; display:block;">
+                <div class="tax-selector-ui">
+                    <button class="tax-ui-btn" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
+                    <button class="tax-ui-btn active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">НДФЛ 13%</button>
+                    <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
+                </div>
+                
+                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">Введите свои данные</div>
+                
+                <div class="list-header-row calc-cols">
+                    <span>Название</span>
+                    <span>Дох.</span>
+                    <span>Кол-во</span>
+                </div>
+                
+                <div id="calc-bonds-input-list"></div>
+                
+                <button class="btn-reset-wide" onclick="resetCustomCalc()">
+                    <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    Очистить все поля
+                </button>
+
+                <div class="result-list-container">
+                    <div style="font-weight:bold; font-size:12px; margin-bottom:8px; color:var(--accent-blue);">Ваши выплаты:</div>
+                    <div id="calc-results-list" style="font-size:11px; color:#666;">Введите количество для расчета...</div>
+                </div>
+            </div>
+        </div>
         
         <div class="section-header-styled">Результаты поиска</div>
         <div id="search-results">
@@ -1021,12 +1044,13 @@
             <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
                 <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
-            <div class="nav-search-btn" id="nav-search" onclick="expandSearch()">
-                <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <button class="theme-toggle-mini" onclick="event.stopPropagation(); toggleTheme()" id="themeBtn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                </button>
-            </div>
+        </div>
+
+        <div class="nav-search-btn" id="nav-search" onclick="expandSearch()">
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <button class="theme-toggle-mini" onclick="event.stopPropagation(); toggleTheme()" id="themeBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
         </div>
 
         <div class="nav-search-expanded" id="expandedNav">
@@ -1101,7 +1125,7 @@
         function showScreen(screenId) {
             // Если переходим не на Интересное, сворачиваем поиск
             if(screenId !== 'screen-interesting') {
-                collapseSearch(false); // false means don't force switch screen internally
+                collapseSearch(false);
             }
 
             if (currentScreen === 'screen-assets' && screenId !== 'screen-assets') {
@@ -1128,6 +1152,7 @@
         /* NAVIGATION LOGIC FOR SEARCH & DOLLAR BTN */
         function expandSearch() {
             document.getElementById('standardNav').classList.add('hidden');
+            document.getElementById('nav-search').classList.add('hidden'); // Also hide the search btn wrapper
             document.getElementById('expandedNav').classList.add('active');
             showScreen('screen-interesting');
             setTimeout(() => {
@@ -1138,6 +1163,7 @@
         function collapseSearch(goHome = true) {
             document.getElementById('expandedNav').classList.remove('active');
             document.getElementById('standardNav').classList.remove('hidden');
+            document.getElementById('nav-search').classList.remove('hidden');
             document.getElementById('tickerSearchInput').blur();
             // Clear search results
             document.getElementById('tickerSearchInput').value = '';
@@ -1191,6 +1217,15 @@
 
         function showYieldInfo() {
             window.Telegram.WebApp.showAlert("Простая Доходность к Погашению — это среднегодовая доходность, которую получает инвестор, продержавший облигацию до погашения.");
+        }
+        
+        function showEchelonInfo(e) {
+            e.stopPropagation();
+            let msg = "";
+            echelons.forEach(ech => {
+                msg += `${ech.title}: ${ech.info}\n\n`;
+            });
+            window.Telegram.WebApp.showAlert(msg);
         }
 
         function toggleTheme() {
@@ -1519,6 +1554,7 @@
 
             let actualSpentTotal = 0; let bondQuantities = {};
             let totalBondProjectedIncome = 0;
+            let rainData = [];
             
             let bHtml = '';
             if (bonds.length > 0) {
@@ -1533,6 +1569,13 @@
                     
                     totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
                     
+                    // Collect Coupon Data for Rain
+                    if(b.qty > 0 && bondCouponsMap[b.t]) {
+                         const info = bondCouponsMap[b.t];
+                         const netAmount = (info.value * b.qty) * (1 - currentTax);
+                         rainData.push({ date: info.date, name: b.n, qty: b.qty, amount: netAmount });
+                    }
+                    
                     bHtml += `
                     <div class="asset-item" onclick="toggleRow(this)">
                         <span class="ticker" style="font-weight:700; font-size:11px;">${limitName(b.n)}</span>
@@ -1546,12 +1589,39 @@
                             <div class="detail-row"><span>Цена:</span> <span>${b.p} ₽</span></div>
                             <div class="detail-row"><span>НКД:</span> <span>${b.nkd.toFixed(2)} ₽</span></div>
                             <div class="detail-row"><span>Простая Доходность к Погашению:</span> <span>${b.y.replace(' ₽','')}</span></div>
+                            <button class="btn-tiny-graph" onclick="openTradingView(event, '${b.t}')">
+                                <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                                Открыть график
+                            </button>
                         </div>
                     </div>`;
                 });
             }
             if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml;
             document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
+            
+            // Render Coupon Rain Data
+            if(document.getElementById('couponList')) {
+                rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
+                let couponHtml = '';
+                let couponTotal = 0;
+                if(rainData.length === 0) {
+                     couponHtml = '<div style="text-align:center; padding:10px; color:#aaa;">Нет ближайших выплат для выбранных активов.</div>';
+                } else {
+                    rainData.forEach(r => {
+                        couponTotal += r.amount;
+                        couponHtml += `
+                        <div class="coupon-row">
+                            <div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div>
+                            <div style="color:#8e8e93">${limitName(r.name)}</div>
+                            <div style="text-align:center">${r.qty}шт.</div>
+                            <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
+                        </div>`;
+                    });
+                }
+                document.getElementById('couponList').innerHTML = couponHtml;
+                document.getElementById('couponTotalHeader').innerText = Math.round(couponTotal).toLocaleString() + ' ₽';
+            }
             
             let ofzHtml = '';
             bonds.forEach(b => {
@@ -1595,8 +1665,8 @@
                 let dotColor = 'gray';
                 if(e.title.includes('I ')) dotColor = '#2ecc71';
                 else if(e.title.includes('II ')) dotColor = '#3498db';
-                else if(e.title.includes('III ')) dotColor = '#f39c12';
-                else if(e.title.includes('IV ')) dotColor = '#e74c3c';
+                else if(e.title.includes('III ')) dotColor = '#f1c40f'; // Yellow
+                else if(e.title.includes('IV ')) dotColor = '#e67e22'; // Orange
                 
                 eHtml += `
                 <div class="echelon-separator-modern" onclick="toggleTip(event, this)">
@@ -1604,8 +1674,8 @@
                         <div class="esm-dot" style="background:${dotColor}"></div>
                         <span class="esm-title">${e.title}</span>
                         <div class="esm-pct">
-                            ${Math.round(e.weight*100)}% 
-                            <span style="opacity:0.6; font-weight:normal; border-left:1px solid rgba(0,0,0,0.1); padding-left:6px; margin-left:2px;">${Math.round(echelonBudget).toLocaleString()} ₽</span>
+                            ${Math.round(echelonBudget).toLocaleString()} ₽
+                            <span style="opacity:0.6; font-weight:normal; border-left:1px solid rgba(0,0,0,0.1); padding-left:6px; margin-left:2px;">${Math.round(e.weight*100)}%</span>
                         </div>
                     </div>
                     <div class="esm-info">ⓘ</div>
@@ -1646,6 +1716,9 @@
                 document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
                 document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
                 document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString() + ' ₽';
+                
+                // Ratio Display Update
+                document.getElementById('summ-ratio-val').innerText = `${bondPct}/${stockPct}`;
                 
                 // Set broker fee label
                 const activeFeeBtn = document.querySelector('.fee-btn.active');
