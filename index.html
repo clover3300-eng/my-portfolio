@@ -247,19 +247,36 @@
         .preset-dropdown-btn.open { transform: rotate(180deg); }
         .preset-dropdown-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
         
+        /* IMPROVED PRESET OPTIONS */
         .preset-options {
-            display: none; margin-top: 12px; background: var(--bg-color);
-            border-radius: 12px; padding: 8px; gap: 6px;
+            display: none; margin-top: 15px; background: var(--card-bg);
+            border-radius: 16px; padding: 12px; gap: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 20px var(--card-shadow);
         }
-        .preset-options.show { display: flex; flex-wrap: wrap; justify-content: center; }
-        .preset-btn {
-            padding: 8px 14px; border-radius: 20px; border: 1px solid var(--accent-blue);
-            background: var(--card-bg); color: var(--accent-blue);
-            font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+        .preset-options.show { display: flex; flex-direction: column; }
+        
+        .preset-btn-modern {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px; border-radius: 12px; border: 1px solid var(--item-border);
+            background: var(--bg-color); cursor: pointer; transition: all 0.2s;
         }
-        .preset-btn:hover, .preset-btn:active {
-            background: var(--accent-blue); color: white;
+        .preset-btn-modern:hover, .preset-btn-modern:active {
+            background: var(--accent-blue); border-color: var(--accent-blue);
         }
+        .preset-btn-modern:hover .preset-left, .preset-btn-modern:active .preset-left { color: white; }
+        .preset-btn-modern:hover .preset-right, .preset-btn-modern:active .preset-right { color: rgba(255,255,255,0.8); }
+        .preset-btn-modern:hover .preset-icon, .preset-btn-modern:active .preset-icon { background: rgba(255,255,255,0.2); }
+        
+        .preset-left { display: flex; align-items: center; gap: 12px; color: var(--text-main); }
+        .preset-icon {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: var(--coupon-blue-bg); display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+        .preset-title { font-weight: 700; font-size: 14px; }
+        .preset-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+        .preset-right { font-size: 18px; font-weight: 800; color: var(--accent-blue); }
 
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
@@ -326,31 +343,63 @@
         .info-expanded-block.show { display: block; }
         .info-expanded-block strong { color: var(--text-main); }
         
-        /* Echelon Info Graphic Styles */
+        /* MODERN Echelon Info Graphic Styles */
         .echelon-info-graphic {
-            display: flex; flex-direction: column; gap: 12px; margin-top: 10px;
+            display: flex; flex-direction: column; gap: 10px; margin-top: 10px;
         }
         .eig-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 12px; border-radius: 12px;
-            background: var(--bg-color); border-left: 4px solid;
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 16px; border-radius: 16px;
+            background: linear-gradient(135deg, var(--bg-color), rgba(255,255,255,0.5));
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .eig-item.e1 { border-color: #2ecc71; }
-        .eig-item.e2 { border-color: #3498db; }
-        .eig-item.e3 { border-color: #f1c40f; }
-        .eig-item.e4 { border-color: #e67e22; }
+        .eig-item:active { transform: scale(0.98); }
+        .eig-item::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0; width: 4px;
+        }
+        .eig-item.e1::before { background: linear-gradient(180deg, #2ecc71, #27ae60); }
+        .eig-item.e2::before { background: linear-gradient(180deg, #3498db, #2980b9); }
+        .eig-item.e3::before { background: linear-gradient(180deg, #f1c40f, #f39c12); }
+        .eig-item.e4::before { background: linear-gradient(180deg, #e67e22, #d35400); }
+        
         .eig-icon {
-            width: 36px; height: 36px; border-radius: 50%;
+            width: 44px; height: 44px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 18px; flex-shrink: 0;
+            font-size: 22px; flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .eig-item.e1 .eig-icon { background: rgba(46,204,113,0.15); }
-        .eig-item.e2 .eig-icon { background: rgba(52,152,219,0.15); }
-        .eig-item.e3 .eig-icon { background: rgba(241,196,15,0.15); }
-        .eig-item.e4 .eig-icon { background: rgba(230,126,34,0.15); }
+        .eig-item.e1 .eig-icon { background: linear-gradient(135deg, rgba(46,204,113,0.2), rgba(46,204,113,0.05)); }
+        .eig-item.e2 .eig-icon { background: linear-gradient(135deg, rgba(52,152,219,0.2), rgba(52,152,219,0.05)); }
+        .eig-item.e3 .eig-icon { background: linear-gradient(135deg, rgba(241,196,15,0.2), rgba(241,196,15,0.05)); }
+        .eig-item.e4 .eig-icon { background: linear-gradient(135deg, rgba(230,126,34,0.2), rgba(230,126,34,0.05)); }
+        
         .eig-text { flex: 1; }
-        .eig-title { font-weight: 800; font-size: 12px; color: var(--text-main); margin-bottom: 2px; }
-        .eig-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+        .eig-title { 
+            font-weight: 800; font-size: 13px; color: var(--text-main); margin-bottom: 4px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .eig-badge {
+            font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .eig-item.e1 .eig-badge { background: rgba(46,204,113,0.15); color: #27ae60; }
+        .eig-item.e2 .eig-badge { background: rgba(52,152,219,0.15); color: #2980b9; }
+        .eig-item.e3 .eig-badge { background: rgba(241,196,15,0.15); color: #f39c12; }
+        .eig-item.e4 .eig-badge { background: rgba(230,126,34,0.15); color: #d35400; }
+        
+        .eig-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+        
+        .eig-arrow {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: var(--card-bg); display: flex; align-items: center; justify-content: center;
+            color: var(--text-secondary); flex-shrink: 0;
+        }
 
         .allocation-info-connected {
             display: flex; align-items: stretch; justify-content: space-between;
@@ -381,23 +430,36 @@
             box-shadow: 0 4px 10px rgba(52, 152, 219, 0.2); z-index: 5; font-size: 20px; line-height: 1;
         }
         
+        /* UPDATED ECHELON SEPARATOR */
         .echelon-separator-modern {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 0; margin-top: 15px; margin-bottom: 5px;
-            border-bottom: 2px solid var(--item-border); cursor: pointer;
+            padding: 10px 0; margin-top: 15px; margin-bottom: 5px;
+            border-bottom: 2px solid var(--item-border);
         }
         .esm-left { display: flex; align-items: center; gap: 8px; }
         .esm-dot { width: 8px; height: 8px; border-radius: 50%; }
         .esm-title { font-weight: 800; font-size: 12px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
-        .esm-info-btn {
-            width: 18px; height: 18px; border-radius: 50%; background: var(--accent-blue); color: white;
+        
+        /* LIGHT INFO BUTTON */
+        .esm-info-btn-light {
+            width: 18px; height: 18px; border-radius: 50%; 
+            background: rgba(0,0,0,0.05); color: var(--text-secondary);
             font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; margin-right: 4px;
+            cursor: pointer; border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.2s;
         }
+        .esm-info-btn-light:hover { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
+        .dark-mode .esm-info-btn-light { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        
         .esm-pct { 
-            font-size: 12px; font-weight: normal; color: var(--accent-blue); 
-            background: rgba(52,152,219,0.1); padding: 4px 8px; border-radius: 8px; 
-            display: flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: normal; color: var(--text-secondary); 
+            display: flex; align-items: center; gap: 8px;
+        }
+        .esm-sum { color: var(--text-main); font-weight: 600; }
+        .esm-divider { color: var(--item-border); font-weight: 300; }
+        .esm-percent {
+            background: rgba(52,152,219,0.1); padding: 4px 10px; border-radius: 8px; 
+            color: var(--accent-blue); font-weight: 800;
         }
         
         .echelon-tip {
@@ -465,7 +527,7 @@
         }
         .footer-disclaimer { text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px; }
 
-        /* NAVIGATION UPDATE */
+        /* NAVIGATION UPDATE - WITHOUT DOLLAR BUTTON */
         .nav-wrapper {
             position: fixed; bottom: 25px; left: 0; width: 100%; 
             display: flex; justify-content: center; gap: 10px;
@@ -491,17 +553,6 @@
         .nav-search-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
         .nav-search-btn:active { transform: scale(0.9); }
         
-        .nav-dollar-btn-standalone {
-            width: 50px; height: 50px; border-radius: 50%;
-            background: var(--nav-bg); backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border);
-            cursor: pointer; color: #27ae60; font-weight: bold; font-size: 22px;
-            transition: all 0.2s;
-        }
-        .nav-dollar-btn-standalone:active { transform: scale(0.9); }
-        
         /* EXPANDED SEARCH BAR UI */
         .nav-search-expanded {
             position: absolute; bottom: 0; left: 15px; right: 15px;
@@ -516,15 +567,6 @@
             z-index: 910;
         }
         .nav-search-expanded.active { transform: translateY(0); }
-        
-        .nav-dollar-btn {
-            width: 44px; height: 44px; border-radius: 50%;
-            background: rgba(46, 204, 113, 0.15); color: #27ae60;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; cursor: pointer; border: 1px solid rgba(46, 204, 113, 0.3);
-            font-weight: bold; font-size: 20px; transition: transform 0.2s;
-        }
-        .nav-dollar-btn:active { transform: scale(0.9); }
         
         .nav-search-input-bar {
             flex: 1; border: none; background: rgba(0,0,0,0.05);
@@ -770,10 +812,22 @@
         }
         .portfolio-icon-box svg { width: 26px; height: 26px; stroke: white; fill: none; stroke-width: 1.5; }
         
-        .fee-pill {
-            background: var(--bg-color); border: 1px solid var(--item-border); padding: 6px 12px; border-radius: 20px;
-            font-size: 11px; font-weight: bold; color: #8e8e93; display: inline-block;
+        /* IMPROVED FEE DISPLAY */
+        .fee-pill-modern {
+            display: flex; align-items: center; gap: 10px;
+            background: linear-gradient(135deg, var(--bg-color), rgba(52,152,219,0.05));
+            border: 1px solid var(--border-color); 
+            padding: 10px 14px; border-radius: 12px;
+            box-shadow: 0 2px 8px var(--card-shadow);
         }
+        .fee-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: var(--coupon-blue-bg); display: flex; align-items: center; justify-content: center;
+            font-size: 16px;
+        }
+        .fee-text-col { display: flex; flex-direction: column; }
+        .fee-label-sm { font-size: 10px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; }
+        .fee-value-lg { font-size: 14px; font-weight: 800; color: var(--accent-blue); }
         
         .summary-ratio-block {
             display: flex; flex-direction: column; gap: 6px; margin-top: 4px;
@@ -908,16 +962,54 @@
                 </div>
                 <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
                 <div class="slider-hint-wrapper">
-                    <span class="slider-hint">Вы можете установить свое Соотношение</span>
+                    <span class="slider-hint">Выберите готовую стратегию или настройте вручную</span>
                     <div class="preset-dropdown-btn" id="presetDropdownBtn" onclick="togglePresetDropdown()">
                         <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     </div>
                 </div>
+                
+                <!-- IMPROVED PRESET OPTIONS -->
                 <div class="preset-options" id="presetOptions">
-                    <button class="preset-btn" onclick="setPresetRatio(20)">20/80</button>
-                    <button class="preset-btn" onclick="setPresetRatio(40)">40/60</button>
-                    <button class="preset-btn" onclick="setPresetRatio(60)">60/40</button>
-                    <button class="preset-btn" onclick="setPresetRatio(80)">80/20</button>
+                    <div class="preset-btn-modern" onclick="setPresetRatio(20)">
+                        <div class="preset-left">
+                            <div class="preset-icon">🛡️</div>
+                            <div>
+                                <div class="preset-title">Консервативная</div>
+                                <div class="preset-subtitle">Максимальная защита капитала</div>
+                            </div>
+                        </div>
+                        <div class="preset-right">20/80</div>
+                    </div>
+                    <div class="preset-btn-modern" onclick="setPresetRatio(40)">
+                        <div class="preset-left">
+                            <div class="preset-icon">⚖️</div>
+                            <div>
+                                <div class="preset-title">Умеренная</div>
+                                <div class="preset-subtitle">Баланс надежности и роста</div>
+                            </div>
+                        </div>
+                        <div class="preset-right">40/60</div>
+                    </div>
+                    <div class="preset-btn-modern" onclick="setPresetRatio(60)">
+                        <div class="preset-left">
+                            <div class="preset-icon">📈</div>
+                            <div>
+                                <div class="preset-title">Сбалансированная</div>
+                                <div class="preset-subtitle">Стабильный доход + рост</div>
+                            </div>
+                        </div>
+                        <div class="preset-right">60/40</div>
+                    </div>
+                    <div class="preset-btn-modern" onclick="setPresetRatio(80)">
+                        <div class="preset-left">
+                            <div class="preset-icon">🚀</div>
+                            <div>
+                                <div class="preset-title">Агрессивная</div>
+                                <div class="preset-subtitle">Максимальный потенциал роста</div>
+                            </div>
+                        </div>
+                        <div class="preset-right">80/20</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -969,7 +1061,14 @@
                             </div>
                         </div>
                         
-                        <div class="fee-pill">Комиссия: <span id="summ-fee">0.03%</span></div>
+                        <!-- IMPROVED FEE DISPLAY -->
+                        <div class="fee-pill-modern">
+                            <div class="fee-icon">💳</div>
+                            <div class="fee-text-col">
+                                <span class="fee-label-sm">Комиссия брокера</span>
+                                <span class="fee-value-lg" id="summ-fee">0.03%</span>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="summary-prediction">
@@ -1103,34 +1202,39 @@
             <span class="info-i-blue" onclick="event.stopPropagation(); toggleInfoBlock('echelon-info-block')">i</span>
         </div>
         <div id="echelon-info-block" class="info-expanded-block">
+            <!-- IMPROVED ECHELON INFO DESIGN -->
             <div class="echelon-info-graphic">
                 <div class="eig-item e1">
                     <div class="eig-icon">💎</div>
                     <div class="eig-text">
-                        <div class="eig-title">I Эшелон</div>
-                        <div class="eig-desc">Компании, которые платят дивиденды и стараются их повышать</div>
+                        <div class="eig-title">I Эшелон <span class="eig-badge">Надежный</span></div>
+                        <div class="eig-desc">Компании, которые платят дивиденды и стараются их повышать каждый год</div>
                     </div>
+                    <div class="eig-arrow">→</div>
                 </div>
                 <div class="eig-item e2">
                     <div class="eig-icon">📊</div>
                     <div class="eig-text">
-                        <div class="eig-title">II Эшелон</div>
-                        <div class="eig-desc">Компании, которые платят дивиденды, но выплаты разнятся</div>
+                        <div class="eig-title">II Эшелон <span class="eig-badge">Стабильный</span></div>
+                        <div class="eig-desc">Компании, которые платят дивиденды, но размер выплат может меняться</div>
                     </div>
+                    <div class="eig-arrow">→</div>
                 </div>
                 <div class="eig-item e3">
                     <div class="eig-icon">⚡</div>
                     <div class="eig-text">
-                        <div class="eig-title">III Эшелон</div>
-                        <div class="eig-desc">Компании, которые могут платить, но не платят</div>
+                        <div class="eig-title">III Эшелон <span class="eig-badge">Рисковый</span></div>
+                        <div class="eig-desc">Компании с потенциалом выплат, но пока не платят регулярно</div>
                     </div>
+                    <div class="eig-arrow">→</div>
                 </div>
                 <div class="eig-item e4">
                     <div class="eig-icon">🚀</div>
                     <div class="eig-text">
-                        <div class="eig-title">IV Эшелон</div>
-                        <div class="eig-desc">Компании, которые не платят дивидендов</div>
+                        <div class="eig-title">IV Эшелон <span class="eig-badge">Рост</span></div>
+                        <div class="eig-desc">Компании роста, которые реинвестируют прибыль вместо дивидендов</div>
                     </div>
+                    <div class="eig-arrow">→</div>
                 </div>
             </div>
         </div>
@@ -1226,6 +1330,7 @@
         <div id="company-content"></div>
     </div>
 
+    <!-- NAVIGATION WITHOUT DOLLAR BUTTON -->
     <div class="nav-wrapper" id="navWrapper">
         <div class="nav-dock" id="standardNav">
             <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
@@ -1242,8 +1347,6 @@
             </div>
         </div>
 
-        <div class="nav-dollar-btn-standalone" id="nav-dollar" onclick="goToAssetsScreen()">$</div>
-
         <div class="nav-search-btn" id="nav-search" onclick="expandSearch()">
             <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             <button class="theme-toggle-mini" onclick="event.stopPropagation(); toggleTheme()" id="themeBtn">
@@ -1252,7 +1355,6 @@
         </div>
 
         <div class="nav-search-expanded" id="expandedNav">
-            <div class="nav-dollar-btn" onclick="goToAssetsFromSearch()">$</div>
             <input type="text" class="nav-search-input-bar" id="tickerSearchInput" placeholder="Тикер, название или ISIN..." onkeyup="handleSearchKeyup(event)">
             <div class="nav-item" onclick="collapseSearch()">
                 <svg viewBox="0 0 24 24" style="width:24px;height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -1377,7 +1479,6 @@
         function expandSearch() {
             document.getElementById('standardNav').classList.add('hidden');
             document.getElementById('nav-search').style.display = 'none';
-            document.getElementById('nav-dollar').style.display = 'none';
             document.getElementById('expandedNav').classList.add('active');
             showScreen('screen-interesting');
             setTimeout(() => {
@@ -1389,20 +1490,10 @@
             document.getElementById('expandedNav').classList.remove('active');
             document.getElementById('standardNav').classList.remove('hidden');
             document.getElementById('nav-search').style.display = 'flex';
-            document.getElementById('nav-dollar').style.display = 'flex';
             document.getElementById('tickerSearchInput').blur();
             document.getElementById('tickerSearchInput').value = '';
             
             if(goHome) showScreen('screen-home');
-        }
-
-        function goToAssetsScreen() {
-            showScreen('screen-assets');
-        }
-
-        function goToAssetsFromSearch() {
-            collapseSearch(false);
-            showScreen('screen-assets');
         }
 
         function goBackFromCompany() {
@@ -1971,16 +2062,18 @@
                 
                 const tipId = `echelon-tip-${echelonIndex}`;
                 
+                // UPDATED ECHELON SEPARATOR WITH DIVIDER AND LIGHT i BUTTON
                 eHtml += `
                 <div class="echelon-separator-modern">
                     <div class="esm-left">
-                        <div class="esm-info-btn" onclick="toggleEchelonTip(event, '${tipId}')">i</div>
                         <div class="esm-dot" style="background:${dotColor}"></div>
                         <span class="esm-title">${e.title}</span>
+                        <div class="esm-info-btn-light" onclick="toggleEchelonTip(event, '${tipId}')">i</div>
                     </div>
                     <div class="esm-pct">
-                         <span style="opacity:0.6; font-weight:normal;">${Math.round(echelonBudget).toLocaleString()} ₽</span>
-                         <b>${Math.round(e.weight*100)}%</b>
+                        <span class="esm-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
+                        <span class="esm-divider">|</span>
+                        <span class="esm-percent">${Math.round(e.weight*100)}%</span>
                     </div>
                 </div>
                 <div class="echelon-tip" id="${tipId}">${e.info}</div>
