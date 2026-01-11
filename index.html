@@ -70,6 +70,12 @@
             transition: background 0.3s, color 0.3s;
         }
 
+        /* REMOVE INPUT OUTLINE/BORDER */
+        input:focus, select:focus, textarea:focus, button:focus {
+            outline: none;
+            box-shadow: none; 
+        }
+
         .toast {
             position: fixed;
             top: 20px; left: 50%; transform: translateX(-50%);
@@ -191,11 +197,17 @@
             background: var(--card-bg); padding: 24px; border-radius: 24px;
             box-shadow: 0 15px 35px var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color);
         }
+        .calc-box-mini {
+            background: var(--card-bg); padding: 15px; border-radius: 16px;
+            border: 1px solid var(--accent-blue); margin-bottom: 10px;
+            display:flex; justify-content: space-between; align-items: center;
+        }
+        
         .calc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .input-container { flex: 1; }
         .input-label { font-size: 13px; color: #8e8e93; font-weight: 600; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         .input-wrapper { display: flex; align-items: baseline; gap: 8px; }
-        input#sumInput { 
+        input[type="number"] { 
             border: none; font-size: 34px; font-weight: 700; width: 100%; outline: none; 
             color: var(--input-color); background: transparent; margin: 0; padding: 0; line-height: 1;
         }
@@ -277,7 +289,32 @@
         .preset-title { font-weight: 700; font-size: 14px; }
         .preset-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
         .preset-right { font-size: 18px; font-weight: 800; color: var(--accent-blue); }
-        .preset-footer-hint { font-size: 10px; color: #8e8e93; text-align: center; margin-top: 8px; font-style: italic; }
+        
+        /* MODERN PRESET EXAMPLE NOTE */
+        .preset-example-modern {
+            margin-top: 20px;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(46, 204, 113, 0.05));
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px dashed rgba(52, 152, 219, 0.3);
+        }
+        .pem-icon {
+            font-size: 24px;
+            background: var(--card-bg);
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .pem-text {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .pem-text strong { color: var(--text-main); font-weight: 800; }
 
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
@@ -563,7 +600,7 @@
             -webkit-backdrop-filter: blur(25px) saturate(180%);
             border-radius: 25px;
             display: flex; align-items: center; padding: 0 10px; gap: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border); /* Explicit border to replace default frame if any */
             transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 910;
         }
@@ -792,7 +829,7 @@
         .portfolio-empty { padding: 40px 20px; text-align: center; color: var(--text-secondary); }
         .portfolio-empty-icon { font-size: 40px; margin-bottom: 15px; opacity: 0.5; }
         
-        /* SUMMARY CARD STYLES */
+        /* SUMMARY CARD STYLES UPDATED */
         .summary-card {
             background: linear-gradient(135deg, var(--card-bg), #f8fafd);
             border-radius: 20px; padding: 20px; margin-bottom: 25px;
@@ -805,26 +842,35 @@
             border-radius: 50%; transform: translate(30%, -30%);
         }
         
-        .summary-top-modern {
-            display: flex; flex-direction: column; gap: 15px;
-            margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed var(--item-border);
-        }
+        /* UPDATED SUMMARY LAYOUT */
+        .summary-top-modern { position: relative; display: block; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed var(--item-border); }
+        .stm-header-label { font-size: 11px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+        .stm-val-big { font-size: 26px; font-weight: 800; color: var(--text-main); line-height: 1; margin-bottom: 15px; display: block; }
         
-        .stm-header-row {
-            display: flex; align-items: baseline; justify-content: space-between;
+        .portfolio-icon-corner {
+            position: absolute; top: 0; right: 0; 
+            width: 40px; height: 40px; background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 20px; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
         }
-        .stm-header-label { font-size: 11px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stm-val-big { font-size: 26px; font-weight: 800; color: var(--text-main); line-height: 1; }
-        
+
         .stm-bar-container { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: #eee; width: 100%; margin-top: 5px; }
         .stm-bar-bonds { background: var(--accent-blue); transition: width 0.3s; }
         .stm-bar-stocks { background: var(--accent-green); transition: width 0.3s; }
         
-        .stm-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
-        .stm-fee-text { font-size: 11px; color: #95a5a6; font-weight: 500; }
-        .stm-pct-labels { display: flex; gap: 10px; font-size: 10px; font-weight: 700; }
-        .stm-pl-bond { color: var(--accent-blue); }
-        .stm-pl-stock { color: var(--accent-green); }
+        .stm-legend-row {
+            display: flex; justify-content: space-between; align-items: flex-start; margin-top: 12px;
+        }
+        .stm-legend-col { display: flex; flex-direction: column; gap: 4px; }
+        
+        .stm-pl-bond { color: var(--accent-blue); font-size: 10px; font-weight: 700; }
+        .stm-pl-stock { color: var(--accent-green); font-size: 10px; font-weight: 700; }
+        
+        .stm-fee-badge {
+            background: var(--card-bg); border: 1px solid var(--item-border);
+            padding: 6px 12px; border-radius: 10px; font-size: 10px; font-weight: bold;
+            color: var(--text-secondary); box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
         
         .summary-prediction { background: rgba(46, 204, 113, 0.05); border-radius: 12px; padding: 12px; border: 1px solid rgba(46, 204, 113, 0.1); }
         .pred-title { font-size: 10px; color: #27ae60; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
@@ -861,11 +907,49 @@
         .search-empty-state .title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .search-empty-state .desc { font-size: 12px; line-height: 1.5; }
         
+        /* New Monthly Income Styles */
+        .calc-desc-highlight {
+            font-size: 11px; color: var(--accent-blue); background: var(--coupon-blue-bg);
+            padding: 10px; border-radius: 10px; margin-bottom: 15px; line-height: 1.4;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2000; display: none;
+            align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
+        }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+        .modal-card {
+            background: var(--card-bg); padding: 25px; border-radius: 24px;
+            max-width: 320px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center; position: relative;
+        }
+        .modal-close {
+            position: absolute; top: 15px; right: 15px; width: 30px; height: 30px;
+            background: var(--bg-color); border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary);
+        }
+        
     </style>
 </head>
 <body onclick="hideAllTips(event)">
 
 <div id="toast" class="toast">Скопировано!</div>
+
+<!-- Modal for YTM Info -->
+<div id="ytm-modal" class="modal-overlay" onclick="closeModal('ytm-modal')">
+    <div class="modal-card" onclick="event.stopPropagation()">
+        <div class="modal-close" onclick="closeModal('ytm-modal')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="font-size:40px; margin-bottom:15px;">🎓</div>
+        <h3 style="margin:0 0 10px 0;">Простая Доходность</h3>
+        <p style="font-size:13px; color:#7f8c8d; line-height:1.6;">
+            Простая Доходность к Погашению — это среднегодовая доходность, которую получает инвестор, если продержит облигацию до даты её погашения.
+        </p>
+    </div>
+</div>
 
     <div id="screen-home" class="screen active">
         <div class="terminal-header">
@@ -955,7 +1039,6 @@
                     </div>
                 </div>
                 
-                <!-- IMPROVED PRESET OPTIONS (Order: Bonds first as requested) -->
                 <div class="preset-options" id="presetOptions">
                     <div class="preset-btn-modern" onclick="setPresetRatio(80)">
                         <div class="preset-left">
@@ -997,7 +1080,16 @@
                         </div>
                         <div class="preset-right">20/80</div>
                     </div>
-                    <div class="preset-footer-hint">Пример: 60/40 означает 60% Облигаций и 40% Акций</div>
+                    
+                    <!-- MODERN NOTE -->
+                    <div class="preset-example-modern">
+                        <div class="pem-icon">💡</div>
+                        <div class="pem-text">
+                            <strong>Пример стратегии:</strong><br>
+                            60/40 означает 60% Облигаций и 40% Акций.<br>
+                            Баланс защиты и роста.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1027,24 +1119,23 @@
                 <div class="summary-card">
                     <!-- NEW HARMONIOUS DESIGN START -->
                     <div class="summary-top-modern">
-                        <div>
-                             <div class="stm-header-label">Инвестиции</div>
-                             <div class="stm-header-row">
-                                 <div class="stm-val-big" id="summ-invested">0 ₽</div>
-                             </div>
+                        <div class="stm-header-label">Инвестиции</div>
+                        <div class="stm-val-big" id="summ-invested">0 ₽</div>
+                        
+                        <div class="portfolio-icon-corner">💼</div>
+                        
+                        <div class="stm-bar-container">
+                            <div id="bar-bond-fill" class="stm-bar-bonds" style="width:50%"></div>
+                            <div id="bar-stock-fill" class="stm-bar-stocks" style="width:50%"></div>
                         </div>
                         
-                        <div>
-                            <div class="stm-bar-container">
-                                <div id="bar-bond-fill" class="stm-bar-bonds" style="width:50%"></div>
-                                <div id="bar-stock-fill" class="stm-bar-stocks" style="width:50%"></div>
+                        <div class="stm-legend-row">
+                            <div class="stm-legend-col">
+                                <span class="stm-pl-bond">Облигации <span id="srl-bond-pct">50%</span></span>
+                                <span class="stm-pl-stock">Акции <span id="srl-stock-pct">50%</span></span>
                             </div>
-                            <div class="stm-meta-row">
-                                <div class="stm-pct-labels">
-                                    <span class="stm-pl-bond">Облигации <span id="srl-bond-pct">50%</span></span>
-                                    <span class="stm-pl-stock">Акции <span id="srl-stock-pct">50%</span></span>
-                                </div>
-                                <div class="stm-fee-text">Комиссия: <span id="summ-fee">0.03%</span></div>
+                            <div class="stm-fee-badge">
+                                Комиссия: <span id="summ-fee">0.03%</span>
                             </div>
                         </div>
                     </div>
@@ -1171,7 +1262,8 @@
              <div id="ofz-list"></div>
         </div>
 
-        <div class="expand-arrow-btn" id="expandArrowOfz" onclick="toggleOfzTable(this)">
+        <!-- MODIFIED CLICK HANDLER TO SHOW PREVIEW -->
+        <div class="expand-arrow-btn" id="expandArrowOfz" onclick="showOfzPreview()">
             <div class="eab-line"></div>
             <div class="eab-icon-box">
                 <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1186,7 +1278,7 @@
             </span>
         </div>
         
-        <div class="info-expanded-block show" style="margin-top:10px;">
+        <div id="echelon-info-block" class="info-expanded-block show" style="margin-top:10px;">
             <!-- IMPROVED ECHELON INFO DESIGN -->
             <div class="echelon-info-graphic">
                 <div class="eig-item e1">
@@ -1238,7 +1330,8 @@
             </table>
         </div>
         
-        <div class="expand-arrow-btn" id="expandArrowBtn" onclick="toggleEchelonTable(this)">
+        <!-- MODIFIED CLICK HANDLER TO TOGGLE INFO BLOCK ONLY -->
+        <div class="expand-arrow-btn" id="expandArrowBtn" onclick="toggleEchelonInfoOnly(this)">
             <div class="eab-line"></div>
             <div class="eab-icon-box">
                 <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -1271,13 +1364,27 @@
                 <span class="calc-badge-modern">Калькулятор</span>
             </div>
             <div class="coupon-content" id="calc-income-wrapper" style="padding: 10px; display:block;">
+                
+                <!-- NEW INPUT BLOCK FOR MONTHLY INCOME -->
+                <div class="calc-box-mini">
+                    <div class="input-container" onclick="event.stopPropagation(); document.getElementById('monthlySumInput').focus()">
+                        <span class="input-label">Сумма инвестиций</span>
+                        <div class="input-wrapper">
+                            <input type="number" id="monthlySumInput" placeholder="0" oninput="calcMonthlyDist()" onclick="event.stopPropagation(); this.select()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
+                            <span class="currency">₽</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="calc-desc-highlight">
+                    Калькулятор предлагает к покупке список ОФЗ благодаря которому Вы будете получать ежемесячно выплаты купонов.
+                </div>
+
                 <div class="tax-selector-ui">
                     <button class="tax-ui-btn" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
                     <button class="tax-ui-btn active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">НДФЛ 13%</button>
                     <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
                 </div>
-                
-                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">Введите свои данные</div>
                 
                 <div class="list-header-row calc-cols">
                     <span>Название</span>
@@ -1311,7 +1418,7 @@
         <div id="company-content"></div>
     </div>
 
-    <!-- NAVIGATION WITHOUT DOLLAR BUTTON -->
+    <!-- NAVIGATION -->
     <div class="nav-wrapper" id="navWrapper">
         <div class="nav-dock" id="standardNav">
             <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
@@ -1358,7 +1465,7 @@
         let bondCouponsMap = {}; 
         let bondDetailsMap = {};
         let currentScreen = 'screen-home';
-        let lastNavScreen = 'screen-home'; // Added for search history
+        let lastNavScreen = 'screen-home'; 
         let isPortfolioCalculated = false;
         let isFirstVisit = true;
 
@@ -1400,18 +1507,14 @@
 
         async function updateMarketData() {
             try {
-                // Bitcoin
                 try {
                     const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
                     const data = await res.json();
                     if(data && data.price) {
                         document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.price)).toLocaleString();
                     }
-                } catch(e) { 
-                    console.log("BTC fetch error:", e);
-                }
+                } catch(e) { console.log("BTC fetch error", e); }
 
-                // IMOEX
                 fetch('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=marketdata')
                     .then(r => r.json()).then(d => { 
                         const cols = d.marketdata.columns; const data = d.marketdata.data[0];
@@ -1419,7 +1522,6 @@
                         if(val) document.getElementById('val-imoex').innerText = Math.round(val).toLocaleString();
                     }).catch(e => console.log("IMOEX error"));
 
-                // USD/RUB
                 fetch('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off')
                     .then(r => r.json()).then(d => { 
                         const mData = d.marketdata.data[0]; const mCols = d.marketdata.columns;
@@ -1436,7 +1538,6 @@
         updateMarketData(); updateMarketStatus();
 
         function showScreen(screenId) {
-            // Logic to remember last main tab for search back button
             if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
                 lastNavScreen = screenId;
                 collapseSearch(false);
@@ -1533,11 +1634,31 @@
             wrapper.classList.toggle('collapsed');
             if(btn.classList) btn.classList.toggle('open');
         }
+        
+        /* NEW FUNCTION: Toggle Only the Info Block for Echelons */
+        function toggleEchelonInfoOnly(btn) {
+            const block = document.getElementById('echelon-info-block');
+            block.classList.toggle('show');
+            if(btn.classList) btn.classList.toggle('open');
+        }
 
         function toggleOfzTable(btn) {
             const wrapper = document.getElementById('ofz-wrapper');
             wrapper.classList.toggle('collapsed');
             if(btn.classList) btn.classList.toggle('open');
+        }
+        
+        /* NEW FUNCTION: Show Modal for OFZ YTM */
+        function showOfzPreview() {
+            toggleModal('ytm-modal');
+        }
+        
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('active');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
         }
         
         function toggleOfzDetails(id) {
@@ -1639,7 +1760,10 @@
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
         function hideAllTips(event) { 
             document.querySelectorAll('.echelon-tip').forEach(el => el.classList.remove('show'));
-            if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } 
+            if(event && event.target.tagName !== 'INPUT') { 
+                if(document.getElementById('sumInput')) document.getElementById('sumInput').blur();
+                if(document.getElementById('monthlySumInput')) document.getElementById('monthlySumInput').blur();
+            } 
         }
         function toggleRow(el) { el.classList.toggle('active'); }
 
@@ -1726,6 +1850,7 @@
                 val = Math.max(0, val + delta);
                 input.value = val;
                 recalcCustomCoupons();
+                updateMonthlySumFromQty(); // SYNC UPDATE
             }
         }
         
@@ -1734,6 +1859,7 @@
              if(input) {
                  input.value = 0;
                  recalcCustomCoupons();
+                 updateMonthlySumFromQty(); // SYNC UPDATE
              }
         }
 
@@ -1750,7 +1876,7 @@
                     <div class="ub-yield">${b.y.replace('%', '')}%</div>
                     <div class="qty-controls">
                         <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
-                        <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons()">
+                        <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons(); updateMonthlySumFromQty();">
                         <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
                         <div class="btn-row-reset" onclick="resetOne('${b.t}')">
                             <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -1761,9 +1887,59 @@
             container.innerHTML = html;
         }
 
+        /* NEW CALCULATION LOGIC FOR MONTHLY INCOME DIST */
+        function calcMonthlyDist() {
+            let total = parseFloat(document.getElementById('monthlySumInput').value) || 0;
+            if(bonds.length === 0) return;
+            
+            let perBond = total / bonds.length;
+            let remainders = 0;
+            
+            bonds.forEach(b => {
+                let cost = (b.p + b.nkd) * (1 + brokerFee);
+                let qty = cost > 0 ? Math.floor(perBond / cost) : 0;
+                
+                let spent = qty * cost;
+                let rem = perBond - spent;
+                remainders += rem;
+                
+                let input = document.getElementById(`input-${b.t}`);
+                if(input) input.value = qty;
+            });
+            
+            // Distribute leftovers to first bond
+            if(bonds.length > 0) {
+                let first = bonds[0];
+                let costFirst = (first.p + first.nkd) * (1 + brokerFee);
+                
+                while(costFirst > 0 && remainders >= costFirst) {
+                    let input = document.getElementById(`input-${first.t}`);
+                    if(input) input.value = parseInt(input.value) + 1;
+                    remainders -= costFirst;
+                }
+            }
+            
+            recalcCustomCoupons();
+        }
+        
+        function updateMonthlySumFromQty() {
+            let total = 0;
+            const inputs = document.querySelectorAll('.calc-input');
+            inputs.forEach(inp => {
+                let t = inp.getAttribute('data-ticker');
+                let qty = parseInt(inp.value) || 0;
+                let b = bonds.find(x => x.t === t);
+                if(b) {
+                    total += qty * (b.p + b.nkd) * (1 + brokerFee);
+                }
+            });
+            document.getElementById('monthlySumInput').value = Math.round(total);
+        }
+
         function resetCustomCalc() {
             const inputs = document.querySelectorAll('.calc-input');
             inputs.forEach(input => input.value = 0);
+            document.getElementById('monthlySumInput').value = '';
             recalcCustomCoupons();
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
@@ -1792,7 +1968,7 @@
 
             let html = '';
             if(rainData.length === 0) {
-                html = 'Введите количество купленных облигаций выше.';
+                html = 'Введите сумму выше или количество вручную.';
             } else {
                 rainData.forEach(r => {
                     total += r.amount;
@@ -1843,7 +2019,6 @@
                 if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
             });
             
-            // UX: Clear input and close keyboard logic
             const input = document.getElementById('tickerSearchInput');
             input.value = '';
             input.blur();
@@ -1937,7 +2112,6 @@
                 document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
             }
 
-            // --- 100% LOGIC IMPLEMENTATION ---
             const bondSection = document.getElementById('section-bonds');
             const couponBox = document.getElementById('couponBox');
             const separator = document.getElementById('section-separator');
@@ -1946,7 +2120,6 @@
             const footerImportant = document.getElementById('footer-important');
             
             if(bondSection && stockSection) {
-                // Reset defaults
                 bondSection.style.display = 'block';
                 couponBox.style.display = 'block';
                 separator.style.display = 'flex';
@@ -1955,19 +2128,16 @@
                 stockHeader.innerText = "2. Растущая часть";
                 
                 if (bondPct === 0) {
-                    // 100% Stocks
-                    bondSection.style.display = 'none'; // Effectively hide bonds list (though prompt said "Hide Money Flow") - user likely meant the section
+                    bondSection.style.display = 'none'; 
                     couponBox.style.display = 'none';
                     separator.style.display = 'none';
-                    stockHeader.innerText = "1. Растущая часть"; // Rename to 1
+                    stockHeader.innerText = "1. Растущая часть";
                 } else if (bondPct === 100) {
-                    // 100% Bonds
                     stockSection.style.display = 'none';
                     footerImportant.style.display = 'none';
                     separator.style.display = 'none';
                 }
             }
-            // ---------------------------------
 
             let actualSpentTotal = 0; let bondQuantities = {};
             let totalBondProjectedIncome = 0;
@@ -2081,12 +2251,11 @@
                 let dotColor = 'gray';
                 if(e.title.includes('I ')) dotColor = '#2ecc71';
                 else if(e.title.includes('II ')) dotColor = '#3498db';
-                else if(e.title.includes('III ')) dotColor = '#f1c40f'; // YELLOW (3rd Echelon)
+                else if(e.title.includes('III ')) dotColor = '#f1c40f';
                 else if(e.title.includes('IV ')) dotColor = '#e67e22';
                 
                 const tipId = `echelon-tip-${echelonIndex}`;
                 
-                // UPDATED ECHELON SEPARATOR WITH NEW DESIGN
                 eHtml += `
                 <div class="echelon-separator-modern">
                     <div class="esm-left">
