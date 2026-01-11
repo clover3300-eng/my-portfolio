@@ -65,9 +65,11 @@
         }
 
         .toast {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            position: fixed;
+            top: 20px; left: 50%; transform: translateX(-50%);
             background: #2ecc71; color: white; padding: 10px 20px; border-radius: 20px;
-            font-size: 12px; font-weight: bold; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            font-size: 12px; font-weight: bold;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
             z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
         }
         .toast.show { opacity: 1; visibility: visible; }
@@ -82,7 +84,8 @@
 
         .terminal-header { padding: 30px 10px; text-align: left; }
         .terminal-badge {
-            display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+            display: inline-flex;
+            align-items: center; gap: 6px; padding: 4px 10px;
             background: var(--accent-blue); color: white; font-size: 10px; font-weight: 900;
             border-radius: 4px; text-transform: uppercase;
             margin-bottom: 12px; letter-spacing: 1px;
@@ -101,10 +104,12 @@
             background: linear-gradient(145deg, var(--card-bg), rgba(255,255,255,0.8));
             border-radius: 20px; padding: 16px 10px;
             position: relative; overflow: hidden; box-shadow: 0 8px 20px var(--card-shadow);
-            border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 1px solid var(--border-color); display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
         }
         .market-item-modern::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--item-border);
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--item-border);
         }
         .market-item-modern.blue::before { background: var(--accent-blue); }
         .market-item-modern.green::before { background: var(--accent-green); }
@@ -117,9 +122,9 @@
             min-width: 70px; text-align: center; letter-spacing: -0.5px;
         }
         
-        /* Info Cards */
         .info-card {
-            background: var(--card-bg); padding: 20px; border-radius: 20px; margin-bottom: 15px;
+            background: var(--card-bg);
+            padding: 20px; border-radius: 20px; margin-bottom: 15px;
             border: 1px solid var(--border-color); box-shadow: 0 5px 15px var(--card-shadow); 
             position: relative; overflow: hidden; transition: transform 0.2s;
         }
@@ -144,7 +149,6 @@
         .badge-blue { background: var(--badge-blue-bg); color: var(--accent-blue); }
         .badge-green { background: var(--badge-green-bg); color: var(--accent-green); }
 
-        /* Buttons */
         .btn-action {
             display: flex; align-items: center; justify-content: center; width: 100%; padding: 16px; margin-top: 12px;
             background: var(--coupon-blue-bg); color: var(--accent-blue);
@@ -228,8 +232,7 @@
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
         .asset-item {
-            display: grid;
-            grid-template-columns: 85px 1fr 75px 80px; padding: 12px; 
+            display: grid; grid-template-columns: 85px 1fr 75px 80px; padding: 12px; 
             border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center;
         }
         .ticker { font-weight: bold; color: var(--text-main); }
@@ -240,7 +243,8 @@
         .asset-yield-badge {
             background: rgba(46, 204, 113, 0.15); color: var(--accent-green);
             font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; width: 100%; box-sizing: border-box;
+            display: flex; align-items: center; justify-content: center; width: 100%;
+            box-sizing: border-box;
         }
         .asset-yield-badge.blue { background: rgba(52, 152, 219, 0.15); color: var(--accent-blue); }
 
@@ -252,26 +256,28 @@
         .asset-item.active .details { display: block; }
         .detail-row { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(0,0,0,0.05); padding: 2px 0; }
         .detail-row span:last-child { color: var(--text-main); font-weight: 600; }
+        
+        .btn-tiny-graph {
+             background: var(--accent-blue); color: white; border: none;
+             padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: bold;
+             margin-top: 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center;
+             gap: 4px; box-shadow: 0 2px 5px rgba(52, 152, 219, 0.2);
+        }
 
         .section-header-highlight {
             margin: 25px 0 8px; padding: 12px 16px; border-radius: 16px;
             font-weight: 800; font-size: 16px; 
-            background: var(--header-light-gradient);
-            color: var(--text-main);
+            background: var(--header-light-gradient); color: var(--text-main);
             box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid rgba(52, 152, 219, 0.2);
             display: flex; align-items: center; justify-content: space-between;
         }
-        .section-desc-small {
-            font-size: 11px; color: #8e8e93; margin-bottom: 12px; padding: 0 5px; line-height: 1.4;
-        }
+        .section-desc-small { font-size: 11px; color: #8e8e93; margin-bottom: 12px; padding: 0 5px; line-height: 1.4; }
 
         .section-header-styled {
-            margin: 25px 0 12px;
-            background: linear-gradient(135deg, #ffffff, #f0f2f5);
+            margin: 25px 0 12px; background: linear-gradient(135deg, #ffffff, #f0f2f5);
             padding: 14px 16px; border-radius: 16px;
             font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: space-between;
-            color: var(--graphite-color);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.5);
+            color: var(--graphite-color); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.5);
         }
         .dark-mode .section-header-styled {
             background: linear-gradient(135deg, #1e293b, #0f172a);
@@ -281,56 +287,45 @@
         .allocation-info-connected {
             display: flex; align-items: stretch; justify-content: space-between;
             margin-bottom: 12px; width: 100%;
-            background: var(--card-bg);
-            border: 1px solid var(--accent-blue);
-            border-radius: 20px;
-            padding: 0;
-            position: relative; overflow: hidden;
+            background: var(--card-bg); border: 1px solid var(--accent-blue);
+            border-radius: 20px; padding: 0; position: relative; overflow: hidden;
         }
         .alloc-left {
-            padding: 8px 16px;
-            font-size: 13px; color: var(--text-main);
-            display: flex; align-items: center;
-            flex: 1; border: none; background: transparent;
+            padding: 8px 16px; font-size: 13px; color: var(--text-main);
+            display: flex; align-items: center; flex: 1; border: none; background: transparent;
         }
         .alloc-right {
-            background: var(--accent-blue); color: white;
-            padding: 8px 16px;
-            font-weight: 800; font-size: 11px;
-            display: flex; align-items: center;
-            white-space: nowrap;
-            border-radius: 20px;
-            margin: 2px;
+            background: var(--accent-blue); color: white; padding: 8px 16px;
+            font-weight: 800; font-size: 11px; display: flex; align-items: center;
+            white-space: nowrap; border-radius: 20px; margin: 2px;
         }
         
         .section-transition {
             display: flex; align-items: center; justify-content: center; gap: 10px;
             margin: 15px 0 25px; opacity: 1; position: relative;
         }
-        .st-line {
-            height: 1px; flex: 1; background: linear-gradient(90deg, transparent, var(--accent-blue));
-        }
+        .st-line { height: 1px; flex: 1; background: linear-gradient(90deg, transparent, var(--accent-blue)); }
         .st-line.rev { background: linear-gradient(90deg, var(--accent-blue), transparent); }
         .st-icon {
             width: 32px; height: 32px; border-radius: 50%;
             background: var(--card-bg); color: var(--accent-blue);
-            border: 1px solid var(--accent-blue);
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.2);
-            z-index: 5; font-size: 20px; line-height: 1;
+            border: 1px solid var(--accent-blue); display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.2); z-index: 5; font-size: 20px; line-height: 1;
         }
         
-        /* New Echelon Separator Style */
         .echelon-separator-modern {
             display: flex; justify-content: space-between; align-items: center;
             padding: 8px 0; margin-top: 15px; margin-bottom: 5px;
-            border-bottom: 2px solid var(--item-border);
-            cursor: pointer;
+            border-bottom: 2px solid var(--item-border); cursor: pointer;
         }
         .esm-left { display: flex; align-items: center; gap: 8px; }
         .esm-dot { width: 8px; height: 8px; border-radius: 50%; }
         .esm-title { font-weight: 800; font-size: 12px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
-        .esm-pct { font-size: 11px; font-weight: bold; color: var(--accent-blue); background: rgba(52,152,219,0.1); padding: 2px 6px; border-radius: 6px; }
+        .esm-pct { 
+            font-size: 12px; font-weight: 800; color: var(--accent-blue); 
+            background: rgba(52,152,219,0.1); padding: 4px 8px; border-radius: 8px; 
+            display: flex; align-items: center; gap: 6px;
+        }
         .esm-info { font-size: 14px; color: #ccc; }
         
         .echelon-tip {
@@ -346,21 +341,16 @@
             border: 1px solid var(--accent-blue); overflow: hidden; margin-bottom: 10px;
             position: relative; z-index: 2;
         }
-        
-        /* UPDATED COUPON HEADER LAYOUT */
         .coupon-header {
             padding: 12px 14px; background: var(--coupon-blue-bg); color: var(--accent-blue);
             font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer; align-items: center;
             position: relative;
         }
-        .coupon-title-wrapper {
-            display: flex; align-items: flex-start; gap: 10px;
-        }
+        .coupon-title-wrapper { display: flex; align-items: flex-start; gap: 10px; }
         .coupon-icon-lg { font-size: 20px; line-height: 1.2; }
         .coupon-text-col { display: flex; flex-direction: column; line-height: 1.1; }
         .coupon-main-text { font-size: 14px; font-weight: 800; }
         .coupon-preview-mini { font-size: 9px; opacity: 0.7; font-weight: normal; margin-top: 2px; }
-
         .coupon-content { display: none; padding: 0 12px 12px; }
         .coupon-content.active { display: block; }
         
@@ -369,24 +359,16 @@
             padding: 8px 0; font-size: 9px; font-weight: 800; color: #95a5a6;
             border-bottom: 2px solid var(--item-border); margin-top: 10px; margin-bottom: 5px;
         }
-        
         .coupon-row {
             display: grid; grid-template-columns: 85px 1fr 50px 70px; gap: 5px;
             padding: 10px 0; border-bottom: 1px solid var(--item-border); font-size: 11px; align-items: center;
         }
         .coupon-row b { color: var(--text-main); }
-        .arrow-icon {
-            width: 14px; height: 14px; fill: currentColor; transition: transform 0.3s;
-        }
+        .arrow-icon { width: 14px; height: 14px; fill: currentColor; transition: transform 0.3s; }
         .coupon-content.active + .coupon-header .arrow-icon, 
-        .coupon-header[onclick*="toggle"] .arrow-icon.rotated {
-            transform: rotate(180deg);
-        }
+        .coupon-header[onclick*="toggle"] .arrow-icon.rotated { transform: rotate(180deg); }
 
-        .tax-selector-ui {
-            display: flex; background: var(--bg-color); border-radius: 10px;
-            padding: 3px; margin: 12px 0; gap: 2px;
-        }
+        .tax-selector-ui { display: flex; background: var(--bg-color); border-radius: 10px; padding: 3px; margin: 12px 0; gap: 2px; }
         .tax-ui-btn {
             flex: 1; border: none; background: transparent; padding: 6px;
             font-size: 11px; font-weight: bold; color: #8e8e93; border-radius: 8px;
@@ -396,6 +378,7 @@
 
         .footer-disclaimer { text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px; }
 
+        /* NAVIGATION UPDATE */
         .nav-wrapper {
             position: fixed; bottom: 25px; left: 0; width: 100%; 
             display: flex; justify-content: center; gap: 10px;
@@ -404,10 +387,12 @@
         .nav-dock {
             background: var(--nav-bg); backdrop-filter: blur(25px) saturate(180%);
             -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border-radius: 25px;
-            display: flex; align-items: center; padding: 8px 15px; gap: 15px;
+            border-radius: 25px; display: flex; align-items: center; padding: 8px 15px; gap: 15px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border);
+            transition: opacity 0.3s;
         }
+        .nav-dock.hidden { opacity: 0; pointer-events: none; position: absolute; }
+        
         .nav-search-btn {
             width: 50px; height: 50px; border-radius: 50%;
             background: var(--nav-bg); backdrop-filter: blur(25px) saturate(180%);
@@ -418,6 +403,37 @@
         }
         .nav-search-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
         .nav-search-btn:active { transform: scale(0.9); }
+        
+        /* EXPANDED SEARCH BAR UI */
+        .nav-search-expanded {
+            position: absolute; bottom: 0; left: 15px; right: 15px;
+            height: 66px; /* Similar height to dock including padding */
+            background: var(--nav-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 25px;
+            display: flex; align-items: center; padding: 0 10px; gap: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid var(--nav-border);
+            transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 910;
+        }
+        .nav-search-expanded.active { transform: translateY(0); }
+        
+        .nav-dollar-btn {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(46, 204, 113, 0.15); color: #27ae60;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; cursor: pointer; border: 1px solid rgba(46, 204, 113, 0.3);
+            font-weight: bold; font-size: 20px; transition: transform 0.2s;
+        }
+        .nav-dollar-btn:active { transform: scale(0.9); }
+        
+        .nav-search-input-bar {
+            flex: 1; border: none; background: rgba(0,0,0,0.05);
+            height: 44px; border-radius: 22px; padding: 0 15px;
+            font-size: 14px; outline: none; color: var(--text-main);
+        }
+
         .nav-item {
             display: flex; align-items: center; justify-content: center; width: 44px; height: 44px;
             border-radius: 15px; cursor: pointer; transition: all 0.2s; color: var(--nav-icon-inactive);
@@ -436,26 +452,19 @@
         }
         .theme-toggle-mini svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
 
-        /* ========================
-           ASSETS PAGE STYLES & IMPROVED UI
-           ======================== */
-        
+        /* ASSETS & UI */
         .list-header-row {
             display: grid; padding: 0 16px; margin-bottom: 5px;
             font-size: 9px; font-weight: 700; color: #95a5a6; text-transform: uppercase; letter-spacing: 0.5px;
         }
-        
         .list-header-row.ofz-cols {
             grid-template-columns: 1fr 60px 60px 70px; gap: 8px; text-align: right;
         }
         .list-header-row.ofz-cols span:first-child { text-align: left; }
         .list-header-row.ofz-cols span:nth-child(2), .list-header-row.ofz-cols span:nth-child(3) { text-align: center; }
         
-        /* ADJUSTED COLUMNS: 1fr | 60px | 120px */
         .list-header-row.calc-cols {
-            display: grid;
-            grid-template-columns: 1fr 60px 120px;
-            gap: 8px;
+            display: grid; grid-template-columns: 1fr 60px 120px; gap: 8px;
             text-align: center; margin-bottom: 8px;
         }
         .list-header-row.calc-cols span:first-child { text-align: left; }
@@ -464,8 +473,7 @@
             background: var(--card-bg); border-radius: 16px;
             padding: 14px 16px; margin-bottom: 10px;
             border: 1px solid var(--border-color);
-            display: grid;
-            grid-template-columns: 1fr 60px 60px 70px; 
+            display: grid; grid-template-columns: 1fr 60px 60px 70px; 
             align-items: center; gap: 8px;
             box-shadow: 0 4px 10px var(--card-shadow);
             cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
@@ -483,7 +491,7 @@
         }
         .ofz-price { 
             font-size: 12px; font-weight: 700; color: #7f8c8d; text-align: center; 
-            background: rgba(0,0,0,0.04); padding: 4px 8px; border-radius: 8px; 
+            background: rgba(0,0,0,0.04); padding: 4px 8px; border-radius: 8px;
         }
         
         .ofz-yield-badge { 
@@ -496,8 +504,7 @@
         .ofz-details-panel {
             display: none; background: rgba(0,0,0,0.02);
             padding: 12px; border-radius: 0 0 16px 16px; margin-top: -10px; margin-bottom: 10px;
-            border: 1px solid var(--border-color); border-top: none;
-            font-size: 11px; color: var(--text-secondary);
+            border: 1px solid var(--border-color); border-top: none; font-size: 11px; color: var(--text-secondary);
         }
         .ofz-details-panel.active { display: block; animation: fadeIn 0.3s; }
         .ofz-detail-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); }
@@ -510,15 +517,10 @@
         }
 
         .calc-bond-row {
-            display: grid;
-            grid-template-columns: 1fr 60px 120px; 
-            align-items: center;
+            display: grid; grid-template-columns: 1fr 60px 120px; align-items: center;
             padding: 10px 0; border-bottom: 1px dashed var(--item-border); gap: 8px;
         }
-        .unified-badge-container {
-            display: flex; align-items: center; width: 100%; overflow: hidden;
-            border-radius: 8px; font-size: 10px; font-weight: bold;
-        }
+        .unified-badge-container { display: flex; align-items: center; width: 100%; overflow: hidden; border-radius: 8px; font-size: 10px; font-weight: bold; }
         .ub-name {
             background: #ffffff; color: var(--text-main); padding: 4px 8px; border: 1px solid #dfe6e9;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius: 6px; width: 100%;
@@ -554,14 +556,10 @@
 
         .info-i-blue {
             display: inline-flex; width: 16px; height: 16px; border-radius: 50%; background: var(--accent-blue); color: white;
-            font-size: 11px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px;
-            cursor: pointer;
+            font-size: 11px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px; cursor: pointer;
         }
 
         .search-container { padding: 10px 0; }
-        .search-input { width: 100%; padding: 16px; border-radius: 16px; border: 1px solid var(--border-color);
-            background: var(--card-bg); color: var(--text-main); font-size: 16px; outline: none; margin-bottom: 15px; box-sizing: border-box;
-        }
         .search-result-item { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--item-border); }
         
         .btn-reset-wide {
@@ -580,8 +578,7 @@
         }
 
         .echelon-header-pill {
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(5px);
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(5px);
             color: #555; border: 1px solid rgba(0,0,0,0.1);
             border-radius: 50%; width: 24px; height: 24px;
             display: flex; align-items: center; justify-content: center;
@@ -595,40 +592,30 @@
         th:nth-child(3) .echelon-header-pill { color: #f39c12; border-color: #f1c40f; box-shadow: 0 2px 8px rgba(241, 196, 15, 0.2); }
         th:nth-child(4) .echelon-header-pill { color: #c0392b; border-color: #e74c3c; box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2); }
 
-        .echelon-table-styled {
-            width: 100%; border-collapse: separate; border-spacing: 0;
-        }
-        .echelon-table-styled th {
-            padding-bottom: 15px; vertical-align: bottom;
-        }
-        .echelon-table-styled td {
-            padding: 12px 6px;
-            border-bottom: 1px solid var(--item-border);
-            text-align: center; vertical-align: middle;
-        }
+        .echelon-table-styled { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .echelon-table-styled th { padding-bottom: 15px; vertical-align: bottom; }
+        .echelon-table-styled td { padding: 12px 6px; border-bottom: 1px solid var(--item-border); text-align: center; vertical-align: middle; }
         .echelon-table-styled tr:last-child td { border-bottom: none; }
         .echelon-table-styled tr:nth-child(even) { background-color: rgba(0,0,0,0.015); }
         
-        .et-ticker {
-            font-weight: 800; font-size: 11px; color: var(--text-main); display: block; margin-bottom: 4px;
-        }
+        .et-ticker { font-weight: 800; font-size: 11px; color: var(--text-main); display: block; margin-bottom: 4px; }
         .et-target {
-            display: inline-block;
-            font-size: 10px; font-weight: 700; color: var(--accent-green);
+            display: inline-block; font-size: 10px; font-weight: 700; color: var(--accent-green);
             background: rgba(46, 204, 113, 0.1); padding: 2px 6px; border-radius: 6px;
         }
 
         /* Echelon Expand Logic */
         .echelon-wrapper {
-            position: relative;
-            background: var(--card-bg); border-radius: 16px; 
+            position: relative; background: var(--card-bg); border-radius: 16px; 
             padding: 20px 5px; overflow: hidden; 
             box-shadow: 0 4px 15px var(--card-shadow);
             transition: max-height 0.4s ease;
         }
-        .echelon-wrapper.collapsed {
-            max-height: 240px;
-        }
+        .echelon-wrapper.collapsed { max-height: 240px; }
+        
+        /* FIX FOR OFZ WRAPPER SPACES */
+        #ofz-wrapper.collapsed { max-height: 180px; } /* Fitted height */
+        
         .echelon-wrapper.collapsed::after {
             content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 60px;
             background: linear-gradient(to bottom, transparent, var(--card-bg));
@@ -649,19 +636,14 @@
         .expand-arrow-btn:active .eab-icon-box { transform: scale(0.95); }
         .expand-arrow-btn.open .eab-icon-box { transform: rotate(180deg); }
 
-        .portfolio-empty {
-            padding: 40px 20px; text-align: center; color: var(--text-secondary);
-        }
-        .portfolio-empty-icon {
-            font-size: 40px; margin-bottom: 15px; opacity: 0.5;
-        }
+        .portfolio-empty { padding: 40px 20px; text-align: center; color: var(--text-secondary); }
+        .portfolio-empty-icon { font-size: 40px; margin-bottom: 15px; opacity: 0.5; }
         
         /* SUMMARY CARD STYLES */
         .summary-card {
             background: linear-gradient(135deg, var(--card-bg), #f8fafd);
             border-radius: 20px; padding: 20px; margin-bottom: 25px;
-            box-shadow: 0 8px 25px var(--card-shadow);
-            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 25px var(--card-shadow); border: 1px solid var(--border-color);
             position: relative; overflow: hidden;
         }
         .summary-card::before {
@@ -683,9 +665,7 @@
             box-shadow: 0 4px 10px rgba(52,152,219,0.15);
         }
         
-        .summary-fee-row {
-            display: flex; justify-content: space-between; font-size: 11px; color: #8e8e93; margin-bottom: 15px;
-        }
+        .summary-fee-row { display: flex; justify-content: space-between; font-size: 11px; color: #8e8e93; margin-bottom: 15px; }
         
         .summary-prediction { background: rgba(46, 204, 113, 0.05); border-radius: 12px; padding: 12px; border: 1px solid rgba(46, 204, 113, 0.1); }
         .pred-title { font-size: 10px; color: #27ae60; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
@@ -711,23 +691,8 @@
             <div class="home-title">Добро Пожаловать! 🎉</div>
             <div class="home-desc">Это мини-помощник по выбору российских активов. Помогаем делать Иксы! 😁</div>
             
-            <div class="market-grid">
-                <div class="market-item-modern blue">
-                    <div class="mk-label">IMOEX</div>
-                    <div class="mk-val" id="val-imoex">---</div>
-                </div>
-                <div class="market-item-modern green">
-                    <div class="mk-label">USD/RUB</div>
-                    <div class="mk-val" id="val-usdrub">---</div>
-                </div>
-                <div class="market-item-modern orange">
-                    <div class="mk-label">BTC/USD</div>
-                    <div class="mk-val" id="val-btc">---</div>
-                </div>
-            </div>
-
             <div class="info-card bonds">
-                <div class="info-card-header">🛡️ Облигации</div>
+               <div class="info-card-header">🛡️ Облигации</div>
                 <div class="info-card-sub-clean">Ваш "Денежный Поток"</div>
                 <div class="info-card-text">Это как дать в долг государству. Оно гарантирует возврат денег и платит проценты. Один из самых надежных способов сохранить деньги.</div>
                 <div class="info-card-badge badge-blue">НАДЕЖНОСТЬ: ВЫСОКАЯ</div>
@@ -898,7 +863,6 @@
                     </div>
                 </div>
                 
-                <!-- INFINITY TRANSITION -->
                 <div class="section-transition">
                     <div class="st-line"></div>
                     <div class="st-icon">∞</div>
@@ -930,9 +894,7 @@
     <div id="screen-assets" class="screen">
         <div class="header"><h1>Ребалансировка</h1></div>
         <div class="rebalance-intro">
-            <b>Ребалансировка</b> — это пересмотр состава активов для увеличения доходности. Мы продаем то, что уже отыграло свой рост или дает низкий доход, и покупаем более выгодные инструменты.
-
-Используйте список ниже, чтобы найти лучшие идеи для замены.
+            <b>Ребалансировка</b> — это пересмотр состава активов для увеличения доходности. Мы продаем то, что уже отыграло свой рост или дает низкий доход, и покупаем более выгодные инструменты. Используйте список ниже, чтобы найти лучшие идеи для замены.
         </div>
         
         <div class="section-header-styled">
@@ -947,11 +909,10 @@
             <span>Доходность</span>
         </div>
         
-        <!-- WRAPPED OFZ LIST FOR EXPANSION -->
         <div id="ofz-wrapper" class="echelon-wrapper collapsed">
              <div id="ofz-list"></div>
         </div>
-        
+
         <div class="expand-arrow-btn" id="expandArrowOfz" onclick="toggleOfzTable(this)">
             <div class="eab-line"></div>
             <div class="eab-icon-box">
@@ -994,7 +955,7 @@
             </div>
         </div>
 
-        <div class="section-header-styled">🚀 Таблица Эшелонов</div>
+        <div class="section-header-styled" onclick="toggleEchelonTable(document.getElementById('expandArrowBtn'))" style="cursor:pointer">🚀 Таблица Эшелонов</div>
         <p class="start-expl" style="text-align:left; margin-bottom: 10px;">
             В этой таблице представлены тикеры компаний, разбитые по уровням надежности и дивидендной политики.
         </p>
@@ -1002,7 +963,7 @@
         <div id="echelon-wrapper" class="echelon-wrapper collapsed">
             <table class="echelon-table-styled">
                 <thead>
-                    <tr>
+                    <tr onclick="toggleEchelonTable(document.getElementById('expandArrowBtn'))">
                         <th><div class="echelon-header-pill">I</div></th>
                         <th><div class="echelon-header-pill">II</div></th>
                         <th><div class="echelon-header-pill">III</div></th>
@@ -1020,42 +981,60 @@
             </div>
             <div class="eab-line"></div>
         </div>
-
-        <button class="btn-action" style="margin-top: 25px;" onclick="showScreen('screen-search')">
-            <svg style="width:16px;height:16px; margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            Поиск по Тикеру
-        </button>
     </div>
 
-    <div id="screen-search" class="screen">
-        <div class="header"><h1>Поиск Актива</h1></div>
-        <div class="search-container">
-            <input type="text" class="search-input" id="tickerSearchInput" placeholder="Тикер, название или ISIN..." oninput="performSearch(this.value)">
+    <div id="screen-interesting" class="screen">
+        <div class="header"><h1>ИНТЕРЕСНОЕ</h1></div>
+        
+        <div class="market-grid">
+            <div class="market-item-modern blue">
+                <div class="mk-label">IMOEX</div>
+                <div class="mk-val" id="val-imoex">---</div>
+            </div>
+            <div class="market-item-modern green">
+                <div class="mk-label">USD/RUB</div>
+                <div class="mk-val" id="val-usdrub">---</div>
+            </div>
+            <div class="market-item-modern orange">
+                <div class="mk-label">BTC/USD</div>
+                <div class="mk-val" id="val-btc">---</div>
+            </div>
         </div>
-        <div id="search-results"></div>
+        
+        <div class="section-header-styled">Результаты поиска</div>
+        <div id="search-results">
+            <div style="text-align:center; color:#888; padding:20px;">Введите запрос в строку поиска ниже</div>
+        </div>
     </div>
 
     <div class="nav-wrapper">
-        <div class="nav-dock">
+        <div class="nav-dock" id="standardNav">
             <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </div>
             <div class="nav-item" id="nav-app" onclick="showScreen('screen-app')">
                 <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
             </div>
-            <!-- SWAPPED ITEMS -->
             <div class="nav-item" id="nav-portfolio" onclick="showScreen('screen-portfolio')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
             </div>
             <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
                 <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
+            <div class="nav-search-btn" id="nav-search" onclick="expandSearch()">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <button class="theme-toggle-mini" onclick="event.stopPropagation(); toggleTheme()" id="themeBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+            </div>
         </div>
-        <div class="nav-search-btn" id="nav-search" onclick="showScreen('screen-search')">
-            <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <button class="theme-toggle-mini" onclick="event.stopPropagation(); toggleTheme()" id="themeBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-            </button>
+
+        <div class="nav-search-expanded" id="expandedNav">
+            <div class="nav-dollar-btn" onclick="goToAssetsFromSearch()">$</div>
+            <input type="text" class="nav-search-input-bar" id="tickerSearchInput" placeholder="Тикер, название или ISIN..." oninput="performSearch(this.value)">
+            <div class="nav-item" onclick="collapseSearch()">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </div>
         </div>
     </div>
 
@@ -1079,7 +1058,6 @@
             { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
             { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
-
         let echelonTableData = [[], [], [], []];
 
         function updateMarketStatus() {
@@ -1121,6 +1099,11 @@
         updateMarketData(); updateMarketStatus();
 
         function showScreen(screenId) {
+            // Если переходим не на Интересное, сворачиваем поиск
+            if(screenId !== 'screen-interesting') {
+                collapseSearch(false); // false means don't force switch screen internally
+            }
+
             if (currentScreen === 'screen-assets' && screenId !== 'screen-assets') {
                 const inc = document.getElementById('calc-income-wrapper');
                 if(inc) inc.style.display = 'none';
@@ -1136,10 +1119,36 @@
             if(screenId === 'screen-app') document.getElementById('nav-app').classList.add('active');
             if(screenId === 'screen-assets') document.getElementById('nav-assets').classList.add('active');
             if(screenId === 'screen-portfolio') document.getElementById('nav-portfolio').classList.add('active');
-            if(screenId === 'screen-search') document.getElementById('nav-search').classList.add('active');
+            if(screenId === 'screen-interesting') document.getElementById('nav-search').classList.add('active');
             
             window.scrollTo({top: 0, behavior: 'smooth'});
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        }
+
+        /* NAVIGATION LOGIC FOR SEARCH & DOLLAR BTN */
+        function expandSearch() {
+            document.getElementById('standardNav').classList.add('hidden');
+            document.getElementById('expandedNav').classList.add('active');
+            showScreen('screen-interesting');
+            setTimeout(() => {
+                document.getElementById('tickerSearchInput').focus();
+            }, 300);
+        }
+
+        function collapseSearch(goHome = true) {
+            document.getElementById('expandedNav').classList.remove('active');
+            document.getElementById('standardNav').classList.remove('hidden');
+            document.getElementById('tickerSearchInput').blur();
+            // Clear search results
+            document.getElementById('tickerSearchInput').value = '';
+            document.getElementById('search-results').innerHTML = '<div style="text-align:center; color:#888; padding:20px;">Введите запрос в строку поиска ниже</div>';
+            
+            if(goHome) showScreen('screen-home');
+        }
+
+        function goToAssetsFromSearch() {
+            collapseSearch(false);
+            showScreen('screen-assets');
         }
 
         function calculateAndShowPortfolio() {
@@ -1166,7 +1175,7 @@
         function toggleEchelonTable(btn) {
             const wrapper = document.getElementById('echelon-wrapper');
             wrapper.classList.toggle('collapsed');
-            btn.classList.toggle('open');
+            if(btn.classList) btn.classList.toggle('open');
         }
 
         function toggleOfzTable(btn) {
@@ -1257,7 +1266,8 @@
 
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
-        function toggleTip(event, el) { event.stopPropagation(); const isActive = el.classList.contains('show-tip'); hideAllTips(); if (!isActive) el.classList.add('show-tip'); }
+        function toggleTip(event, el) { event.stopPropagation();
+        const isActive = el.classList.contains('show-tip'); hideAllTips(); if (!isActive) el.classList.add('show-tip'); }
         function hideAllTips(event) { 
             document.querySelectorAll('.echelon-separator-modern').forEach(el => el.classList.remove('show-tip'));
             if(event && event.target.tagName !== 'INPUT') { if(document.getElementById('sumInput')) document.getElementById('sumInput').blur(); } }
@@ -1268,8 +1278,21 @@
                 const toast = document.getElementById('toast');
                 toast.innerText = `Скопировано: ${text}`;
                 toast.className = "toast show";
-                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2000);
+                setTimeout(() => { 
+                    toast.className = toast.className.replace("show", ""); }, 2000);
             });
+        }
+        
+        function copyTicker(e, text) {
+            e.stopPropagation();
+            copyToClipboard(text);
+        }
+        
+        function openTradingView(e, ticker) {
+            e.stopPropagation();
+            // Using standard MOEX format or general RU search
+            const url = `https://ru.tradingview.com/chart/?symbol=RUS:${ticker}`;
+            window.open(url, '_blank');
         }
 
         async function fetchBondData(code) {
@@ -1309,7 +1332,7 @@
                 for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
                 }
                 if (allStocks.length > 0) { echelons[0].assets = allStocks.slice(0, 3);
-                    echelons[1].assets = allStocks.slice(3, 6); echelons[2].assets = allStocks.slice(6, 9); echelons[3].assets = allStocks.slice(9, 12);
+                echelons[1].assets = allStocks.slice(3, 6); echelons[2].assets = allStocks.slice(6, 9); echelons[3].assets = allStocks.slice(9, 12);
                 }
 
                 echelonTableData = [[], [], [], []];
@@ -1503,11 +1526,11 @@
                 let bondCalculations = bonds.map(b => { const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; return { ...b, qty, fullCostPerUnit }; });
                 let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
                 if (leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
-                
                 bondCalculations.forEach(b => {
                     actualSpentTotal += (b.qty * b.fullCostPerUnit); bondQuantities[b.t] = b.qty;
                     const bondYieldVal = parseFloat(b.y.replace('%', '')) || 0;
                     const investedInBond = b.qty * b.p;
+                    
                     totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
                     
                     bHtml += `
@@ -1528,7 +1551,7 @@
                 });
             }
             if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml;
-                document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
+            document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
             
             let ofzHtml = '';
             bonds.forEach(b => {
@@ -1563,7 +1586,6 @@
 
             let eHtml = '';
             let totalStockProjectedGrowth = 0;
-
             echelons.forEach(e => {
                 const echelonBudget = stockBudget * e.weight; const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
                 let stockCalculations = e.assets.map(a => { const fullCostPerUnit = a.p * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0; return { ...a, qty, fullCostPerUnit }; });
@@ -1581,16 +1603,15 @@
                     <div class="esm-left">
                         <div class="esm-dot" style="background:${dotColor}"></div>
                         <span class="esm-title">${e.title}</span>
-                        <span class="esm-pct">
+                        <div class="esm-pct">
                             ${Math.round(e.weight*100)}% 
-                            <span style="opacity:0.6; font-weight:normal">(${Math.round(echelonBudget).toLocaleString()} ₽)</span>
-                        </span>
+                            <span style="opacity:0.6; font-weight:normal; border-left:1px solid rgba(0,0,0,0.1); padding-left:6px; margin-left:2px;">${Math.round(echelonBudget).toLocaleString()} ₽</span>
+                        </div>
                     </div>
                     <div class="esm-info">ⓘ</div>
                 </div>
                 <div class="echelon-tip">${e.info}</div>
                 <div class="asset-list">`;
-                
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
                     const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
@@ -1604,7 +1625,17 @@
                         <span class="asset-name"><span class="asset-yield-badge blue">${s.target.replace(' ₽','')}</span></span>
                         <span class="qty">${s.qty} шт.</span>
                         <span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
-                        <div class="details">Компания: <b>${s.n}</b><br>Цена: <b>${s.p} ₽</b><br>Цель: <b>${s.target.replace(' ₽','')}</b> [ Прогноз на период до 36 месяцев ]</div>
+                        <div class="details">
+                            <div class="detail-row"><span>Компания:</span> <span>${s.n}</span></div>
+                            <div class="detail-row"><span>Тикер:</span> <span style="cursor:pointer; color:var(--accent-blue); font-weight:bold;" onclick="copyTicker(event, '${s.t}')">${s.t} ❐</span></div>
+                            <div class="detail-row"><span>Цена:</span> <span>${s.p} ₽</span></div>
+                            <div class="detail-row"><span>Цель:</span> <span>${s.target.replace(' ₽','')}</span></div>
+                            <div style="font-size:10px; color:#aaa; margin:5px 0 8px; font-style:italic;">( Прогноз на период до 36 мес. )</div>
+                            <button class="btn-tiny-graph" onclick="openTradingView(event, '${s.t}')">
+                                <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                                Открыть график
+                            </button>
+                        </div>
                     </div>`;
                 });
                 eHtml += `</div>`;
@@ -1614,7 +1645,6 @@
                 document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
                 document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
                 document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
-                
                 document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString() + ' ₽';
                 
                 // Set broker fee label
