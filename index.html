@@ -1526,7 +1526,6 @@
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
         let bonds = [];
-        let monthlyIncomeBonds = [];
         let brokerFee = 0.0003; 
         let currentTax = 0.13;
         let customTax = 0.13;
@@ -1537,7 +1536,6 @@
         let isPortfolioCalculated = false;
         let isFirstVisit = true;
         let isUpdatingProgrammatically = false;
-    
 
         let echelons = [
             { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
@@ -1934,76 +1932,23 @@
         }
 
         async function fetchBondData(code) {
-    const safeDetails = { matDate: '—', couponValue: 0, nextCoupon: '—', couponYield: '0', freq: 0 };
-    let searchCode = code.trim();
-    
-    // 1. Агрессивный поиск: ищем любые 5 цифр (например 26238)
-    const match = searchCode.match(/(\d{5})/);
-    
-    if (match) {
-        const number = match[1]; // Нашли цифры 26238
-        try {
-            // Ищем точный тикер
-            const searchRes = await fetch(`https://iss.moex.com/iss/securities.json?q=${number}&engine=stock&market=bonds&iss.meta=off`);
-            const searchData = await searchRes.json();
-            
-            if (searchData.securities && searchData.securities.data) {
-                const sRows = searchData.securities.data;
-                const sCols = searchData.securities.columns;
-                const secIdIdx = sCols.indexOf('secid');
-                // Берем первый попавшийся тикер, начинающийся на SU
-                const foundRow = sRows.find(r => r[secIdIdx] && r[secIdIdx].startsWith('SU'));
-                if (foundRow) {
-                    searchCode = foundRow[secIdIdx]; 
-                }
-            }
-        } catch (e) { console.log("Сбой поиска тикера", e); }
-    }
-
-    // 2. Загружаем данные
-    try {
-        const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${searchCode}.json?iss.meta=off&iss.only=securities`);
-        const data = await res.json();
-        
-        if (!data.securities || !data.securities.data || data.securities.data.length === 0) {
-            bondDetailsMap[code] = safeDetails; // Сохраняем пустышку, чтобы не ломать скрипт
-            return { nkd: 0, matDate: '—', apiPrice: 1000, apiName: code };
+            try {
+                const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
+                const data = await res.json(); const cols = data.securities.columns; const row = data.securities.data[0];
+                bondCouponsMap[code] = { date: row[cols.indexOf('NEXTCOUPON')], value: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0 };
+                
+                const couponPeriod = parseFloat(row[cols.indexOf('COUPONPERIOD')]) || 0;
+                const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
+                bondDetailsMap[code] = {
+                    matDate: row[cols.indexOf('MATDATE')] || '—',
+                    couponValue: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0,
+                    nextCoupon: row[cols.indexOf('NEXTCOUPON')] || '—',
+                    couponYield: row[cols.indexOf('COUPONPERCENT')] || '—',
+                    freq: freq
+                };
+                return { nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0, matDate: row[cols.indexOf('MATDATE')] || '—' };
+            } catch (e) { return { nkd: 0, matDate: '—' }; }
         }
-
-        const cols = data.securities.columns;
-        const row = data.securities.data[0];
-        
-        bondCouponsMap[code] = { 
-            date: row[cols.indexOf('NEXTCOUPON')], 
-            value: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0 
-        };
-        
-        const couponPeriod = parseFloat(row[cols.indexOf('COUPONPERIOD')]) || 0;
-        const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
-        
-        bondDetailsMap[code] = {
-            matDate: row[cols.indexOf('MATDATE')] || '—',
-            couponValue: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0,
-            nextCoupon: row[cols.indexOf('NEXTCOUPON')] || '—',
-            couponYield: row[cols.indexOf('COUPONPERCENT')] || '—',
-            freq: freq
-        };
-
-        return { 
-            nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0, 
-            matDate: row[cols.indexOf('MATDATE')] || '—',
-            apiPrice: parseFloat(row[cols.indexOf('PREVPRICE')]) || 0, 
-            apiName: row[cols.indexOf('SECNAME')] || row[cols.indexOf('SHORTNAME')] || code 
-        };
-
-    } catch (e) { 
-        bondDetailsMap[code] = safeDetails;
-        return { nkd: 0, matDate: '—', apiPrice: 1000, apiName: code }; 
-    }
-}
-
-
-
 
         async function loadData() {
             initTheme();
@@ -2021,35 +1966,6 @@
                 }
                 const bondPromises = bondList.map(async (b) => { const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; });
                 bonds = await Promise.all(bondPromises);
-
-                let monthlyListRaw = [];
-// Читаем строки с 3 по 14 (индексы 2-13).
-for (let i = 2; i <= 13; i++) { 
-    if (rows[i] && rows[i][31] && rows[i][31].trim() !== "") {
-        monthlyListRaw.push({ 
-            t: rows[i][31].trim(),   
-            y: rows[i][32] ? rows[i][32].trim() : '0%' 
-        });
-    }
-}
-
-// === ОБНОВЛЕННАЯ ЗАГРУЗКА: ПО ОЧЕРЕДИ ===
-monthlyIncomeBonds = [];
-for (const b of monthlyListRaw) {
-    // Загружаем одну облигацию
-    const extra = await fetchBondData(b.t);
-    // Добавляем в готовый список
-    monthlyIncomeBonds.push({ 
-        ...b, 
-        nkd: extra.nkd, 
-        matDate: extra.matDate,
-        p: extra.apiPrice > 0 ? extra.apiPrice : 1000, 
-        n: extra.apiName 
-    });
-    // Ждем 0.1 секунды перед следующей (чтобы биржа не забанила)
-    await new Promise(r => setTimeout(r, 100));
-}
-// === КОНЕЦ ОБНОВЛЕНИЯ ===
                 
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
@@ -2097,7 +2013,7 @@ for (const b of monthlyListRaw) {
         function updateMonthlySumFromQuantities() {
             if (isUpdatingProgrammatically) return;
             let totalSum = 0;
-            monthlyIncomeBonds.forEach(bond => {
+            bonds.forEach(bond => {
                 const input = document.getElementById(`input-${bond.t}`);
                 if (input) {
                     const qty = parseInt(input.value) || 0;
@@ -2120,8 +2036,8 @@ for (const b of monthlyListRaw) {
             const sumInput = document.getElementById('monthlySumInput');
             const sum = parseFloat(sumInput.value) || 0;
 
-            if (monthlyIncomeBonds.length === 0 || sum === 0) {
-                 monthlyIncomeBonds.forEach(bond => {
+            if (bonds.length === 0 || sum === 0) {
+                 bonds.forEach(bond => {
                     const input = document.getElementById(`input-${bond.t}`);
                     if(input) input.value = 0;
                 });
@@ -2129,10 +2045,10 @@ for (const b of monthlyListRaw) {
                 return;
             };
 
-            const amountPerBond = sum / monthlyIncomeBonds.length;
+            const amountPerBond = sum / bonds.length;
             let totalRemainder = sum;
 
-            monthlyIncomeBonds.forEach(bond => {
+            bonds.forEach(bond => {
                 const fullCost = (bond.p + bond.nkd) * (1 + customTax);
                 const qty = fullCost > 0 ? Math.floor(amountPerBond / fullCost) : 0;
                 const input = document.getElementById(`input-${bond.t}`);
@@ -2141,7 +2057,7 @@ for (const b of monthlyListRaw) {
             });
 
             // Re-invest remainder
-            if (totalRemainder > 0 && monthlyIncomeBonds.length > 0) {
+            if (totalRemainder > 0 && bonds.length > 0) {
                 const firstBond = bonds[0];
                 const firstBondCost = (firstBond.p + firstBond.nkd) * (1 + customTax);
                 if (firstBondCost > 0) {
@@ -2160,7 +2076,7 @@ for (const b of monthlyListRaw) {
             const container = document.getElementById('calc-bonds-input-list');
             if(!container) return;
             let html = '';
-            monthlyIncomeBonds.forEach(b => {
+            bonds.forEach(b => {
                 html += `
                 <div class="calc-bond-row">
                     <div class="unified-badge-container">
@@ -2191,78 +2107,69 @@ for (const b of monthlyListRaw) {
         }
 
         function recalcCustomCoupons() {
-    const inputs = document.querySelectorAll('.calc-input');
-    let allFutureCoupons = [];
-    
-    inputs.forEach(input => {
-        const qty = parseInt(input.value) || 0;
-        const ticker = input.getAttribute('data-ticker');
-        const details = bondDetailsMap[ticker];
-
-        // Проверяем, что есть количество, есть детали и дата купона реальная (не прочерк)
-        if (qty > 0 && details && details.freq > 0 && details.couponValue > 0 && details.nextCoupon && details.nextCoupon !== '—') {
-            let currentDate = new Date(details.nextCoupon);
+            const inputs = document.querySelectorAll('.calc-input');
+            let allFutureCoupons = [];
             
-            // Если дата некорректная, пропускаем этот шаг, чтобы не сломать весь скрипт
-            if (isNaN(currentDate.getTime())) return;
-
-            const intervalDays = Math.round(365 / details.freq);
-            // Используем monthlyIncomeBonds для поиска названия
-            const bondName = monthlyIncomeBonds.find(b => b.t === ticker)?.n || ticker;
-
-            for (let i = 0; i < 3; i++) {
-                const paymentDate = new Date(currentDate);
-                const netAmount = (details.couponValue * qty) * (1 - customTax);
-                allFutureCoupons.push({
-                    date: paymentDate,
-                    name: bondName,
-                    qty: qty,
-                    amount: netAmount
-                });
-                currentDate.setDate(currentDate.getDate() + intervalDays);
-            }
-        }
-    });
-
-    // Сортируем по дате
-    allFutureCoupons.sort((a, b) => a.date - b.date);
-    
-    const couponsToDisplay = allFutureCoupons.slice(0, 12);
-    let html = '';
-    const resultList = document.getElementById('calc-results-list');
-    
-    if (couponsToDisplay.length === 0) {
-        html = '<div style="text-align:center; padding:10px;">Введите количество или нет данных о ближайших купонах...</div>';
-    } else {
-         couponsToDisplay.forEach(r => {
-            html += `
-            <div class="coupon-row">
-                <div><b>${r.date.toLocaleDateString('ru-RU')}</b></div>
-                <div style="color:#8e8e93">${limitName(r.name)}</div>
-                <div style="text-align:center">${r.qty}шт.</div>
-                <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
-            </div>`;
-        });
-
-        let totalAnnualIncome = 0;
-        inputs.forEach(input => {
-            const qty = parseInt(input.value) || 0;
-            const ticker = input.getAttribute('data-ticker');
-            if (qty > 0 && bondDetailsMap[ticker]) {
+            inputs.forEach(input => {
+                const qty = parseInt(input.value) || 0;
+                const ticker = input.getAttribute('data-ticker');
                 const details = bondDetailsMap[ticker];
-                if (details.freq > 0 && details.couponValue > 0) {
-                    totalAnnualIncome += (details.couponValue * qty * details.freq * (1 - customTax));
+
+                if (qty > 0 && details && details.freq > 0 && details.couponValue > 0) {
+                    let currentDate = new Date(details.nextCoupon);
+                    const intervalDays = Math.round(365 / details.freq);
+                    const bondName = bonds.find(b => b.t === ticker)?.n || ticker;
+
+                    for (let i = 0; i < 3; i++) {
+                        const paymentDate = new Date(currentDate);
+                        const netAmount = (details.couponValue * qty) * (1 - customTax);
+                        allFutureCoupons.push({
+                            date: paymentDate,
+                            name: bondName,
+                            qty: qty,
+                            amount: netAmount
+                        });
+                        currentDate.setDate(currentDate.getDate() + intervalDays);
+                    }
                 }
+            });
+
+            allFutureCoupons.sort((a, b) => a.date - b.date);
+            const couponsToDisplay = allFutureCoupons.slice(0, 12);
+            let html = '';
+            const resultList = document.getElementById('calc-results-list');
+            
+            if (couponsToDisplay.length === 0) {
+                html = 'Введите количество для расчета...';
+            } else {
+                 couponsToDisplay.forEach(r => {
+                    html += `
+                    <div class="coupon-row">
+                        <div><b>${r.date.toLocaleDateString('ru-RU')}</b></div>
+                        <div style="color:#8e8e93">${limitName(r.name)}</div>
+                        <div style="text-align:center">${r.qty}шт.</div>
+                        <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
+                    </div>`;
+                });
+
+                let totalAnnualIncome = 0;
+                inputs.forEach(input => {
+                    const qty = parseInt(input.value) || 0;
+                    const ticker = input.getAttribute('data-ticker');
+                    if (qty > 0 && bondDetailsMap[ticker]) {
+                        const details = bondDetailsMap[ticker];
+                        if (details.freq > 0 && details.couponValue > 0) {
+                            totalAnnualIncome += (details.couponValue * qty * details.freq * (1 - customTax));
+                        }
+                    }
+                });
+                
+                const avgMonthly = totalAnnualIncome > 0 ? totalAnnualIncome / 12 : 0;
+                html += `<div style="text-align:right; margin-top:10px; font-weight:bold; font-size:12px;">Средняя выплата в месяц: ${Math.round(avgMonthly).toLocaleString()} ₽</div>`;
             }
-        });
-        
-        const avgMonthly = totalAnnualIncome > 0 ? totalAnnualIncome / 12 : 0;
-        html += `<div style="text-align:right; margin-top:10px; font-weight:bold; font-size:12px;">Средняя выплата в месяц: ${Math.round(avgMonthly).toLocaleString()} ₽</div>`;
-    }
 
-    if(resultList) resultList.innerHTML = html;
-}
-
+            if(resultList) resultList.innerHTML = html;
+        }
 
         // --- END OF MONTHLY CALC LOGIC ---
 
