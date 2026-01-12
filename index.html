@@ -1934,14 +1934,60 @@
         }
 
         async function fetchBondData(code) {
+    // Безопасная "пустышка"
+    const safeDetails = {
+        matDate: '—', couponValue: 0, nextCoupon: '—', couponYield: '0', freq: 0
+    };
+
+    // 1. БЛОК АВТО-ПЕРЕВОДА
+    // Изначально считаем, что код - это то, что в таблице
+    let searchCode = code.trim();
+    
+    // Если видим "ОФЗ" и цифры (например "ОФЗ 26238")
+    const match = searchCode.match(/ОФЗ\s*(\d+)/i);
+    if (match) {
+        const number = match[1]; // Берем цифры (26238)
+        try {
+            // Спрашиваем у биржи: "Какой тикер у ОФЗ с этим номером?"
+            const searchRes = await fetch(`https://iss.moex.com/iss/securities.json?q=${number}&engine=stock&market=bonds&iss.meta=off`);
+            const searchData = await searchRes.json();
+            
+            if (searchData.securities && searchData.securities.data) {
+                const sRows = searchData.securities.data;
+                const sCols = searchData.securities.columns;
+                const secIdIdx = sCols.indexOf('secid');
+                
+                // Ищем первый код, который начинается на SU (это стандарт для ОФЗ)
+                const foundRow = sRows.find(r => r[secIdIdx] && r[secIdIdx].startsWith('SU'));
+                if (foundRow) {
+                    searchCode = foundRow[secIdIdx]; // Нашли! Меняем "ОФЗ 26238" на "SU26238RMFS4"
+                }
+            }
+        } catch (e) {
+            console.log("Не удалось найти тикер для", code);
+        }
+    }
+
+    // 2. ЗАГРУЗКА ДАННЫХ (теперь используем searchCode)
     try {
-        const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities`);
-        const data = await res.json(); 
-        const cols = data.securities.columns; 
+        const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${searchCode}.json?iss.meta=off&iss.only=securities`);
+        const data = await res.json();
+        
+        // Если данных нет
+        if (!data.securities || !data.securities.data || data.securities.data.length === 0) {
+            bondDetailsMap[code] = safeDetails;
+            bondCouponsMap[code] = { date: null, value: 0 };
+            return { nkd: 0, matDate: '—', apiPrice: 1000, apiName: code };
+        }
+
+        const cols = data.securities.columns;
         const row = data.securities.data[0];
         
         // Сохраняем данные для расчетов
-        bondCouponsMap[code] = { date: row[cols.indexOf('NEXTCOUPON')], value: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0 };
+        bondCouponsMap[code] = { // Важно: ключом оставляем исходный code из таблицы, чтобы калькулятор его нашел
+            date: row[cols.indexOf('NEXTCOUPON')], 
+            value: parseFloat(row[cols.indexOf('COUPONVALUE')]) || 0 
+        };
         
         const couponPeriod = parseFloat(row[cols.indexOf('COUPONPERIOD')]) || 0;
         const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
@@ -1954,17 +2000,22 @@
             freq: freq
         };
 
-        // Возвращаем расширенные данные (Цена и Название нужны для нового списка)
         return { 
             nkd: parseFloat(row[cols.indexOf('ACCRUEDINT')]) || 0, 
             matDate: row[cols.indexOf('MATDATE')] || '—',
-            apiPrice: parseFloat(row[cols.indexOf('PREVPRICE')]) || 0, // Цена с биржи
-            apiName: row[cols.indexOf('SECNAME')] || row[cols.indexOf('SHORTNAME')] || code // Название
+            apiPrice: parseFloat(row[cols.indexOf('PREVPRICE')]) || 0, 
+            apiName: row[cols.indexOf('SECNAME')] || row[cols.indexOf('SHORTNAME')] || code 
         };
+
     } catch (e) { 
+        console.log(`Ошибка получения данных для ${code}`, e);
+        bondDetailsMap[code] = safeDetails; 
+        bondCouponsMap[code] = { date: null, value: 0 };
         return { nkd: 0, matDate: '—', apiPrice: 1000, apiName: code }; 
     }
 }
+
+
 
 
         async function loadData() {
