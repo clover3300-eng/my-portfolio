@@ -2149,69 +2149,78 @@ monthlyIncomeBonds = await Promise.all(monthlyPromises);
         }
 
         function recalcCustomCoupons() {
-            const inputs = document.querySelectorAll('.calc-input');
-            let allFutureCoupons = [];
+    const inputs = document.querySelectorAll('.calc-input');
+    let allFutureCoupons = [];
+    
+    inputs.forEach(input => {
+        const qty = parseInt(input.value) || 0;
+        const ticker = input.getAttribute('data-ticker');
+        const details = bondDetailsMap[ticker];
+
+        // Проверяем, что есть количество, есть детали и дата купона реальная (не прочерк)
+        if (qty > 0 && details && details.freq > 0 && details.couponValue > 0 && details.nextCoupon && details.nextCoupon !== '—') {
+            let currentDate = new Date(details.nextCoupon);
             
-            inputs.forEach(input => {
-                const qty = parseInt(input.value) || 0;
-                const ticker = input.getAttribute('data-ticker');
-                const details = bondDetailsMap[ticker];
+            // Если дата некорректная, пропускаем этот шаг, чтобы не сломать весь скрипт
+            if (isNaN(currentDate.getTime())) return;
 
-                if (qty > 0 && details && details.freq > 0 && details.couponValue > 0) {
-                    let currentDate = new Date(details.nextCoupon);
-                    const intervalDays = Math.round(365 / details.freq);
-                    const bondName = monthlyIncomeBonds.find(b => b.t === ticker)?.n || ticker;
+            const intervalDays = Math.round(365 / details.freq);
+            // Используем monthlyIncomeBonds для поиска названия
+            const bondName = monthlyIncomeBonds.find(b => b.t === ticker)?.n || ticker;
 
-                    for (let i = 0; i < 3; i++) {
-                        const paymentDate = new Date(currentDate);
-                        const netAmount = (details.couponValue * qty) * (1 - customTax);
-                        allFutureCoupons.push({
-                            date: paymentDate,
-                            name: bondName,
-                            qty: qty,
-                            amount: netAmount
-                        });
-                        currentDate.setDate(currentDate.getDate() + intervalDays);
-                    }
-                }
-            });
-
-            allFutureCoupons.sort((a, b) => a.date - b.date);
-            const couponsToDisplay = allFutureCoupons.slice(0, 12);
-            let html = '';
-            const resultList = document.getElementById('calc-results-list');
-            
-            if (couponsToDisplay.length === 0) {
-                html = 'Введите количество для расчета...';
-            } else {
-                 couponsToDisplay.forEach(r => {
-                    html += `
-                    <div class="coupon-row">
-                        <div><b>${r.date.toLocaleDateString('ru-RU')}</b></div>
-                        <div style="color:#8e8e93">${limitName(r.name)}</div>
-                        <div style="text-align:center">${r.qty}шт.</div>
-                        <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
-                    </div>`;
+            for (let i = 0; i < 3; i++) {
+                const paymentDate = new Date(currentDate);
+                const netAmount = (details.couponValue * qty) * (1 - customTax);
+                allFutureCoupons.push({
+                    date: paymentDate,
+                    name: bondName,
+                    qty: qty,
+                    amount: netAmount
                 });
-
-                let totalAnnualIncome = 0;
-                inputs.forEach(input => {
-                    const qty = parseInt(input.value) || 0;
-                    const ticker = input.getAttribute('data-ticker');
-                    if (qty > 0 && bondDetailsMap[ticker]) {
-                        const details = bondDetailsMap[ticker];
-                        if (details.freq > 0 && details.couponValue > 0) {
-                            totalAnnualIncome += (details.couponValue * qty * details.freq * (1 - customTax));
-                        }
-                    }
-                });
-                
-                const avgMonthly = totalAnnualIncome > 0 ? totalAnnualIncome / 12 : 0;
-                html += `<div style="text-align:right; margin-top:10px; font-weight:bold; font-size:12px;">Средняя выплата в месяц: ${Math.round(avgMonthly).toLocaleString()} ₽</div>`;
+                currentDate.setDate(currentDate.getDate() + intervalDays);
             }
-
-            if(resultList) resultList.innerHTML = html;
         }
+    });
+
+    // Сортируем по дате
+    allFutureCoupons.sort((a, b) => a.date - b.date);
+    
+    const couponsToDisplay = allFutureCoupons.slice(0, 12);
+    let html = '';
+    const resultList = document.getElementById('calc-results-list');
+    
+    if (couponsToDisplay.length === 0) {
+        html = '<div style="text-align:center; padding:10px;">Введите количество или нет данных о ближайших купонах...</div>';
+    } else {
+         couponsToDisplay.forEach(r => {
+            html += `
+            <div class="coupon-row">
+                <div><b>${r.date.toLocaleDateString('ru-RU')}</b></div>
+                <div style="color:#8e8e93">${limitName(r.name)}</div>
+                <div style="text-align:center">${r.qty}шт.</div>
+                <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
+            </div>`;
+        });
+
+        let totalAnnualIncome = 0;
+        inputs.forEach(input => {
+            const qty = parseInt(input.value) || 0;
+            const ticker = input.getAttribute('data-ticker');
+            if (qty > 0 && bondDetailsMap[ticker]) {
+                const details = bondDetailsMap[ticker];
+                if (details.freq > 0 && details.couponValue > 0) {
+                    totalAnnualIncome += (details.couponValue * qty * details.freq * (1 - customTax));
+                }
+            }
+        });
+        
+        const avgMonthly = totalAnnualIncome > 0 ? totalAnnualIncome / 12 : 0;
+        html += `<div style="text-align:right; margin-top:10px; font-weight:bold; font-size:12px;">Средняя выплата в месяц: ${Math.round(avgMonthly).toLocaleString()} ₽</div>`;
+    }
+
+    if(resultList) resultList.innerHTML = html;
+}
+
 
         // --- END OF MONTHLY CALC LOGIC ---
 
