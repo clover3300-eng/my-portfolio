@@ -2274,29 +2274,39 @@
             let html = '';
             let totalAmount = 0;
 
-            // ВАЖНО: Мы используем allScheduledPayments, который мы создали в loadData
-            // Если переменная еще не определена (код выполняется до загрузки), выходим
+            // Если список выплат еще не загрузился, выходим
             if (typeof allScheduledPayments === 'undefined' || allScheduledPayments.length === 0) {
                  if(resultList) resultList.innerHTML = "Загрузка списка выплат...";
                  return;
             }
             
-            // Проходим по ВСЕМ выплатам (всем 12 датам)
+            // Проходим по ВСЕМ 12 строкам выплат
             allScheduledPayments.forEach(payment => {
                 
-                // 1. Ищем поле ввода, соответствующее тикеру этой выплаты
-                const input = document.getElementById(`input-${payment.t}`);
+                let qty = 0;
                 
-                // 2. Узнаем, сколько штук этой бумаги ввел пользователь
-                const qty = input ? (parseInt(input.value) || 0) : 0;
+                // ВАЖНО: Мы берем тикер из строки выплаты (payment.t)
+                // И ищем соответствующее поле ввода наверху
+                if (payment.t) {
+                    // Используем .trim(), чтобы убрать лишние пробелы, если они есть в таблице
+                    const cleanTicker = payment.t.trim();
+                    const input = document.getElementById(`input-${cleanTicker}`);
+                    
+                    // Если поле найдено - берем из него значение. Если нет - 0.
+                    if (input) {
+                        qty = parseInt(input.value) || 0;
+                    }
+                }
                 
-                // 3. Считаем сумму (Купон * Количество * (1 - Налог))
+                // Расчет: Купон * Количество * (1 - Налог)
+                // Используем staticCouponVal, который мы взяли из столбца AE
                 const grossAmount = payment.staticCouponVal * qty;
                 const netAmount = grossAmount * (1 - customTax);
                 
                 totalAmount += netAmount;
 
-                // 4. Рисуем строку. Показываем дату и название из колонок AB/AC
+                // Рисуем строку
+                // Кол-во (qty) теперь будет одинаковым для одинаковых тикеров
                 html += `
                 <div class="coupon-row" style="grid-template-columns: 85px 1fr 60px 80px;">
                     <div style="font-weight:bold; color:var(--text-main);">${payment.dateStr}</div>
@@ -2308,7 +2318,7 @@
 
             if(resultList) resultList.innerHTML = html;
 
-            // Итого в футере
+            // Итоговые цифры внизу
             if(resultFooter) {
                 const yearTotal = Math.round(totalAmount).toLocaleString();
                 const monthAvg = Math.round(totalAmount / 12).toLocaleString();
