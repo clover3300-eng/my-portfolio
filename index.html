@@ -2056,66 +2056,62 @@
                 bonds = await Promise.all(bondPromises);
                 
                 // NEW: Load Monthly Income Bonds from AF, AG
-                // Payment Schedule from AB, AC
-                let mbList = [];
-                // Мы берем строки с 3 по 14. В программировании отсчет с 0, поэтому это индексы 2..13
-                for (let i = 2; i <= 13; i++) {
-                    // Проверяем, существует ли строка вообще
-                    if (rows[i]) {
-                        
-                        // 1. БЛОК ОФЗ (AF3:AF14 и AG3:AG14)
-                        // Индекс 31 соответствует столбцу AF (A=0 ... AF=31)
-                        let ticker = rows[i][31]; 
-                        
-                        // Индекс 32 соответствует столбцу AG (Доходность)
-                        let yieldVal = rows[i][32];
+                // --- НОВЫЙ КОД: Разделяем Уникальные бумаги и График выплат ---
+                
+                let allScheduledPayments = []; // Сюда соберем все 12 выплат
+                let uniqueTickersMap = new Map(); // Сюда соберем только уникальные бумаги для покупки
 
-                        // ВАЖНО: Если ячейка с Тикером пустая - пропускаем эту строку (как ты просил)
+                // Проходим по строкам с 3 по 14 (индексы 2-13)
+                for (let i = 2; i <= 13; i++) {
+                    if (rows[i]) {
+                        // 1. ЧИТАЕМ ДАННЫЕ ИЗ СТРОКИ
+                        let ticker = rows[i][31];       // Столбец AF (Тикер)
+                        let yieldVal = rows[i][32];     // Столбец AG (Доходность)
+                        
+                        // Если тикера нет - пропускаем строку
                         if (!ticker || ticker.trim() === "") continue;
 
-                        // 2. БЛОК ВЫПЛАТЫ (AB3:AC14)
-                        // Индекс 27 = AB (Дата)
-                        let dateStr = rows[i][27];
-                        
-                        // Индекс 28 = AC (Название)
-                        let bondName = rows[i][28];
-
-                        // Индекс 30 = AE (Сумма купона).
-                        // Мы это берем, чтобы знать СКОЛЬКО платит облигация. 
-                        // (Если в таблице сумма в AE, оставляем 30. Если нет - скажи, поправим)
+                        let dateStr = rows[i][27];      // Столбец AB (Дата)
+                        let bondName = rows[i][28];     // Столбец AC (Название выплаты)
+                        // Столбец AE (30) - Сумма купона
                         let couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0;
 
-                        // Добавляем эту облигацию в наш список
-                        mbList.push({
-                            t: ticker,            // Тикер для API (из AF)
-                            y: yieldVal || '0%',  // Доходность для отображения (из AG)
-                            
-                            dateStr: dateStr,     // Дата выплаты (из AB)
-                            displayName: bondName,// Название для таблицы выплат (из AC)
-                            
-                            staticCouponVal: couponAmount // Сумма выплаты (из AE)
+                        // 2. ДОБАВЛЯЕМ В ОБЩИЙ СПИСОК ВЫПЛАТ (Для таблицы результатов)
+                        // Мы сохраняем 't' (тикер), чтобы знать, к какой бумаге относится выплата
+                        allScheduledPayments.push({
+                            t: ticker, 
+                            dateStr: dateStr,
+                            displayName: bondName,
+                            staticCouponVal: couponAmount
                         });
+
+                        // 3. ДОБАВЛЯЕМ В СПИСОК УНИКАЛЬНЫХ БУМАГ (Для полей ввода)
+                        // Map автоматически перезапишет дубликаты, оставив только уникальные тикеры
+                        if (!uniqueTickersMap.has(ticker)) {
+                            uniqueTickersMap.set(ticker, {
+                                t: ticker,
+                                y: yieldVal || '0%',
+                                n: bondName // Берем первое попавшееся название для блока ввода
+                            });
+                        }
                     }
                 }
 
-                // Теперь идем на Московскую Биржу за Ценами и НКД для каждой найденной облигации
-                const mbPromises = mbList.map(async (b) => {
-                    // Делаем запрос к API биржи по тикеру
+                // Превращаем Map уникальных бумаг обратно в массив для обработки
+                let uniqueBondsList = Array.from(uniqueTickersMap.values());
+
+                // Загружаем цены с Мосбиржи ТОЛЬКО для уникальных бумаг (чтобы не грузить лишнее)
+                const mbPromises = uniqueBondsList.map(async (b) => {
                     const extra = await fetchBondData(b.t);
-                    
-                    // Если биржа вернула цену, берем её. Если нет (вдруг сбой) - ставим 1000 руб как заглушку.
                     const price = (extra.price > 0) ? extra.price : 1000;
-                    
-                    // Возвращаем обновленные данные
                     return { 
                         ...b, 
-                        p: price,      // Чистая цена (от API)
-                        nkd: extra.nkd,// НКД (от API)
-                        n: b.displayName // В поле 'n' записываем название из колонки AC
+                        p: price, 
+                        nkd: extra.nkd 
                     };
                 });
                 
-                // Ждем, пока загрузятся данные по ВСЕМ облигациям
+                // Сохраняем готовый список для INPURT-блока (где мы вводим количество)
                 monthlyIncomeBonds = await Promise.all(mbPromises);
 
 
