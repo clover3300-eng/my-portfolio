@@ -1575,6 +1575,7 @@
 
         let bonds = [];
         let monthlyIncomeBonds = []; // New list for the specific calculator
+        let allScheduledPayments = [];
         let brokerFee = 0.0003; 
         let currentTax = 0.13;
         let customTax = 0.13;
@@ -2058,26 +2059,22 @@
                 // NEW: Load Monthly Income Bonds from AF, AG
                 // --- НОВЫЙ КОД: Разделяем Уникальные бумаги и График выплат ---
                 
-                let allScheduledPayments = []; // Сюда соберем все 12 выплат
-                let uniqueTickersMap = new Map(); // Сюда соберем только уникальные бумаги для покупки
+                allScheduledPayments = []; 
+                let uniqueTickersMap = new Map(); 
 
-                // Проходим по строкам с 3 по 14 (индексы 2-13)
+                // Проходим по строкам с 3 по 14
                 for (let i = 2; i <= 13; i++) {
                     if (rows[i]) {
-                        // 1. ЧИТАЕМ ДАННЫЕ ИЗ СТРОКИ
-                        let ticker = rows[i][31];       // Столбец AF (Тикер)
-                        let yieldVal = rows[i][32];     // Столбец AG (Доходность)
+                        let ticker = rows[i][31];       // Столбец AF
+                        let yieldVal = rows[i][32];     // Столбец AG
                         
-                        // Если тикера нет - пропускаем строку
                         if (!ticker || ticker.trim() === "") continue;
 
-                        let dateStr = rows[i][27];      // Столбец AB (Дата)
-                        let bondName = rows[i][28];     // Столбец AC (Название выплаты)
-                        // Столбец AE (30) - Сумма купона
-                        let couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0;
+                        let dateStr = rows[i][27];      // Столбец AB
+                        let bondName = rows[i][28];     // Столбец AC
+                        let couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0; // AE
 
-                        // 2. ДОБАВЛЯЕМ В ОБЩИЙ СПИСОК ВЫПЛАТ (Для таблицы результатов)
-                        // Мы сохраняем 't' (тикер), чтобы знать, к какой бумаге относится выплата
+                        // Добавляем в ОБЩИЙ глобальный список (для таблицы результатов)
                         allScheduledPayments.push({
                             t: ticker, 
                             dateStr: dateStr,
@@ -2085,13 +2082,12 @@
                             staticCouponVal: couponAmount
                         });
 
-                        // 3. ДОБАВЛЯЕМ В СПИСОК УНИКАЛЬНЫХ БУМАГ (Для полей ввода)
-                        // Map автоматически перезапишет дубликаты, оставив только уникальные тикеры
+                        // Добавляем в УНИКАЛЬНЫЙ список (для кнопок ввода)
                         if (!uniqueTickersMap.has(ticker)) {
                             uniqueTickersMap.set(ticker, {
                                 t: ticker,
                                 y: yieldVal || '0%',
-                                n: bondName // Берем первое попавшееся название для блока ввода
+                                n: bondName 
                             });
                         }
                     }
