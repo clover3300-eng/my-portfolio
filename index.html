@@ -2029,14 +2029,22 @@
                      const m_row = data.marketdata.data[0];
                      const lastIdx = m_cols.indexOf('LAST');
                      const prevIdx = m_cols.indexOf('PREVPRICE');
-                     lastPrice = (lastIdx !== -1 && m_row[lastIdx]) ? m_row[lastIdx] : (prevIdx !== -1 ? m_row[prevIdx] : 0);
+
+                     // Явно проверяем LAST
+                     if (lastIdx !== -1 && m_row[lastIdx]) {
+                        lastPrice = m_row[lastIdx];
+                     } 
+                     // Если LAST нет, явно проверяем PREVPRICE
+                     else if (prevIdx !== -1 && m_row[prevIdx]) {
+                        lastPrice = m_row[prevIdx];
+                     }
                 }
                 
                 // Если в marketdata цены нет, ищем PREVPRICE в securities
                 if (!lastPrice && sec_row) {
                      const prevPriceIdx = sec_cols.indexOf('PREVPRICE');
-                     if (prevPriceIdx !== -1) {
-                         lastPrice = sec_row[prevPriceIdx] || 0;
+                     if (prevPriceIdx !== -1 && sec_row[prevPriceIdx]) {
+                         lastPrice = sec_row[prevPriceIdx];
                      }
                 }
 
@@ -2075,24 +2083,24 @@
                 const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
                 
-                // --- Блок 50/50 ---
+                // --- Блок 50/50 (не трогаем) ---
                 let bondList = [];
-                for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' }); }
+                for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i].length > 13 && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' }); }
                 const bondPromises = bondList.map(async (b) => { const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; });
                 bonds = await Promise.all(bondPromises);
 
-                // --- НАЧАЛО: ОБНОВЛЕННЫЙ БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА ---
+                // --- НАЧАЛО: ИСПРАВЛЕННЫЙ БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА ---
                 
                 allScheduledPayments = []; 
                 let uniqueBondsForCalc = new Map();
 
-                // Loop from row 3 (index 2) to row 14 (index 13)
+                // Цикл с 3-й по 14-ю строку (индексы 2-13)
                 for (let i = 2; i <= 13; i++) {
-                    if (!rows[i] || rows[i].length < 34) continue; // Skip malformed rows
+                    if (!rows[i] || rows[i].length < 34) continue;
                     
-                    // --- Populate the list for the quantity calculator (top part) ---
+                    // 1. Формируем список для калькулятора (верхняя часть)
                     const ticker = rows[i][31]; // AF
-                    if (ticker) { // Process only if ticker cell is not empty
+                    if (ticker) { // Обрабатываем только если ячейка с тикером не пустая
                         if (!uniqueBondsForCalc.has(ticker)) {
                             uniqueBondsForCalc.set(ticker, {
                                 t: ticker,          // AF3:AF14
@@ -2102,30 +2110,30 @@
                         }
                     }
 
-                    // --- Populate the list for the 12 payments (bottom part) ---
+                    // 2. Формируем список из 12 выплат (нижняя часть)
                     allScheduledPayments.push({
                         dateStr: rows[i][27] || "---",       // AB3:AB14
                         displayName: rows[i][28] || "---",  // AC3:AC14
-                        t: rows[i][31] || "",               // AF3:AF14 (for linking)
-                        staticCouponVal: parseFloat(rows[i][30].replace(',', '.')) || 0 // AE3:AE14
+                        // Привязываем тикер из AF для последующего поиска количества
+                        paymentTicker: rows[i][31] || ""    // AF3:AF14
                     });
                 }
                 
-                // Fetch prices for the unique tickers
+                // 3. Запрашиваем по API данные для уникальных тикеров
                 let uniqueBondsList = Array.from(uniqueBondsForCalc.values());
                 const monthlyBondsPromises = uniqueBondsList.map(async (b) => {
                     const extra = await fetchBondData(b.t);
-                    // Apply the x10 multiplication for the price from API
+                    // Умножаем полученную цену на 10
                     const price = (extra.price > 0) ? extra.price * 10 : 0; 
                     return { ...b, p: price, nkd: extra.nkd };
                 });
                 
                 monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
                 
-                // --- КОНЕЦ ОБНОВЛЕННОГО БЛОКА ---
+                // --- КОНЕЦ ИСПРАВЛЕННОГО БЛОКА ---
 
                 let allStocks = [];
-                for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
+                for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i].length > 13 && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
                 }
                 if (allStocks.length > 0) { 
                     echelons[0].assets = allStocks.slice(0, 3);
@@ -2136,7 +2144,7 @@
 
                 echelonTableData = [[], [], [], []];
                 for (let i = 2; i <= 13; i++) {
-                    if (rows[i] && rows[i].length > 23) {
+                     if (rows[i] && rows[i].length > 23) {
                         if(rows[i][16]) echelonTableData[0].push({ t: rows[i][16], target: rows[i][17] || '' });
                         if(rows[i][18]) echelonTableData[1].push({ t: rows[i][18], target: rows[i][19] || '' });
                         if(rows[i][20]) echelonTableData[2].push({ t: rows[i][20], target: rows[i][21] || '' });
@@ -2270,8 +2278,6 @@
             let html = '';
             
             monthlyIncomeBonds.forEach(b => {
-                const fullPrice = (b.p + b.nkd).toFixed(2);
-                
                 html += `
                 <div class="calc-bond-row">
                     <div class="unified-badge-container" style="flex-direction:column; align-items:flex-start; gap: 3px;">
@@ -2323,13 +2329,13 @@
             
             allScheduledPayments.forEach(payment => {
                 let qty = 0;
-                if (payment.t) {
-                    const cleanTicker = payment.t.trim();
+                if (payment.paymentTicker) {
+                    const cleanTicker = payment.paymentTicker.trim();
                     const input = document.getElementById(`input-${cleanTicker}`);
                     if (input) qty = parseInt(input.value) || 0;
                 }
                 
-                const grossAmount = payment.staticCouponVal * qty;
+                const grossAmount = (payment.staticCouponVal || 0) * qty;
                 const netAmount = grossAmount * (1 - customTax);
                 totalAmount += netAmount;
 
