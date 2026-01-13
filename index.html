@@ -143,7 +143,6 @@
         .mk-dynamics.neutral { background: rgba(0,0,0,0.05); color: var(--text-secondary); }
         .dark-mode .mk-dynamics.neutral { background: rgba(255,255,255,0.1); }
         
-        /* New Rates Vertical Block */
         .rates-vertical-block {
             background: var(--card-bg);
             border-radius: 16px;
@@ -297,25 +296,33 @@
         .preset-btn-modern {
             display: flex; align-items: center; justify-content: space-between;
             padding: 14px 16px; border-radius: 12px; border: 1px solid var(--item-border);
-            background: var(--bg-color); cursor: pointer; transition: all 0.2s;
+            background: var(--bg-color); cursor: pointer; 
+            transition: transform 0.1s, border-color 0.2s; /* Removed background transition to avoid flicker */
         }
-        /* UPDATED Style for selected preset (Contour ONLY, no fill) */
+        
         .preset-btn-modern.selected-preset {
             border: 2px solid var(--accent-blue);
-            background: transparent !important; /* Force transparent */
+            background: transparent !important;
             box-shadow: none;
         }
         .preset-btn-modern.selected-preset .preset-right {
             color: var(--accent-blue);
         }
         
-        .preset-btn-modern:hover:not(.selected-preset), .preset-btn-modern:active:not(.selected-preset) {
+        /* Updated Hover/Active states to prevent flicker */
+        .preset-btn-modern:hover:not(.selected-preset) {
             background: var(--accent-blue); border-color: var(--accent-blue);
         }
-        .preset-btn-modern:hover:not(.selected-preset) .preset-left, .preset-btn-modern:active:not(.selected-preset) .preset-left { color: white; }
-        .preset-btn-modern:hover:not(.selected-preset) .preset-right, .preset-btn-modern:active:not(.selected-preset) .preset-right { color: rgba(255,255,255,0.8); }
-        .preset-btn-modern:hover:not(.selected-preset) .preset-icon, .preset-btn-modern:active:not(.selected-preset) .preset-icon { background: rgba(255,255,255,0.2); }
+        .preset-btn-modern:hover:not(.selected-preset) .preset-left { color: white; }
+        .preset-btn-modern:hover:not(.selected-preset) .preset-right { color: rgba(255,255,255,0.8); }
+        .preset-btn-modern:hover:not(.selected-preset) .preset-icon { background: rgba(255,255,255,0.2); }
         
+        /* Active state now only scales, no color change to prevent flash */
+        .preset-btn-modern:active:not(.selected-preset) {
+            transform: scale(0.98);
+            /* No background change here to avoid flickering to blue and back */
+        }
+
         .preset-left { display: flex; align-items: center; gap: 12px; color: var(--text-main); }
         .preset-icon {
             width: 36px; height: 36px; border-radius: 10px;
@@ -837,16 +844,18 @@
             position: relative;
         }
         .rebalance-intro-modern b { color: var(--text-main); font-weight: 800; }
-        .rebalance-intro-modern::before {
-            content: 'ℹ️';
-            position: absolute;
-            top: -12px; right: 20px;
-            font-size: 18px;
+        
+        /* Removed ::before, using .ri-icon instead */
+        .ri-icon {
+            position: absolute; top: -12px; right: 20px;
+            width: 32px; height: 32px;
             background: var(--card-bg);
-            padding: 4px 8px;
             border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 10px var(--card-shadow);
+            color: var(--accent-blue);
         }
+        .ri-icon svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; }
 
         .echelon-header-pill {
             background: rgba(255,255,255,0.8); backdrop-filter: blur(5px);
@@ -1313,13 +1322,15 @@
     <div id="screen-assets" class="screen">
         <div class="header"><h1>Ребалансировка</h1></div>
         <div class="rebalance-intro-modern">
+            <div class="ri-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
             <b>Ребалансировка</b> — это пересмотр состава активов для увеличения доходности. Мы продаем то, что уже отыграло свой рост или дает низкий доход, и покупаем более выгодные инструменты. Используйте список ниже, чтобы найти лучшие идеи для замены.
         </div>
         
         <div class="section-header-styled" onclick="toggleOfzTable(document.getElementById('expandArrowOfz'))">
             <span>🛡️ ОФЗ для замены</span>
             <span class="info-i-blue" onclick="showYieldInfo(event)">
-                 <!-- Changed Icon to Modern -->
                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             </span>
         </div>
@@ -1440,7 +1451,6 @@
             </div>
         </div>
 
-        <!-- NEW VERTICAL OF RATES BLOCK -->
         <div class="rates-vertical-block">
             <div class="rv-title">ВЕРТИКАЛЬ СТАВОК</div>
             <div class="rv-grid">
@@ -1490,7 +1500,6 @@
                 
                 <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">.</div>
                 
-                <!-- Layout Shifted Right -->
                 <div class="list-header-row calc-cols">
                     <span>НАЗВАНИЕ</span>
                     <span>ДОХОДНОСТЬ</span>
@@ -1687,7 +1696,6 @@
                         let last, open, prev;
                         let changePercent = 0;
 
-                        // Helper to find index safely
                         const getVal = (block, colName) => {
                             if(!block || !block.columns || !block.data || block.data.length === 0) return null;
                             const idx = block.columns.indexOf(colName);
@@ -1699,11 +1707,10 @@
                             open = getVal(marketdata, 'OPEN');
                         }
 
-                        // Fallback to securities if LAST/OPEN not in marketdata
                         if ((!last || !open) && d.securities && d.securities.data.length > 0) {
                              prev = getVal(d.securities, 'PREVPRICE');
-                             if(!last) last = prev; // If no last deal, use prev close
-                             if(!open) open = prev; // Use prev close as base if open is missing
+                             if(!last) last = prev; 
+                             if(!open) open = prev; 
                         }
                         
                         if(last && open && open > 0) {
@@ -1721,11 +1728,8 @@
             };
 
             fetchMoex('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-imoex'), document.getElementById('dyn-imoex'));
-            // Improved USD/RUB fetch
             fetchMoex('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-usdrub'), document.getElementById('dyn-usdrub'));
             
-            // Try to fetch 10Y OFZ Yield (RGBI is index, need a bond or index yield. Trying RGBI Yield index)
-            // Or use a specific 10Y Bond like SU26244RMFS2
              fetch('https://iss.moex.com/iss/engines/stock/markets/bonds/securities/SU26244RMFS2.json?iss.meta=off&iss.only=securities,marketdata')
                 .then(r => r.json())
                 .then(d => {
@@ -2050,24 +2054,23 @@
                 const bondPromises = bondList.map(async (b) => { const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; });
                 bonds = await Promise.all(bondPromises);
                 
-                // NEW: Load Monthly Income Bonds from AF, AG, AB
-                // Indexes: AF=31, AG=32, AB=27, AC=28
+                // NEW: Load Monthly Income Bonds from AF, AG
+                // Payment Schedule from AB, AC
                 let mbList = [];
                 for (let i = 2; i <= 13; i++) {
-                     if (rows[i] && rows[i][31]) { // If Name exists in AF
+                     if (rows[i] && rows[i][31]) { 
                         mbList.push({
                              t: rows[i][31], // Name (used as ticker for search)
                              y: rows[i][32], // Yield
-                             dateStr: rows[i][27] // Date from AB
+                             dateStr: rows[i][27], // AB: Date
+                             couponVal: parseFloat(rows[i][28].replace(',','.')) || 0 // AC: Coupon Amount
                         });
                      }
                 }
-                // Fetch prices for calculation logic. Since we only have Name/Ticker in col AF, we assume it is valid for API or fallback
                 const mbPromises = mbList.map(async (b) => {
-                     // Try to fetch price assuming b.t is a ticker or we use 1000
                      const extra = await fetchBondData(b.t);
-                     const price = (extra.price > 0) ? extra.price : 1000; // Default to 1000 if no market price found
-                     return { ...b, p: price, nkd: extra.nkd, n: b.t }; // n matches t for simplicity in display
+                     const price = (extra.price > 0) ? extra.price : 1000;
+                     return { ...b, p: price, nkd: extra.nkd, n: b.t }; 
                 });
                 monthlyIncomeBonds = await Promise.all(mbPromises);
 
@@ -2097,7 +2100,6 @@
 
         // --- MONTHLY INCOME CALCULATOR LOGIC ---
         
-        // Hide Menu on Focus
         const mInput = document.getElementById('monthlySumInput');
         if(mInput) {
             mInput.addEventListener('focus', () => {
@@ -2232,7 +2234,7 @@
                 const ticker = input.getAttribute('data-ticker');
                 const bond = monthlyIncomeBonds.find(b => b.t === ticker);
 
-                if (qty > 0 && bond && bond.dateStr) {
+                if (bond && bond.dateStr) {
                     const parts = bond.dateStr.split('.');
                     let paymentDate;
                     if(parts.length === 3) {
@@ -2241,11 +2243,9 @@
                          paymentDate = new Date(bond.dateStr); 
                     }
 
-                    const yieldVal = parseFloat(bond.y.replace('%','').replace(',','.')) || 0;
-                    // Approx calc based on yield (assuming Annual yield / 2 for simplicity as per requirement of approx calculation)
-                    const approxCouponAmount = (1000 * (yieldVal / 100)) / 2; 
-                    
-                    const netAmount = (approxCouponAmount * qty) * (1 - customTax);
+                    // Calculation based on Column AC (couponVal)
+                    const val = bond.couponVal || 0;
+                    const netAmount = (val * qty) * (1 - customTax);
                     
                     if(!isNaN(paymentDate.getTime())) {
                         allFutureCoupons.push({
@@ -2259,7 +2259,7 @@
             });
 
             allFutureCoupons.sort((a, b) => a.date - b.date);
-            // Requirement: Show all 12 rows (implied to be matching the 12 bonds)
+            // Limit to 12
             const couponsToDisplay = allFutureCoupons.slice(0, 12);
             
             let html = '';
@@ -2269,11 +2269,12 @@
             let totalAmount = 0;
 
             if (couponsToDisplay.length === 0) {
-                html = 'Введите количество для расчета...';
+                html = 'Загрузка данных...';
                 if(resultFooter) resultFooter.innerHTML = '';
             } else {
                  couponsToDisplay.forEach(r => {
                     totalAmount += r.amount;
+                    // Always render the row, even if amount is 0
                     html += `
                     <div class="coupon-row">
                         <div><b>${r.date.toLocaleDateString('ru-RU')}</b></div>
@@ -2283,7 +2284,6 @@
                     </div>`;
                 });
                 
-                // Average Calculation Logic
                 const averagePayment = couponsToDisplay.length > 0 ? totalAmount / 12 : 0;
                 if(resultFooter) resultFooter.innerHTML = `Средняя выплата в месяц: <span style="color:var(--accent-green); font-size:14px;">${Math.round(averagePayment).toLocaleString()} ₽</span>`;
             }
