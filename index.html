@@ -2059,52 +2059,72 @@
                 // NEW: Load Monthly Income Bonds from AF, AG
                 // --- НОВЫЙ КОД: Разделяем Уникальные бумаги и График выплат ---
                 
-                 allScheduledPayments = []; // Глобальный список выплат
-                let uniqueTickersMap = new Map(); // Список для кнопок (уникальные бумаги)
+                 allScheduledPayments = []; 
+                let uniqueTickersMap = new Map(); 
+                let nameToTickerIndex = {}; // Словарь: "Название" -> "Тикер"
 
-                // Жестко идем по строкам с 3 по 14 (индексы 2-13)
+                // ШАГ 1: Пробегаем, чтобы запомнить, какому Названию какой Тикер принадлежит
+                // Это нужно, чтобы заполнить пробелы в столбце AF для второй выплаты
                 for (let i = 2; i <= 13; i++) {
                     if (rows[i]) {
-                        // 1. БЕРЕМ ДАННЫЕ О ВЫПЛАТЕ (AB и AC)
-                        // Индекс 27 = AB (Дата)
-                        let dateStr = rows[i][27]; 
-                        // Индекс 28 = AC (Название)
-                        let bondName = rows[i][28];
-                        // Индекс 30 = AE (Сумма купона)
-                        let couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0;
+                        let ticker = rows[i][31]; // AF
+                        let name = rows[i][28];   // AC
+                        
+                        // Если в строке есть и Тикер, и Название - запоминаем эту связь
+                        if (ticker && ticker.trim() !== "" && name) {
+                            nameToTickerIndex[name.trim()] = ticker.trim();
+                        }
+                    }
+                }
 
-                        // БЕРЕМ ТИКЕР (AF) ЧТОБЫ СВЯЗАТЬ С КАЛЬКУЛЯТОРОМ
-                        let ticker = rows[i][31]; 
-                        let yieldVal = rows[i][32];
+                // ШАГ 2: Формируем списки
+                for (let i = 2; i <= 13; i++) {
+                    if (rows[i]) {
+                        // Данные из ячеек
+                        let rawTicker = rows[i][31];    // AF (может быть пустым)
+                        let yieldVal = rows[i][32];     // AG
+                        let dateStr = rows[i][27];      // AB
+                        let bondName = rows[i][28];     // AC
+                        let couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0; // AE
 
-                        // ВАЖНО: Если есть Дата или Название - мы ОБЯЗАТЕЛЬНО добавляем строку в список выплат
-                        // Даже если тикер пустой, строка всё равно покажется в таблице
+                        let cleanName = bondName ? bondName.trim() : "";
+
+                        // -- МАГИЯ ЗДЕСЬ --
+                        // Мы пытаемся найти тикер. 
+                        // 1. Если он написан в ячейке AF - берем его.
+                        // 2. Если ячейка пустая - ищем тикер по Названию в нашем словаре.
+                        let resolvedTicker = rawTicker;
+                        if (!resolvedTicker || resolvedTicker.trim() === "") {
+                            resolvedTicker = nameToTickerIndex[cleanName] || "";
+                        }
+
+                        // А. Добавляем в СПИСОК ВЫПЛАТ (все 12 строк)
+                        // Теперь у каждой выплаты будет resolvedTicker, даже если в AF пусто!
                         if (dateStr || bondName) {
                             allScheduledPayments.push({
-                                t: ticker, // Может быть пустым, ничего страшного
+                                t: resolvedTicker, // Сюда подставится найденный тикер
                                 dateStr: dateStr || "---",
                                 displayName: bondName || "---",
                                 staticCouponVal: couponAmount
                             });
                         }
 
-                        // 2. ФОРМИРУЕМ СПИСОК КНОПОК (Только если есть реальный тикер)
-                        if (ticker && ticker.trim() !== "") {
-                            if (!uniqueTickersMap.has(ticker)) {
-                                uniqueTickersMap.set(ticker, {
-                                    t: ticker,
+                        // Б. Добавляем в СПИСОК КНОПОК (Только те, где в AF реально что-то написано)
+                        // Как ты и просил: "пустые ячейки не берем"
+                        if (rawTicker && rawTicker.trim() !== "") {
+                            if (!uniqueTickersMap.has(rawTicker)) {
+                                uniqueTickersMap.set(rawTicker, {
+                                    t: rawTicker,
                                     y: yieldVal || '0%',
-                                    n: bondName // Берем название просто для подписи кнопки
+                                    n: bondName 
                                 });
                             }
                         }
                     }
                 }
 
-                // Готовим список кнопок для ввода
+                // ШАГ 3: Загружаем цены для кнопок
                 let uniqueBondsList = Array.from(uniqueTickersMap.values());
-
-                // Грузим цены только для кнопок
                 const mbPromises = uniqueBondsList.map(async (b) => {
                     const extra = await fetchBondData(b.t);
                     const price = (extra.price > 0) ? extra.price : 1000;
@@ -2112,6 +2132,7 @@
                 });
                 
                 monthlyIncomeBonds = await Promise.all(mbPromises);
+                setTimeout(recalcCustomCoupons, 500);
                 
                 // Сразу после загрузки обновляем список выплат на экране, чтобы он не был пустым
                 setTimeout(recalcCustomCoupons, 500);
