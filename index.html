@@ -635,12 +635,11 @@
         .list-header-row.ofz-cols span:nth-child(2), .list-header-row.ofz-cols span:nth-child(3) { text-align: center; }
         
         .list-header-row.calc-cols {
-            display: grid; grid-template-columns: 1fr 60px 140px; gap: 8px;
+            display: grid; grid-template-columns: 1fr 140px; gap: 8px;
             text-align: center; margin-bottom: 8px;
         }
         .list-header-row.calc-cols span:first-child { text-align: left; }
-        .list-header-row.calc-cols span:nth-child(2) { text-align: center; }
-        .list-header-row.calc-cols span:nth-child(3) { text-align: right; padding-right: 30px; }
+        .list-header-row.calc-cols span:nth-child(2) { text-align: right; padding-right: 30px; }
 
 
         .ofz-card-modern {
@@ -711,7 +710,7 @@
         }
 
         .calc-bond-row {
-            display: grid; grid-template-columns: 1fr auto 140px; align-items: center;
+            display: grid; grid-template-columns: 1fr 140px; align-items: center;
             padding: 10px 0; border-bottom: 1px dashed var(--item-border); gap: 8px;
         }
         .calc-bond-row:last-child { border-bottom: none; }
@@ -719,10 +718,6 @@
         .ub-name {
             background: #ffffff; color: var(--text-main); padding: 4px 8px; border: 1px solid #dfe6e9;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius: 6px; width: 100%;
-        }
-        .ub-yield {
-            background: rgba(46, 204, 113, 0.2); color: #27ae60; padding: 4px 8px; white-space: nowrap;
-            border-radius: 6px; font-size: 11px; text-align: center;
         }
         .dark-mode .ub-name { background: #1e293b; color: #f1f5f9; border-color: #334155; }
         
@@ -1415,7 +1410,7 @@
                     <div class="input-container">
                         <span class="input-label">Сумма Инвестиций</span>
                         <div class="input-wrapper">
-                            <input type="number" id="monthlySumInput" value="100000" oninput="distributeMonthlyInvestment()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" style="background: transparent; border: none; color: var(--input-color); width: 100%; font-weight: 700;">
+                            <input type="number" id="monthlySumInput" value="100000" oninput="distributeSumToQuantities()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" style="background: transparent; border: none; color: var(--input-color); width: 100%; font-weight: 700;">
                             <span class="currency" style="font-size: 24px;">₽</span>
                         </div>
                     </div>
@@ -1431,7 +1426,6 @@
                 
                 <div class="list-header-row calc-cols">
                     <span>НАЗВАНИЕ</span>
-                    <span> </span>
                     <span>КОЛИЧЕСТВО</span>
                 </div>
                 
@@ -1506,7 +1500,6 @@
         let brokerFee = 0.0003; 
         let currentTax = 0.13;
         let customTax = 0.13;
-        let bondCouponsMap = {}; 
         let bondDetailsMap = {};
         let currentScreen = 'screen-home';
         let lastNavScreen = 'screen-home';
@@ -1930,104 +1923,65 @@
                 const market_cols = data.marketdata.columns; 
                 const market_row = data.marketdata.data[0];
 
-                bondCouponsMap[code] = { date: sec_row[sec_cols.indexOf('NEXTCOUPON')], value: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0 };
-                
-                const couponPeriod = parseFloat(sec_row[sec_cols.indexOf('COUPONPERIOD')]) || 0;
-                const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
-                
                 bondDetailsMap[code] = {
-                    matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—',
-                    couponValue: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0,
-                    nextCoupon: sec_row[sec_cols.indexOf('NEXTCOUPON')] || '—',
-                    couponYield: sec_row[sec_cols.indexOf('COUPONPERCENT')] || '—',
-                    freq: freq,
                     price: parseFloat(market_row[market_cols.indexOf('LAST')]) || 0,
-                    nkd: parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0
+                    nkd: parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0,
+                    matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—',
                 };
                 return bondDetailsMap[code];
             } catch (e) { 
                 console.error("Error fetching data for", code, e);
-                return { nkd: 0, matDate: '—', price: 0 }; 
+                return { price: 0, nkd: 0, matDate: '—' }; 
             }
         }
         
         function formatDateToCustom(dateStr) {
-            if (!dateStr || !/^\d{2}\.\d{2}\.\d{4}$/.test(dateStr)) {
-                return dateStr; 
-            }
+            if (!dateStr || !/^\d{2}\.\d{2}\.\d{4}$/.test(dateStr)) return dateStr; 
             const parts = dateStr.split('.');
-            const day = parts[0];
-            const month = parts[1];
-            const year = parts[2];
-            const date = new Date(`${year}-${month}-${day}`);
-            
-            if (isNaN(date)) {
-                return dateStr;
-            }
-
+            const date = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+            if (isNaN(date)) return dateStr;
             const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            return `${day}-${monthNames[date.getMonth()]}-${year}`;
+            return `${parts[0]}-${monthNames[date.getMonth()]}-${parts[2]}`;
         }
 
         async function loadData() {
-            initTheme();
-            loadSettings();
-            checkFirstVisit();
-            updateMarketData();
-            updateMarketStatus();
+            initTheme(); loadSettings(); checkFirstVisit(); updateMarketData(); updateMarketStatus();
             try {
                 const response = await fetch(CSV_URL);
                 const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
                 
                 let bondList = [];
-                for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
-                }
-                const bondPromises = bondList.map(async (b) => { const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; });
+                for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' }); }
+                const bondPromises = bondList.map(b => fetchBondData(b.t).then(extra => ({...b, ...extra})));
                 bonds = await Promise.all(bondPromises);
                 
                 let allStocks = [];
-                for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
-                }
-                if (allStocks.length > 0) { echelons[0].assets = allStocks.slice(0, 3);
-                echelons[1].assets = allStocks.slice(3, 6); echelons[2].assets = allStocks.slice(6, 9); echelons[3].assets = allStocks.slice(9, 12);
-                }
+                for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' }); }
+                if (allStocks.length > 0) { echelons[0].assets = allStocks.slice(0, 3); echelons[1].assets = allStocks.slice(3, 6); echelons[2].assets = allStocks.slice(6, 9); echelons[3].assets = allStocks.slice(9, 12); }
 
                 echelonTableData = [[], [], [], []];
-                for (let i = 2; i <= 13; i++) {
-                    if (rows[i]) {
+                for (let i = 2; i <= 13; i++) { if (rows[i]) {
                         if(rows[i][16]) echelonTableData[0].push({ t: rows[i][16], target: rows[i][17] || '' });
                         if(rows[i][18]) echelonTableData[1].push({ t: rows[i][18], target: rows[i][19] || '' });
                         if(rows[i][20]) echelonTableData[2].push({ t: rows[i][20], target: rows[i][21] || '' });
                         if(rows[i][22]) echelonTableData[3].push({ t: rows[i][22], target: rows[i][23] || '' });
-                    }
-                }
+                }}
                 
                 paymentSchedule = [];
                 let monthlyBondsMap = {};
-
-                for (let i = 2; i <= 13; i++) {
-                    if (rows[i] && rows[i][27] && rows[i][28] && rows[i][29]) {
+                for (let i = 2; i <= 13; i++) { if (rows[i] && rows[i][27] && rows[i][28] && rows[i][29]) {
                         const ticker = rows[i][28].trim(); 
                         if (ticker) {
-                            paymentSchedule.push({
-                                date: rows[i][27],      
-                                ticker: ticker,         
-                                amount: parseFloat(String(rows[i][29]).replace(',', '.')) || 0 
-                            });
-                            if (!monthlyBondsMap[ticker]) {
-                                 monthlyBondsMap[ticker] = { t: ticker, n: ticker };
-                            }
+                            paymentSchedule.push({ date: rows[i][27], ticker: ticker, amount: parseFloat(String(rows[i][29]).replace(',', '.')) || 0 });
+                            if (!monthlyBondsMap[ticker]) monthlyBondsMap[ticker] = { t: ticker, n: ticker };
                         }
-                    }
-                }
+                }}
                 monthlyIncomeBonds = Object.values(monthlyBondsMap);
-                const monthlyBondDetailsPromises = monthlyIncomeBonds.map(b => fetchBondData(b.t));
-                await Promise.all(monthlyBondDetailsPromises);
+                await Promise.all(monthlyIncomeBonds.map(b => fetchBondData(b.t)));
 
                 renderCustomBondCalc();
-                distributeMonthlyInvestment();
-                draw();
+                distributeSumToQuantities();
             } catch (e) { console.error(e); }
         }
 
@@ -2037,7 +1991,7 @@
                 let val = parseInt(input.value) || 0;
                 val = Math.max(0, val + delta);
                 input.value = val;
-                recalcCustomCoupons();
+                updateSumFromQuantities();
             }
         }
         
@@ -2045,13 +1999,61 @@
              const input = document.getElementById(`input-${ticker}`);
              if(input) {
                  input.value = 0;
-                 recalcCustomCoupons();
+                 updateSumFromQuantities();
              }
         }
         
-        function distributeMonthlyInvestment() {
-             recalcCustomCoupons();
+        function distributeSumToQuantities() {
+            if (isUpdatingProgrammatically) return;
+            isUpdatingProgrammatically = true;
+            
+            const sum = parseFloat(document.getElementById('monthlySumInput').value) || 0;
+            if (monthlyIncomeBonds.length === 0) { isUpdatingProgrammatically = false; return; };
+            
+            const totalMarketValue = monthlyIncomeBonds.reduce((acc, bond) => {
+                const details = bondDetailsMap[bond.t];
+                return acc + (details ? details.price + details.nkd : 0);
+            }, 0);
+
+            if (totalMarketValue === 0) {
+                 monthlyIncomeBonds.forEach(bond => {
+                    const input = document.getElementById(`input-${bond.t}`);
+                    if(input) input.value = 0;
+                 });
+            } else {
+                monthlyIncomeBonds.forEach(bond => {
+                    const details = bondDetailsMap[bond.t];
+                    const bondValue = details ? details.price + details.nkd : 0;
+                    const weight = bondValue / totalMarketValue;
+                    const bondBudget = sum * weight;
+                    const qty = bondValue > 0 ? Math.floor(bondBudget / bondValue) : 0;
+                    const input = document.getElementById(`input-${bond.t}`);
+                    if(input) input.value = qty;
+                });
+            }
+
+            recalcCustomCoupons();
+            isUpdatingProgrammatically = false;
         }
+
+        function updateSumFromQuantities() {
+            if (isUpdatingProgrammatically) return;
+            isUpdatingProgrammatically = true;
+
+            let totalInvestedSum = 0;
+            monthlyIncomeBonds.forEach(bond => {
+                const qty = parseInt(document.getElementById(`input-${bond.t}`).value) || 0;
+                if (qty > 0 && bondDetailsMap[bond.t]) {
+                    const details = bondDetailsMap[bond.t];
+                    totalInvestedSum += qty * (details.price + details.nkd);
+                }
+            });
+            document.getElementById('monthlySumInput').value = Math.round(totalInvestedSum);
+
+            recalcCustomCoupons();
+            isUpdatingProgrammatically = false;
+        }
+
 
         function renderCustomBondCalc() {
             const container = document.getElementById('calc-bonds-input-list');
@@ -2063,10 +2065,9 @@
                     <div class="unified-badge-container">
                         <div class="ub-name">${limitName(b.n)}</div>
                     </div>
-                    <div></div>
                     <div class="qty-controls">
                         <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
-                        <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="recalcCustomCoupons()">
+                        <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="updateSumFromQuantities()">
                         <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
                         <div class="btn-row-reset" onclick="resetOne('${b.t}')">
                             <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -2078,27 +2079,23 @@
         }
 
         function resetCustomCalc() {
-            const inputs = document.querySelectorAll('#calc-bonds-input-list .calc-input');
-            inputs.forEach(input => input.value = 0);
-            recalcCustomCoupons();
+            document.getElementById('monthlySumInput').value = "0";
+            distributeSumToQuantities();
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
 
         function recalcCustomCoupons() {
             const inputs = document.querySelectorAll('#calc-bonds-input-list .calc-input');
             const quantities = {};
-            inputs.forEach(input => {
-                quantities[input.dataset.ticker] = parseInt(input.value) || 0;
-            });
+            inputs.forEach(input => { quantities[input.dataset.ticker] = parseInt(input.value) || 0; });
 
             let calculatedPayments = [];
-            let totalInvestedSum = 0;
             paymentSchedule.forEach(payment => {
                 const qty = quantities[payment.ticker] || 0;
                 if (qty > 0) {
                     const finalAmount = payment.amount * qty * (1 - customTax);
                     const dateParts = payment.date.split('.');
-                    const sortableDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dayjs(payment.date, "DD.MM.YYYY").date()}`);
+                    const sortableDate = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
 
                     calculatedPayments.push({
                         date: sortableDate,
@@ -2109,16 +2106,6 @@
                     });
                 }
             });
-
-            Object.keys(quantities).forEach(ticker => {
-                const qty = quantities[ticker];
-                if (qty > 0 && bondDetailsMap[ticker]) {
-                    const details = bondDetailsMap[ticker];
-                    totalInvestedSum += qty * (details.price + details.nkd);
-                }
-            });
-            document.getElementById('monthlySumInput').value = Math.round(totalInvestedSum);
-
 
             calculatedPayments.sort((a, b) => a.date - b.date);
 
@@ -2151,132 +2138,6 @@
             }
 
             if(resultList) resultList.innerHTML = html;
-        }
-
-        function updateEchelonTable() {
-            const body = document.getElementById('echelon-tickers-body');
-            if(!body) return;
-            let html = '';
-            const maxRows = Math.max(...echelonTableData.map(col => col.length));
-            for(let i=0; i<maxRows; i++) {
-                html += '<tr>';
-                for(let j=0; j<4; j++) {
-                    const asset = echelonTableData[j][i];
-                    if(asset) html += `<td onclick="copyToClipboard('${asset.t}')"><span class="et-ticker">${asset.t}</span><span class="et-target">${asset.target.replace(' ₽','')}</span></td>`;
-                    else html += `<td></td>`;
-                }
-                html += '</tr>';
-            }
-            body.innerHTML = html;
-        }
-
-        function performSearch(query) {
-            if(!query || query.length < 2) {
-                openCompanyPage(null, query);
-                return;
-            }
-            
-            const q = query.toUpperCase();
-            let results = [];
-            echelons.forEach(e => {
-                e.assets.forEach(a => {
-                    if(a.t.toUpperCase().includes(q) || a.n.toUpperCase().includes(q)) results.push({...a, type: 'Акция'});
-                });
-            });
-            bonds.forEach(b => {
-                if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
-            });
-            
-            const input = document.getElementById('tickerSearchInput');
-            input.value = '';
-            input.blur();
-            
-            openCompanyPage(results[0] || null, query);
-        }
-        
-        async function openCompanyPage(item, searchQuery = '') {
-            const content = document.getElementById('company-content');
-            
-            if(!item) {
-                content.innerHTML = `
-                    <div class="search-empty-state">
-                        <div class="icon">🔍</div>
-                        <div class="title">Ничего не найдено</div>
-                        <div class="desc">По запросу "${searchQuery}" не найдено результатов.<br>Попробуйте изменить запрос.</div>
-                    </div>
-                `;
-                showScreen('screen-company');
-                return;
-            }
-            
-            const isStock = item.type === 'Акция';
-            const target = isStock ? item.target : '-';
-            const yieldVal = isStock ? 'СМ. ТАБЛИЦУ' : item.y;
-            
-            let changeHtml = '<div class="cc-v2-change neutral">--</div>';
-            
-            try {
-                const url = `https://iss.moex.com/iss/engines/stock/markets/${isStock ? 'shares' : 'bonds'}/securities/${item.t}.json?iss.meta=off&iss.only=securities,marketdata`;
-                const res = await fetch(url);
-                const data = await res.json();
-                const marketdata = data.marketdata.data[0];
-                const marketcols = data.marketdata.columns;
-                const last = marketdata[marketcols.indexOf('LAST')];
-                const open = marketdata[marketcols.indexOf('OPEN')];
-                
-                if (last && open && open > 0) {
-                    const change = last - open;
-                    const changePct = (change / open) * 100;
-                    const sign = change > 0 ? '+' : '';
-                    const colorClass = change > 0 ? 'positive' : (change < 0 ? 'negative' : 'neutral');
-                    changeHtml = `<div class="cc-v2-change ${colorClass}">${sign}${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)</div>`;
-                }
-            } catch (e) { console.log('Error fetching company details'); }
-
-            let html = `
-                <div class="company-card-v2">
-                    <div class="cc-v2-header">
-                        <div class="cc-v2-logo">${item.t}</div>
-                        <div>
-                            <div class="cc-v2-name">${item.n}</div>
-                            <div class="cc-v2-type">${item.type}</div>
-                        </div>
-                    </div>
-                    <div class="cc-v2-price-block">
-                         <div class="cc-v2-price">${item.p} ₽</div>
-                         ${changeHtml}
-                    </div>
-                    <button class="btn-action" onclick="openTradingView(event, '${item.t}')">Открыть график TradingView</button>
-                </div>
-                
-                <div class="news-header">Характеристики</div>
-                <div class="stat-grid">
-                     <div class="stat-item">
-                        <div class="stat-label">${isStock ? 'Цель' : 'Доходность'}</div>
-                        <div class="stat-val" style="color:var(--accent-green)">${isStock ? target : yieldVal}</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Эшелон</div>
-                        <div class="stat-val">${isStock ? (echelons.findIndex(e => e.assets.some(a => a.t === item.t)) + 1) : 'N/A'}</div>
-                    </div>
-                </div>
-                
-                <div class="news-header">Новости компании</div>
-                <div id="company-news-list">
-                    <div class="news-item">
-                         <div class="news-date">Сегодня</div>
-                         <div class="news-title">Обзор рыночной ситуации по ${item.t}</div>
-                         <div class="news-snippet">Аналитики отмечают стабильное положение компании на рынке. Технический анализ показывает консолидацию цены...</div>
-                    </div>
-                     <div class="news-item">
-                         <div class="news-date">Вчера</div>
-                         <div class="news-title">Финансовые показатели</div>
-                         <div class="news-snippet">Компания опубликовала отчетность за последний квартал. Выручка соответствует ожиданиям экспертов...</div>
-                    </div>
-                </div>
-            `;
-            content.innerHTML = html;
-            showScreen('screen-company');
         }
 
         function draw() {
@@ -2320,43 +2181,34 @@
 
             let actualSpentTotal = 0; let bondQuantities = {};
             let totalBondProjectedIncome = 0;
-            let rainData = [];
             
             let bHtml = '';
-            if (bonds.length > 0) {
+            if (bonds.length > 0 && bondBudget > 0) {
                 const perBondBudget = bondBudget / bonds.length;
-                let bondCalculations = bonds.map(b => { const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; return { ...b, qty, fullCostPerUnit }; });
+                let bondCalculations = bonds.map(b => { const fullCostPerUnit = (b.price + b.nkd) * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; return { ...b, qty, fullCostPerUnit }; });
                 let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
-                if (bondCalculations.length > 0 && leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
+                if (bondCalculations.length > 0 && bondCalculations[0].fullCostPerUnit > 0 && leftover >= bondCalculations[0].fullCostPerUnit) {
                     bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
                 }
                 bondCalculations.forEach(b => {
                     actualSpentTotal += (b.qty * b.fullCostPerUnit); bondQuantities[b.t] = b.qty;
                     const bondYieldVal = parseFloat(b.y.replace('%', '')) || 0;
-                    const investedInBond = b.qty * b.p;
+                    const investedInBond = b.qty * b.price;
                     totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
-                    if(b.qty > 0 && bondCouponsMap[b.t]) {
-                         const info = bondCouponsMap[b.t];
-                         const netAmount = (info.value * b.qty) * (1 - currentTax);
-                         rainData.push({ date: info.date, name: b.n, qty: b.qty, amount: netAmount });
-                    }
+                   
                     bHtml += `
                     <div class="asset-item" onclick="toggleRow(this)">
                         <span class="ticker" style="font-weight:700; font-size:11px;">${limitName(b.n)}</span>
                         <span class="asset-name"><span class="asset-yield-badge">${b.y}</span></span>
                         <span class="qty">${b.qty} шт.</span>
-                        <span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span>
+                        <span class="price-total">${Math.round(b.qty * b.price).toLocaleString()} ₽</span>
                         <div class="details">
                             <div class="detail-row"><span>Полное Наименование:</span> <span>${b.n}</span></div>
                             <div class="detail-row"><span>Код:</span> <span>${b.t}</span></div>
                             <div class="detail-row"><span>Дата погашения:</span> <span>${b.matDate}</span></div>
-                            <div class="detail-row"><span>Цена:</span> <span>${b.p} ₽</span></div>
+                            <div class="detail-row"><span>Цена:</span> <span>${b.price} ₽</span></div>
                             <div class="detail-row"><span>НКД:</span> <span>${b.nkd.toFixed(2)} ₽</span></div>
                             <div class="detail-row"><span>Простая Доходность к Погашению:</span> <span>${b.y.replace(' ₽','')}</span></div>
-                            <button class="btn-tiny-graph" onclick="openTradingView(event, '${b.t}')">
-                                <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-                                Открыть график
-                            </button>
                         </div>
                     </div>`;
                 });
@@ -2364,51 +2216,22 @@
             if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml;
             document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
             
-            if(document.getElementById('couponList')) {
-                rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
-                let couponHtml = ''; let couponTotal = 0;
-                if(rainData.length === 0) { 
-                    couponHtml = '<div style="text-align:center; padding:15px; color:#aaa; font-size:12px;">Нет ближайших выплат для выбранных активов.</div>';
-                } else { 
-                    rainData.forEach(r => { 
-                        couponTotal += r.amount; 
-                        couponHtml += `
-                        <div class="coupon-row">
-                            <div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div>
-                            <div style="color:#8e8e93">${limitName(r.name)}</div>
-                            <div style="text-align:center">${r.qty}шт.</div>
-                            <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
-                        </div>`; 
-                    }); 
-                }
-                document.getElementById('couponList').innerHTML = couponHtml;
-                document.getElementById('couponTotalHeader').innerText = Math.round(couponTotal).toLocaleString() + ' ₽';
-            }
-            
             let ofzHtml = '';
             bonds.forEach(b => {
-                const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
-                const calculatedCY = (b.p > 0 && details.couponValue && details.freq) ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) : '0.00';
                 ofzHtml += `
                 <div class="ofz-card-modern" onclick="toggleOfzDetails('details-${b.t}')">
                     <div class="ofz-main-info">
                         <div class="ofz-name-lg">${limitName(b.n)}</div>
                         <div class="ofz-ticker-sm">${b.t}</div>
                     </div>
-                    <div class="ofz-price">${b.p}</div>
+                    <div class="ofz-price">${b.price}</div>
                     <div class="ofz-nkd-badge">${Math.round(b.nkd*10)/10}</div>
                     <div class="ofz-yield-badge" title="Доходность к погашению">
                         ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                     </div>
                 </div>
                 <div id="details-${b.t}" class="ofz-details-panel">
-                    <div class="ofz-detail-row"><span>Код:</span> <span class="ofz-detail-val">${b.t}</span></div>
-                    <div class="ofz-detail-row"><span>НКД:</span> <span class="ofz-detail-val">${b.nkd.toFixed(2)} ₽</span></div>
-                    <div class="ofz-detail-row"><span>Дата погашения:</span> <span class="ofz-detail-val">${details.matDate}</span></div>
-                    <div class="ofz-detail-row"><span>Размер купона:</span> <span class="ofz-detail-val">${details.couponValue} ₽</span></div>
-                    <div class="ofz-detail-row"><span>Дата ближайшего купона:</span> <span class="ofz-detail-val">${details.nextCoupon}</span></div>
-                    <div class="ofz-detail-row"><span>Текущая купонная доходность:</span> <span class="ofz-detail-val">${calculatedCY}%</span></div>
-                    <div class="ofz-detail-row"><span>Выплат в год:</span> <span class="ofz-detail-val">${details.freq}</span></div>
+                     <div class="ofz-detail-row"><span>Код:</span> <span class="ofz-detail-val">${b.t}</span></div>
                 </div>`;
             });
             if(document.getElementById('ofz-list')) document.getElementById('ofz-list').innerHTML = ofzHtml;
@@ -2420,7 +2243,7 @@
                 const echelonBudget = stockBudget * e.weight; const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
                 let stockCalculations = e.assets.map(a => { const fullCostPerUnit = a.p * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0; return { ...a, qty, fullCostPerUnit }; });
                 let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
-                if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
+                if (stockCalculations.length > 0 && stockCalculations[0].fullCostPerUnit > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
                     stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
                 }
                 const tipId = `echelon-tip-${echelonIndex}`;
@@ -2453,15 +2276,7 @@
                         <span class="qty">${s.qty} шт.</span>
                         <span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
                         <div class="details">
-                            <div class="detail-row"><span>Компания:</span> <span>${s.n}</span></div>
-                            <div class="detail-row"><span>Тикер:</span> <span style="cursor:pointer; color:var(--accent-blue); font-weight:bold;" onclick="copyTicker(event, '${s.t}')">${s.t} ❐</span></div>
-                            <div class="detail-row"><span>Цена:</span> <span>${s.p} ₽</span></div>
-                            <div class="detail-row"><span>Цель:</span> <span>${s.target.replace(' ₽','')}</span></div>
-                            <div style="font-size:10px; color:#aaa; margin:5px 0 8px;">[ Прогноз на период до 36 мес. ]</div>
-                            <button class="btn-tiny-graph" onclick="openTradingView(event, '${s.t}')">
-                                <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-                                Открыть график
-                            </button>
+                             <div class="detail-row"><span>Компания:</span> <span>${s.n}</span></div>
                         </div>
                     </div>`;
                 });
