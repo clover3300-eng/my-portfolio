@@ -2266,57 +2266,63 @@
         }
 
         function recalcCustomCoupons() {
-    const resultList = document.getElementById('calc-results-list');
-    const resultFooter = document.getElementById('calc-results-footer');
-    
-    let html = '';
-    let totalAmount = 0;
-    
-    // Проходим строго по нашему списку из 12 бумаг
-    monthlyIncomeBonds.forEach(bond => {
-        // Находим поле ввода по тикеру
-        const input = document.getElementById(`input-${bond.t}`);
-        const qty = input ? (parseInt(input.value) || 0) : 0;
-        
-        // Расчет: Значение из столбца AE * Количество * (1 - Налог)
-        // staticCouponVal мы сохранили в loadData из колонки 30 (AE)
-        const grossAmount = bond.staticCouponVal * qty;
-        const netAmount = grossAmount * (1 - customTax);
-        
-        totalAmount += netAmount;
+            const resultList = document.getElementById('calc-results-list');
+            const resultFooter = document.getElementById('calc-results-footer');
+            
+            let html = '';
+            let totalAmount = 0;
 
-        // Формируем строку HTML
-        // Используем grid-template-columns, аналогичный заголовку
-        html += `
-        <div class="coupon-row" style="grid-template-columns: 85px 1fr 60px 80px;">
-            <div style="font-weight:bold; color:var(--text-main);">${bond.dateStr}</div>
-            <div style="color:#8e8e93; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${limitName(bond.displayName)}</div>
-            <div style="text-align:center">${qty} шт.</div>
-            <div style="text-align:right"><b>${Math.round(netAmount).toLocaleString()} ₽</b></div>
-        </div>`;
-    });
+            // ВАЖНО: Мы используем allScheduledPayments, который мы создали в loadData
+            // Если переменная еще не определена (код выполняется до загрузки), выходим
+            if (typeof allScheduledPayments === 'undefined' || allScheduledPayments.length === 0) {
+                 if(resultList) resultList.innerHTML = "Загрузка списка выплат...";
+                 return;
+            }
+            
+            // Проходим по ВСЕМ выплатам (всем 12 датам)
+            allScheduledPayments.forEach(payment => {
+                
+                // 1. Ищем поле ввода, соответствующее тикеру этой выплаты
+                const input = document.getElementById(`input-${payment.t}`);
+                
+                // 2. Узнаем, сколько штук этой бумаги ввел пользователь
+                const qty = input ? (parseInt(input.value) || 0) : 0;
+                
+                // 3. Считаем сумму (Купон * Количество * (1 - Налог))
+                const grossAmount = payment.staticCouponVal * qty;
+                const netAmount = grossAmount * (1 - customTax);
+                
+                totalAmount += netAmount;
 
-    if(resultList) resultList.innerHTML = html;
+                // 4. Рисуем строку. Показываем дату и название из колонок AB/AC
+                html += `
+                <div class="coupon-row" style="grid-template-columns: 85px 1fr 60px 80px;">
+                    <div style="font-weight:bold; color:var(--text-main);">${payment.dateStr}</div>
+                    <div style="color:#8e8e93; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${limitName(payment.displayName)}</div>
+                    <div style="text-align:center">${qty} шт.</div>
+                    <div style="text-align:right"><b>${Math.round(netAmount).toLocaleString()} ₽</b></div>
+                </div>`;
+            });
 
-    // Итого в футере
-    if(resultFooter) {
-        // Сумма за год (все 12 выплат)
-        const yearTotal = Math.round(totalAmount).toLocaleString();
-        // Среднее в месяц
-        const monthAvg = Math.round(totalAmount / 12).toLocaleString();
-        
-        resultFooter.innerHTML = `
-            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                <span>Итого за год:</span>
-                <span>${yearTotal} ₽</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; color:var(--accent-green);">
-                <span>Среднее в месяц:</span>
-                <span style="font-size:14px; font-weight:800;">${monthAvg} ₽</span>
-            </div>
-        `;
-    }
-}
+            if(resultList) resultList.innerHTML = html;
+
+            // Итого в футере
+            if(resultFooter) {
+                const yearTotal = Math.round(totalAmount).toLocaleString();
+                const monthAvg = Math.round(totalAmount / 12).toLocaleString();
+                
+                resultFooter.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <span>Итого за год:</span>
+                        <span>${yearTotal} ₽</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; color:var(--accent-green);">
+                        <span>Среднее в месяц:</span>
+                        <span style="font-size:14px; font-weight:800;">${monthAvg} ₽</span>
+                    </div>
+                `;
+            }
+        }
 
 
         // --- END OF MONTHLY CALC LOGIC ---
