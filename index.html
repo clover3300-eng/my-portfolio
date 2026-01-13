@@ -106,7 +106,6 @@
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
         .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 25px; }
         
-        /* IMPROVED MARKET DATA DESIGN */
         .market-grid {
             display: flex;
             flex-direction: column;
@@ -143,7 +142,6 @@
         .mk-dynamics.negative { background: rgba(231, 76, 60, 0.1); color: var(--accent-red); }
         .mk-dynamics.neutral { background: rgba(0,0,0,0.05); color: var(--text-secondary); }
         .dark-mode .mk-dynamics.neutral { background: rgba(255,255,255,0.1); }
-        /* END IMPROVEMENT */
         
         .info-card {
             background: var(--card-bg);
@@ -209,7 +207,7 @@
             box-shadow: 0 15px 35px var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color);
         }
         .calc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-        .input-container { flex: 1; margin-top: 10px; } /* Correction: Lower the sum input */
+        .input-container { flex: 1; margin-top: 10px; }
         .input-label { font-size: 13px; color: #8e8e93; font-weight: 600; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         .input-wrapper { display: flex; align-items: baseline; gap: 8px; }
         input#sumInput { 
@@ -264,7 +262,6 @@
         .preset-dropdown-btn.open { transform: rotate(180deg); }
         .preset-dropdown-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
         
-        /* IMPROVED PRESET OPTIONS */
         .preset-options {
             display: none; margin-top: 15px; background: var(--card-bg);
             border-radius: 16px; padding: 12px; gap: 10px;
@@ -276,19 +273,17 @@
         .preset-btn-modern {
             display: flex; align-items: center; justify-content: space-between;
             padding: 14px 16px; border-radius: 12px;
-            border: 2px solid var(--item-border); /* Correction: Start with 2px border */
+            border: 2px solid transparent; 
             background: var(--bg-color); cursor: pointer; transition: all 0.2s;
-            min-height: 40px; /* Correction: Ensure same height */
+            min-height: 40px;
         }
-
-        /* Correction: Change preset highlight to border */
-        .preset-btn-modern:hover, .preset-btn-modern:active {
-            background: var(--bg-color); 
+        /* Correction: Keep preset selected with a border */
+        .preset-btn-modern.selected {
             border-color: var(--accent-blue);
         }
-        .preset-btn-modern:hover .preset-left, .preset-btn-modern:active .preset-left { color: var(--text-main); }
-        .preset-btn-modern:hover .preset-right, .preset-btn-modern:active .preset-right { color: var(--accent-blue); }
-        .preset-btn-modern:hover .preset-icon, .preset-btn-modern:active .preset-icon { background: var(--coupon-blue-bg); }
+        .preset-btn-modern:hover {
+            border-color: var(--accent-blue);
+        }
         
         .preset-left { display: flex; align-items: center; gap: 12px; color: var(--text-main); }
         .preset-icon {
@@ -299,11 +294,6 @@
         .preset-title { font-weight: 700; font-size: 14px; }
         .preset-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
         .preset-right { font-size: 18px; font-weight: 800; color: var(--accent-blue); }
-
-        /* Correction: Make 60/40 preset same size */
-        .preset-btn-modern:nth-child(2) {
-             min-height: 40px; /* Applied to all buttons via main class */
-        }
 
         .preset-footer-hint { font-size: 10px; color: #8e8e93; text-align: center; margin-top: 8px; font-style: italic; }
 
@@ -372,7 +362,6 @@
         }
         .info-expanded-block.show { display: block; }
         
-        /* MODERN Echelon Info Graphic Styles */
         .echelon-info-graphic {
             display: flex; flex-direction: column; gap: 10px; margin-top: 10px;
         }
@@ -459,7 +448,6 @@
             box-shadow: 0 4px 10px rgba(52, 152, 219, 0.2); z-index: 5; font-size: 20px; line-height: 1;
         }
         
-        /* UPDATED ECHELON SEPARATOR */
         .echelon-separator-modern {
             display: flex; justify-content: space-between; align-items: center;
             padding: 10px 0; margin-top: 15px; margin-bottom: 5px;
@@ -469,13 +457,11 @@
         .esm-dot { width: 8px; height: 8px; border-radius: 50%; }
         .esm-title { font-weight: 800; font-size: 12px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* ECHELON DOTS COLOR OVERRIDE */
         .echelon-separator-modern.echelon-1 .esm-dot { background-color: var(--accent-green); }
         .echelon-separator-modern.echelon-2 .esm-dot { background-color: var(--accent-blue); }
         .echelon-separator-modern.echelon-3 .esm-dot { background-color: var(--accent-yellow); }
         .echelon-separator-modern.echelon-4 .esm-dot { background-color: var(--accent-orange); }
 
-        /* LIGHT INFO BUTTON -- Correction: Make 'i' lighter/clearer */
         .esm-info-btn-light {
             width: 18px; height: 18px; border-radius: 50%;
             background: #f0f2f5; 
@@ -548,7 +534,6 @@
         }
         .tax-ui-btn.active { background: var(--card-bg); color: var(--accent-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-        /* MODERN IMPORTANT BLOCK */
         .footer-disclaimer-important {
             margin-top: 15px; margin-bottom: 25px; text-align: left; 
             color: var(--text-main); 
@@ -565,7 +550,6 @@
         }
         .footer-disclaimer { text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px; }
 
-        /* NAVIGATION UPDATE - WITHOUT DOLLAR BUTTON */
         .nav-wrapper {
             position: fixed; bottom: 25px; left: 0; width: 100%; 
             display: flex; justify-content: center; gap: 10px;
@@ -591,7 +575,6 @@
         .nav-search-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
         .nav-search-btn:active { transform: scale(0.9); }
         
-        /* EXPANDED SEARCH BAR UI */
         .nav-search-expanded {
             position: absolute; bottom: 0; left: 15px; right: 15px;
             height: 66px;
@@ -601,7 +584,6 @@
             border-radius: 25px;
             display: flex; align-items: center; padding: 0 10px; gap: 10px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
-            /* Correction: REMOVED BORDER PER REQUEST */
             border: none;
             transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 910;
@@ -632,7 +614,6 @@
             cursor: pointer; color: var(--accent-blue);
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        /* Make icon inside dynamic back button match other icons */
         .nav-back-island svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
 
         .theme-toggle-mini {
@@ -644,7 +625,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 910;
         }
 
-        /* ASSETS & UI */
         .list-header-row {
             display: grid; padding: 0 16px; margin-bottom: 5px;
             font-size: 9px; font-weight: 700; color: #95a5a6; text-transform: uppercase; letter-spacing: 0.5px;
@@ -655,7 +635,6 @@
         .list-header-row.ofz-cols span:first-child { text-align: left; }
         .list-header-row.ofz-cols span:nth-child(2), .list-header-row.ofz-cols span:nth-child(3) { text-align: center; }
         
-        /* Correction: Align monthly calculator headers */
         .list-header-row.calc-cols {
             display: grid; grid-template-columns: 1fr 60px 140px; gap: 8px;
             text-align: center; margin-bottom: 8px;
@@ -762,9 +741,9 @@
         }
         .qty-btn:active { transform: scale(0.9); background: #eee; }
         .calc-input {
-            width: 44px; /* Increased width for 10000 */
+            width: 44px;
             border: none;
-            font-size: 12px; /* Adjusted font size */
+            font-size: 12px;
             font-weight: bold; text-align: center;
             background: transparent; color: var(--text-main); outline: none; padding: 0;
             -moz-appearance: textfield;
@@ -788,7 +767,6 @@
             font-size: 14px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px; cursor: pointer;
         }
         
-        /* Yield Info Preview Box */
         .info-preview-box {
             display: none;
             background: var(--coupon-blue-bg);
@@ -817,7 +795,6 @@
         .btn-reset-wide:active { background: #e0e0e0; }
         .dark-mode .btn-reset-wide { background: #2d3748; color: #cbd5e0; }
         
-        /* IMPROVED REBALANCE INTRO */
         .rebalance-intro-modern {
             background: linear-gradient(135deg, var(--card-bg), var(--bg-color));
             border: 1px solid var(--border-color);
@@ -833,7 +810,7 @@
         }
         .rebalance-intro-modern b { color: var(--text-main); font-weight: 800; }
         .rebalance-intro-modern::before {
-            content: '💡'; /* Correction: More modern icon */
+            content: '💡';
             position: absolute;
             top: -12px; right: 20px;
             font-size: 18px;
@@ -871,7 +848,6 @@
             background: rgba(46, 204, 113, 0.1); padding: 2px 6px; border-radius: 6px;
         }
 
-        /* Echelon Expand Logic */
         .echelon-wrapper {
             position: relative; border-radius: 16px; 
             padding: 20px 5px; overflow: hidden; 
@@ -879,7 +855,6 @@
         }
         .echelon-wrapper.collapsed { max-height: 240px; }
         
-        /* FIX FOR OFZ WRAPPER SPACES */
         #ofz-wrapper { padding: 0; }
         #ofz-wrapper.collapsed { max-height: 180px; }
         
@@ -907,7 +882,6 @@
         .portfolio-empty { padding: 40px 20px; text-align: center; color: var(--text-secondary); }
         .portfolio-empty-icon { font-size: 40px; margin-bottom: 15px; opacity: 0.5; }
         
-        /* SUMMARY CARD STYLES */
         .summary-card {
             background: linear-gradient(135deg, var(--card-bg), #f8fafd);
             border-radius: 20px; padding: 20px; margin-bottom: 25px;
@@ -922,14 +896,13 @@
             border-radius: 50%; transform: translate(30%, -30%);
         }
         
-        /* MODIFIED PORTFOLIO SUMMARY CARD */
         .summary-top-modern {
             padding-bottom: 15px; border-bottom: 1px dashed var(--item-border);
         }
         .stm-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start; /* Align to top */
+            align-items: flex-start;
             margin-bottom: 12px;
         }
         .stm-header-label { font-size: 11px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -976,7 +949,6 @@
         .dot-bond { color: var(--accent-blue); font-size: 10px; margin-right: 4px; }
         .dot-stock { color: var(--accent-green); font-size: 10px; margin-right: 4px; }
         
-        /* COMPANY SCREEN STYLES - NEW DESIGN */
         .company-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
         .back-btn { width: 36px; height: 36px; border-radius: 12px; background: var(--card-bg); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; color: var(--text-main); }
         .company-title { font-size: 20px; font-weight: 800; line-height: 1.2; }
@@ -1107,7 +1079,7 @@
                     <span>Облигации <span id="labelBondsPct">50</span>%</span>
                     <span>Акции <span id="labelStocksPct">50</span>%</span>
                 </div>
-                <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
+                <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw(); clearPresetSelection();">
                 <div class="slider-hint-wrapper">
                     <span class="slider-hint">Выберите готовую стратегию или настройте вручную</span>
                     <div class="preset-dropdown-btn" id="presetDropdownBtn" onclick="togglePresetDropdown()">
@@ -1115,9 +1087,8 @@
                     </div>
                 </div>
                 
-                <!-- IMPROVED PRESET OPTIONS (Order: Bonds first as requested) -->
                 <div class="preset-options" id="presetOptions">
-                    <div class="preset-btn-modern" onclick="setPresetRatio(80)">
+                    <div class="preset-btn-modern" onclick="setPresetRatio(80, this)">
                         <div class="preset-left">
                             <div class="preset-icon">🛡️</div>
                             <div>
@@ -1127,7 +1098,7 @@
                         </div>
                         <div class="preset-right">80/20</div>
                     </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(60)">
+                    <div class="preset-btn-modern" onclick="setPresetRatio(60, this)">
                         <div class="preset-left">
                             <div class="preset-icon">⚖️</div>
                             <div>
@@ -1137,7 +1108,7 @@
                         </div>
                         <div class="preset-right">60/40</div>
                     </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(40)">
+                    <div class="preset-btn-modern" onclick="setPresetRatio(40, this)">
                         <div class="preset-left">
                             <div class="preset-icon">📈</div>
                             <div>
@@ -1147,7 +1118,7 @@
                         </div>
                         <div class="preset-right">40/60</div>
                     </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(20)">
+                    <div class="preset-btn-modern" onclick="setPresetRatio(20, this)">
                         <div class="preset-left">
                             <div class="preset-icon">🚀</div>
                             <div>
@@ -1318,7 +1289,6 @@
         
         <div class="section-header-styled" onclick="toggleOfzTable(document.getElementById('expandArrowOfz'))">
             <span>🛡️ ОФЗ для замены</span>
-            <!-- Correction: Replace text 'i' with modern SVG icon -->
             <span class="info-i-blue" onclick="showYieldInfo(event)">
                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             </span>
@@ -1348,14 +1318,12 @@
 
         <div class="section-header-styled" onclick="toggleInfoBlock(this)">
             <span>🚀 Акции для замены</span>
-            <!-- Correction: Unify arrow icons -->
             <span class="info-i-blue">
                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             </span>
         </div>
         
         <div class="info-expanded-block" style="margin-top:10px;">
-            <!-- IMPROVED ECHELON INFO DESIGN -->
             <div class="echelon-info-graphic">
                 <div class="eig-item e1">
                     <div class="eig-icon">💎</div>
@@ -1449,7 +1417,6 @@
             </div>
             <div class="coupon-content" id="calc-income-wrapper" style="padding: 10px; display:block;">
                 
-                <!-- === NEW MONTHLY INCOME CALCULATOR INPUT === -->
                 <div class="monthly-calc-box">
                     <div class="input-container">
                         <span class="input-label">Сумма Инвестиций</span>
@@ -1461,7 +1428,6 @@
                 </div>
                 
                 <p class="calc-expl-text">Калькулятор предлагает к покупке список ОФЗ, благодаря которому Вы будете получать ежемесячно выплаты купонов.</p>
-                <!-- === END OF UPDATE === -->
 
                 <div class="tax-selector-ui">
                     <button class="tax-ui-btn" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
@@ -1501,7 +1467,6 @@
         <div id="company-content"></div>
     </div>
 
-    <!-- NAVIGATION WITHOUT DOLLAR BUTTON -->
     <div class="nav-wrapper" id="navWrapper">
         <div class="nav-dock" id="standardNav">
             <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
@@ -1542,7 +1507,7 @@
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
         let bonds = [];
-        let monthlyIncomeBonds = []; // New variable for the monthly income calculator
+        let monthlyIncomeBonds = [];
         let brokerFee = 0.0003; 
         let currentTax = 0.13;
         let customTax = 0.13;
@@ -1562,24 +1527,23 @@
         ];
         let echelonTableData = [[], [], [], []];
         
-        // --- Swipe Navigation ---
         const swipeScreens = ['screen-home', 'screen-app', 'screen-portfolio', 'screen-assets'];
         let touchstartX = 0;
         let touchendX = 0;
 
         function handleGesture() {
             const deltaX = touchendX - touchstartX;
-            if (Math.abs(deltaX) < 75) return; // Ignore small swipes
+            if (Math.abs(deltaX) < 75) return; 
 
             const currentIndex = swipeScreens.indexOf(currentScreen);
-            if (currentIndex === -1) return; // Not a swipable screen
+            if (currentIndex === -1) return;
 
-            if (touchendX < touchstartX) { // Swiped left
+            if (touchendX < touchstartX) {
                 const nextIndex = Math.min(currentIndex + 1, swipeScreens.length - 1);
                 showScreen(swipeScreens[nextIndex]);
             }
 
-            if (touchendX > touchstartX) { // Swiped right
+            if (touchendX > touchstartX) {
                 const prevIndex = Math.max(currentIndex - 1, 0);
                 showScreen(swipeScreens[prevIndex]);
             }
@@ -1591,12 +1555,10 @@
 
         document.body.addEventListener('touchend', e => {
             touchendX = e.changedTouches[0].screenX;
-            // Prevent swipe when interacting with sliders or scrollable areas
             if(e.target.type !== 'range' && !e.target.closest('.scrollable')) {
                  handleGesture();
             }
         });
-        // --- End Swipe ---
 
         function checkFirstVisit() {
             const visited = localStorage.getItem('user_visited');
@@ -1652,7 +1614,6 @@
                 }
             };
             
-            // Bitcoin
             try {
                 const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
                 const data = await res.json();
@@ -1662,25 +1623,27 @@
                 }
             } catch(e) { console.log("BTC fetch error:", e); }
 
-            // MOEX data - Correction: More robust data handling
+            // Correction: More resilient fetch logic for MOEX data
             const fetchMoex = (url, valEl, dynEl) => {
                 fetch(url)
                     .then(r => r.json())
                     .then(d => {
-                        const marketdata = d.marketdata || d.marketdata_yields;
-                        if (!marketdata || !marketdata.data || marketdata.data.length === 0) {
+                        const marketdataBlock = d.marketdata || d.marketdata_yields;
+                        if (!marketdataBlock || !marketdataBlock.data || marketdataBlock.data.length === 0) {
                              console.log("No market data for:", valEl.id); return;
                         }
                         
-                        const cols = marketdata.columns;
-                        const dataRow = marketdata.data[0];
-                        const last = dataRow[cols.indexOf('LAST')] || dataRow[cols.indexOf('CURRENTVALUE')] || dataRow[cols.indexOf('YIELD')] ;
+                        const marketCols = marketdataBlock.columns;
+                        const marketDataRow = marketdataBlock.data[0];
+                        const last = marketDataRow[marketCols.indexOf('LAST')] || marketDataRow[marketCols.indexOf('CURRENTVALUE')] || marketDataRow[marketCols.indexOf('YIELD')] ;
                         
+                        if(last) valEl.innerText = last.toFixed(2).replace('.00', '') + (url.includes('USD') ? ' ₽' : '');
+
                         let changePercent = 0;
                         if (d.securities && d.securities.data && d.securities.data.length > 0) {
                             const secDataRow = d.securities.data[0];
                             const secCols = d.securities.columns;
-                            const open = dataRow[cols.indexOf('OPEN')];
+                            const open = marketDataRow[marketCols.indexOf('OPEN')];
                             const prev = secDataRow[secCols.indexOf('PREVPRICE')];
                             const referencePrice = open || prev;
                             if(last && referencePrice && referencePrice > 0) {
@@ -1688,7 +1651,6 @@
                             }
                         }
                         
-                        if(last) valEl.innerText = last.toFixed(2).replace('.00', '') + (url.includes('USD') ? ' ₽' : '');
                         setDynamics(dynEl, changePercent);
 
                     }).catch(e => console.log("MOEX error for:", valEl.id, e));
@@ -1781,12 +1743,17 @@
             btn.classList.toggle('open');
             options.classList.toggle('show');
         }
+        
+        // Correction: Function to clear preset selection
+        function clearPresetSelection() {
+             document.querySelectorAll('#presetOptions .preset-btn-modern').forEach(b => b.classList.remove('selected'));
+        }
 
-        function setPresetRatio(bondPct) {
+        // Correction: Update setPresetRatio to handle selection state
+        function setPresetRatio(bondPct, clickedButton) {
             document.getElementById('ratioSlider').value = bondPct;
-            // Correction: Do not collapse the preset block after selection
-            // document.getElementById('presetOptions').classList.remove('show'); 
-            // document.getElementById('presetDropdownBtn').classList.remove('open');
+            clearPresetSelection(); // Clear previous selections
+            clickedButton.classList.add('selected'); // Select the clicked one
             draw();
         }
 
@@ -1903,7 +1870,9 @@
 
         function resetRatio() {
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-            document.getElementById('ratioSlider').value = 50; draw();
+            document.getElementById('ratioSlider').value = 50; 
+            clearPresetSelection();
+            draw();
         }
 
         function setFee(val, btn) {
@@ -1992,14 +1961,12 @@
                 const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
                 
-                // --- Main 50/50 Calculator Bonds ---
                 let bondList = [];
                 for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
                 }
                 const bondPromises = bondList.map(async (b) => { const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; });
                 bonds = await Promise.all(bondPromises);
                 
-                // --- Stocks ---
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
                 }
@@ -2007,7 +1974,6 @@
                 echelons[1].assets = allStocks.slice(3, 6); echelons[2].assets = allStocks.slice(6, 9); echelons[3].assets = allStocks.slice(9, 12);
                 }
 
-                // --- Rebalance Echelons ---
                 echelonTableData = [[], [], [], []];
                 for (let i = 2; i <= 13; i++) {
                     if (rows[i]) {
@@ -2018,15 +1984,14 @@
                     }
                 }
                 
-                // --- Monthly Income Calculator Bonds ---
                 let monthlyBondList = [];
-                for (let i = 2; i <= 13; i++) { // Corresponds to spreadsheet rows 3 to 14
-                    if (rows[i] && rows[i][31] && rows[i][31].trim() !== '') { // Check if AF is not empty
+                for (let i = 2; i <= 13; i++) {
+                    if (rows[i] && rows[i][31] && rows[i][31].trim() !== '') {
                         monthlyBondList.push({
-                            t: rows[i][31], // AF: Ticker
-                            n: rows[i][31], // AF: Using Ticker as Name per user request
-                            p: parseFloat(String(rows[i][33]).replace(',', '.')) || 0, // AH: Price
-                            y: rows[i][32] || '0%' // AG: Yield
+                            t: rows[i][31],
+                            n: rows[i][31],
+                            p: parseFloat(String(rows[i][33]).replace(',', '.')) || 0,
+                            y: rows[i][32] || '0%'
                         });
                     }
                 }
@@ -2040,8 +2005,6 @@
                 draw();
             } catch (e) { console.error(e); }
         }
-
-        // --- MONTHLY INCOME CALCULATOR LOGIC (CORRECTED) ---
 
         function changeQty(ticker, delta) {
             const input = document.getElementById(`input-${ticker}`);
@@ -2064,7 +2027,6 @@
         function updateMonthlySumFromQuantities() {
             if (isUpdatingProgrammatically) return;
             let totalSum = 0;
-            // Correction: Use monthlyIncomeBonds array
             monthlyIncomeBonds.forEach(bond => {
                 const input = document.getElementById(`input-${bond.t}`);
                 if (input) {
@@ -2088,7 +2050,6 @@
             const sumInput = document.getElementById('monthlySumInput');
             const sum = parseFloat(sumInput.value) || 0;
             
-            // Correction: Use monthlyIncomeBonds array
             if (monthlyIncomeBonds.length === 0) return;
 
             if (sum === 0) {
@@ -2111,7 +2072,6 @@
                 totalRemainder -= qty * fullCost;
             });
 
-            // Re-invest remainder
             if (totalRemainder > 0 && monthlyIncomeBonds.length > 0) {
                 const firstBond = monthlyIncomeBonds[0];
                 const firstBondCost = (firstBond.p + firstBond.nkd) * (1 + customTax);
@@ -2131,7 +2091,6 @@
             const container = document.getElementById('calc-bonds-input-list');
             if(!container) return;
             let html = '';
-            // Correction: Use monthlyIncomeBonds array
             monthlyIncomeBonds.forEach(b => {
                 html += `
                 <div class="calc-bond-row">
@@ -2162,6 +2121,7 @@
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
 
+        // Correction: More robust calculation logic
         function recalcCustomCoupons() {
             const inputs = document.querySelectorAll('#calc-bonds-input-list .calc-input');
             let allFutureCoupons = [];
@@ -2174,11 +2134,10 @@
                 if (qty > 0 && details && details.freq > 0 && details.couponValue > 0) {
                     let currentDate = new Date(details.nextCoupon);
                     const intervalDays = Math.round(365 / details.freq);
-                    // Correction: Use monthlyIncomeBonds array to find the name
                     const bondName = monthlyIncomeBonds.find(b => b.t === ticker)?.n || ticker;
 
-                    for (let i = 0; i < 3; i++) { // Check for 3 future payments
-                        if (currentDate instanceof Date && !isNaN(currentDate)) {
+                    for (let i = 0; i < 3; i++) { // Check for 3 future payments to ensure we have enough data
+                        if (currentDate instanceof Date && !isNaN(currentDate)) { // Check if date is valid
                             const paymentDate = new Date(currentDate);
                             const netAmount = (details.couponValue * qty) * (1 - customTax);
                             allFutureCoupons.push({
@@ -2229,8 +2188,6 @@
 
             if(resultList) resultList.innerHTML = html;
         }
-
-        // --- END OF MONTHLY CALC LOGIC ---
 
         function updateEchelonTable() {
             const body = document.getElementById('echelon-tickers-body');
