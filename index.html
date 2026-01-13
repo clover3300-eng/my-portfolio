@@ -2215,11 +2215,14 @@
         }
 
         function distributeMonthlyInvestment() {
+            // Защита от зацикливания (чтобы обновление полей не вызывало пересчет снова)
             if (isUpdatingProgrammatically) return;
-            const sumInput = document.getElementById('monthlySumInput');
-            const sum = parseFloat(sumInput.value) || 0;
 
-            if (monthlyIncomeBonds.length === 0 || sum === 0) {
+            const sumInput = document.getElementById('monthlySumInput');
+            // Если поле пустое или 0 - очищаем всё
+            const totalSum = parseFloat(sumInput.value) || 0;
+            
+            if (monthlyIncomeBonds.length === 0 || totalSum <= 0) {
                  monthlyIncomeBonds.forEach(bond => {
                     const input = document.getElementById(`input-${bond.t}`);
                     if(input) input.value = 0;
@@ -2228,29 +2231,97 @@
                 return;
             };
 
-            const amountPerBond = sum / monthlyIncomeBonds.length;
-            let totalRemainder = sum;
-
-            monthlyIncomeBonds.forEach(bond => {
-                const fullCost = (bond.p + bond.nkd) * (1 + customTax);
-                const qty = fullCost > 0 ? Math.floor(amountPerBond / fullCost) : 0;
-                const input = document.getElementById(`input-${bond.t}`);
-                if(input) input.value = qty;
-                totalRemainder -= qty * fullCost;
+            // 1. РАВНОЕ РАСПРЕДЕЛЕНИЕ
+            // Делим 1 000 000 на 6 = 166 666.67
+            const budgetPerBond = totalSum / monthlyIncomeBonds.length;
+            
+            let currentTotalSpent = 0; // Сумма реальных покупок (без комиссии)
+            
+            // Создаем временный массив для расчетов, чтобы не дергать DOM лишний раз
+            // И сразу парсим доходность в число для сортировки
+            let calcList = monthlyIncomeBonds.map(b => {
+                // Парсим "14.5%" в число 14.5
+                let yieldNum = parseFloat(b.y.replace(/[^\d.-]/g, '')) || 0;
+                // Полная цена = Цена + НКД
+                let fullPrice = b.p + b.nkd;
+                
+                return {
+                    ...b,
+                    yieldNum: yieldNum,
+                    fullPrice: fullPrice,
+                    qty: 0,
+                    cost: 0
+                };
             });
 
-            if (totalRemainder > 0 && monthlyIncomeBonds.length > 0) {
-                const firstBond = monthlyIncomeBonds[0];
-                const firstBondCost = (firstBond.p + firstBond.nkd) * (1 + customTax);
-                if (firstBondCost > 0) {
-                    const extraQty = Math.floor(totalRemainder / firstBondCost);
+            // 2. ПЕРВИЧНАЯ ЗАКУПКА (ПРОХОД ПО ВСЕМ БУМАГАМ)
+            calcList.forEach(bond => {
+                if (bond.fullPrice > 0) {
+                    // Сколько штук влезает в бюджет на одну бумагу
+                    // Math.floor округляет вниз (268.9 -> 268)
+                    bond.qty = Math.floor(budgetPerBond / bond.fullPrice);
+                    
+                    // Сколько реально потратили на эту бумагу
+                    bond.cost = bond.qty * bond.fullPrice;
+                    
+                    // Добавляем в общие траты
+                    currentTotalSpent += bond.cost;
+                }
+            });
+
+            // 3. РАСЧЕТ ОСТАТКА И КОМИССИИ
+            // Остаток = Все деньги - Потраченные деньги (пока без комиссии)
+            let grossRemainder = totalSum - currentTotalSpent;
+            
+            // Считаем комиссию на УЖЕ совершенные покупки
+            // brokerFee берется из глобальной настройки (которую ты кнопками 0.03% меняешь)
+            let totalCommission = currentTotalSpent * brokerFee;
+            
+            // Чистый остаток = Грязный остаток - Комиссия
+            let netRemainder = grossRemainder - totalCommission;
+
+            // 4. ДОКУПКА НА ОСТАТОК (РЕИНВЕСТ)
+            // Если денег осталось больше, чем 0
+            if (netRemainder > 0) {
+                // Ищем САМУЮ ДОХОДНУЮ бумагу
+                // Сортируем список по убыванию доходности (yieldNum)
+                // Находим лидера
+                let bestBond = null;
+                let maxYield = -1;
+                
+                calcList.forEach(b => {
+                    if (b.yieldNum > maxYield) {
+                        maxYield = b.yieldNum;
+                        bestBond = b;
+                    }
+                });
+
+                // Если нашли лучшую бумагу и цена адекватная
+                if (bestBond && bestBond.fullPrice > 0) {
+                    // Считаем, сколько стоит ОДНА штука с учетом комиссии (ведь на докупку тоже нужна комса)
+                    let costOfOneWithFee = bestBond.fullPrice * (1 + brokerFee);
+                    
+                    // Сколько штук можем докупить на чистый остаток
+                    let extraQty = Math.floor(netRemainder / costOfOneWithFee);
+                    
                     if (extraQty > 0) {
-                        const firstBondInput = document.getElementById(`input-${firstBond.t}`);
-                        firstBondInput.value = (parseInt(firstBondInput.value) || 0) + extraQty;
+                        bestBond.qty += extraQty;
+                        // (Остаток после этого уже не важен, он остается "мелочью" на счете)
                     }
                 }
             }
 
+            // 5. ОБНОВЛЯЕМ ПОЛЯ ВВОДА НА ЭКРАНЕ
+            isUpdatingProgrammatically = true; // Блокируем, чтобы не вызвать infinite loop
+            calcList.forEach(bond => {
+                const input = document.getElementById(`input-${bond.t}`);
+                if(input) {
+                    input.value = bond.qty;
+                }
+            });
+            isUpdatingProgrammatically = false;
+
+            // 6. ПЕРЕСЧИТЫВАЕМ ТАБЛИЦУ ВЫПЛАТ
             recalcCustomCoupons();
         }
 
