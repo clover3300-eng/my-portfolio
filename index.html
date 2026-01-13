@@ -1542,7 +1542,7 @@
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
         let bonds = [];
-        let monthlyIncomeBonds = []; // Correction: New variable for the monthly income calculator
+        let monthlyIncomeBonds = []; // New variable for the monthly income calculator
         let brokerFee = 0.0003; 
         let currentTax = 0.13;
         let customTax = 0.13;
@@ -2018,13 +2018,13 @@
                     }
                 }
                 
-                // --- Correction: Monthly Income Calculator Bonds ---
+                // --- Monthly Income Calculator Bonds ---
                 let monthlyBondList = [];
                 for (let i = 2; i <= 13; i++) { // Corresponds to spreadsheet rows 3 to 14
-                    if (rows[i] && rows[i][31] && rows[i][31].trim() !== '') {
+                    if (rows[i] && rows[i][31] && rows[i][31].trim() !== '') { // Check if AF is not empty
                         monthlyBondList.push({
                             t: rows[i][31], // AF: Ticker
-                            n: rows[i][30] || rows[i][31], // AE: Name, fallback to ticker
+                            n: rows[i][31], // AF: Using Ticker as Name per user request
                             p: parseFloat(String(rows[i][33]).replace(',', '.')) || 0, // AH: Price
                             y: rows[i][32] || '0%' // AG: Yield
                         });
