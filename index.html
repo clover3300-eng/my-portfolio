@@ -1500,11 +1500,12 @@
                 
                 <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">.</div>
                 
-                <div class="list-header-row calc-cols">
-                    <span>НАЗВАНИЕ</span>
-                    <span>ДОХОДНОСТЬ</span>
-                    <span>КОЛИЧЕСТВО</span>
-                </div>
+                <div class="list-header-row calc-cols" style="grid-template-columns: 85px 1fr 60px 80px;">
+                 <span>ДАТА</span>
+                 <span>НАЗВАНИЕ</span>
+                 <span style="text-align:center">КОЛ-ВО</span>
+                 <span style="text-align:right">СУММА</span>
+               </div>
                 
                 <div id="calc-bonds-input-list"></div>
                 
@@ -2057,23 +2058,42 @@
                 // NEW: Load Monthly Income Bonds from AF, AG
                 // Payment Schedule from AB, AC
                 let mbList = [];
-                for (let i = 2; i <= 13; i++) {
-                     if (rows[i] && rows[i][31]) { 
-                        mbList.push({
-                             t: rows[i][31], // Name (used as ticker for search)
-                             y: rows[i][32], // Yield
-                             dateStr: rows[i][27], // AB: Date
-                             couponVal: parseFloat(rows[i][28].replace(',','.')) || 0 // AC: Coupon Amount
-                        });
-                     }
-                }
-                const mbPromises = mbList.map(async (b) => {
-                     const extra = await fetchBondData(b.t);
-                     const price = (extra.price > 0) ? extra.price : 1000;
-                     return { ...b, p: price, nkd: extra.nkd, n: b.t }; 
-                });
-                monthlyIncomeBonds = await Promise.all(mbPromises);
+// Проходим по строкам с 3 по 14 (индексы 2-13)
+for (let i = 2; i <= 13; i++) {
+    if (rows[i]) {
+        mbList.push({
+            // Тикер берем из AF (31), чтобы использовать как ID для input
+            t: rows[i][31], 
+            
+            // AB (27) - Дата выплаты
+            dateStr: rows[i][27], 
+            
+            // AC (28) - Название для таблицы результатов
+            displayName: rows[i][28], 
+            
+            // AE (30) - Сумма купона (парсим число)
+            staticCouponVal: parseFloat(rows[i][30].replace(',', '.')) || 0,
+            
+            // AG (32) - Доходность (для отображения в блоке ввода)
+            y: rows[i][32] || '0%' 
+        });
+    }
+}
 
+// Загружаем цены через API только для расчета стоимости покупки (Input блок),
+// но для расчета выплат будем использовать staticCouponVal из CSV
+const mbPromises = mbList.map(async (b) => {
+    const extra = await fetchBondData(b.t);
+    // Если цена не пришла, ставим 1000 по умолчанию
+    const price = (extra.price > 0) ? extra.price : 1000;
+    return { 
+        ...b, 
+        p: price, 
+        nkd: extra.nkd, 
+        n: b.displayName // Используем имя из столбца AC как основное имя
+    };
+});
+monthlyIncomeBonds = await Promise.all(mbPromises);
 
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
@@ -2226,70 +2246,58 @@
         }
 
         function recalcCustomCoupons() {
-            const inputs = document.querySelectorAll('.calc-input');
-            let allFutureCoupons = [];
-            
-            inputs.forEach(input => {
-                const qty = parseInt(input.value) || 0;
-                const ticker = input.getAttribute('data-ticker');
-                const bond = monthlyIncomeBonds.find(b => b.t === ticker);
+    const resultList = document.getElementById('calc-results-list');
+    const resultFooter = document.getElementById('calc-results-footer');
+    
+    let html = '';
+    let totalAmount = 0;
+    
+    // Проходим строго по нашему списку из 12 бумаг
+    monthlyIncomeBonds.forEach(bond => {
+        // Находим поле ввода по тикеру
+        const input = document.getElementById(`input-${bond.t}`);
+        const qty = input ? (parseInt(input.value) || 0) : 0;
+        
+        // Расчет: Значение из столбца AE * Количество * (1 - Налог)
+        // staticCouponVal мы сохранили в loadData из колонки 30 (AE)
+        const grossAmount = bond.staticCouponVal * qty;
+        const netAmount = grossAmount * (1 - customTax);
+        
+        totalAmount += netAmount;
 
-                if (bond && bond.dateStr) {
-                    const parts = bond.dateStr.split('.');
-                    let paymentDate;
-                    if(parts.length === 3) {
-                         paymentDate = new Date(parts[2], parts[1]-1, parts[0]);
-                    } else {
-                         paymentDate = new Date(bond.dateStr); 
-                    }
+        // Формируем строку HTML
+        // Используем grid-template-columns, аналогичный заголовку
+        html += `
+        <div class="coupon-row" style="grid-template-columns: 85px 1fr 60px 80px;">
+            <div style="font-weight:bold; color:var(--text-main);">${bond.dateStr}</div>
+            <div style="color:#8e8e93; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${limitName(bond.displayName)}</div>
+            <div style="text-align:center">${qty} шт.</div>
+            <div style="text-align:right"><b>${Math.round(netAmount).toLocaleString()} ₽</b></div>
+        </div>`;
+    });
 
-                    // Calculation based on Column AC (couponVal)
-                    const val = bond.couponVal || 0;
-                    const netAmount = (val * qty) * (1 - customTax);
-                    
-                    if(!isNaN(paymentDate.getTime())) {
-                        allFutureCoupons.push({
-                            date: paymentDate,
-                            name: bond.n,
-                            qty: qty,
-                            amount: netAmount
-                        });
-                    }
-                }
-            });
+    if(resultList) resultList.innerHTML = html;
 
-            allFutureCoupons.sort((a, b) => a.date - b.date);
-            // Limit to 12
-            const couponsToDisplay = allFutureCoupons.slice(0, 12);
-            
-            let html = '';
-            const resultList = document.getElementById('calc-results-list');
-            const resultFooter = document.getElementById('calc-results-footer');
-            
-            let totalAmount = 0;
+    // Итого в футере
+    if(resultFooter) {
+        // Сумма за год (все 12 выплат)
+        const yearTotal = Math.round(totalAmount).toLocaleString();
+        // Среднее в месяц
+        const monthAvg = Math.round(totalAmount / 12).toLocaleString();
+        
+        resultFooter.innerHTML = `
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span>Итого за год:</span>
+                <span>${yearTotal} ₽</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; color:var(--accent-green);">
+                <span>Среднее в месяц:</span>
+                <span style="font-size:14px; font-weight:800;">${monthAvg} ₽</span>
+            </div>
+        `;
+    }
+}
 
-            if (couponsToDisplay.length === 0) {
-                html = 'Загрузка данных...';
-                if(resultFooter) resultFooter.innerHTML = '';
-            } else {
-                 couponsToDisplay.forEach(r => {
-                    totalAmount += r.amount;
-                    // Always render the row, even if amount is 0
-                    html += `
-                    <div class="coupon-row">
-                        <div><b>${r.date.toLocaleDateString('ru-RU')}</b></div>
-                        <div style="color:#8e8e93">${limitName(r.name)}</div>
-                        <div style="text-align:center">${r.qty}шт.</div>
-                        <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
-                    </div>`;
-                });
-                
-                const averagePayment = couponsToDisplay.length > 0 ? totalAmount / 12 : 0;
-                if(resultFooter) resultFooter.innerHTML = `Средняя выплата в месяц: <span style="color:var(--accent-green); font-size:14px;">${Math.round(averagePayment).toLocaleString()} ₽</span>`;
-            }
-
-            if(resultList) resultList.innerHTML = html;
-        }
 
         // --- END OF MONTHLY CALC LOGIC ---
 
