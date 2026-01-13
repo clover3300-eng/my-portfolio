@@ -1500,12 +1500,11 @@
                 
                 <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">.</div>
                 
-                <div class="list-header-row calc-cols" style="grid-template-columns: 85px 1fr 60px 80px;">
-                 <span>ДАТА</span>
-                 <span>НАЗВАНИЕ</span>
-                 <span style="text-align:center">КОЛ-ВО</span>
-                 <span style="text-align:right">СУММА</span>
-               </div>
+                <div class="list-header-row calc-cols">
+                    <span>НАЗВАНИЕ</span>
+                    <span style="text-align: center;">ДОХОДНОСТЬ</span>
+                    <span style="text-align: center;">КОЛИЧЕСТВО</span>
+                </div>
                 
                 <div id="calc-bonds-input-list"></div>
                 
@@ -2102,80 +2101,62 @@
                 bonds = await Promise.all(bondPromises);
 
                 
-                // --- ВОТ ЗДЕСЬ ОБНОВЛЕННЫЙ БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА ---
+                // --- НАЧАЛО: ОБНОВЛЕННЫЙ БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА ---
                 
                 allScheduledPayments = []; 
                 let uniqueTickersMap = new Map(); 
 
+                // The loop now goes from row 3 (index 2) to row 14 (index 13)
                 for (let i = 2; i <= 13; i++) {
-                    if (rows[i]) {
-                        // Берем НАЗВАНИЕ из колонки AC (индекс 28) или AF (индекс 31), где оно у тебя написано
-                        // Предположим, что в AC (28) точное название как на бирже (например "ОФЗ 26238")
-                        let rawName = rows[i][28]; 
-                        let rawNameFallback = rows[i][31]; // Про запас смотрим и в AF
-
-                        let dateStr = rows[i][27];      // AB
-                        let bondName = rows[i][28];     // AC (Для отображения)
-                        let yieldVal = rows[i][32];     // AG
-                        let couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0; // AE
-
-                        // ИЩЕМ ТИКЕР В СЛОВАРЕ
-                        let foundTicker = null;
+                    if (rows[i] && rows[i].length > 33) { // Ensure row has enough columns
                         
-                        if (rawName) {
-                            let key = rawName.trim().toUpperCase();
-                            foundTicker = globalTickerMap[key];
-                        }
+                        // User-specified columns
+                        const ticker = rows[i][31];       // AF3:AF14 -> Tickers
+                        const displayName = rows[i][32];  // AG3:AG14 -> Display Names
+                        const yieldVal = rows[i][33];     // AH3:AH14 -> Yields
                         
-                        // Если по имени из AC не нашли, пробуем по имени из AF
-                        if (!foundTicker && rawNameFallback) {
-                            let key = rawNameFallback.trim().toUpperCase();
-                            foundTicker = globalTickerMap[key];
-                        }
+                        // Columns from original logic that seem to be kept
+                        const dateStr = rows[i][27];      // AB -> Date for payment schedule
+                        const couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0; // AE -> Coupon value for payment schedule
 
-                        // Если всё еще не нашли (вдруг в таблице написано чуть иначе), 
-                        // то оставляем как есть, но цена будет 1000.
-                        // Но теперь вероятность найти 99%, если названия совпадают.
-                        let finalTicker = foundTicker || ""; 
+                        // The ticker is now directly provided
+                        let finalTicker = ticker || ""; 
 
-                        // Добавляем в список выплат (Все 12 строк)
-                        if (dateStr || bondName) {
+                        // Add to the list of all 12 monthly payments (for the bottom list)
+                        if (dateStr || displayName) {
                             allScheduledPayments.push({
                                 t: finalTicker, 
                                 dateStr: dateStr || "---",
-                                displayName: bondName || "---",
+                                displayName: displayName || "---",
                                 staticCouponVal: couponAmount
                             });
                         }
 
-                        // Добавляем в кнопки (только уникальные и найденные)
+                        // Add to the list of unique bonds for the top list (where quantity is set)
                         if (finalTicker) {
                             if (!uniqueTickersMap.has(finalTicker)) {
                                 uniqueTickersMap.set(finalTicker, {
-                                    t: finalTicker, // Теперь тут настоящий тикер SU...!
+                                    t: finalTicker,
                                     y: yieldVal || '0%',
-                                    n: bondName // Название для отображения
+                                    n: displayName // Use the new display name
                                 });
                             }
                         }
                     }
                 }
 
-                // Грузим цены по НАСТОЯЩИМ тикерам
+                // Fetch prices for unique tickers
                 let uniqueBondsList = Array.from(uniqueTickersMap.values());
                 const mbPromises = uniqueBondsList.map(async (b) => {
-                    // Теперь fetchBondData получит правильный SU... и вернет реальную цену!
                     const extra = await fetchBondData(b.t);
-                    const price = (extra.price > 0) ? extra.price : 1000;
+                    // Apply the x10 multiplication for the price from API
+                    const price = (extra.price > 0) ? extra.price * 10 : 1000;
                     return { ...b, p: price, nkd: extra.nkd };
                 });
                 
                 monthlyIncomeBonds = await Promise.all(mbPromises);
-                renderCustomBondCalc();
-                setTimeout(recalcCustomCoupons, 500);
 
-                // --- КОНЕЦ БЛОКА ---
-
+                // --- КОНЕЦ ОБНОВЛЕННОГО БЛОКА ---
 
 
                 let allStocks = [];
