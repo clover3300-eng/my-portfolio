@@ -2328,24 +2328,37 @@
         function renderCustomBondCalc() {
             const container = document.getElementById('calc-bonds-input-list');
             if(!container) return;
+            
             let html = '';
+            
             monthlyIncomeBonds.forEach(b => {
+                // Считаем полную цену для отображения
+                const fullPrice = (b.p + b.nkd).toFixed(2);
+                
                 html += `
                 <div class="calc-bond-row">
-                    <div class="unified-badge-container">
-                        <div class="ub-name">${limitName(b.n)}</div>
+                    <div class="unified-badge-container" style="flex-direction:column; align-items:flex-start;">
+                        <div class="ub-name" style="width:100%">${limitName(b.n)}</div>
+                        <!-- НОВАЯ СТРОКА: ПОКАЗЫВАЕМ ЦЕНУ, КОТОРУЮ ВИДИТ РОБОТ -->
+                        <div style="font-size:9px; color:#999; margin-top:2px; padding-left:2px;">
+                            Расчетная цена: <b>${fullPrice} ₽</b> (P:${b.p} + N:${b.nkd})
+                        </div>
                     </div>
+                    
                     <div class="ub-yield">${b.y.replace('%', '')}%</div>
+                    
                     <div class="qty-controls">
                         <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
                         <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="updateMonthlySumFromQuantities()">
                         <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
+                        
                         <div class="btn-row-reset" onclick="resetOne('${b.t}')">
                             <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                         </div>
                     </div>
                 </div>`;
             });
+            
             container.innerHTML = html;
         }
 
