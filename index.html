@@ -209,7 +209,7 @@
             box-shadow: 0 15px 35px var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color);
         }
         .calc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-        .input-container { flex: 1; }
+        .input-container { flex: 1; margin-top: 10px; } /* Correction: Lower the sum input */
         .input-label { font-size: 13px; color: #8e8e93; font-weight: 600; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         .input-wrapper { display: flex; align-items: baseline; gap: 8px; }
         input#sumInput { 
@@ -275,15 +275,20 @@
         
         .preset-btn-modern {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 16px; border-radius: 12px; border: 1px solid var(--item-border);
+            padding: 14px 16px; border-radius: 12px;
+            border: 2px solid var(--item-border); /* Correction: Start with 2px border */
             background: var(--bg-color); cursor: pointer; transition: all 0.2s;
+            min-height: 40px; /* Correction: Ensure same height */
         }
+
+        /* Correction: Change preset highlight to border */
         .preset-btn-modern:hover, .preset-btn-modern:active {
-            background: var(--accent-blue); border-color: var(--accent-blue);
+            background: var(--bg-color); 
+            border-color: var(--accent-blue);
         }
-        .preset-btn-modern:hover .preset-left, .preset-btn-modern:active .preset-left { color: white; }
-        .preset-btn-modern:hover .preset-right, .preset-btn-modern:active .preset-right { color: rgba(255,255,255,0.8); }
-        .preset-btn-modern:hover .preset-icon, .preset-btn-modern:active .preset-icon { background: rgba(255,255,255,0.2); }
+        .preset-btn-modern:hover .preset-left, .preset-btn-modern:active .preset-left { color: var(--text-main); }
+        .preset-btn-modern:hover .preset-right, .preset-btn-modern:active .preset-right { color: var(--accent-blue); }
+        .preset-btn-modern:hover .preset-icon, .preset-btn-modern:active .preset-icon { background: var(--coupon-blue-bg); }
         
         .preset-left { display: flex; align-items: center; gap: 12px; color: var(--text-main); }
         .preset-icon {
@@ -294,6 +299,12 @@
         .preset-title { font-weight: 700; font-size: 14px; }
         .preset-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
         .preset-right { font-size: 18px; font-weight: 800; color: var(--accent-blue); }
+
+        /* Correction: Make 60/40 preset same size */
+        .preset-btn-modern:nth-child(2) {
+             min-height: 40px; /* Applied to all buttons via main class */
+        }
+
         .preset-footer-hint { font-size: 10px; color: #8e8e93; text-align: center; margin-top: 8px; font-style: italic; }
 
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
@@ -464,16 +475,18 @@
         .echelon-separator-modern.echelon-3 .esm-dot { background-color: var(--accent-yellow); }
         .echelon-separator-modern.echelon-4 .esm-dot { background-color: var(--accent-orange); }
 
-        /* LIGHT INFO BUTTON */
+        /* LIGHT INFO BUTTON -- Correction: Make 'i' lighter/clearer */
         .esm-info-btn-light {
-            width: 18px; height: 18px; border-radius: 50%; 
-            background: rgba(0,0,0,0.05); color: var(--text-secondary);
+            width: 18px; height: 18px; border-radius: 50%;
+            background: #f0f2f5; 
+            color: #78909c;
             font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; border: 1px solid rgba(0,0,0,0.1);
+            cursor: pointer; 
+            border: 1px solid #e0e0e0;
             transition: all 0.2s;
         }
         .esm-info-btn-light:hover { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
-        .dark-mode .esm-info-btn-light { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        .dark-mode .esm-info-btn-light { background: #334155; color: #cbd5e1; border-color: #475569; }
         
         .esm-pct { 
             font-size: 12px; font-weight: normal; color: var(--text-secondary); 
@@ -588,7 +601,7 @@
             border-radius: 25px;
             display: flex; align-items: center; padding: 0 10px; gap: 10px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
-            /* REMOVED BORDER PER REQUEST */
+            /* Correction: REMOVED BORDER PER REQUEST */
             border: none;
             transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 910;
@@ -630,7 +643,6 @@
             cursor: pointer; position: absolute; top: -10px; right: -12px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 910;
         }
-        .theme-toggle-mini svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
 
         /* ASSETS & UI */
         .list-header-row {
@@ -643,11 +655,15 @@
         .list-header-row.ofz-cols span:first-child { text-align: left; }
         .list-header-row.ofz-cols span:nth-child(2), .list-header-row.ofz-cols span:nth-child(3) { text-align: center; }
         
+        /* Correction: Align monthly calculator headers */
         .list-header-row.calc-cols {
             display: grid; grid-template-columns: 1fr 60px 140px; gap: 8px;
             text-align: center; margin-bottom: 8px;
         }
         .list-header-row.calc-cols span:first-child { text-align: left; }
+        .list-header-row.calc-cols span:nth-child(2) { text-align: center; }
+        .list-header-row.calc-cols span:nth-child(3) { text-align: right; padding-right: 30px; }
+
 
         .ofz-card-modern {
             background: var(--card-bg); border-radius: 16px;
@@ -817,7 +833,7 @@
         }
         .rebalance-intro-modern b { color: var(--text-main); font-weight: 800; }
         .rebalance-intro-modern::before {
-            content: 'ℹ️';
+            content: '💡'; /* Correction: More modern icon */
             position: absolute;
             top: -12px; right: 20px;
             font-size: 18px;
@@ -1302,8 +1318,9 @@
         
         <div class="section-header-styled" onclick="toggleOfzTable(document.getElementById('expandArrowOfz'))">
             <span>🛡️ ОФЗ для замены</span>
+            <!-- Correction: Replace text 'i' with modern SVG icon -->
             <span class="info-i-blue" onclick="showYieldInfo(event)">
-                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 12m-10 0a10 10 0 1 0 20 0 10 10 0 1 0-20 0"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             </span>
         </div>
         <div class="info-preview-box" id="yield-info-box">
@@ -1331,8 +1348,9 @@
 
         <div class="section-header-styled" onclick="toggleInfoBlock(this)">
             <span>🚀 Акции для замены</span>
+            <!-- Correction: Unify arrow icons -->
             <span class="info-i-blue">
-                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             </span>
         </div>
         
@@ -1451,12 +1469,10 @@
                     <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
                 </div>
                 
-                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">.</div>
-                
                 <div class="list-header-row calc-cols">
-                    <span>Название</span>
-                    <span>Доходность</span>
-                    <span>Количество</span>
+                    <span>НАЗВАНИЕ</span>
+                    <span>ДОХОДНОСТЬ</span>
+                    <span>КОЛИЧЕСТВО</span>
                 </div>
                 
                 <div id="calc-bonds-input-list"></div>
@@ -1526,6 +1542,7 @@
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
         let bonds = [];
+        let monthlyIncomeBonds = []; // Correction: New variable for the monthly income calculator
         let brokerFee = 0.0003; 
         let currentTax = 0.13;
         let customTax = 0.13;
@@ -1616,6 +1633,12 @@
 
         async function updateMarketData() {
             const setDynamics = (el, change) => {
+                if (typeof change !== 'number' || !isFinite(change)) {
+                    el.classList.remove('positive', 'negative');
+                    el.classList.add('neutral');
+                    el.innerText = '--%';
+                    return;
+                }
                 el.classList.remove('positive', 'negative', 'neutral');
                 if (change > 0.01) {
                     el.classList.add('positive');
@@ -1639,28 +1662,35 @@
                 }
             } catch(e) { console.log("BTC fetch error:", e); }
 
-            // MOEX data
+            // MOEX data - Correction: More robust data handling
             const fetchMoex = (url, valEl, dynEl) => {
                 fetch(url)
                     .then(r => r.json())
                     .then(d => {
                         const marketdata = d.marketdata || d.marketdata_yields;
-                        if (!marketdata || marketdata.data.length === 0) return;
+                        if (!marketdata || !marketdata.data || marketdata.data.length === 0) {
+                             console.log("No market data for:", valEl.id); return;
+                        }
                         
                         const cols = marketdata.columns;
-                        const data = marketdata.data[0];
-                        const last = data[cols.indexOf('LAST')] || data[cols.indexOf('CURRENTVALUE')] || data[cols.indexOf('YIELD')] ;
-                        const open = data[cols.indexOf('OPEN')];
-                        const prev = d.securities.data[0][d.securities.columns.indexOf('PREVPRICE')];
+                        const dataRow = marketdata.data[0];
+                        const last = dataRow[cols.indexOf('LAST')] || dataRow[cols.indexOf('CURRENTVALUE')] || dataRow[cols.indexOf('YIELD')] ;
                         
                         let changePercent = 0;
-                        const referencePrice = open || prev;
-                        if(last && referencePrice && referencePrice > 0) {
-                            changePercent = ((last - referencePrice) / referencePrice) * 100;
+                        if (d.securities && d.securities.data && d.securities.data.length > 0) {
+                            const secDataRow = d.securities.data[0];
+                            const secCols = d.securities.columns;
+                            const open = dataRow[cols.indexOf('OPEN')];
+                            const prev = secDataRow[secCols.indexOf('PREVPRICE')];
+                            const referencePrice = open || prev;
+                            if(last && referencePrice && referencePrice > 0) {
+                                changePercent = ((last - referencePrice) / referencePrice) * 100;
+                            }
                         }
                         
                         if(last) valEl.innerText = last.toFixed(2).replace('.00', '') + (url.includes('USD') ? ' ₽' : '');
                         setDynamics(dynEl, changePercent);
+
                     }).catch(e => console.log("MOEX error for:", valEl.id, e));
             };
 
@@ -1754,8 +1784,9 @@
 
         function setPresetRatio(bondPct) {
             document.getElementById('ratioSlider').value = bondPct;
-            document.getElementById('presetOptions').classList.remove('show');
-            document.getElementById('presetDropdownBtn').classList.remove('open');
+            // Correction: Do not collapse the preset block after selection
+            // document.getElementById('presetOptions').classList.remove('show'); 
+            // document.getElementById('presetDropdownBtn').classList.remove('open');
             draw();
         }
 
@@ -1961,12 +1992,14 @@
                 const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
                 
+                // --- Main 50/50 Calculator Bonds ---
                 let bondList = [];
                 for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
                 }
                 const bondPromises = bondList.map(async (b) => { const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; });
                 bonds = await Promise.all(bondPromises);
                 
+                // --- Stocks ---
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
                 }
@@ -1974,6 +2007,7 @@
                 echelons[1].assets = allStocks.slice(3, 6); echelons[2].assets = allStocks.slice(6, 9); echelons[3].assets = allStocks.slice(9, 12);
                 }
 
+                // --- Rebalance Echelons ---
                 echelonTableData = [[], [], [], []];
                 for (let i = 2; i <= 13; i++) {
                     if (rows[i]) {
@@ -1984,13 +2018,30 @@
                     }
                 }
                 
+                // --- Correction: Monthly Income Calculator Bonds ---
+                let monthlyBondList = [];
+                for (let i = 2; i <= 13; i++) { // Corresponds to spreadsheet rows 3 to 14
+                    if (rows[i] && rows[i][31] && rows[i][31].trim() !== '') {
+                        monthlyBondList.push({
+                            t: rows[i][31], // AF: Ticker
+                            n: rows[i][30] || rows[i][31], // AE: Name, fallback to ticker
+                            p: parseFloat(String(rows[i][33]).replace(',', '.')) || 0, // AH: Price
+                            y: rows[i][32] || '0%' // AG: Yield
+                        });
+                    }
+                }
+                const monthlyBondPromises = monthlyBondList.map(async (b) => { 
+                    const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; 
+                });
+                monthlyIncomeBonds = await Promise.all(monthlyBondPromises);
+
                 renderCustomBondCalc();
                 distributeMonthlyInvestment();
                 draw();
             } catch (e) { console.error(e); }
         }
 
-        // --- MONTHLY INCOME CALCULATOR LOGIC ---
+        // --- MONTHLY INCOME CALCULATOR LOGIC (CORRECTED) ---
 
         function changeQty(ticker, delta) {
             const input = document.getElementById(`input-${ticker}`);
@@ -2013,7 +2064,8 @@
         function updateMonthlySumFromQuantities() {
             if (isUpdatingProgrammatically) return;
             let totalSum = 0;
-            bonds.forEach(bond => {
+            // Correction: Use monthlyIncomeBonds array
+            monthlyIncomeBonds.forEach(bond => {
                 const input = document.getElementById(`input-${bond.t}`);
                 if (input) {
                     const qty = parseInt(input.value) || 0;
@@ -2035,9 +2087,12 @@
             if (isUpdatingProgrammatically) return;
             const sumInput = document.getElementById('monthlySumInput');
             const sum = parseFloat(sumInput.value) || 0;
+            
+            // Correction: Use monthlyIncomeBonds array
+            if (monthlyIncomeBonds.length === 0) return;
 
-            if (bonds.length === 0 || sum === 0) {
-                 bonds.forEach(bond => {
+            if (sum === 0) {
+                 monthlyIncomeBonds.forEach(bond => {
                     const input = document.getElementById(`input-${bond.t}`);
                     if(input) input.value = 0;
                 });
@@ -2045,10 +2100,10 @@
                 return;
             };
 
-            const amountPerBond = sum / bonds.length;
+            const amountPerBond = sum / monthlyIncomeBonds.length;
             let totalRemainder = sum;
 
-            bonds.forEach(bond => {
+            monthlyIncomeBonds.forEach(bond => {
                 const fullCost = (bond.p + bond.nkd) * (1 + customTax);
                 const qty = fullCost > 0 ? Math.floor(amountPerBond / fullCost) : 0;
                 const input = document.getElementById(`input-${bond.t}`);
@@ -2057,8 +2112,8 @@
             });
 
             // Re-invest remainder
-            if (totalRemainder > 0 && bonds.length > 0) {
-                const firstBond = bonds[0];
+            if (totalRemainder > 0 && monthlyIncomeBonds.length > 0) {
+                const firstBond = monthlyIncomeBonds[0];
                 const firstBondCost = (firstBond.p + firstBond.nkd) * (1 + customTax);
                 if (firstBondCost > 0) {
                     const extraQty = Math.floor(totalRemainder / firstBondCost);
@@ -2076,7 +2131,8 @@
             const container = document.getElementById('calc-bonds-input-list');
             if(!container) return;
             let html = '';
-            bonds.forEach(b => {
+            // Correction: Use monthlyIncomeBonds array
+            monthlyIncomeBonds.forEach(b => {
                 html += `
                 <div class="calc-bond-row">
                     <div class="unified-badge-container">
@@ -2100,14 +2156,14 @@
             isUpdatingProgrammatically = true;
             document.getElementById('monthlySumInput').value = 0;
             isUpdatingProgrammatically = false;
-            const inputs = document.querySelectorAll('.calc-input');
+            const inputs = document.querySelectorAll('#calc-bonds-input-list .calc-input');
             inputs.forEach(input => input.value = 0);
             recalcCustomCoupons();
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
 
         function recalcCustomCoupons() {
-            const inputs = document.querySelectorAll('.calc-input');
+            const inputs = document.querySelectorAll('#calc-bonds-input-list .calc-input');
             let allFutureCoupons = [];
             
             inputs.forEach(input => {
@@ -2118,18 +2174,21 @@
                 if (qty > 0 && details && details.freq > 0 && details.couponValue > 0) {
                     let currentDate = new Date(details.nextCoupon);
                     const intervalDays = Math.round(365 / details.freq);
-                    const bondName = bonds.find(b => b.t === ticker)?.n || ticker;
+                    // Correction: Use monthlyIncomeBonds array to find the name
+                    const bondName = monthlyIncomeBonds.find(b => b.t === ticker)?.n || ticker;
 
-                    for (let i = 0; i < 3; i++) {
-                        const paymentDate = new Date(currentDate);
-                        const netAmount = (details.couponValue * qty) * (1 - customTax);
-                        allFutureCoupons.push({
-                            date: paymentDate,
-                            name: bondName,
-                            qty: qty,
-                            amount: netAmount
-                        });
-                        currentDate.setDate(currentDate.getDate() + intervalDays);
+                    for (let i = 0; i < 3; i++) { // Check for 3 future payments
+                        if (currentDate instanceof Date && !isNaN(currentDate)) {
+                            const paymentDate = new Date(currentDate);
+                            const netAmount = (details.couponValue * qty) * (1 - customTax);
+                            allFutureCoupons.push({
+                                date: paymentDate,
+                                name: bondName,
+                                qty: qty,
+                                amount: netAmount
+                            });
+                            currentDate.setDate(currentDate.getDate() + intervalDays);
+                        }
                     }
                 }
             });
@@ -2451,7 +2510,7 @@
                         <div class="esm-dot"></div>
                         <span class="esm-title">${e.title}</span>
                         <div class="esm-info-btn-light" onclick="toggleEchelonTip(event, '${tipId}')">
-                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                         </div>
                     </div>
                     <div class="esm-pct">
@@ -2550,3 +2609,5 @@
     </script>
 </body>
 </html>
+
+Есть ли что-то еще, с чем я могу помочь?
