@@ -2059,56 +2059,62 @@
                 // NEW: Load Monthly Income Bonds from AF, AG
                 // --- НОВЫЙ КОД: Разделяем Уникальные бумаги и График выплат ---
                 
-                allScheduledPayments = []; 
-                let uniqueTickersMap = new Map(); 
+                 allScheduledPayments = []; // Глобальный список выплат
+                let uniqueTickersMap = new Map(); // Список для кнопок (уникальные бумаги)
 
-                // Проходим по строкам с 3 по 14
+                // Жестко идем по строкам с 3 по 14 (индексы 2-13)
                 for (let i = 2; i <= 13; i++) {
                     if (rows[i]) {
-                        let ticker = rows[i][31];       // Столбец AF
-                        let yieldVal = rows[i][32];     // Столбец AG
-                        
-                        if (!ticker || ticker.trim() === "") continue;
+                        // 1. БЕРЕМ ДАННЫЕ О ВЫПЛАТЕ (AB и AC)
+                        // Индекс 27 = AB (Дата)
+                        let dateStr = rows[i][27]; 
+                        // Индекс 28 = AC (Название)
+                        let bondName = rows[i][28];
+                        // Индекс 30 = AE (Сумма купона)
+                        let couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0;
 
-                        let dateStr = rows[i][27];      // Столбец AB
-                        let bondName = rows[i][28];     // Столбец AC
-                        let couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0; // AE
+                        // БЕРЕМ ТИКЕР (AF) ЧТОБЫ СВЯЗАТЬ С КАЛЬКУЛЯТОРОМ
+                        let ticker = rows[i][31]; 
+                        let yieldVal = rows[i][32];
 
-                        // Добавляем в ОБЩИЙ глобальный список (для таблицы результатов)
-                        allScheduledPayments.push({
-                            t: ticker, 
-                            dateStr: dateStr,
-                            displayName: bondName,
-                            staticCouponVal: couponAmount
-                        });
-
-                        // Добавляем в УНИКАЛЬНЫЙ список (для кнопок ввода)
-                        if (!uniqueTickersMap.has(ticker)) {
-                            uniqueTickersMap.set(ticker, {
-                                t: ticker,
-                                y: yieldVal || '0%',
-                                n: bondName 
+                        // ВАЖНО: Если есть Дата или Название - мы ОБЯЗАТЕЛЬНО добавляем строку в список выплат
+                        // Даже если тикер пустой, строка всё равно покажется в таблице
+                        if (dateStr || bondName) {
+                            allScheduledPayments.push({
+                                t: ticker, // Может быть пустым, ничего страшного
+                                dateStr: dateStr || "---",
+                                displayName: bondName || "---",
+                                staticCouponVal: couponAmount
                             });
+                        }
+
+                        // 2. ФОРМИРУЕМ СПИСОК КНОПОК (Только если есть реальный тикер)
+                        if (ticker && ticker.trim() !== "") {
+                            if (!uniqueTickersMap.has(ticker)) {
+                                uniqueTickersMap.set(ticker, {
+                                    t: ticker,
+                                    y: yieldVal || '0%',
+                                    n: bondName // Берем название просто для подписи кнопки
+                                });
+                            }
                         }
                     }
                 }
 
-                // Превращаем Map уникальных бумаг обратно в массив для обработки
+                // Готовим список кнопок для ввода
                 let uniqueBondsList = Array.from(uniqueTickersMap.values());
 
-                // Загружаем цены с Мосбиржи ТОЛЬКО для уникальных бумаг (чтобы не грузить лишнее)
+                // Грузим цены только для кнопок
                 const mbPromises = uniqueBondsList.map(async (b) => {
                     const extra = await fetchBondData(b.t);
                     const price = (extra.price > 0) ? extra.price : 1000;
-                    return { 
-                        ...b, 
-                        p: price, 
-                        nkd: extra.nkd 
-                    };
+                    return { ...b, p: price, nkd: extra.nkd };
                 });
                 
-                // Сохраняем готовый список для INPURT-блока (где мы вводим количество)
                 monthlyIncomeBonds = await Promise.all(mbPromises);
+                
+                // Сразу после загрузки обновляем список выплат на экране, чтобы он не был пустым
+                setTimeout(recalcCustomCoupons, 500);
 
 
                 let allStocks = [];
