@@ -2058,42 +2058,66 @@
                 // NEW: Load Monthly Income Bonds from AF, AG
                 // Payment Schedule from AB, AC
                 let mbList = [];
-// Проходим по строкам с 3 по 14 (индексы 2-13)
-for (let i = 2; i <= 13; i++) {
-    if (rows[i]) {
-        mbList.push({
-            // Тикер берем из AF (31), чтобы использовать как ID для input
-            t: rows[i][31], 
-            
-            // AB (27) - Дата выплаты
-            dateStr: rows[i][27], 
-            
-            // AC (28) - Название для таблицы результатов
-            displayName: rows[i][28], 
-            
-            // AE (30) - Сумма купона (парсим число)
-            staticCouponVal: parseFloat(rows[i][30].replace(',', '.')) || 0,
-            
-            // AG (32) - Доходность (для отображения в блоке ввода)
-            y: rows[i][32] || '0%' 
-        });
-    }
-}
+                // Мы берем строки с 3 по 14. В программировании отсчет с 0, поэтому это индексы 2..13
+                for (let i = 2; i <= 13; i++) {
+                    // Проверяем, существует ли строка вообще
+                    if (rows[i]) {
+                        
+                        // 1. БЛОК ОФЗ (AF3:AF14 и AG3:AG14)
+                        // Индекс 31 соответствует столбцу AF (A=0 ... AF=31)
+                        let ticker = rows[i][31]; 
+                        
+                        // Индекс 32 соответствует столбцу AG (Доходность)
+                        let yieldVal = rows[i][32];
 
-// Загружаем цены через API только для расчета стоимости покупки (Input блок),
-// но для расчета выплат будем использовать staticCouponVal из CSV
-const mbPromises = mbList.map(async (b) => {
-    const extra = await fetchBondData(b.t);
-    // Если цена не пришла, ставим 1000 по умолчанию
-    const price = (extra.price > 0) ? extra.price : 1000;
-    return { 
-        ...b, 
-        p: price, 
-        nkd: extra.nkd, 
-        n: b.displayName // Используем имя из столбца AC как основное имя
-    };
-});
-monthlyIncomeBonds = await Promise.all(mbPromises);
+                        // ВАЖНО: Если ячейка с Тикером пустая - пропускаем эту строку (как ты просил)
+                        if (!ticker || ticker.trim() === "") continue;
+
+                        // 2. БЛОК ВЫПЛАТЫ (AB3:AC14)
+                        // Индекс 27 = AB (Дата)
+                        let dateStr = rows[i][27];
+                        
+                        // Индекс 28 = AC (Название)
+                        let bondName = rows[i][28];
+
+                        // Индекс 30 = AE (Сумма купона).
+                        // Мы это берем, чтобы знать СКОЛЬКО платит облигация. 
+                        // (Если в таблице сумма в AE, оставляем 30. Если нет - скажи, поправим)
+                        let couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0;
+
+                        // Добавляем эту облигацию в наш список
+                        mbList.push({
+                            t: ticker,            // Тикер для API (из AF)
+                            y: yieldVal || '0%',  // Доходность для отображения (из AG)
+                            
+                            dateStr: dateStr,     // Дата выплаты (из AB)
+                            displayName: bondName,// Название для таблицы выплат (из AC)
+                            
+                            staticCouponVal: couponAmount // Сумма выплаты (из AE)
+                        });
+                    }
+                }
+
+                // Теперь идем на Московскую Биржу за Ценами и НКД для каждой найденной облигации
+                const mbPromises = mbList.map(async (b) => {
+                    // Делаем запрос к API биржи по тикеру
+                    const extra = await fetchBondData(b.t);
+                    
+                    // Если биржа вернула цену, берем её. Если нет (вдруг сбой) - ставим 1000 руб как заглушку.
+                    const price = (extra.price > 0) ? extra.price : 1000;
+                    
+                    // Возвращаем обновленные данные
+                    return { 
+                        ...b, 
+                        p: price,      // Чистая цена (от API)
+                        nkd: extra.nkd,// НКД (от API)
+                        n: b.displayName // В поле 'n' записываем название из колонки AC
+                    };
+                });
+                
+                // Ждем, пока загрузятся данные по ВСЕМ облигациям
+                monthlyIncomeBonds = await Promise.all(mbPromises);
+
 
                 let allStocks = [];
                 for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
