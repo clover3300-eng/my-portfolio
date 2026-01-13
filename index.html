@@ -2039,103 +2039,143 @@
             } catch (e) { return { nkd: 0, matDate: '—', price: 0 }; }
         }
 
+
+            // Словарь для поиска Тикера по Названию
+        let globalTickerMap = {};
+
+        async function initMoexDictionary() {
+            try {
+                // Запрашиваем список всех облигаций с режима торгов TQOB (Т+1, основные торги ОФЗ)
+                const res = await fetch('https://iss.moex.com/iss/engines/stock/markets/bonds/boards/TQOB/securities.json?iss.only=securities');
+                const json = await res.json();
+                
+                const data = json.securities.data;
+                const cols = json.securities.columns;
+                
+                const idxSecId = cols.indexOf('SECID');       // Тикер (SU...)
+                const idxShort = cols.indexOf('SHORTNAME');   // Короткое имя (ОФЗ 26238)
+                const idxName = cols.indexOf('NAME');         // Полное имя
+                
+                globalTickerMap = {};
+                
+                data.forEach(row => {
+                    const secId = row[idxSecId];
+                    const shortName = row[idxShort];
+                    const fullName = row[idxName];
+                    
+                    // Сохраняем варианты, чтобы наверняка найти
+                    // Приводим к верхнему регистру и убираем лишние пробелы для надежности
+                    if(shortName) globalTickerMap[shortName.trim().toUpperCase()] = secId;
+                    if(fullName) globalTickerMap[fullName.trim().toUpperCase()] = secId;
+                    // На случай, если в таблице все-таки указан сам тикер
+                    globalTickerMap[secId.trim().toUpperCase()] = secId; 
+                });
+                
+                console.log("Словарь Мосбиржи загружен. Найдено облигаций:", Object.keys(globalTickerMap).length);
+                
+            } catch (e) {
+                console.error("Ошибка загрузки словаря Мосбиржи:", e);
+            }
+        }
+
+
         async function loadData() {
             initTheme();
             loadSettings();
             checkFirstVisit();
             updateMarketData();
             updateMarketStatus();
+            
+            // 1. СНАЧАЛА ГРУЗИМ СЛОВАРЬ (Это новое!)
+            await initMoexDictionary();
+
             try {
                 const response = await fetch(CSV_URL);
                 const text = await response.text();
+                // Парсим CSV...
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
                 
+                // ... (тут твой код загрузки bonds для первого блока 50/50, оставляем как было) ...
                 let bondList = [];
-                for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' });
-                }
+                for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' }); }
                 const bondPromises = bondList.map(async (b) => { const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; });
                 bonds = await Promise.all(bondPromises);
+
                 
-                // NEW: Load Monthly Income Bonds from AF, AG
-                // --- НОВЫЙ КОД: Разделяем Уникальные бумаги и График выплат ---
+                // --- ВОТ ЗДЕСЬ ОБНОВЛЕННЫЙ БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА ---
                 
-                 allScheduledPayments = []; 
+                allScheduledPayments = []; 
                 let uniqueTickersMap = new Map(); 
-                let nameToTickerIndex = {}; // Словарь: "Название" -> "Тикер"
 
-                // ШАГ 1: Пробегаем, чтобы запомнить, какому Названию какой Тикер принадлежит
-                // Это нужно, чтобы заполнить пробелы в столбце AF для второй выплаты
                 for (let i = 2; i <= 13; i++) {
                     if (rows[i]) {
-                        let ticker = rows[i][31]; // AF
-                        let name = rows[i][28];   // AC
-                        
-                        // Если в строке есть и Тикер, и Название - запоминаем эту связь
-                        if (ticker && ticker.trim() !== "" && name) {
-                            nameToTickerIndex[name.trim()] = ticker.trim();
-                        }
-                    }
-                }
+                        // Берем НАЗВАНИЕ из колонки AC (индекс 28) или AF (индекс 31), где оно у тебя написано
+                        // Предположим, что в AC (28) точное название как на бирже (например "ОФЗ 26238")
+                        let rawName = rows[i][28]; 
+                        let rawNameFallback = rows[i][31]; // Про запас смотрим и в AF
 
-                // ШАГ 2: Формируем списки
-                for (let i = 2; i <= 13; i++) {
-                    if (rows[i]) {
-                        // Данные из ячеек
-                        let rawTicker = rows[i][31];    // AF (может быть пустым)
-                        let yieldVal = rows[i][32];     // AG
                         let dateStr = rows[i][27];      // AB
-                        let bondName = rows[i][28];     // AC
+                        let bondName = rows[i][28];     // AC (Для отображения)
+                        let yieldVal = rows[i][32];     // AG
                         let couponAmount = parseFloat(rows[i][30].replace(',', '.')) || 0; // AE
 
-                        let cleanName = bondName ? bondName.trim() : "";
-
-                        // -- МАГИЯ ЗДЕСЬ --
-                        // Мы пытаемся найти тикер. 
-                        // 1. Если он написан в ячейке AF - берем его.
-                        // 2. Если ячейка пустая - ищем тикер по Названию в нашем словаре.
-                        let resolvedTicker = rawTicker;
-                        if (!resolvedTicker || resolvedTicker.trim() === "") {
-                            resolvedTicker = nameToTickerIndex[cleanName] || "";
+                        // ИЩЕМ ТИКЕР В СЛОВАРЕ
+                        let foundTicker = null;
+                        
+                        if (rawName) {
+                            let key = rawName.trim().toUpperCase();
+                            foundTicker = globalTickerMap[key];
+                        }
+                        
+                        // Если по имени из AC не нашли, пробуем по имени из AF
+                        if (!foundTicker && rawNameFallback) {
+                            let key = rawNameFallback.trim().toUpperCase();
+                            foundTicker = globalTickerMap[key];
                         }
 
-                        // А. Добавляем в СПИСОК ВЫПЛАТ (все 12 строк)
-                        // Теперь у каждой выплаты будет resolvedTicker, даже если в AF пусто!
+                        // Если всё еще не нашли (вдруг в таблице написано чуть иначе), 
+                        // то оставляем как есть, но цена будет 1000.
+                        // Но теперь вероятность найти 99%, если названия совпадают.
+                        let finalTicker = foundTicker || ""; 
+
+                        // Добавляем в список выплат (Все 12 строк)
                         if (dateStr || bondName) {
                             allScheduledPayments.push({
-                                t: resolvedTicker, // Сюда подставится найденный тикер
+                                t: finalTicker, 
                                 dateStr: dateStr || "---",
                                 displayName: bondName || "---",
                                 staticCouponVal: couponAmount
                             });
                         }
 
-                        // Б. Добавляем в СПИСОК КНОПОК (Только те, где в AF реально что-то написано)
-                        // Как ты и просил: "пустые ячейки не берем"
-                        if (rawTicker && rawTicker.trim() !== "") {
-                            if (!uniqueTickersMap.has(rawTicker)) {
-                                uniqueTickersMap.set(rawTicker, {
-                                    t: rawTicker,
+                        // Добавляем в кнопки (только уникальные и найденные)
+                        if (finalTicker) {
+                            if (!uniqueTickersMap.has(finalTicker)) {
+                                uniqueTickersMap.set(finalTicker, {
+                                    t: finalTicker, // Теперь тут настоящий тикер SU...!
                                     y: yieldVal || '0%',
-                                    n: bondName 
+                                    n: bondName // Название для отображения
                                 });
                             }
                         }
                     }
                 }
 
-                // ШАГ 3: Загружаем цены для кнопок
+                // Грузим цены по НАСТОЯЩИМ тикерам
                 let uniqueBondsList = Array.from(uniqueTickersMap.values());
                 const mbPromises = uniqueBondsList.map(async (b) => {
+                    // Теперь fetchBondData получит правильный SU... и вернет реальную цену!
                     const extra = await fetchBondData(b.t);
                     const price = (extra.price > 0) ? extra.price : 1000;
                     return { ...b, p: price, nkd: extra.nkd };
                 });
                 
                 monthlyIncomeBonds = await Promise.all(mbPromises);
+                renderCustomBondCalc();
                 setTimeout(recalcCustomCoupons, 500);
-                
-                // Сразу после загрузки обновляем список выплат на экране, чтобы он не был пустым
-                setTimeout(recalcCustomCoupons, 500);
+
+                // --- КОНЕЦ БЛОКА ---
+
 
 
                 let allStocks = [];
