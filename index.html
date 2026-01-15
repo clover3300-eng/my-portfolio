@@ -2113,34 +2113,36 @@ updateRatesDisplay();
                 // --- БЛОК ЗАГРУЗКИ ЕЖЕМЕСЯЧНОГО ДОХОДА (ИСПРАВЛЕННЫЙ) ---
                 
                 allScheduledPayments = []; 
-                let uniqueBondsForCalc = new Map();
+                let uniqueBondsMap = new Map();
 
-                // Цикл с 3-й по 14-ю строку Excel (индексы массива 2-13)
+                // Проходим строго по 12 строкам (с 3-й по 14-ю)
                 for (let i = 2; i <= 13; i++) {
-                    if (!rows[i] || rows[i].length < 34) continue;
+                    if (!rows[i]) continue;
                     
-                    // 1. Формируем список уникальных ОФЗ для ВЕРХНЕЙ части (калькулятора)
-                    // Данные берем из колонок AF (тикер), AG (имя), AH (доходность)
-                    const ticker = rows[i][31]; // Колонка AF
-                    if (ticker) {
-                        if (!uniqueBondsForCalc.has(ticker)) {
-                            uniqueBondsForCalc.set(ticker, {
-                                t: ticker,          
-                                n: rows[i][32],     // AG
-                                y: rows[i][33]      // AH
-                            });
-                        }
-                    }
+                    const ticker = rows[i][31] ? rows[i][31].trim() : ''; // AF
+                    const dateVal = rows[i][27] || "---";               // AB
+                    const nameVal = rows[i][28] || "---";               // AC
+                    const couponVal = parseFloat(rows[i][29]) || 0;     // AD
 
-                    // 2. Формируем список из 12 выплат для НИЖНЕЙ части
-                    // Здесь используем ваши колонки: AB (индекс 27) и AC (индекс 28)
+                    // 1. Добавляем в список для нижней таблицы (всегда 12 строк)
                     allScheduledPayments.push({
-                        dateStr: rows[i][27] || "---",       // Колонка AB (Дата)
-                        displayName: rows[i][28] || "---",   // Колонка AC (Название)
-                        paymentTicker: rows[i][31] || "",    // Колонка AF (Тикер - нужен для связи с верхом!)
-                        staticCouponVal: parseFloat(rows[i][29]) || 0 // Колонка AD (Размер купона для расчета)
+                        dateStr: dateVal,
+                        displayName: nameVal,
+                        paymentTicker: ticker,
+                        staticCouponVal: couponVal
                     });
+
+                    // 2. Собираем уникальные облигации для верхней части (инпутов)
+                    if (ticker && !uniqueBondsMap.has(ticker)) {
+                        uniqueBondsMap.set(ticker, {
+                            t: ticker,          
+                            n: rows[i][32] || ticker, // AG
+                            y: rows[i][33] || "0%"    // AH
+                        });
+                    }
                 }
+                // Превращаем Map в массив для верхних карточек
+                monthlyIncomeBonds = Array.from(uniqueBondsMap.values());
                 
                 // 3. Запрашиваем по API данные для уникальных тикеров
                 let uniqueBondsList = Array.from(uniqueBondsForCalc.values());
