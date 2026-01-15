@@ -2110,33 +2110,37 @@ updateRatesDisplay();
 
                 // --- НАЧАЛО: ИСПРАВЛЕННЫЙ БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА ---
                 
+                // --- БЛОК ЗАГРУЗКИ ЕЖЕМЕСЯЧНОГО ДОХОДА (ИСПРАВЛЕННЫЙ) ---
+                
                 allScheduledPayments = []; 
                 let uniqueBondsForCalc = new Map();
 
-                // Цикл с 3-й по 14-ю строку (индексы 2-13)
+                // Цикл с 3-й по 14-ю строку Excel (индексы массива 2-13)
                 for (let i = 2; i <= 13; i++) {
-    if (!rows[i] || rows[i].length < 34) continue;
-    
-    // 1. Формируем список для калькулятора (верхняя часть)
-    const ticker = rows[i][31]; // AF
-    if (ticker) {
-        if (!uniqueBondsForCalc.has(ticker)) {
-            uniqueBondsForCalc.set(ticker, {
-                t: ticker,          // AF3:AF14
-                n: rows[i][32],     // AG3:AG14
-                y: rows[i][33]      // AH3:AH14
-            });
-        }
-    }
+                    if (!rows[i] || rows[i].length < 34) continue;
+                    
+                    // 1. Формируем список уникальных ОФЗ для ВЕРХНЕЙ части (калькулятора)
+                    // Данные берем из колонок AF (тикер), AG (имя), AH (доходность)
+                    const ticker = rows[i][31]; // Колонка AF
+                    if (ticker) {
+                        if (!uniqueBondsForCalc.has(ticker)) {
+                            uniqueBondsForCalc.set(ticker, {
+                                t: ticker,          
+                                n: rows[i][32],     // AG
+                                y: rows[i][33]      // AH
+                            });
+                        }
+                    }
 
-    // 2. Формируем список из 12 выплат (нижняя часть)
-    allScheduledPayments.push({
-        dateStr: rows[i][27] || "---",       // AB3:AB14 - дата
-        displayName: rows[i][28] || "---",   // AC3:AC14 - название
-        paymentTicker: rows[i][31] || "",    // AF3:AF14 - тикер
-        staticCouponVal: parseFloat(rows[i][29]) || 0  // ДОБАВИТЬ ЭТУ СТРОКУ - AD3:AD14 - размер купона
-    });
-}
+                    // 2. Формируем список из 12 выплат для НИЖНЕЙ части
+                    // Здесь используем ваши колонки: AB (индекс 27) и AC (индекс 28)
+                    allScheduledPayments.push({
+                        dateStr: rows[i][27] || "---",       // Колонка AB (Дата)
+                        displayName: rows[i][28] || "---",   // Колонка AC (Название)
+                        paymentTicker: rows[i][31] || "",    // Колонка AF (Тикер - нужен для связи с верхом!)
+                        staticCouponVal: parseFloat(rows[i][29]) || 0 // Колонка AD (Размер купона для расчета)
+                    });
+                }
                 
                 // 3. Запрашиваем по API данные для уникальных тикеров
                 let uniqueBondsList = Array.from(uniqueBondsForCalc.values());
@@ -2355,39 +2359,44 @@ monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
             let totalAmount = 0;
             let hasAnyPayments = false;
 
+            // Если список выплат пуст, выходим
             if (typeof allScheduledPayments === 'undefined' || allScheduledPayments.length === 0) {
                  resultList.innerHTML = '<div style="text-align:center; padding:10px;">Загрузка списка выплат...</div>';
                  return;
             }
             
-            // Собираем актуальные количества из инпутов
+            // 1. Создаем справочник количеств: Тикер -> Количество введенное вверху
             const bondQtyMap = {};
             monthlyIncomeBonds.forEach(bond => {
+                // Ищем инпут по тикеру
                 const input = document.getElementById(`input-${bond.t}`);
+                // Берем значение, если инпут найден
                 const qty = input ? (parseInt(input.value) || 0) : 0;
+                
                 bondQtyMap[bond.t] = {
                     qty: qty,
-                    // Если API вернуло couponValue, берем его, иначе 0
                     apiCouponValue: bond.couponValue || 0 
                 };
             });
             
-            // Формируем нижний список выплат
+            // 2. Строим нижний список на основе 12 строк из Excel (allScheduledPayments)
             allScheduledPayments.forEach(payment => {
                 const ticker = payment.paymentTicker ? payment.paymentTicker.trim() : '';
                 
                 let qty = 0;
-                let couponValue = payment.staticCouponVal || 0; // Сначала берем из CSV как базовое значение
+                let couponValue = payment.staticCouponVal || 0; // Базовое значение из Excel (AD)
                 
+                // Если по этому тикеру есть данные сверху - берем количество оттуда
                 if (ticker && bondQtyMap[ticker]) {
-                    qty = bondQtyMap[ticker].qty;
-                    // Если есть данные из API, они точнее, берем их
+                    qty = bondQtyMap[ticker].qty; // <--- ВОТ ЗДЕСЬ ДУБЛИРУЕТСЯ КОЛИЧЕСТВО
+                    
+                    // Если API успело подгрузить точный купон, используем его, иначе из Excel
                     if (bondQtyMap[ticker].apiCouponValue > 0) {
                         couponValue = bondQtyMap[ticker].apiCouponValue;
                     }
                 }
                 
-                // Считаем только если есть количество
+                // Отображаем строку только если количество > 0
                 if (qty > 0) {
                     hasAnyPayments = true;
                     const grossAmount = couponValue * qty;
@@ -2396,16 +2405,17 @@ monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
 
                     html += `
                     <div class="coupon-row">
-                        <div><b>${payment.dateStr}</b></div>
+                        <div style="width: 85px;"><b>${payment.dateStr}</b></div>
                         <div style="color:#8e8e93; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${limitName(payment.displayName)}</div>
-                        <div style="text-align:center">${qty} шт.</div>
-                        <div style="text-align:right"><b>${Math.round(netAmount).toLocaleString()} ₽</b></div>
+                        <div style="text-align:center; width: 50px;">${qty} шт.</div>
+                        <div style="text-align:right; width: 70px;"><b>${Math.round(netAmount).toLocaleString()} ₽</b></div>
                     </div>`;
                 }
             });
 
+            // Если ничего не выбрано (везде 0 шт)
             if (!hasAnyPayments) {
-                resultList.innerHTML = '<div style="text-align:center; padding:20px; color:#aaa;">Введите сумму инвестиций или измените количество бумаг выше, чтобы увидеть график выплат.</div>';
+                resultList.innerHTML = '<div style="text-align:center; padding:20px; color:#aaa; font-size: 11px;">Введите сумму или количество бумаг выше, чтобы увидеть график выплат.</div>';
                 resultFooter.innerHTML = '';
             } else {
                 resultList.innerHTML = html;
@@ -2419,13 +2429,12 @@ monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
                         <span>${yearTotal} ₽</span>
                     </div>
                     <div style="display:flex; justify-content:space-between; color:var(--accent-green); margin-top:5px; padding-top:5px; border-top:1px solid #eee;">
-                        <span>Средняя выплата в месяц:</span>
+                        <span>Средняя Выплата в месяц:</span>
                         <span style="font-size:14px; font-weight:800;">~${monthAvg} ₽</span>
                     </div>
                 `;
             }
         }
-
 
         // --- END OF MONTHLY CALC LOGIC ---
 
