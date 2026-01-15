@@ -1,9 +1,10 @@
 const CACHE_NAME = 'solomina-v1';
 const urlsToCache = [
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  './',
+  'manifest.json',
+  'icon-192.png',
+  'icon-512.png'
+  // НЕ добавляйте index.html, используйте './'
 ];
 
 // Установка Service Worker
