@@ -1466,10 +1466,10 @@
                 <span>Инфляция (г/г)</span>
                 <b id="val-inflation">9.1%</b>
              </div>
-                 <div class="rv-item">
+                <div class="rv-item">
                 <span>ОФЗ 10 лет</span>
-                <b id="val-ofz10">---</b>
-             </div>
+                <b id="val-ofz10">---%</b>
+              </div>
             </div>
         </div>
 
@@ -1644,9 +1644,7 @@
     document.getElementById('val-key-rate').innerText = ratesData.keyRate;
     document.getElementById('val-deposit-rate').innerText = ratesData.depositRate;
     document.getElementById('val-inflation').innerText = ratesData.inflation;
-    if(ratesData.ofz10 !== '---') {
-        document.getElementById('val-ofz10').innerText = ratesData.ofz10;
-    }
+    document.getElementById('val-ofz10').innerText = ratesData.ofz10;  // <--- ЭТА СТРОКА
 }
 
         async function updateMarketData() {
@@ -2084,9 +2082,8 @@ if (rows.length > 3 && rows[3].length > 42) {
     const inflationVal = rows[3][42]; // строка 4, колонка AQ
     if (inflationVal) ratesData.inflation = inflationVal.includes('%') ? inflationVal : inflationVal + '%';
 }
-if (rows.length > 4 && rows[4].length > 42) {
-    // AQ5 - ОФЗ 10 лет
-    const ofz10Val = rows[4][42]; // строка 5, колонка AQ
+if (rows.length > 4 && rows[4].length > 42) {  
+    const ofz10Val = rows[4][42]; // строка 5, колонка AQ (AQ5)
     if (ofz10Val) ratesData.ofz10 = ofz10Val.includes('%') ? ofz10Val : ofz10Val + '%';
 }
 
