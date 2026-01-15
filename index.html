@@ -1455,21 +1455,17 @@
             <div class="rv-title">ВЕРТИКАЛЬ СТАВОК</div>
             <div class="rv-grid">
                 <div class="rv-item">
-                    <span>Ключевая ставка ЦБ</span>
-                    <b>21.0%</b>
-                </div>
+                 <span>Ключевая ставка ЦБ</span>
+                 <b id="val-key-rate">21.0%</b>
+            </div>
+                 <div class="rv-item">
+                 <span>Макс. ставка по вкладам</span>
+                 <b id="val-deposit-rate">21.5%</b>
+           </div>
                 <div class="rv-item">
-                    <span>Макс. ставка по вкладам</span>
-                    <b>21.5%</b>
-                </div>
-                <div class="rv-item">
-                    <span>Инфляция (г/г)</span>
-                    <b>9.1%</b>
-                </div>
-                <div class="rv-item">
-                     <span>ОФЗ 10 лет</span>
-                     <b id="val-ofz10">---%</b>
-                </div>
+                <span>Инфляция (г/г)</span>
+                <b id="val-inflation">9.1%</b>
+             </div>
             </div>
         </div>
 
@@ -1588,6 +1584,14 @@
         let isPortfolioCalculated = false;
         let isFirstVisit = true;
         let isUpdatingProgrammatically = false;
+        // Переменные для вертикали ставок
+        let ratesData = {
+           keyRate: '21.0%',
+           depositRate: '21.5%',
+           inflation: '9.1%',
+           ofz10: '---'
+        };
+    
 
         let echelons = [
             { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
@@ -1597,40 +1601,7 @@
         ];
         let echelonTableData = [[], [], [], []];
         
-        // --- Swipe Navigation ---
-        const swipeScreens = ['screen-home', 'screen-app', 'screen-portfolio', 'screen-assets'];
-        let touchstartX = 0;
-        let touchendX = 0;
-
-        function handleGesture() {
-            const deltaX = touchendX - touchstartX;
-            if (Math.abs(deltaX) < 75) return; 
-
-            const currentIndex = swipeScreens.indexOf(currentScreen);
-            if (currentIndex === -1) return; 
-
-            if (touchendX < touchstartX) { 
-                const nextIndex = Math.min(currentIndex + 1, swipeScreens.length - 1);
-                showScreen(swipeScreens[nextIndex]);
-            }
-
-            if (touchendX > touchstartX) { 
-                const prevIndex = Math.max(currentIndex - 1, 0);
-                showScreen(swipeScreens[prevIndex]);
-            }
-        }
-
-        document.body.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        document.body.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            if(e.target.type !== 'range' && !e.target.closest('.scrollable')) {
-                 handleGesture();
-            }
-        });
-        // --- End Swipe ---
+        // Swipe navigation removed
 
         function checkFirstVisit() {
             const visited = localStorage.getItem('user_visited');
@@ -1664,6 +1635,15 @@
             const isWorkingHours = (hour > 10 || (hour === 10 && min >= 0)) && (hour < 18 || (hour === 18 && min <= 50));
             dot.className = (isWeekday && isWorkingHours) ? 'market-dot dot-online' : 'market-dot dot-offline';
         }
+
+    function updateRatesDisplay() {
+    document.getElementById('val-key-rate').innerText = ratesData.keyRate;
+    document.getElementById('val-deposit-rate').innerText = ratesData.depositRate;
+    document.getElementById('val-inflation').innerText = ratesData.inflation;
+    if(ratesData.ofz10 !== '---') {
+        document.getElementById('val-ofz10').innerText = ratesData.ofz10;
+    }
+}
 
         async function updateMarketData() {
             const setDynamics = (el, change) => {
@@ -2082,6 +2062,32 @@
                 const response = await fetch(CSV_URL);
                 const text = await response.text();
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
+
+                // Загрузка данных вертикали ставок из ячеек AQ2-AQ5
+// AQ это колонка 43 (0-based index = 42)
+if (rows.length > 1 && rows[1].length > 42) {
+    // AQ2 - Ключевая ставка
+    const keyRateVal = rows[1][42]; // строка 2, колонка AQ
+    if (keyRateVal) ratesData.keyRate = keyRateVal.includes('%') ? keyRateVal : keyRateVal + '%';
+}
+if (rows.length > 2 && rows[2].length > 42) {
+    // AQ3 - Максимальная ставка по вкладам
+    const depositRateVal = rows[2][42]; // строка 3, колонка AQ
+    if (depositRateVal) ratesData.depositRate = depositRateVal.includes('%') ? depositRateVal : depositRateVal + '%';
+}
+if (rows.length > 3 && rows[3].length > 42) {
+    // AQ4 - Инфляция
+    const inflationVal = rows[3][42]; // строка 4, колонка AQ
+    if (inflationVal) ratesData.inflation = inflationVal.includes('%') ? inflationVal : inflationVal + '%';
+}
+if (rows.length > 4 && rows[4].length > 42) {
+    // AQ5 - ОФЗ 10 лет
+    const ofz10Val = rows[4][42]; // строка 5, колонка AQ
+    if (ofz10Val) ratesData.ofz10 = ofz10Val.includes('%') ? ofz10Val : ofz10Val + '%';
+}
+
+// Обновить отображение
+updateRatesDisplay();
                 
                 // --- Блок 50/50 (не трогаем) ---
                 let bondList = [];
@@ -2154,6 +2160,7 @@
                 
                 renderCustomBondCalc();
                 distributeMonthlyInvestment();
+                updateRatesDisplay();
                 draw();
             } catch (e) { 
                 console.error("Error in loadData:", e); 
