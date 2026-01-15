@@ -2359,83 +2359,48 @@ monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
             
             let html = '';
             let totalAmount = 0;
-            let hasAnyPayments = false;
 
-            // Если список выплат пуст, выходим
-            if (typeof allScheduledPayments === 'undefined' || allScheduledPayments.length === 0) {
-                 resultList.innerHTML = '<div style="text-align:center; padding:10px;">Загрузка списка выплат...</div>';
-                 return;
-            }
-            
-            // 1. Создаем справочник количеств: Тикер -> Количество введенное вверху
+            // Карта количеств из верхних инпутов
             const bondQtyMap = {};
             monthlyIncomeBonds.forEach(bond => {
-                // Ищем инпут по тикеру
                 const input = document.getElementById(`input-${bond.t}`);
-                // Берем значение, если инпут найден
-                const qty = input ? (parseInt(input.value) || 0) : 0;
-                
-                bondQtyMap[bond.t] = {
-                    qty: qty,
-                    apiCouponValue: bond.couponValue || 0 
-                };
+                bondQtyMap[bond.t] = input ? (parseInt(input.value) || 0) : 0;
             });
             
-            // 2. Строим нижний список на основе 12 строк из Excel (allScheduledPayments)
+            // Выводим все 12 сохраненных выплат
             allScheduledPayments.forEach(payment => {
-                const ticker = payment.paymentTicker ? payment.paymentTicker.trim() : '';
+                const qty = bondQtyMap[payment.paymentTicker] || 0;
                 
-                let qty = 0;
-                let couponValue = payment.staticCouponVal || 0; // Базовое значение из Excel (AD)
-                
-                // Если по этому тикеру есть данные сверху - берем количество оттуда
-                if (ticker && bondQtyMap[ticker]) {
-                    qty = bondQtyMap[ticker].qty; // <--- ВОТ ЗДЕСЬ ДУБЛИРУЕТСЯ КОЛИЧЕСТВО
-                    
-                    // Если API успело подгрузить точный купон, используем его, иначе из Excel
-                    if (bondQtyMap[ticker].apiCouponValue > 0) {
-                        couponValue = bondQtyMap[ticker].apiCouponValue;
-                    }
-                }
-                
-                // Отображаем строку только если количество > 0
-                if (qty > 0) {
-                    hasAnyPayments = true;
-                    const grossAmount = couponValue * qty;
-                    const netAmount = grossAmount * (1 - customTax);
-                    totalAmount += netAmount;
+                // Рассчитываем сумму (используем купон из таблицы AD)
+                const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
+                totalAmount += netAmount;
 
-                    html += `
-                    <div class="coupon-row">
-                        <div style="width: 85px;"><b>${payment.dateStr}</b></div>
-                        <div style="color:#8e8e93; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${limitName(payment.displayName)}</div>
-                        <div style="text-align:center; width: 50px;">${qty} шт.</div>
-                        <div style="text-align:right; width: 70px;"><b>${Math.round(netAmount).toLocaleString()} ₽</b></div>
-                    </div>`;
-                }
+                // Отображаем строку (даже если qty 0, если хотите видеть пустой календарь)
+                // Если хотите скрывать нулевые, оставьте условие if (qty > 0)
+                html += `
+                <div class="coupon-row" style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; border-bottom: 1px solid #f0f0f0; padding: 4px 0;">
+                    <div style="width: 70px;">${payment.dateStr}</div>
+                    <div style="flex: 1; color:#8e8e93; padding: 0 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${payment.displayName}</div>
+                    <div style="width: 50px; text-align: center;">${qty} шт.</div>
+                    <div style="width: 70px; text-align: right;"><b>${Math.round(netAmount)} ₽</b></div>
+                </div>`;
             });
 
-            // Если ничего не выбрано (везде 0 шт)
-            if (!hasAnyPayments) {
-                resultList.innerHTML = '<div style="text-align:center; padding:20px; color:#aaa; font-size: 11px;">Введите сумму или количество бумаг выше, чтобы увидеть график выплат.</div>';
-                resultFooter.innerHTML = '';
-            } else {
-                resultList.innerHTML = html;
+            resultList.innerHTML = html;
 
-                const yearTotal = Math.round(totalAmount).toLocaleString();
-                const monthAvg = Math.round(totalAmount / 12).toLocaleString();
-                
-                resultFooter.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                        <span>Итого за год (чистыми):</span>
-                        <span>${yearTotal} ₽</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; color:var(--accent-green); margin-top:5px; padding-top:5px; border-top:1px solid #eee;">
-                        <span>Средняя Выплата в месяц:</span>
-                        <span style="font-size:14px; font-weight:800;">~${monthAvg} ₽</span>
-                    </div>
-                `;
-            }
+            const yearTotal = Math.round(totalAmount).toLocaleString();
+            const monthAvg = Math.round(totalAmount / 12).toLocaleString();
+            
+            resultFooter.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-top:10px;">
+                    <span>Итого за год:</span>
+                    <b>${yearTotal} ₽</b>
+                </div>
+                <div style="display:flex; justify-content:space-between; color:var(--accent-green); font-weight:bold;">
+                    <span>В месяц:</span>
+                    <span>~${monthAvg} ₽</span>
+                </div>
+            `;
         }
 
         // --- END OF MONTHLY CALC LOGIC ---
