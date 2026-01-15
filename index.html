@@ -2335,55 +2335,67 @@ updateRatesDisplay();
         }
 
         function recalcCustomCoupons() {
-            const resultList = document.getElementById('calc-results-list');
-            const resultFooter = document.getElementById('calc-results-footer');
-            if (!resultList || !resultFooter) return;
-            
-            let html = '';
-            let totalAmount = 0;
+    const resultList = document.getElementById('calc-results-list');
+    const resultFooter = document.getElementById('calc-results-footer');
+    if (!resultList || !resultFooter) return;
+    
+    let html = '';
+    let totalAmount = 0;
 
-            if (typeof allScheduledPayments === 'undefined' || allScheduledPayments.length === 0) {
-                 resultList.innerHTML = "Загрузка списка выплат...";
-                 return;
+    if (typeof allScheduledPayments === 'undefined' || allScheduledPayments.length === 0) {
+         resultList.innerHTML = "Загрузка списка выплат...";
+         return;
+    }
+    
+    // Сначала собираем количество для каждого тикера
+    const tickerQuantities = {};
+    allScheduledPayments.forEach(payment => {
+        if (payment.paymentTicker) {
+            const cleanTicker = payment.paymentTicker.trim();
+            if (!tickerQuantities.hasOwnProperty(cleanTicker)) {
+                const input = document.getElementById(`input-${cleanTicker}`);
+                tickerQuantities[cleanTicker] = input ? (parseInt(input.value) || 0) : 0;
             }
-            
-            allScheduledPayments.forEach(payment => {
-                let qty = 0;
-                if (payment.paymentTicker) {
-                    const cleanTicker = payment.paymentTicker.trim();
-                    const input = document.getElementById(`input-${cleanTicker}`);
-                    if (input) qty = parseInt(input.value) || 0;
-                }
-                
-                const grossAmount = (payment.staticCouponVal || 0) * qty;
-                const netAmount = grossAmount * (1 - customTax);
-                totalAmount += netAmount;
-
-                html += `
-                <div class="coupon-row">
-                    <div><b>${payment.dateStr}</b></div>
-                    <div style="color:#8e8e93; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${limitName(payment.displayName)}</div>
-                    <div style="text-align:center">${qty} шт.</div>
-                    <div style="text-align:right"><b>${Math.round(netAmount).toLocaleString()} ₽</b></div>
-                </div>`;
-            });
-
-            resultList.innerHTML = html;
-
-            const yearTotal = Math.round(totalAmount).toLocaleString();
-            const monthAvg = Math.round(totalAmount / 12).toLocaleString();
-            
-            resultFooter.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                    <span>Итого за год:</span>
-                    <span>${yearTotal} ₽</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; color:var(--accent-green);">
-                    <span>Среднее в месяц:</span>
-                    <span style="font-size:14px; font-weight:800;">${monthAvg} ₽</span>
-                </div>
-            `;
         }
+    });
+    
+    // Теперь формируем HTML с одинаковым количеством для одинаковых тикеров
+    allScheduledPayments.forEach(payment => {
+        let qty = 0;
+        if (payment.paymentTicker) {
+            const cleanTicker = payment.paymentTicker.trim();
+            qty = tickerQuantities[cleanTicker] || 0;
+        }
+        
+        const grossAmount = (payment.staticCouponVal || 0) * qty;
+        const netAmount = grossAmount * (1 - customTax);
+        totalAmount += netAmount;
+
+        html += `
+        <div class="coupon-row">
+            <div><b>${payment.dateStr}</b></div>
+            <div style="color:#8e8e93; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${limitName(payment.displayName)}</div>
+            <div style="text-align:center">${qty} шт.</div>
+            <div style="text-align:right"><b>${Math.round(netAmount).toLocaleString()} ₽</b></div>
+        </div>`;
+    });
+
+    resultList.innerHTML = html;
+
+    const yearTotal = Math.round(totalAmount).toLocaleString();
+    const monthAvg = Math.round(totalAmount / 12).toLocaleString();
+    
+    resultFooter.innerHTML = `
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span>Итого за год:</span>
+            <span>${yearTotal} ₽</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; color:var(--accent-green);">
+            <span>Среднее в месяц:</span>
+            <span style="font-size:14px; font-weight:800;">${monthAvg} ₽</span>
+        </div>
+    `;
+}
 
 
         // --- END OF MONTHLY CALC LOGIC ---
