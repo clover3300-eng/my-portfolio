@@ -34,6 +34,23 @@
             --badge-green-bg: rgba(46, 204, 113, 0.15);
         }
 
+        /* Фиксация окна - предотвращение bounce эффекта */
+    html, body {
+        overscroll-behavior: none;
+        -webkit-overflow-scrolling: touch;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        position: relative;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+
         body.dark-mode {
             --bg-color: #0f172a;
             --card-bg: #1e293b;
@@ -1028,6 +1045,8 @@
         .search-empty-state .icon { font-size: 48px; margin-bottom: 15px; opacity: 0.5; }
         .search-empty-state .title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .search-empty-state .desc { font-size: 12px; line-height: 1.5; }
+
+        
         
     </style>
 </head>
@@ -2757,17 +2776,50 @@ updateRatesDisplay();
         }
 
         loadData(); 
-if(window.Telegram && window.Telegram.WebApp) {
-    window.Telegram.WebApp.ready(); 
-    window.Telegram.WebApp.expand();
-    
-    // Отключаем свайп вниз для закрытия приложения
-    window.Telegram.WebApp.disableVerticalSwipes();
-    
-    // Дополнительно: делаем приложение на весь экран
-    window.Telegram.WebApp.setHeaderColor('secondary_bg_color');
-    window.Telegram.WebApp.setBackgroundColor('#f4f7f9'); // или ваш цвет фона
-}
+        if(window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready(); 
+            window.Telegram.WebApp.expand();
+            
+            // Отключаем свайп вниз для закрытия приложения
+            window.Telegram.WebApp.disableVerticalSwipes();
+        }
+
+        // ДОБАВИТЬ ВЕСЬ ЭТОТ БЛОК ↓
+        
+        // Предотвращаем "резиновую" прокрутку
+        document.body.addEventListener('touchmove', function(e) {
+            // Разрешаем прокрутку только для элементов с классом scrollable или внутри определенных контейнеров
+            const target = e.target;
+            const scrollableParent = target.closest('.screen.active, input, textarea, select');
+            
+            if (!scrollableParent) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Дополнительная защита для предотвращения overscroll
+        let lastTouchY = 0;
+        document.addEventListener('touchstart', function(e) {
+            lastTouchY = e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', function(e) {
+            const touchY = e.touches[0].clientY;
+            const touchYDelta = touchY - lastTouchY;
+            lastTouchY = touchY;
+            
+            const body = document.body;
+            
+            // Если пытаемся скроллить вверх когда уже наверху
+            if (body.scrollTop === 0 && touchYDelta > 0) {
+                e.preventDefault();
+            }
+            
+            // Если пытаемся скроллить вниз когда уже внизу
+            if (body.scrollTop + body.offsetHeight >= body.scrollHeight && touchYDelta < 0) {
+                e.preventDefault();
+            }
+        }, { passive: false });
     </script>
 </body>
 </html>
