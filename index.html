@@ -2115,28 +2115,28 @@ updateRatesDisplay();
 
                 // Цикл с 3-й по 14-ю строку (индексы 2-13)
                 for (let i = 2; i <= 13; i++) {
-                    if (!rows[i] || rows[i].length < 34) continue;
-                    
-                    // 1. Формируем список для калькулятора (верхняя часть)
-                    const ticker = rows[i][31]; // AF
-                    if (ticker) { // Обрабатываем только если ячейка с тикером не пустая
-                        if (!uniqueBondsForCalc.has(ticker)) {
-                            uniqueBondsForCalc.set(ticker, {
-                                t: ticker,          // AF3:AF14
-                                n: rows[i][32],     // AG3:AG14
-                                y: rows[i][33]      // AH3:AH14
-                            });
-                        }
-                    }
+    if (!rows[i] || rows[i].length < 34) continue;
+    
+    // 1. Формируем список для калькулятора (верхняя часть)
+    const ticker = rows[i][31]; // AF
+    if (ticker) {
+        if (!uniqueBondsForCalc.has(ticker)) {
+            uniqueBondsForCalc.set(ticker, {
+                t: ticker,          // AF3:AF14
+                n: rows[i][32],     // AG3:AG14
+                y: rows[i][33]      // AH3:AH14
+            });
+        }
+    }
 
-                    // 2. Формируем список из 12 выплат (нижняя часть)
-                    allScheduledPayments.push({
-                        dateStr: rows[i][27] || "---",       // AB3:AB14
-                        displayName: rows[i][28] || "---",  // AC3:AC14
-                        // Привязываем тикер из AF для последующего поиска количества
-                        paymentTicker: rows[i][31] || ""    // AF3:AF14
-                    });
-                }
+    // 2. Формируем список из 12 выплат (нижняя часть)
+    allScheduledPayments.push({
+        dateStr: rows[i][27] || "---",       // AB3:AB14 - дата
+        displayName: rows[i][28] || "---",   // AC3:AC14 - название
+        paymentTicker: rows[i][31] || "",    // AF3:AF14 - тикер
+        staticCouponVal: parseFloat(rows[i][29]) || 0  // ДОБАВИТЬ ЭТУ СТРОКУ - AD3:AD14 - размер купона
+    });
+}
                 
                 // 3. Запрашиваем по API данные для уникальных тикеров
                 let uniqueBondsList = Array.from(uniqueBondsForCalc.values());
@@ -2338,6 +2338,12 @@ updateRatesDisplay();
     const resultList = document.getElementById('calc-results-list');
     const resultFooter = document.getElementById('calc-results-footer');
     if (!resultList || !resultFooter) return;
+            // ДОБАВИТЬ ЭТИ СТРОКИ ДЛЯ ОТЛАДКИ ↓
+    console.log('=== ОТЛАДКА recalcCustomCoupons ===');
+    console.log('Всего выплат:', allScheduledPayments.length);
+    console.log('Первая выплата:', allScheduledPayments[0]);
+    console.log('Поле paymentTicker первой выплаты:', allScheduledPayments[0]?.paymentTicker);
+    // КОНЕЦ ОТЛАДКИ ↑
     
     let html = '';
     let totalAmount = 0;
