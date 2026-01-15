@@ -2770,40 +2770,54 @@ updateRatesDisplay();
 
         // ДОБАВИТЬ ВЕСЬ ЭТОТ БЛОК ↓
         
-        // Предотвращаем "резиновую" прокрутку
-        document.body.addEventListener('touchmove', function(e) {
-            // Разрешаем прокрутку только для элементов с классом scrollable или внутри определенных контейнеров
-            const target = e.target;
-            const scrollableParent = target.closest('.screen.active, input, textarea, select');
-            
-            if (!scrollableParent) {
-                e.preventDefault();
-            }
-        }, { passive: false });
+        // Предотвращаем "резиновую" прокрутку только на границах
+let preventRubberBand = false;
 
-        // Дополнительная защита для предотвращения overscroll
-        let lastTouchY = 0;
-        document.addEventListener('touchstart', function(e) {
-            lastTouchY = e.touches[0].clientY;
-        }, { passive: true });
+document.addEventListener('touchstart', function(e) {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight;
+    
+    // Проверяем, находимся ли мы на границе прокрутки
+    const atTop = scrollTop <= 0;
+    const atBottom = scrollTop + clientHeight >= scrollHeight;
+    
+    preventRubberBand = atTop || atBottom;
+}, { passive: true });
 
-        document.addEventListener('touchmove', function(e) {
+document.addEventListener('touchmove', function(e) {
+    if (preventRubberBand) {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        
+        const atTop = scrollTop <= 0;
+        const atBottom = scrollTop + clientHeight >= scrollHeight;
+        
+        // Блокируем только если действительно на границе и пытаемся скроллить дальше
+        if ((atTop || atBottom)) {
             const touchY = e.touches[0].clientY;
-            const touchYDelta = touchY - lastTouchY;
-            lastTouchY = touchY;
+            const target = e.target;
             
-            const body = document.body;
-            
-            // Если пытаемся скроллить вверх когда уже наверху
-            if (body.scrollTop === 0 && touchYDelta > 0) {
-                e.preventDefault();
+            // Разрешаем скролл для инпутов и текстовых полей
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') {
+                return;
             }
             
-            // Если пытаемся скроллить вниз когда уже внизу
-            if (body.scrollTop + body.offsetHeight >= body.scrollHeight && touchYDelta < 0) {
-                e.preventDefault();
+            // Проверяем, есть ли скроллируемый родитель
+            let scrollableParent = target;
+            while (scrollableParent && scrollableParent !== document.body) {
+                const overflowY = window.getComputedStyle(scrollableParent).overflowY;
+                if ((overflowY === 'auto' || overflowY === 'scroll') && scrollableParent.scrollHeight > scrollableParent.clientHeight) {
+                    return; // Есть скроллируемый родитель, разрешаем скролл
+                }
+                scrollableParent = scrollableParent.parentElement;
             }
-        }, { passive: false });
+            
+            e.preventDefault();
+        }
+    }
+}, { passive: false });
     </script>
 </body>
 </html>
