@@ -2757,10 +2757,17 @@ updateRatesDisplay();
         }
 
         loadData(); 
-        if(window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready(); 
-            window.Telegram.WebApp.expand();
-        }
+if(window.Telegram && window.Telegram.WebApp) {
+    window.Telegram.WebApp.ready(); 
+    window.Telegram.WebApp.expand();
+    
+    // Отключаем свайп вниз для закрытия приложения
+    window.Telegram.WebApp.disableVerticalSwipes();
+    
+    // Дополнительно: делаем приложение на весь экран
+    window.Telegram.WebApp.setHeaderColor('secondary_bg_color');
+    window.Telegram.WebApp.setBackgroundColor('#f4f7f9'); // или ваш цвет фона
+}
     </script>
 </body>
 </html>
