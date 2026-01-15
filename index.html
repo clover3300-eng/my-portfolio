@@ -2768,6 +2768,18 @@ updateRatesDisplay();
             } finally { brand.style.display = 'none'; }
         }
 
+    // Регистрация Service Worker для PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker зарегистрирован:', registration);
+                })
+                .catch(function(error) {
+                    console.log('Ошибка регистрации Service Worker:', error);
+                });
+        }
+
+
         loadData(); 
         if(window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready(); 
