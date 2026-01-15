@@ -2141,13 +2141,22 @@ updateRatesDisplay();
                 // 3. Запрашиваем по API данные для уникальных тикеров
                 let uniqueBondsList = Array.from(uniqueBondsForCalc.values());
                 const monthlyBondsPromises = uniqueBondsList.map(async (b) => {
-                    const extra = await fetchBondData(b.t);
-                    // Умножаем полученную цену на 10
-                    const price = (extra.price > 0) ? extra.price * 10 : 0; 
-                    return { ...b, p: price, nkd: extra.nkd };
-                });
-                
-                monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
+    const extra = await fetchBondData(b.t);
+    const price = (extra.price > 0) ? extra.price * 10 : 0;
+    
+    // Получаем размер купона из bondDetailsMap
+    const bondDetails = bondDetailsMap[b.t] || {};
+    const couponValue = bondDetails.couponValue || 0;
+    
+    return { 
+        ...b, 
+        p: price, 
+        nkd: extra.nkd,
+        couponValue: couponValue  // ДОБАВИТЬ размер купона
+    };
+});
+
+monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
                 
                 // --- КОНЕЦ ИСПРАВЛЕННОГО БЛОКА ---
 
@@ -2230,7 +2239,7 @@ updateRatesDisplay();
             document.getElementById('monthlySumInput').value = Math.round(totalSum);
             isUpdatingProgrammatically = false;
 
-            recalcCustomCoupons();
+            ;
         }
 
         function distributeMonthlyInvestment() {
@@ -2244,7 +2253,7 @@ updateRatesDisplay();
                     const input = document.getElementById(`input-${bond.t}`);
                     if(input) input.value = 0;
                 });
-                recalcCustomCoupons();
+                ;
                 return;
             };
 
@@ -2288,7 +2297,7 @@ updateRatesDisplay();
             });
             isUpdatingProgrammatically = false;
 
-            recalcCustomCoupons();
+            ;
         }
 
         function renderCustomBondCalc() {
@@ -2330,7 +2339,7 @@ updateRatesDisplay();
             isUpdatingProgrammatically = false;
             const inputs = document.querySelectorAll('.calc-input');
             inputs.forEach(input => input.value = 0);
-            recalcCustomCoupons();
+            ;
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
 
@@ -2338,12 +2347,6 @@ updateRatesDisplay();
     const resultList = document.getElementById('calc-results-list');
     const resultFooter = document.getElementById('calc-results-footer');
     if (!resultList || !resultFooter) return;
-            // ДОБАВИТЬ ЭТИ СТРОКИ ДЛЯ ОТЛАДКИ ↓
-    console.log('=== ОТЛАДКА recalcCustomCoupons ===');
-    console.log('Всего выплат:', allScheduledPayments.length);
-    console.log('Первая выплата:', allScheduledPayments[0]);
-    console.log('Поле paymentTicker первой выплаты:', allScheduledPayments[0]?.paymentTicker);
-    // КОНЕЦ ОТЛАДКИ ↑
     
     let html = '';
     let totalAmount = 0;
@@ -2353,27 +2356,32 @@ updateRatesDisplay();
          return;
     }
     
-    // Сначала собираем количество для каждого тикера
-    const tickerQuantities = {};
-    allScheduledPayments.forEach(payment => {
-        if (payment.paymentTicker) {
-            const cleanTicker = payment.paymentTicker.trim();
-            if (!tickerQuantities.hasOwnProperty(cleanTicker)) {
-                const input = document.getElementById(`input-${cleanTicker}`);
-                tickerQuantities[cleanTicker] = input ? (parseInt(input.value) || 0) : 0;
-            }
-        }
+    // Собираем данные из верхнего списка (откуда берем количество)
+    const bondDataMap = {};
+    monthlyIncomeBonds.forEach(bond => {
+        const input = document.getElementById(`input-${bond.t}`);
+        const qty = input ? (parseInt(input.value) || 0) : 0;
+        bondDataMap[bond.t] = {
+            qty: qty,
+            couponValue: bond.couponValue || 0  // значение купона из данных облигации
+        };
     });
     
-    // Теперь формируем HTML с одинаковым количеством для одинаковых тикеров
+    // Формируем нижний список выплат
     allScheduledPayments.forEach(payment => {
+        const ticker = payment.paymentTicker ? payment.paymentTicker.trim() : '';
+        
+        // Берем количество и размер купона из верхнего списка по тикеру
         let qty = 0;
-        if (payment.paymentTicker) {
-            const cleanTicker = payment.paymentTicker.trim();
-            qty = tickerQuantities[cleanTicker] || 0;
+        let couponValue = 0;
+        
+        if (ticker && bondDataMap[ticker]) {
+            qty = bondDataMap[ticker].qty;
+            couponValue = bondDataMap[ticker].couponValue;
         }
         
-        const grossAmount = (payment.staticCouponVal || 0) * qty;
+        // Считаем сумму выплаты
+        const grossAmount = couponValue * qty;
         const netAmount = grossAmount * (1 - customTax);
         totalAmount += netAmount;
 
@@ -2397,7 +2405,7 @@ updateRatesDisplay();
             <span>${yearTotal} ₽</span>
         </div>
         <div style="display:flex; justify-content:space-between; color:var(--accent-green);">
-            <span>Среднее в месяц:</span>
+            <span>Средняя сумма Выплаты в месяц:</span>
             <span style="font-size:14px; font-weight:800;">${monthAvg} ₽</span>
         </div>
     `;
