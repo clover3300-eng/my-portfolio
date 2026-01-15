@@ -2229,7 +2229,7 @@ monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
                 if (input) {
                     const qty = parseInt(input.value) || 0;
                     if (qty > 0) {
-                        const fullCost = (bond.p + bond.nkd); // No tax on input sum
+                        const fullCost = (bond.p + bond.nkd); 
                         totalSum += qty * fullCost;
                     }
                 }
@@ -2239,7 +2239,7 @@ monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
             document.getElementById('monthlySumInput').value = Math.round(totalSum);
             isUpdatingProgrammatically = false;
 
-            ;
+            recalcCustomCoupons(); // <--- ВАЖНОЕ ДОБАВЛЕНИЕ: Обновляем нижний список
         }
 
         function distributeMonthlyInvestment() {
@@ -2248,12 +2248,13 @@ monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
             const sumInput = document.getElementById('monthlySumInput');
             const totalSum = parseFloat(sumInput.value) || 0;
             
+            // Если сумма 0 или пустая, обнуляем входы и пересчитываем низ
             if (monthlyIncomeBonds.length === 0 || totalSum <= 0) {
                  monthlyIncomeBonds.forEach(bond => {
                     const input = document.getElementById(`input-${bond.t}`);
                     if(input) input.value = 0;
                 });
-                ;
+                recalcCustomCoupons(); // <--- ДОБАВЛЕНО
                 return;
             };
 
@@ -2297,7 +2298,7 @@ monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
             });
             isUpdatingProgrammatically = false;
 
-            ;
+            recalcCustomCoupons(); // <--- ВАЖНОЕ ДОБАВЛЕНИЕ: Обновляем нижний список
         }
 
         function renderCustomBondCalc() {
@@ -2339,77 +2340,91 @@ monthlyIncomeBonds = await Promise.all(monthlyBondsPromises);
             isUpdatingProgrammatically = false;
             const inputs = document.querySelectorAll('.calc-input');
             inputs.forEach(input => input.value = 0);
-            ;
+            
+            recalcCustomCoupons(); // <--- ДОБАВЛЕНО
+            
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
 
         function recalcCustomCoupons() {
-    const resultList = document.getElementById('calc-results-list');
-    const resultFooter = document.getElementById('calc-results-footer');
-    if (!resultList || !resultFooter) return;
-    
-    let html = '';
-    let totalAmount = 0;
+            const resultList = document.getElementById('calc-results-list');
+            const resultFooter = document.getElementById('calc-results-footer');
+            if (!resultList || !resultFooter) return;
+            
+            let html = '';
+            let totalAmount = 0;
+            let hasAnyPayments = false;
 
-    if (typeof allScheduledPayments === 'undefined' || allScheduledPayments.length === 0) {
-         resultList.innerHTML = "Загрузка списка выплат...";
-         return;
-    }
-    
-    // Собираем данные из верхнего списка (откуда берем количество)
-    const bondDataMap = {};
-    monthlyIncomeBonds.forEach(bond => {
-        const input = document.getElementById(`input-${bond.t}`);
-        const qty = input ? (parseInt(input.value) || 0) : 0;
-        bondDataMap[bond.t] = {
-            qty: qty,
-            couponValue: bond.couponValue || 0  // значение купона из данных облигации
-        };
-    });
-    
-    // Формируем нижний список выплат
-    allScheduledPayments.forEach(payment => {
-        const ticker = payment.paymentTicker ? payment.paymentTicker.trim() : '';
-        
-        // Берем количество и размер купона из верхнего списка по тикеру
-        let qty = 0;
-        let couponValue = 0;
-        
-        if (ticker && bondDataMap[ticker]) {
-            qty = bondDataMap[ticker].qty;
-            couponValue = bondDataMap[ticker].couponValue;
+            if (typeof allScheduledPayments === 'undefined' || allScheduledPayments.length === 0) {
+                 resultList.innerHTML = '<div style="text-align:center; padding:10px;">Загрузка списка выплат...</div>';
+                 return;
+            }
+            
+            // Собираем актуальные количества из инпутов
+            const bondQtyMap = {};
+            monthlyIncomeBonds.forEach(bond => {
+                const input = document.getElementById(`input-${bond.t}`);
+                const qty = input ? (parseInt(input.value) || 0) : 0;
+                bondQtyMap[bond.t] = {
+                    qty: qty,
+                    // Если API вернуло couponValue, берем его, иначе 0
+                    apiCouponValue: bond.couponValue || 0 
+                };
+            });
+            
+            // Формируем нижний список выплат
+            allScheduledPayments.forEach(payment => {
+                const ticker = payment.paymentTicker ? payment.paymentTicker.trim() : '';
+                
+                let qty = 0;
+                let couponValue = payment.staticCouponVal || 0; // Сначала берем из CSV как базовое значение
+                
+                if (ticker && bondQtyMap[ticker]) {
+                    qty = bondQtyMap[ticker].qty;
+                    // Если есть данные из API, они точнее, берем их
+                    if (bondQtyMap[ticker].apiCouponValue > 0) {
+                        couponValue = bondQtyMap[ticker].apiCouponValue;
+                    }
+                }
+                
+                // Считаем только если есть количество
+                if (qty > 0) {
+                    hasAnyPayments = true;
+                    const grossAmount = couponValue * qty;
+                    const netAmount = grossAmount * (1 - customTax);
+                    totalAmount += netAmount;
+
+                    html += `
+                    <div class="coupon-row">
+                        <div><b>${payment.dateStr}</b></div>
+                        <div style="color:#8e8e93; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${limitName(payment.displayName)}</div>
+                        <div style="text-align:center">${qty} шт.</div>
+                        <div style="text-align:right"><b>${Math.round(netAmount).toLocaleString()} ₽</b></div>
+                    </div>`;
+                }
+            });
+
+            if (!hasAnyPayments) {
+                resultList.innerHTML = '<div style="text-align:center; padding:20px; color:#aaa;">Введите сумму инвестиций или измените количество бумаг выше, чтобы увидеть график выплат.</div>';
+                resultFooter.innerHTML = '';
+            } else {
+                resultList.innerHTML = html;
+
+                const yearTotal = Math.round(totalAmount).toLocaleString();
+                const monthAvg = Math.round(totalAmount / 12).toLocaleString();
+                
+                resultFooter.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <span>Итого за год (чистыми):</span>
+                        <span>${yearTotal} ₽</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; color:var(--accent-green); margin-top:5px; padding-top:5px; border-top:1px solid #eee;">
+                        <span>Средняя выплата в месяц:</span>
+                        <span style="font-size:14px; font-weight:800;">~${monthAvg} ₽</span>
+                    </div>
+                `;
+            }
         }
-        
-        // Считаем сумму выплаты
-        const grossAmount = couponValue * qty;
-        const netAmount = grossAmount * (1 - customTax);
-        totalAmount += netAmount;
-
-        html += `
-        <div class="coupon-row">
-            <div><b>${payment.dateStr}</b></div>
-            <div style="color:#8e8e93; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${limitName(payment.displayName)}</div>
-            <div style="text-align:center">${qty} шт.</div>
-            <div style="text-align:right"><b>${Math.round(netAmount).toLocaleString()} ₽</b></div>
-        </div>`;
-    });
-
-    resultList.innerHTML = html;
-
-    const yearTotal = Math.round(totalAmount).toLocaleString();
-    const monthAvg = Math.round(totalAmount / 12).toLocaleString();
-    
-    resultFooter.innerHTML = `
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <span>Итого за год:</span>
-            <span>${yearTotal} ₽</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; color:var(--accent-green);">
-            <span>Средняя сумма Выплаты в месяц:</span>
-            <span style="font-size:14px; font-weight:800;">${monthAvg} ₽</span>
-        </div>
-    `;
-}
 
 
         // --- END OF MONTHLY CALC LOGIC ---
