@@ -2110,21 +2110,21 @@ updateRatesDisplay();
 
                 // --- НАЧАЛО: ИСПРАВЛЕННЫЙ БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА ---
                 
-                // --- ОБНОВЛЕННЫЙ БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА ---
+                // --- БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА (ОБНОВЛЕННЫЙ) ---
                 allScheduledPayments = []; 
                 let uniqueBondsMap = new Map();
 
-                // Читаем строго 12 строк: с 3-й по 14-ю (индексы 2-13)
+                // Читаем ровно 12 строк из таблицы (ячейки AB3:AH14 -> индексы 2-13)
                 for (let i = 2; i <= 13; i++) {
                     if (!rows[i]) continue;
                     
-                    // AB=27, AC=28, AD=29, AF=31, AG=32, AH=33
-                    const dateVal = rows[i][27] || "---";               
-                    const nameVal = rows[i][28] || "---";               
+                    // Сохраняем данные для нижней таблицы (12 строк)
+                    // AB = 27, AC = 28, AD = 29, AF = 31, AG = 32, AH = 33
+                    const dateVal = rows[i][27] || "---"; 
+                    const nameVal = rows[i][28] || "---"; 
                     const couponVal = parseFloat(String(rows[i][29]).replace(',', '.')) || 0; 
-                    const ticker = rows[i][31] ? rows[i][31].trim() : ''; 
+                    const ticker = rows[i][31] ? String(rows[i][31]).trim() : ''; 
 
-                    // 1. Добавляем в список для нижней таблицы (всегда 12 строк)
                     allScheduledPayments.push({
                         dateStr: dateVal,
                         displayName: nameVal,
@@ -2132,21 +2132,27 @@ updateRatesDisplay();
                         staticCouponVal: couponVal
                     });
 
-                    // 2. Собираем уникальные ОФЗ для верхних карточек
+                    // Собираем уникальные ОФЗ для верхних карточек калькулятора
                     if (ticker && !uniqueBondsMap.has(ticker)) {
                         uniqueBondsMap.set(ticker, {
                             t: ticker,          
                             n: rows[i][32] || ticker, 
                             y: rows[i][33] || "0%",
-                            p: 1000, // дефолтные значения до загрузки из API
+                            p: 1000, 
                             nkd: 0
                         });
                     }
                 }
+
+                // Обновляем глобальную переменную для карточек
                 monthlyIncomeBonds = Array.from(uniqueBondsMap.values());
+                
+                // Отрисовываем верх и низ
                 renderMonthlyIncomeCards();
-                recalcCustomCoupons(); // Инициализируем пустую таблицу или таблицу с 0
-            }
+                recalcCustomCoupons();
+                
+                // Запускаем обновление цен через API
+                fetchPricesForMonthlyIncome();
                 
                 // --- КОНЕЦ ИСПРАВЛЕННОГО БЛОКА ---
 
@@ -2338,59 +2344,32 @@ updateRatesDisplay();
 
         function recalcCustomCoupons() {
             const resultList = document.getElementById('calc-results-list');
-            const resultFooter = document.getElementById('calc-results-footer');
             if (!resultList) return;
             
             let html = '';
-            let totalAmount = 0;
-
-            // Карта текущих количеств из инпутов
             const bondQtyMap = {};
-            if (typeof monthlyIncomeBonds !== 'undefined') {
-                monthlyIncomeBonds.forEach(bond => {
-                    const input = document.getElementById(`input-${bond.t}`);
-                    bondQtyMap[bond.t] = input ? (parseInt(input.value) || 0) : 0;
-                });
-            }
             
-            // Если данные еще не загружены
-            if (!allScheduledPayments || allScheduledPayments.length === 0) {
-                resultList.innerHTML = '<div style="text-align:center; padding:10px;">Загрузка...</div>';
-                return;
-            }
+            // Собираем количества из инпутов сверху
+            monthlyIncomeBonds.forEach(bond => {
+                const input = document.getElementById(`input-${bond.t}`);
+                bondQtyMap[bond.t] = input ? (parseInt(input.value) || 0) : 0;
+            });
 
-            // Выводим ровно столько строк, сколько в allScheduledPayments (должно быть 12)
+            // Выводим все 12 строк из списка выплат
             allScheduledPayments.forEach(payment => {
                 const qty = bondQtyMap[payment.paymentTicker] || 0;
-                const coupon = payment.staticCouponVal || 0;
-                const netAmount = (coupon * qty) * (1 - customTax);
-                totalAmount += netAmount;
+                const netAmount = (payment.staticCouponVal * qty) * 0.87; // -13% налог
 
                 html += `
-                <div class="coupon-row" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px;">
-                    <div style="width: 80px; font-weight: 600;">${payment.dateStr}</div>
-                    <div style="flex: 1; color: #666; padding: 0 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${payment.displayName}</div>
+                <div class="coupon-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee;">
+                    <div style="width: 80px;">${payment.dateStr}</div>
+                    <div style="flex: 1; color: #666;">${payment.displayName}</div>
                     <div style="width: 50px; text-align: center;">${qty} шт.</div>
-                    <div style="width: 80px; text-align: right; font-weight: bold;">${Math.round(netAmount).toLocaleString()} ₽</div>
+                    <div style="width: 80px; text-align: right;"><b>${Math.round(netAmount)} ₽</b></div>
                 </div>`;
             });
 
             resultList.innerHTML = html;
-
-            if (resultFooter) {
-                const yearTotal = Math.round(totalAmount).toLocaleString();
-                const monthAvg = Math.round(totalAmount / 12).toLocaleString();
-                resultFooter.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; margin-top:10px; font-weight: bold;">
-                        <span>Итого чистыми за год:</span>
-                        <span>${yearTotal} ₽</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; color: var(--accent-green); margin-top: 5px;">
-                        <span>В среднем в месяц:</span>
-                        <span>~${monthAvg} ₽</span>
-                    </div>
-                `;
-            }
         }
 
         // --- END OF MONTHLY CALC LOGIC ---
