@@ -1588,6 +1588,7 @@
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
         let bonds = [];
+        let bondDataCache = {};
         let monthlyIncomeBonds = []; // New list for the specific calculator
         let allScheduledPayments = [];
         let brokerFee = 0.0003; 
@@ -2006,64 +2007,70 @@
         }
 
         async function fetchBondData(code) {
-            // Если тикер не передан, выходим
-            if (!code) return { nkd: 0, matDate: '—', price: 0 };
-            try {
-                const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities,marketdata`);
-                const data = await res.json(); 
-                
-                const sec_cols = data.securities.columns; 
-                const sec_row = data.securities.data[0];
-                
-                let lastPrice = 0;
-                
-                // Сначала ищем цену в marketdata (LAST или PREVPRICE)
-                if (data.marketdata && data.marketdata.data.length > 0) {
-                     const m_cols = data.marketdata.columns;
-                     const m_row = data.marketdata.data[0];
-                     const lastIdx = m_cols.indexOf('LAST');
-                     const prevIdx = m_cols.indexOf('PREVPRICE');
+    if (!code) return { nkd: 0, matDate: '—', price: 0 };
+    
+    // Проверяем кэш
+    if (bondDataCache[code]) {
+        return bondDataCache[code];
+    }
+    
+    try {
+        const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities,marketdata`);
+        const data = await res.json(); 
+        
+        const sec_cols = data.securities.columns; 
+        const sec_row = data.securities.data[0];
+        
+        let lastPrice = 0;
+        
+        if (data.marketdata && data.marketdata.data.length > 0) {
+             const m_cols = data.marketdata.columns;
+             const m_row = data.marketdata.data[0];
+             const lastIdx = m_cols.indexOf('LAST');
+             const prevIdx = m_cols.indexOf('PREVPRICE');
 
-                     // Явно проверяем LAST
-                     if (lastIdx !== -1 && m_row[lastIdx]) {
-                        lastPrice = m_row[lastIdx];
-                     } 
-                     // Если LAST нет, явно проверяем PREVPRICE
-                     else if (prevIdx !== -1 && m_row[prevIdx]) {
-                        lastPrice = m_row[prevIdx];
-                     }
-                }
-                
-                // Если в marketdata цены нет, ищем PREVPRICE в securities
-                if (!lastPrice && sec_row) {
-                     const prevPriceIdx = sec_cols.indexOf('PREVPRICE');
-                     if (prevPriceIdx !== -1 && sec_row[prevPriceIdx]) {
-                         lastPrice = sec_row[prevPriceIdx];
-                     }
-                }
-
-                bondCouponsMap[code] = { date: sec_row[sec_cols.indexOf('NEXTCOUPON')], value: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0 };
-                
-                const couponPeriod = parseFloat(sec_row[sec_cols.indexOf('COUPONPERIOD')]) || 0;
-                const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
-                bondDetailsMap[code] = {
-                    matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—',
-                    couponValue: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0,
-                    nextCoupon: sec_row[sec_cols.indexOf('NEXTCOUPON')] || '—',
-                    couponYield: sec_row[sec_cols.indexOf('COUPONPERCENT')] || '—',
-                    freq: freq
-                };
-
-                return { 
-                    nkd: parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0, 
-                    matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—', 
-                    price: lastPrice // Возвращаем найденную цену (не умножаем здесь)
-                };
-            } catch (e) { 
-                console.error(`Failed to fetch data for ticker: ${code}`, e);
-                return { nkd: 0, matDate: '—', price: 0 }; 
-            }
+             if (lastIdx !== -1 && m_row[lastIdx]) {
+                lastPrice = m_row[lastIdx];
+             } 
+             else if (prevIdx !== -1 && m_row[prevIdx]) {
+                lastPrice = m_row[prevIdx];
+             }
         }
+        
+        if (!lastPrice && sec_row) {
+             const prevPriceIdx = sec_cols.indexOf('PREVPRICE');
+             if (prevPriceIdx !== -1 && sec_row[prevPriceIdx]) {
+                 lastPrice = sec_row[prevPriceIdx];
+             }
+        }
+
+        bondCouponsMap[code] = { date: sec_row[sec_cols.indexOf('NEXTCOUPON')], value: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0 };
+        
+        const couponPeriod = parseFloat(sec_row[sec_cols.indexOf('COUPONPERIOD')]) || 0;
+        const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
+        bondDetailsMap[code] = {
+            matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—',
+            couponValue: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0,
+            nextCoupon: sec_row[sec_cols.indexOf('NEXTCOUPON')] || '—',
+            couponYield: sec_row[sec_cols.indexOf('COUPONPERCENT')] || '—',
+            freq: freq
+        };
+
+        const result = { 
+            nkd: parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0, 
+            matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—', 
+            price: lastPrice
+        };
+        
+        // Сохраняем в кэш
+        bondDataCache[code] = result;
+        
+        return result;
+    } catch (e) { 
+        console.error(`Failed to fetch data for ticker: ${code}`, e);
+        return { nkd: 0, matDate: '—', price: 0 }; 
+    }
+}
 
         async function loadData() {
             initTheme();
@@ -2337,7 +2344,8 @@ function renderMonthlyIncomeCards() {
 
 // ===== ФУНКЦИЯ 2: Загрузка цен с биржи =====
 async function fetchPricesForMonthlyIncome() {
-    for (let bond of monthlyIncomeBonds) {
+    // Загружаем все цены ПАРАЛЛЕЛЬНО, а не по очереди
+    const promises = monthlyIncomeBonds.map(async (bond) => {
         try {
             const extra = await fetchBondData(bond.t);
             bond.p = extra.price || 1000;
@@ -2345,7 +2353,9 @@ async function fetchPricesForMonthlyIncome() {
         } catch(e) {
             console.log("Error fetching price for", bond.t);
         }
-    }
+    });
+    
+    await Promise.all(promises);
     renderMonthlyIncomeCards();
 }
 
