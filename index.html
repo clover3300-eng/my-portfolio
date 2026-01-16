@@ -1039,57 +1039,51 @@
         .search-empty-state .title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .search-empty-state .desc { font-size: 12px; line-height: 1.5; }
 
-       /* Стили для раскрывающихся ячеек */
-.et-cell, .asset-item {
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
+      /* --- Исправленные стили раскрытия (без конфликтов) --- */
+
+/* Скрываем детали по умолчанию везде */
+.asset-item .details, .et-cell .details {
+    display: none !important;
 }
 
-/* Скрытый блок с деталями */
-.details {
-    display: none;
-    width: 100%;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px dashed var(--item-border);
-    font-size: 11px;
-    color: var(--text-secondary);
-}
-
-/* Показываем детали при наличии класса active */
-.active .details {
+/* Раскрываем ТОЛЬКО если у самой строки/ячейки есть класс is-expanded */
+.asset-item.is-expanded .details, 
+.et-cell.is-expanded .details {
     display: block !important;
     animation: fadeIn 0.3s ease;
 }
 
-/* Стили внутри деталей */
-.detail-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 4px;
-}
+/* Стили для 3-й вкладки (Портфель) */
+.asset-item { cursor: pointer; }
+.asset-item.is-expanded { background: rgba(52, 152, 219, 0.05); }
 
-.detail-row span:last-child {
-    font-weight: 700;
-    color: var(--text-main);
-}
-
-/* Специальные стили для ячеек таблицы 4 вкладки */
+/* Стили для 4-й вкладки (Эшелоны) - чтобы таблица не разваливалась */
 .et-cell {
     vertical-align: top;
-    padding: 10px !important;
+    padding: 8px !important;
     border: 1px solid var(--item-border);
+    cursor: pointer;
+    width: 25%; /* Фиксируем ширину колонок */
 }
 
 .et-cell-content {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 2px;
 }
 
-.et-ticker { font-weight: 800; font-size: 13px; }
-.et-target-sm { font-size: 10px; color: var(--accent-blue); }
+.et-cell .ticker { font-weight: 800; font-size: 12px; color: var(--text-main); }
+.et-cell .price-sm { font-size: 10px; color: var(--text-secondary); }
+
+/* Детали внутри ячейки таблицы */
+.et-cell .details {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--item-border);
+    font-size: 10px;
+    text-align: left;
+}
 
         
         
@@ -2036,7 +2030,9 @@
                 if(document.getElementById('monthlySumInput')) document.getElementById('monthlySumInput').blur();
             } 
         }
-        function toggleRow(el) { el.classList.toggle('active'); }
+        function toggleRow(el) {
+    el.classList.toggle('is-expanded');
+}
 
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
@@ -2479,24 +2475,25 @@ function recalcCustomCoupons() {
         function updateEchelonTable() {
     const body = document.getElementById('echelon-tickers-body');
     if(!body) return;
-    
     let html = '';
     const maxRows = Math.max(...echelonTableData.map(col => col.length));
     
-    for(let i = 0; i < maxRows; i++) {
+    for(let i=0; i<maxRows; i++) {
         html += '<tr>';
-        for(let j = 0; j < 4; j++) {
+        for(let j=0; j<4; j++) {
             const asset = echelonTableData[j][i];
             if(asset) {
                 html += `
                 <td class="et-cell" onclick="toggleRow(this)">
-                    <div class="et-cell-content">
-                        <span class="et-ticker">${asset.t}</span>
-                        <span class="et-target-sm">${asset.target.replace(' ₽','')} ₽</span>
+                    <div class="et-cell-content" style="display:flex; flex-direction:column; align-items:center;">
+                        <span style="font-weight:800;">${asset.t}</span>
+                        <span style="font-size:10px; color:var(--text-secondary);">${asset.target.replace(' ₽','')} ₽</span>
                     </div>
                     <div class="details">
-                        <div class="detail-row"><span>Цель:</span> <span>${asset.target}</span></div>
-                        <button class="btn-tiny-graph" onclick="copyTicker(event, '${asset.t}')">Копировать</button>
+                        <div style="font-size:10px; margin-bottom:5px;">
+                            <b>Цель:</b> ${asset.target}
+                        </div>
+                        <button class="btn-tiny-graph" onclick="copyTicker(event, '${asset.t}')" style="width:100%">Копия</button>
                     </div>
                 </td>`;
             } else {
