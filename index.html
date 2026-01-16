@@ -2179,6 +2179,10 @@ updateRatesDisplay();
                 renderCustomBondCalc();
                 distributeMonthlyInvestment();
                 updateRatesDisplay();
+
+                updateEchelonTable();
+                renderOfzList();
+                
                 draw();
             } catch (e) { 
                 console.error("Error in loadData:", e); 
@@ -2415,6 +2419,38 @@ function recalcCustomCoupons() {
             }
             body.innerHTML = html;
         }
+
+    function renderOfzList() {
+    let ofzHtml = '';
+    bonds.forEach(b => {
+        const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
+        const calculatedCY = (b.p > 0 && details.couponValue && details.freq) ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) : '0.00';
+        ofzHtml += `
+        <div class="ofz-card-modern" onclick="toggleOfzDetails('details-${b.t}')">
+            <div class="ofz-main-info">
+                <div class="ofz-name-lg">${limitName(b.n)}</div>
+                <div class="ofz-ticker-sm">${b.t}</div>
+            </div>
+            <div class="ofz-price">${b.p}</div>
+            <div class="ofz-nkd-badge">${Math.round(b.nkd*10)/10}</div>
+            <div class="ofz-yield-badge" title="Доходность к погашению">
+                ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+            </div>
+        </div>
+        <div id="details-${b.t}" class="ofz-details-panel">
+            <div class="ofz-detail-row"><span>Код:</span> <span class="ofz-detail-val">${b.t}</span></div>
+            <div class="ofz-detail-row"><span>НКД:</span> <span class="ofz-detail-val">${b.nkd.toFixed(2)} ₽</span></div>
+            <div class="ofz-detail-row"><span>Дата погашения:</span> <span class="ofz-detail-val">${details.matDate}</span></div>
+            <div class="ofz-detail-row"><span>Размер купона:</span> <span class="ofz-detail-val">${details.couponValue} ₽</span></div>
+            <div class="ofz-detail-row"><span>Дата ближайшего купона:</span> <span class="ofz-detail-val">${details.nextCoupon}</span></div>
+            <div class="ofz-detail-row"><span>Текущая купонная доходность:</span> <span class="ofz-detail-val">${calculatedCY}%</span></div>
+            <div class="ofz-detail-row"><span>Выплат в год:</span> <span class="ofz-detail-val">${details.freq}</span></div>
+        </div>`;
+    });
+    if(document.getElementById('ofz-list')) {
+        document.getElementById('ofz-list').innerHTML = ofzHtml;
+    }
+}
 
         function performSearch(query) {
             if(!query || query.length < 2) {
