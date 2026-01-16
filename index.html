@@ -2109,11 +2109,24 @@ if (rows.length > 4 && rows[4].length > 42) {
 // Обновить отображение
 updateRatesDisplay();
                 
-                // --- Блок 50/50 (не трогаем) ---
-                let bondList = [];
-                for (let i = 2; i <= 9; i++) { if (rows[i] && rows[i].length > 13 && rows[i][10]) bondList.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, y: rows[i][13] || '0%' }); }
-                const bondPromises = bondList.map(async (b) => { const extra = await fetchBondData(b.t); return { ...b, nkd: extra.nkd, matDate: extra.matDate }; });
-                bonds = await Promise.all(bondPromises);
+                // Сначала загружаем облигации из таблицы (БЕЗ запросов к MOEX)
+let bondList = [];
+for (let i = 2; i <= 9; i++) { 
+    if (rows[i] && rows[i].length > 13 && rows[i][10]) {
+        bondList.push({ 
+            t: rows[i][10], 
+            n: rows[i][11], 
+            p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
+            y: rows[i][13] || '0%',
+            nkd: 0,
+            matDate: '—'
+        }); 
+    }
+}
+bonds = bondList;
+
+// Запросы к MOEX делаем В ФОНЕ (не блокируем отображение)
+fetchBondDetailsInBackground();
 
                 // --- НАЧАЛО: ИСПРАВЛЕННЫЙ БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА ---
                 
@@ -2431,6 +2444,8 @@ function recalcCustomCoupons() {
         }
 
     function renderOfzList() {
+    if (bonds.length === 0) return;
+    
     let ofzHtml = '';
     bonds.forEach(b => {
         const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
@@ -2460,6 +2475,25 @@ function recalcCustomCoupons() {
     if(document.getElementById('ofz-list')) {
         document.getElementById('ofz-list').innerHTML = ofzHtml;
     }
+}
+
+
+    async function fetchBondDetailsInBackground() {
+    const promises = bonds.map(async (b) => {
+        try {
+            const extra = await fetchBondData(b.t);
+            b.nkd = extra.nkd || 0;
+            b.matDate = extra.matDate || '—';
+        } catch(e) {
+            console.log("Error fetching", b.t);
+        }
+    });
+    
+    await Promise.all(promises);
+    
+    // После загрузки обновляем отображение
+    renderOfzList();
+    draw();
 }
 
         function performSearch(query) {
