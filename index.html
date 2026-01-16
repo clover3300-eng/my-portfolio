@@ -2395,35 +2395,7 @@ function recalcCustomCoupons() {
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
 
-        function recalcCustomCoupons() {
-            const resultList = document.getElementById('calc-results-list');
-            if (!resultList) return;
-            
-            let html = '';
-            const bondQtyMap = {};
-            
-            // Собираем количества из инпутов сверху
-            monthlyIncomeBonds.forEach(bond => {
-                const input = document.getElementById(`input-${bond.t}`);
-                bondQtyMap[bond.t] = input ? (parseInt(input.value) || 0) : 0;
-            });
-
-            // Выводим все 12 строк из списка выплат
-            allScheduledPayments.forEach(payment => {
-                const qty = bondQtyMap[payment.paymentTicker] || 0;
-                const netAmount = (payment.staticCouponVal * qty) * 0.87; // -13% налог
-
-                html += `
-                <div class="coupon-row" style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee;">
-                    <div style="width: 80px;">${payment.dateStr}</div>
-                    <div style="flex: 1; color: #666;">${payment.displayName}</div>
-                    <div style="width: 50px; text-align: center;">${qty} шт.</div>
-                    <div style="width: 80px; text-align: right;"><b>${Math.round(netAmount)} ₽</b></div>
-                </div>`;
-            });
-
-            resultList.innerHTML = html;
-        }
+      
 
         // --- END OF MONTHLY CALC LOGIC ---
 
