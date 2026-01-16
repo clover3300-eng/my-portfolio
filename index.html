@@ -1039,65 +1039,57 @@
         .search-empty-state .title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .search-empty-state .desc { font-size: 12px; line-height: 1.5; }
 
-        /* --- Стили для раскрывающихся строк в Таблице Эшелонов (Вкладка 4) --- */
+       /* Стили для раскрывающихся ячеек */
+.et-cell, .asset-item {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
 
-/* Сама ячейка таблицы теперь ведет себя как кнопка */
+/* Скрытый блок с деталями */
+.details {
+    display: none;
+    width: 100%;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--item-border);
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* Показываем детали при наличии класса active */
+.active .details {
+    display: block !important;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Стили внутри деталей */
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.detail-row span:last-child {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+/* Специальные стили для ячеек таблицы 4 вкладки */
 .et-cell {
     vertical-align: top;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    position: relative;
-    padding: 10px !important; /* Увеличиваем зону клика */
+    padding: 10px !important;
+    border: 1px solid var(--item-border);
 }
 
-/* Подсветка при нажатии (эффект тапа) */
-.et-cell:active {
-    background: rgba(52, 152, 219, 0.1);
-}
-
-/* Цвет ячейки, когда она раскрыта */
-.et-cell.active {
-    background: rgba(52, 152, 219, 0.05);
-}
-
-/* Контейнер для тикера и цены (верхняя часть) */
 .et-cell-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
 }
 
-/* Скрытый блок с подробностями */
-.et-cell .details {
-    display: none; /* Изначально спрятан */
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px 0 5px 0;
-    text-align: left;
-    border-top: 1px dashed var(--item-border); /* Пунктирная линия как в портфеле */
-    margin-top: 8px;
-    grid-column: auto; /* Сбрасываем настройки сетки, если они применились от 3-й вкладки */
-}
-
-/* Показываем блок, если у ячейки (родителя) появился класс active */
-.et-cell.active .details {
-    display: block;
-    animation: fadeIn 0.3s ease; /* Плавное появление */
-}
-
-/* Стили для строк внутри деталей (Компания: Название) */
-.et-cell .detail-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    margin-bottom: 3px;
-}
-
-.et-cell .detail-row span:last-child {
-    font-weight: 700;
-    color: var(--text-main);
-}
+.et-ticker { font-weight: 800; font-size: 13px; }
+.et-target-sm { font-size: 10px; color: var(--accent-blue); }
 
         
         
@@ -2487,41 +2479,35 @@ function recalcCustomCoupons() {
         function updateEchelonTable() {
     const body = document.getElementById('echelon-tickers-body');
     if(!body) return;
+    
     let html = '';
     const maxRows = Math.max(...echelonTableData.map(col => col.length));
     
-    for(let i=0; i<maxRows; i++) {
+    for(let i = 0; i < maxRows; i++) {
         html += '<tr>';
-        for(let j=0; j<4; j++) {
+        for(let j = 0; j < 4; j++) {
             const asset = echelonTableData[j][i];
             if(asset) {
-                // Пытаемся найти полное название компании в общем списке, если оно там есть
-                const info = allStocks.find(s => s.t === asset.t);
-                const companyName = info ? info.n : 'Актив';
-
                 html += `
-                <td onclick="toggleRow(this)" class="et-cell">
+                <td class="et-cell" onclick="toggleRow(this)">
                     <div class="et-cell-content">
                         <span class="et-ticker">${asset.t}</span>
-                        <span class="et-target">${asset.target.replace(' ₽','')}</span>
+                        <span class="et-target-sm">${asset.target.replace(' ₽','')} ₽</span>
                     </div>
                     <div class="details">
-                        <div class="detail-row"><span>Компания:</span> <span>${companyName}</span></div>
                         <div class="detail-row"><span>Цель:</span> <span>${asset.target}</span></div>
-                        <div style="display:flex; gap:5px; margin-top:8px;">
-                            <button class="btn-tiny-graph" style="margin-top:0; flex:1;" onclick="openTradingView(event, '${asset.t}')">График</button>
-                            <button class="btn-tiny-graph" style="margin-top:0; flex:1; background:var(--accent-green); box-shadow:none;" onclick="copyTicker(event, '${asset.t}')">Копировать</button>
-                        </div>
+                        <button class="btn-tiny-graph" onclick="copyTicker(event, '${asset.t}')">Копировать</button>
                     </div>
                 </td>`;
             } else {
-                html += `<td></td>`;
+                html += '<td></td>';
             }
         }
         html += '</tr>';
     }
     body.innerHTML = html;
 }
+    
     function renderOfzList() {
     if (bonds.length === 0) return;
     
