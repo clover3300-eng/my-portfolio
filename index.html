@@ -2357,7 +2357,6 @@ function renderMonthlyIncomeCards() {
 
 // ===== ФУНКЦИЯ 2: Загрузка цен с биржи =====
 async function fetchPricesForMonthlyIncome() {
-    // Загружаем все цены ПАРАЛЛЕЛЬНО, а не по очереди
     const promises = monthlyIncomeBonds.map(async (bond) => {
         try {
             const extra = await fetchBondData(bond.t);
@@ -2371,7 +2370,6 @@ async function fetchPricesForMonthlyIncome() {
     await Promise.all(promises);
     renderMonthlyIncomeCards();
 }
-
 // ===== ФУНКЦИЯ 3: Пересчёт выплат (ИСПРАВЛЕННАЯ) =====
 function recalcCustomCoupons() {
     const resultList = document.getElementById('calc-results-list');
