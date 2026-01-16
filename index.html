@@ -1196,6 +1196,24 @@
     stroke-width: 2;
 }
 
+        /* Стили раскрытия для 3-й вкладки (Портфель) */
+.asset-item .details {
+    display: none !important;
+}
+
+.asset-item.is-expanded .details {
+    display: block !important;
+    animation: fadeIn 0.3s ease;
+}
+
+.asset-item {
+    cursor: pointer;
+}
+
+.asset-item.is-expanded {
+    background: rgba(52, 152, 219, 0.05);
+}
+
         
         
     </style>
@@ -2595,11 +2613,13 @@ function recalcCustomCoupons() {
         for(let j=0; j<4; j++) {
             const asset = echelonTableData[j][i];
             if(asset) {
+                // Убираем знак рубля из отображения в ячейке
+                const priceDisplay = asset.target.replace(' ₽', '');
                 html += `
                 <td class="et-cell" onclick="toggleEchelonCell('${i}-${j}')">
                     <div class="et-cell-content">
                         <span class="et-ticker">${asset.t}</span>
-                        <span class="et-price">${asset.target.replace(' ₽','')} ₽</span>
+                        <span class="et-price">${priceDisplay}</span>
                     </div>
                 </td>`;
             } else {
@@ -2617,6 +2637,7 @@ function recalcCustomCoupons() {
     }
     body.innerHTML = html;
 }
+
 
     function toggleEchelonCell(cellId) {
     const [row, col] = cellId.split('-').map(Number);
@@ -2636,6 +2657,20 @@ function recalcCustomCoupons() {
         const asset = echelonTableData[col][row];
         if(!asset) return;
         
+        // Ищем полную информацию об активе в echelons
+        let fullAsset = null;
+        let companyName = asset.t; // По умолчанию используем тикер
+        
+        // Поиск в массиве echelons для получения полного названия
+        for(let e of echelons) {
+            const found = e.assets.find(a => a.t === asset.t);
+            if(found) {
+                fullAsset = found;
+                companyName = found.n; // Получаем полное название компании
+                break;
+            }
+        }
+        
         // Определяем эшелон
         const echelonNum = col + 1;
         const echelonName = ['I Эшелон', 'II Эшелон', 'III Эшелон', 'IV Эшелон'][col];
@@ -2650,6 +2685,10 @@ function recalcCustomCoupons() {
                     </div>
                 </div>
                 <div class="et-details-grid">
+                    <div class="et-detail-item" style="grid-column: 1 / -1;">
+                        <span class="et-detail-label">Компания:</span>
+                        <span class="et-detail-value">${companyName}</span>
+                    </div>
                     <div class="et-detail-item">
                         <span class="et-detail-label">Тикер:</span>
                         <span class="et-detail-value" style="cursor:pointer; color:var(--accent-blue);" onclick="copyTicker(event, '${asset.t}')">${asset.t} 📋</span>
@@ -2672,7 +2711,7 @@ function recalcCustomCoupons() {
                         <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
                         График
                     </button>
-                    <button class="et-btn-company" onclick="openCompanyFromTable(event, '${asset.t}')">
+                    <button class="et-btn-company" onclick="openCompanyFromTable(event, '${asset.t}', '${companyName}')">
                         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                         О компании
                     </button>
@@ -2685,25 +2724,40 @@ function recalcCustomCoupons() {
     }
 }
 
-function openCompanyFromTable(event, ticker) {
+function openCompanyFromTable(event, ticker, companyName) {
     event.stopPropagation();
-    // Ищем актив среди всех эшелонов
+    // Ищем полную информацию об активе
     let foundAsset = null;
-    for(let i = 0; i < echelonTableData.length; i++) {
-        const found = echelonTableData[i].find(a => a.t === ticker);
+    
+    // Сначала ищем в основных эшелонах
+    for(let e of echelons) {
+        const found = e.assets.find(a => a.t === ticker);
         if(found) {
             foundAsset = found;
             break;
         }
     }
+    
+    // Если не нашли, создаем минимальный объект
+    if(!foundAsset) {
+        for(let i = 0; i < echelonTableData.length; i++) {
+            const found = echelonTableData[i].find(a => a.t === ticker);
+            if(found) {
+                foundAsset = {
+                    t: found.t,
+                    n: companyName || found.t,
+                    p: 0,
+                    target: found.target
+                };
+                break;
+            }
+        }
+    }
+    
     if(foundAsset) {
-        // Создаем объект с нужными полями для openCompanyPage
         const item = {
-            t: foundAsset.t,
-            n: foundAsset.t, // Используем тикер как название, так как полного названия нет
-            p: 0, // Цена будет загружена в openCompanyPage
-            type: 'Акция',
-            target: foundAsset.target
+            ...foundAsset,
+            type: 'Акция'
         };
         openCompanyPage(item);
     }
