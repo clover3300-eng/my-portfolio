@@ -1039,31 +1039,15 @@
         .search-empty-state .title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .search-empty-state .desc { font-size: 12px; line-height: 1.5; }
 
-      /* --- Исправленные стили раскрытия (без конфликтов) --- */
-
-/* Скрываем детали по умолчанию везде */
-.asset-item .details, .et-cell .details {
-    display: none !important;
-}
-
-/* Раскрываем ТОЛЬКО если у самой строки/ячейки есть класс is-expanded */
-.asset-item.is-expanded .details, 
-.et-cell.is-expanded .details {
-    display: block !important;
-    animation: fadeIn 0.3s ease;
-}
-
-/* Стили для 3-й вкладки (Портфель) */
-.asset-item { cursor: pointer; }
-.asset-item.is-expanded { background: rgba(52, 152, 219, 0.05); }
-
-/* Стили для 4-й вкладки (Эшелоны) - чтобы таблица не разваливалась */
-.et-cell {
-    vertical-align: top;
-    padding: 8px !important;
-    border: 1px solid var(--item-border);
+     /* Стили для таблицы эшелонов с раскрывающимися деталями */
+.echelon-table-styled td.et-cell {
     cursor: pointer;
-    width: 25%; /* Фиксируем ширину колонок */
+    transition: background 0.2s;
+    position: relative;
+}
+
+.echelon-table-styled td.et-cell:hover {
+    background: rgba(52, 152, 219, 0.05);
 }
 
 .et-cell-content {
@@ -1073,16 +1057,143 @@
     gap: 2px;
 }
 
-.et-cell .ticker { font-weight: 800; font-size: 12px; color: var(--text-main); }
-.et-cell .price-sm { font-size: 10px; color: var(--text-secondary); }
+.et-ticker {
+    font-weight: 800;
+    font-size: 12px;
+    color: var(--text-main);
+}
 
-/* Детали внутри ячейки таблицы */
-.et-cell .details {
-    margin-top: 8px;
-    padding-top: 6px;
-    border-top: 1px dashed var(--item-border);
+.et-price {
     font-size: 10px;
-    text-align: left;
+    color: var(--text-secondary);
+}
+
+.et-cell-empty {
+    cursor: default !important;
+}
+
+.et-details-row td {
+    padding: 0 !important;
+    border: none !important;
+    background: var(--bg-color);
+}
+
+.et-details-container {
+    padding: 12px 20px;
+}
+
+.et-expanded-details {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid var(--accent-blue);
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.1);
+}
+
+.et-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--item-border);
+}
+
+.et-details-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.et-details-ticker {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.et-details-echelon {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(52, 152, 219, 0.1);
+    color: var(--accent-blue);
+    text-transform: uppercase;
+}
+
+.et-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.et-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.et-detail-label {
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.et-detail-value {
+    font-size: 13px;
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.et-details-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.et-btn-chart,
+.et-btn-company {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.et-btn-chart {
+    background: var(--accent-blue);
+    color: white;
+}
+
+.et-btn-chart:hover {
+    background: #2980b9;
+}
+
+.et-btn-company {
+    background: var(--bg-color);
+    color: var(--accent-blue);
+    border: 1px solid var(--accent-blue);
+}
+
+.et-btn-company:hover {
+    background: rgba(52, 152, 219, 0.1);
+}
+
+.et-btn-chart svg,
+.et-btn-company svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
 }
 
         
@@ -2479,30 +2590,123 @@ function recalcCustomCoupons() {
     const maxRows = Math.max(...echelonTableData.map(col => col.length));
     
     for(let i=0; i<maxRows; i++) {
+        // Основная строка с ячейками
         html += '<tr>';
         for(let j=0; j<4; j++) {
             const asset = echelonTableData[j][i];
             if(asset) {
                 html += `
-                <td class="et-cell" onclick="toggleRow(this)">
-                    <div class="et-cell-content" style="display:flex; flex-direction:column; align-items:center;">
-                        <span style="font-weight:800;">${asset.t}</span>
-                        <span style="font-size:10px; color:var(--text-secondary);">${asset.target.replace(' ₽','')} ₽</span>
-                    </div>
-                    <div class="details">
-                        <div style="font-size:10px; margin-bottom:5px;">
-                            <b>Цель:</b> ${asset.target}
-                        </div>
-                        <button class="btn-tiny-graph" onclick="copyTicker(event, '${asset.t}')" style="width:100%">Копия</button>
+                <td class="et-cell" onclick="toggleEchelonCell('${i}-${j}')">
+                    <div class="et-cell-content">
+                        <span class="et-ticker">${asset.t}</span>
+                        <span class="et-price">${asset.target.replace(' ₽','')} ₽</span>
                     </div>
                 </td>`;
             } else {
-                html += '<td></td>';
+                html += '<td class="et-cell-empty"></td>';
             }
         }
         html += '</tr>';
+        
+        // Скрытая строка с деталями
+        html += `<tr class="et-details-row" id="details-row-${i}" style="display:none;">
+            <td colspan="4" class="et-details-container">
+                <div id="details-content-${i}"></div>
+            </td>
+        </tr>`;
     }
     body.innerHTML = html;
+}
+
+    function toggleEchelonCell(cellId) {
+    const [row, col] = cellId.split('-').map(Number);
+    const detailsRow = document.getElementById(`details-row-${row}`);
+    const detailsContent = document.getElementById(`details-content-${row}`);
+    
+    // Закрываем все остальные открытые строки
+    document.querySelectorAll('.et-details-row').forEach(r => {
+        if(r.id !== `details-row-${row}`) {
+            r.style.display = 'none';
+        }
+    });
+    
+    // Переключаем текущую строку
+    if(detailsRow.style.display === 'none') {
+        // Получаем данные актива
+        const asset = echelonTableData[col][row];
+        if(!asset) return;
+        
+        // Определяем эшелон
+        const echelonNum = col + 1;
+        const echelonName = ['I Эшелон', 'II Эшелон', 'III Эшелон', 'IV Эшелон'][col];
+        
+        // Формируем контент для деталей
+        detailsContent.innerHTML = `
+            <div class="et-expanded-details">
+                <div class="et-details-header">
+                    <div class="et-details-title">
+                        <span class="et-details-ticker">${asset.t}</span>
+                        <span class="et-details-echelon">${echelonName}</span>
+                    </div>
+                </div>
+                <div class="et-details-grid">
+                    <div class="et-detail-item">
+                        <span class="et-detail-label">Тикер:</span>
+                        <span class="et-detail-value" style="cursor:pointer; color:var(--accent-blue);" onclick="copyTicker(event, '${asset.t}')">${asset.t} 📋</span>
+                    </div>
+                    <div class="et-detail-item">
+                        <span class="et-detail-label">Цель:</span>
+                        <span class="et-detail-value">${asset.target}</span>
+                    </div>
+                    <div class="et-detail-item">
+                        <span class="et-detail-label">Эшелон:</span>
+                        <span class="et-detail-value">${echelonNum}</span>
+                    </div>
+                    <div class="et-detail-item">
+                        <span class="et-detail-label">Прогноз:</span>
+                        <span class="et-detail-value">до 36 мес.</span>
+                    </div>
+                </div>
+                <div class="et-details-actions">
+                    <button class="et-btn-chart" onclick="openTradingView(event, '${asset.t}')">
+                        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                        График
+                    </button>
+                    <button class="et-btn-company" onclick="openCompanyFromTable(event, '${asset.t}')">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        О компании
+                    </button>
+                </div>
+            </div>
+        `;
+        detailsRow.style.display = 'table-row';
+    } else {
+        detailsRow.style.display = 'none';
+    }
+}
+
+function openCompanyFromTable(event, ticker) {
+    event.stopPropagation();
+    // Ищем актив среди всех эшелонов
+    let foundAsset = null;
+    for(let i = 0; i < echelonTableData.length; i++) {
+        const found = echelonTableData[i].find(a => a.t === ticker);
+        if(found) {
+            foundAsset = found;
+            break;
+        }
+    }
+    if(foundAsset) {
+        // Создаем объект с нужными полями для openCompanyPage
+        const item = {
+            t: foundAsset.t,
+            n: foundAsset.t, // Используем тикер как название, так как полного названия нет
+            p: 0, // Цена будет загружена в openCompanyPage
+            type: 'Акция',
+            target: foundAsset.target
+        };
+        openCompanyPage(item);
+    }
 }
     
     function renderOfzList() {
