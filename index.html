@@ -2640,9 +2640,17 @@ function recalcCustomCoupons() {
 
 
     function toggleEchelonCell(cellId) {
+    console.log('toggleEchelonCell вызвана с cellId:', cellId);
+    
     const [row, col] = cellId.split('-').map(Number);
+    console.log('row:', row, 'col:', col);
+    
     const detailsRow = document.getElementById(`details-row-${row}`);
     const detailsContent = document.getElementById(`details-content-${row}`);
+    
+    console.log('detailsRow:', detailsRow);
+    console.log('detailsRow.style.display:', detailsRow ? detailsRow.style.display : 'element not found');
+    
     const wrapper = document.getElementById('echelon-wrapper');
     const expandBtn = document.getElementById('expandArrowBtn');
     
@@ -2653,31 +2661,44 @@ function recalcCustomCoupons() {
         }
     });
     
+    // Проверяем текущее состояние
+    const isHidden = !detailsRow.style.display || detailsRow.style.display === 'none';
+    console.log('isHidden:', isHidden);
+    
     // Переключаем текущую строку
-    if(detailsRow.style.display === 'none' || detailsRow.style.display === '') {
-        // НОВЫЙ КОД: Раскрываем таблицу
+    if(isHidden) {
+        console.log('Открываем подстроку');
+        
+        // Раскрываем таблицу
         if(wrapper && wrapper.classList.contains('collapsed')) {
+            console.log('Раскрываем таблицу');
             wrapper.classList.remove('collapsed');
             if(expandBtn) expandBtn.classList.add('open');
         }
         
         // Получаем данные актива
         const asset = echelonTableData[col][row];
-        if(!asset) return;
+        console.log('asset:', asset);
+        
+        if(!asset) {
+            console.log('Asset не найден!');
+            return;
+        }
         
         // Ищем полную информацию об активе в echelons
         let fullAsset = null;
-        let companyName = asset.t; // По умолчанию используем тикер
+        let companyName = asset.t;
         
-        // Поиск в массиве echelons для получения полного названия
         for(let e of echelons) {
             const found = e.assets.find(a => a.t === asset.t);
             if(found) {
                 fullAsset = found;
-                companyName = found.n; // Получаем полное название компании
+                companyName = found.n;
                 break;
             }
         }
+        
+        console.log('companyName:', companyName);
         
         // Определяем эшелон
         const echelonNum = col + 1;
@@ -2726,14 +2747,19 @@ function recalcCustomCoupons() {
                 </div>
             </div>
         `;
+        
+        console.log('Устанавливаем display: table-row');
         detailsRow.style.display = 'table-row';
         
-        // НОВЫЙ КОД: Прокручиваем к открытой строке с небольшой задержкой
+        console.log('После установки display:', detailsRow.style.display);
+        
+        // Прокручиваем к открытой строке
         setTimeout(() => {
             detailsRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 100);
         
     } else {
+        console.log('Закрываем подстроку');
         detailsRow.style.display = 'none';
     }
 }
