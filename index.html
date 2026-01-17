@@ -2654,7 +2654,7 @@ function recalcCustomCoupons() {
     });
     
     // Переключаем текущую строку
-    if(detailsRow.style.display === 'none') {
+    if(detailsRow.style.display === 'none' || detailsRow.style.display === '') {
         // НОВЫЙ КОД: Раскрываем таблицу
         if(wrapper && wrapper.classList.contains('collapsed')) {
             wrapper.classList.remove('collapsed');
