@@ -2377,7 +2377,7 @@ fetchBondDetailsInBackground();
                 distributeMonthlyInvestment();
                 updateRatesDisplay();
 
-                ();
+                updateEchelonTable();
                 renderOfzList();
                 
                 draw();
@@ -2601,7 +2601,7 @@ function recalcCustomCoupons() {
 
         // --- END OF MONTHLY CALC LOGIC ---
 
-       function updateEchelonTable() {
+        function updateEchelonTable() {
     const body = document.getElementById('echelon-tickers-body');
     if(!body) return;
     let html = '';
@@ -2637,6 +2637,7 @@ function recalcCustomCoupons() {
     }
     body.innerHTML = html;
 }
+
 
     function toggleEchelonCell(cellId) {
     const [row, col] = cellId.split('-').map(Number);
@@ -2722,6 +2723,7 @@ function recalcCustomCoupons() {
         detailsRow.style.display = 'none';
     }
 }
+
 function openCompanyFromTable(event, ticker, companyName) {
     event.stopPropagation();
     // Ищем полную информацию об активе
