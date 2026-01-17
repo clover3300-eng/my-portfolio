@@ -2365,28 +2365,70 @@ fetchBondDetailsInBackground();
 
                 echelonTableData = [[], [], [], []];
 for (let i = 2; i <= 13; i++) {
-     if (rows[i] && rows[i].length > 7) {
-        // Колонка F (индекс 5) = Тикер
-        // Колонка G (индекс 6) = Название компании
-        // Колонка H (индекс 7) = Сектор
-        const ticker = rows[i][5];
-        const companyName = rows[i][6] || ticker;
-        const sector = rows[i][7] || '';
+     if (rows[i] && rows[i].length > 23) {
+        // ЭШЕЛОН 1 (колонки Q:R, индексы 16:17)
+        if(rows[i][16]) {
+            echelonTableData[0].push({ 
+                t: rows[i][16],           // Тикер из колонки Q
+                n: '',                    // Название пока пустое, заполним позже
+                sector: '',               // Сектор пока пустой, заполним позже
+                target: rows[i][17] || '—' // Цель из колонки R
+            });
+        }
         
-        // Определяем эшелон по первой букве тикера или другой логике
-        // Пока распределяем равномерно по 3 в каждый эшелон
-        const echelonIndex = Math.floor((i - 2) / 3) % 4;
+        // ЭШЕЛОН 2 (колонки S:T, индексы 18:19)
+        if(rows[i][18]) {
+            echelonTableData[1].push({ 
+                t: rows[i][18],           // Тикер из колонки S
+                n: '',
+                sector: '',
+                target: rows[i][19] || '—' // Цель из колонки T
+            });
+        }
         
-        if(ticker) {
-            echelonTableData[echelonIndex].push({ 
-                t: ticker, 
-                n: companyName,
-                sector: sector,
-                target: '—' // Можно добавить из другой колонки если есть
+        // ЭШЕЛОН 3 (колонки U:V, индексы 20:21)
+        if(rows[i][20]) {
+            echelonTableData[2].push({ 
+                t: rows[i][20],           // Тикер из колонки U
+                n: '',
+                sector: '',
+                target: rows[i][21] || '—' // Цель из колонки V
+            });
+        }
+        
+        // ЭШЕЛОН 4 (колонки W:X, индексы 22:23)
+        if(rows[i][22]) {
+            echelonTableData[3].push({ 
+                t: rows[i][22],           // Тикер из колонки W
+                n: '',
+                sector: '',
+                target: rows[i][23] || '—' // Цель из колонки X
             });
         }
     }
 }
+
+// Теперь заполняем названия компаний и секторы из колонок F, G, H
+for (let i = 2; i <= 100; i++) { // Проходим по всем строкам
+    if (rows[i] && rows[i].length > 7) {
+        const ticker = rows[i][5];      // Колонка F - тикер
+        const companyName = rows[i][6]; // Колонка G - название
+        const sector = rows[i][7];      // Колонка H - сектор
+        
+        if(ticker) {
+            // Ищем этот тикер во всех эшелонах и дополняем данные
+            for(let echelon of echelonTableData) {
+                for(let asset of echelon) {
+                    if(asset.t === ticker) {
+                        asset.n = companyName || ticker;
+                        asset.sector = sector || '';
+                    }
+                }
+            }
+        }
+    }
+}
+
                 
                 
                 distributeMonthlyInvestment();
