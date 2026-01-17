@@ -13,8 +13,6 @@
     <meta name="theme-color" content="#3498db">
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -42,8 +40,6 @@
             --coupon-blue-bg: rgba(52, 152, 219, 0.08);
             --badge-blue-bg: rgba(52, 152, 219, 0.15);
             --badge-green-bg: rgba(46, 204, 113, 0.15);
-            --brand-color: #333D4D;
-            --bg-gradient: linear-gradient(135deg, #F1F6FB 0%, #F9FAFC 100%);
         }
     
 
@@ -74,7 +70,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
@@ -238,247 +234,6 @@
 
         .header { text-align: center; margin-bottom: 20px; }
         h1 { font-size: 20px; margin-bottom: 4px; }
-
-/* =========================== */
-/* НОВЫЕ СТИЛИ ДЛЯ 2-Й ВКЛАДКИ */
-/* =========================== */
-
-.terminal-brand {
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--brand-color);
-}
-
-.terminal-subtitle {
-    font-size: 13px;
-    color: #8e8e93;
-    margin-top: 4px;
-}
-
-/* Amount Input Styling */
-.premium-input-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.amount-wrapper {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    width: 100%;
-}
-
-.premium-input {
-    background: transparent;
-    border: none;
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 48px;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    width: auto;
-    min-width: 40px;
-    outline: none;
-    color: var(--brand-color);
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "liga" 0;
-    z-index: 2;
-}
-
-.amount-underline {
-    width: 40px;
-    height: 2.5px;
-    background: var(--brand-color);
-    border-radius: 10px;
-    opacity: 0.25;
-    margin-top: -4px;
-}
-
-/* Custom Premium Select */
-.custom-select-container {
-    position: relative;
-    user-select: none;
-}
-.select-trigger {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0,0,0,0.05);
-    border-radius: 20px;
-    padding: 16px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.select-options {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    border: 1px solid rgba(0,0,0,0.05);
-    z-index: 100;
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    max-height: 250px;
-    overflow-y: auto;
-}
-.select-options.open {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-.option-item {
-    padding: 14px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    border-bottom: 1px solid rgba(0,0,0,0.03);
-    transition: background 0.2s;
-}
-.option-item:last-child { border-bottom: none; }
-.option-item:active { background: rgba(0,0,0,0.03); }
-
-/* Strategy Cards */
-.strategy-card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    border-radius: 28px;
-    margin-bottom: 12px;
-}
-.strategy-card.active {
-    border-color: var(--brand-color);
-    background: #FFFFFF;
-    box-shadow: 0 15px 30px rgba(51, 61, 77, 0.08);
-    transform: scale(1.01);
-}
-
-/* Gear Icon Premium Styling */
-.gear-container {
-    width: 56px;
-    height: 56px;
-    background: linear-gradient(135deg, #ffffff 0%, #f4f6f9 100%);
-    border: 1px solid rgba(51, 61, 77, 0.12);
-    box-shadow: inset 0 2px 4px rgba(255,255,255,1), 0 4px 12px rgba(0,0,0,0.04);
-    border-radius: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-}
-.gear-container::after {
-    content: '';
-    position: absolute;
-    top: -2px; left: -2px; right: -2px; bottom: -2px;
-    border-radius: 100%;
-    border: 0.5px solid rgba(51, 61, 77, 0.05);
-    pointer-events: none;
-}
-.strategy-card.active .gear-container {
-    border-color: rgba(51, 61, 77, 0.3);
-    box-shadow: 0 10px 25px rgba(51, 61, 77, 0.15);
-    transform: rotate(60deg);
-}
-.gear-icon {
-    color: var(--brand-color);
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-    opacity: 0.9;
-}
-
-/* Premium Slider Block */
-.premium-slider-block {
-    background: linear-gradient(165deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.8) 100%);
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(255,255,255,0.6);
-    box-shadow: 0 25px 50px -12px rgba(51, 61, 77, 0.12);
-    border-radius: 36px;
-    padding: 30px;
-    position: relative;
-    overflow: hidden;
-}
-.premium-slider-block::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(51, 61, 77, 0.1), transparent);
-}
-
-/* Range Slider Styling */
-input[type=range] {
-    -webkit-appearance: none;
-    width: 100%;
-    background: transparent;
-}
-input[type=range]:focus { outline: none; }
-input[type=range]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 8px;
-    cursor: pointer;
-    background: linear-gradient(90deg, rgba(51, 61, 77, 0.05) 0%, rgba(51, 61, 77, 0.15) 100%);
-    border-radius: 10px;
-}
-input[type=range]::-webkit-slider-thumb {
-    height: 28px;
-    width: 28px;
-    border-radius: 50%;
-    background: #FFFFFF;
-    border: 6px solid var(--brand-color);
-    cursor: pointer;
-    -webkit-appearance: none;
-    margin-top: -10px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-    transition: transform 0.2s ease;
-}
-input[type=range]:active::-webkit-slider-thumb {
-    transform: scale(1.15);
-}
-
-.divider-line {
-    width: 1px;
-    height: 32px;
-    background: rgba(0, 0, 0, 0.08);
-    margin: 0 16px;
-}
-
-.bottom-sticky-panel {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(20px);
-    padding: 20px 24px 44px 24px;
-    z-index: 50;
-}
-
-.chart-ring {
-    transition: stroke-dashoffset 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    stroke: var(--brand-color);
-}
-
-.fade-in-up {
-    animation: fadeInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-}
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ========================= */
-/* КОНЕЦ НОВЫХ СТИЛЕЙ       */
-/* ========================= */
         
         .calc-box {
             background: var(--card-bg); padding: 24px; border-radius: 24px;
@@ -552,7 +307,7 @@ input[type=range]:active::-webkit-slider-thumb {
             display: flex; align-items: center; justify-content: space-between;
             padding: 14px 16px; border-radius: 12px; border: 1px solid var(--item-border);
             background: var(--bg-color); cursor: pointer; 
-            transition: transform 0.1s, border-color 0.2s;
+            transition: transform 0.1s, border-color 0.2s; /* Removed background transition to avoid flicker */
         }
         
         .preset-btn-modern.selected-preset {
@@ -564,6 +319,7 @@ input[type=range]:active::-webkit-slider-thumb {
             color: var(--accent-blue);
         }
         
+        /* Updated Hover/Active states to prevent flicker */
         .preset-btn-modern:hover:not(.selected-preset) {
             background: var(--accent-blue); border-color: var(--accent-blue);
         }
@@ -571,8 +327,10 @@ input[type=range]:active::-webkit-slider-thumb {
         .preset-btn-modern:hover:not(.selected-preset) .preset-right { color: rgba(255,255,255,0.8); }
         .preset-btn-modern:hover:not(.selected-preset) .preset-icon { background: rgba(255,255,255,0.2); }
         
+        /* Active state now only scales, no color change to prevent flash */
         .preset-btn-modern:active:not(.selected-preset) {
             transform: scale(0.98);
+            /* No background change here to avoid flickering to blue and back */
         }
 
         .preset-left { display: flex; align-items: center; gap: 12px; color: var(--text-main); }
@@ -753,7 +511,7 @@ input[type=range]:active::-webkit-slider-thumb {
 
         .esm-info-btn-light {
             width: 18px; height: 18px; border-radius: 50%; 
-            background: rgba(255,255,255,0.8); color: var(--accent-blue);
+            background: rgba(255,255,255,0.8); color: var(--accent-blue); /* Light style */
             font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;
             cursor: pointer; border: 1px solid rgba(0,0,0,0.1);
             transition: all 0.2s;
@@ -869,7 +627,7 @@ input[type=range]:active::-webkit-slider-thumb {
             backdrop-filter: blur(25px) saturate(180%);
             -webkit-backdrop-filter: blur(25px) saturate(180%);
             border-radius: 25px;
-            display: flex; align-items: center; padding: 0 5px; gap: 5px;
+            display: flex; align-items: center; padding: 0 5px; gap: 5px; /* Less padding */
             box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
             border: none;
             transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -924,6 +682,7 @@ input[type=range]:active::-webkit-slider-thumb {
         .list-header-row.ofz-cols span:nth-child(2), .list-header-row.ofz-cols span:nth-child(3) { text-align: center; }
         
         .list-header-row.calc-cols {
+            /* Updated Grid for shifting right */
             display: grid; grid-template-columns: 1fr 70px 100px; gap: 8px;
             text-align: right; margin-bottom: 8px;
         }
@@ -1026,9 +785,9 @@ input[type=range]:active::-webkit-slider-thumb {
         }
         .qty-btn:active { transform: scale(0.9); background: #eee; }
         .calc-input {
-            width: 44px;
+            width: 44px; /* Increased width for 10000 */
             border: none;
-            font-size: 12px;
+            font-size: 12px; /* Adjusted font size */
             font-weight: bold; text-align: center;
             background: transparent; color: var(--text-main); outline: none; padding: 0;
             -moz-appearance: textfield;
@@ -1052,6 +811,7 @@ input[type=range]:active::-webkit-slider-thumb {
             font-size: 14px; font-weight: bold; align-items: center; justify-content: center; margin-left: 6px; cursor: pointer;
         }
         
+        /* Yield Info Preview Box */
         .info-preview-box {
             display: none;
             background: var(--coupon-blue-bg);
@@ -1095,6 +855,7 @@ input[type=range]:active::-webkit-slider-thumb {
         }
         .rebalance-intro-modern b { color: var(--text-main); font-weight: 800; }
         
+        /* Removed ::before, using .ri-icon instead */
         .ri-icon {
             position: absolute; top: -12px; right: 20px;
             width: 32px; height: 32px;
@@ -1190,7 +951,7 @@ input[type=range]:active::-webkit-slider-thumb {
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 12px;
-            margin-top: 10px;
+            margin-top: 10px; /* moved lower */
         }
         .stm-header-label { font-size: 11px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .stm-val-big { font-size: 26px; font-weight: 800; color: var(--text-main); line-height: 1; }
@@ -1278,6 +1039,7 @@ input[type=range]:active::-webkit-slider-thumb {
         .search-empty-state .title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .search-empty-state .desc { font-size: 12px; line-height: 1.5; }
 
+     /* Стили для таблицы эшелонов с раскрывающимися деталями */
 .echelon-table-styled td.et-cell {
     cursor: pointer;
     transition: background 0.2s;
@@ -1434,6 +1196,7 @@ input[type=range]:active::-webkit-slider-thumb {
     stroke-width: 2;
 }
 
+        /* Стили раскрытия для 3-й вкладки (Портфель) */
 .asset-item .details {
     display: none !important;
 }
@@ -1495,601 +1258,1986 @@ input[type=range]:active::-webkit-slider-thumb {
         </div>
     </div>
 
-<!-- ================================ -->
-<!-- НОВАЯ ВТОРАЯ ВКЛАДКА            -->
-<!-- ================================ -->
-
-<div id="screen-app" class="screen">
-    <header class="terminal-header" style="padding: 45px 24px 30px 24px;">
-        <div class="terminal-brand">Terminal</div>
-        <div class="terminal-subtitle">Madame Solomi'na • Private Strategy</div>
-    </header>
-
-    <main style="padding-bottom: 200px;">
-        
-        <!-- Amount Section -->
-        <section style="padding: 0 24px; margin-bottom: 40px;">
-            <label style="font-size: 10px; font-weight: bold; color: #8e8e93; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; display: block;">Сумма к размещению</label>
-            <div class="premium-input-container">
-                <div class="amount-wrapper">
-                    <input type="text" id="invest-amount-display" placeholder="0" class="premium-input" inputmode="numeric">
-                    <span style="font-size: 30px; font-weight: 300; color: #d1d1d6; margin-left: 8px; margin-bottom: 4px;">₽</span>
-                </div>
-                <div class="amount-underline"></div>
-            </div>
-        </section>
-
-        <!-- Custom Dropdown Section -->
-        <section style="padding: 0 24px; margin-bottom: 40px;">
-<label style="font-size: 10px; font-weight: bold; color: #8e8e93; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; display: block;">Тариф комиссии</label>
-        <div class="custom-select-container">
-            <div class="select-trigger" id="select-trigger">
-                <span id="selected-value" style="font-weight: 600; color: #333D4D;">0.05% — Премиум (стандарт)</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: #8e8e93;"><path d="m6 9 6 6 6-6"/></svg>
-            </div>
-            <div class="select-options" id="select-options">
-                <div class="option-item" data-val="0.01">0.01% — Институциональный</div>
-                <div class="option-item" data-val="0.03">0.03% — Премиум Плюс</div>
-                <div class="option-item" data-val="0.05">0.05% — Премиум (стандарт)</div>
-                <div class="option-item" data-val="0.1">0.1% — Трейдер</div>
-                <div class="option-item" data-val="0.3">0.3% — Инвестор</div>
-                <div class="option-item" data-val="0.5">0.5% — Стандарт</div>
-            </div>
+    <div id="screen-app" class="screen">
+        <div class="header">
+            <h1>Как Вложить и Наслаждаться?</h1>
+            <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
         </div>
-    </section>
 
-    <!-- Strategies Section -->
-    <section style="padding: 0 24px;">
-        <label style="font-size: 10px; font-weight: bold; color: #8e8e93; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 24px; display: block;">Инвестиционная стратегия</label>
-        <div id="strategy-grid"></div>
-        
-        <!-- Custom Ratio Control -->
-        <div id="custom-ratio-controls" class="hidden" style="margin-top: 32px;">
-            <div class="premium-slider-block fade-in-up">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;">
-                    <div>
-                        <span style="font-size: 10px; font-weight: 900; text-transform: uppercase; color: #8e8e93; letter-spacing: 2px; display: block; margin-bottom: 4px;">Ручная настройка</span>
-                        <h3 style="font-size: 20px; font-weight: bold; color: #333D4D; margin: 0;">Баланс активов</h3>
+        <div class="calc-box" id="calcSection">
+            <div class="calc-top">
+                <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
+                    <span class="input-label">ВВЕДИТЕ СУММУ</span>
+                    <div class="input-wrapper">
+                        <input type="number" id="sumInput" value="0" oninput="draw()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
+                        <span class="currency">₽</span>
                     </div>
-                    <button id="reset-slider" style="font-size: 10px; font-weight: bold; color: #8e8e93; text-transform: uppercase; border: 1px solid #e0e0e0; background: transparent; padding: 8px 16px; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                        Сброс 50/50
-                    </button>
+                </div>
+                <div id="mainChart" class="chart-mini" data-pct="50/50" onclick="resetRatio()"></div>
+            </div>
+            
+            <div class="usage-bar-container">
+                <div class="usage-label">
+                    <span>ЗАДЕЙСТВОВАНО СРЕДСТВ</span>
+                    <span id="usageLabelText">0 ₽</span>
+                </div>
+                <div class="usage-track">
+                    <div id="usageFill"></div>
+                </div>
+            </div>
+
+            <div class="fee-selector">
+                <span class="fee-label">Комиссия брокера</span>
+                <div class="fee-buttons" id="feeGroup">
+                    <button class="fee-btn" onclick="setFee(0.0001, this)">0.01%</button>
+                    <button class="fee-btn active" onclick="setFee(0.0003, this)">0.03%</button>
+                    <button class="fee-btn" onclick="setFee(0.0005, this)">0.05%</button>
+                    <button class="fee-btn" onclick="setFee(0.001, this)">0.1%</button>
+                    <button class="fee-btn" onclick="setFee(0.003, this)">0.3%</button>
+                    <button class="fee-btn" onclick="setFee(0.004, this)">0.4%</button>
+                    <button class="fee-btn" onclick="setFee(0.005, this)">0.5%</button>
+                </div>
+            </div>
+
+            <div class="ratio-control">
+                <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">
+                    <span>Облигации <span id="labelBondsPct">50</span>%</span>
+                    <span>Акции <span id="labelStocksPct">50</span>%</span>
+                </div>
+                <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
+                <div class="slider-hint-wrapper">
+                    <span class="slider-hint">Выберите готовую стратегию или настройте вручную</span>
+                    <div class="preset-dropdown-btn" id="presetDropdownBtn" onclick="togglePresetDropdown()">
+                        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
                 </div>
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                    <div style="text-align: left;">
-                        <span id="custom-bonds-val-top" style="font-size: 30px; font-family: 'JetBrains Mono', monospace; font-weight: bold; color: #333D4D;">50%</span>
-                        <span style="font-size: 9px; font-weight: 900; color: #8e8e93; display: block; letter-spacing: 2px;">ОБЛИГАЦИИ</span>
+                <div class="preset-options" id="presetOptions">
+                    <div class="preset-btn-modern" onclick="setPresetRatio(80, this)">
+                        <div class="preset-left">
+                            <div class="preset-icon">🛡️</div>
+                            <div>
+                                <div class="preset-title">Консервативная</div>
+                                <div class="preset-subtitle">Максимальная защита капитала</div>
+                            </div>
+                        </div>
+                        <div class="preset-right">80/20</div>
                     </div>
-                    <div style="height: 40px; width: 1px; background: #e0e0e0;"></div>
-                    <div style="text-align: right;">
-                        <span id="custom-stocks-val-top" style="font-size: 30px; font-family: 'JetBrains Mono', monospace; font-weight: bold; color: #333D4D;">50%</span>
-                        <span style="font-size: 9px; font-weight: 900; color: #8e8e93; display: block; letter-spacing: 2px;">АКЦИИ</span>
+                    <div class="preset-btn-modern" onclick="setPresetRatio(60, this)">
+                        <div class="preset-left">
+                            <div class="preset-icon">⚖️</div>
+                            <div>
+                                <div class="preset-title">Сбалансированная</div>
+                                <div class="preset-subtitle">Стабильный доход + рост</div>
+                            </div>
+                        </div>
+                        <div class="preset-right">60/40</div>
                     </div>
-                </div>
-
-                <input type="range" id="ratio-slider" min="0" max="100" value="50" style="margin-bottom: 16px;">
-                
-                <div style="display: flex; justify-content: space-between; font-size: 9px; font-weight: bold; color: #d1d1d6; text-transform: uppercase; letter-spacing: 2px;">
-                    <span>Защита</span>
-                    <span>Доходность</span>
+                    <div class="preset-btn-modern" onclick="setPresetRatio(40, this)">
+                        <div class="preset-left">
+                            <div class="preset-icon">📈</div>
+                            <div>
+                                <div class="preset-title">Умеренная</div>
+                                <div class="preset-subtitle">Баланс надежности и роста</div>
+                            </div>
+                        </div>
+                        <div class="preset-right">40/60</div>
+                    </div>
+                    <div class="preset-btn-modern" onclick="setPresetRatio(20, this)">
+                        <div class="preset-left">
+                            <div class="preset-icon">🚀</div>
+                            <div>
+                                <div class="preset-title">Агрессивная</div>
+                                <div class="preset-subtitle">Максимальный потенциал роста</div>
+                            </div>
+                        </div>
+                        <div class="preset-right">20/80</div>
+                    </div>
+                    <div class="preset-footer-hint">Пример: 60/40 означает 60% Облигаций и 40% Акций</div>
                 </div>
             </div>
         </div>
-    </section>
-</main>
 
-<div class="bottom-sticky-panel">
-    <button id="generate-btn" style="width: 100%; background: #333D4D; color: white; padding: 20px; border-radius: 20px; font-weight: 900; font-size: 17px; border: none; cursor: pointer; box-shadow: 0 12px 25px rgba(48, 61, 79, 0.3); transition: all 0.2s;">
-        Сформировать портфель
-    </button>
-    <p style="font-size: 10px; text-align: center; color: #8e8e93; margin-top: 20px; line-height: 1.6; font-weight: 500; opacity: 0.6; padding: 0 8px;">
-         Madame Solomi'na предложит вам 8 ОФЗ и 12 ликвидных акций на основе выбранного риска.
-    </p>
-</div>
-<span class="et-details-ticker">${asset.t}</span>
-                    <span class="et-details-echelon">${echelonName}</span>
+        <button class="btn-graphite" style="margin-bottom: 25px;" onclick="calculateAndShowPortfolio()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7.5 5.6L10 7 8.6 4.5 10 2 7.5 3.4 5 2 6.4 4.5 5 7zM19.5 15.4L22 14l-2.5-1.4L21 10l-2.5 1.4L16 10l1.4 2.6L16 14l2.5 1.4zM22 2l-2.5 1.4L21 6l-1.5-2.6L16 2l1.4 2.5L16 7l2.5-1.4L21 7 19.5 4.6z M2 22l6-6-1.5-1.5-6 6V22h1.5z m11-11l-2.5-2.5-6.5 6.5 2.5 2.5 6.5-6.5z"/>
+            </svg>
+            Сформировать Портфель
+        </button>
+        <p class="start-expl">
+            При нажатии на эту кнопку Вам будет предложен список из 8 Облигаций Федерального Займа и 12 Акций Публичных Компаний к Покупке
+        </p>
+    </div>
+
+    <div id="screen-portfolio" class="screen">
+        <div class="header"><h1>Портфель</h1></div>
+        
+        <div id="portfolio-empty" class="portfolio-empty">
+            <div class="portfolio-empty-icon">📂</div>
+            <div>Расчет еще не производился.<br>Перейдите в терминал и сформируйте портфель.</div>
+            <button class="btn-action" style="margin-top:20px; border-style:dashed;" onclick="showScreen('screen-app')">Перейти к расчету</button>
+        </div>
+
+        <div id="portfolio-content" style="display:none;">
+            <div id="shareContainer">
+                <div class="summary-card">
+                    <div class="summary-top-modern">
+                        <div class="stm-header">
+                            <div class="stm-header-left">
+                                <div class="stm-header-label">Инвестиции</div>
+                                <div class="stm-val-big" id="summ-invested">0 ₽</div>
+                            </div>
+                            <div class="stm-header-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <rect height="14" rx="2" ry="2" width="20" x="2" y="7"></rect>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="stm-bar-container">
+                            <div id="bar-bond-fill" class="stm-bar-bonds" style="width:50%"></div>
+                            <div id="bar-stock-fill" class="stm-bar-stocks" style="width:50%"></div>
+                        </div>
+
+                        <div class="stm-meta-row">
+                            <div class="stm-pct-labels">
+                                <span class="stm-pl-bond">Облигации <span id="srl-bond-pct">50%</span></span>
+                                <span class="stm-pl-stock">Акции <span id="srl-stock-pct">50%</span></span>
+                            </div>
+                            <div class="stm-fee-lozenge">Комиссия: <span id="summ-fee">0.03%</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-prediction">
+                        <div class="pred-title">Сумма через 3 года (Прогноз):</div>
+                        <div class="pred-total" id="summ-total-3y">0 ₽</div>
+                        <div style="height:1px; background:rgba(0,0,0,0.05); margin:8px 0;"></div>
+                        <div class="pred-breakdown">
+                            <div class="pb-row">
+                                <span><span class="dot-bond">●</span> Денежный поток от Облигаций:</span>
+                                <b id="summ-bond-income">0 ₽</b>
+                            </div>
+                            <div class="pb-row">
+                                <span><span class="dot-stock">●</span> Переоценка Портфеля Акций:</span>
+                                <b id="summ-stock-growth">0 ₽</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
+                    <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
+                    <div id="shareDate" style="font-size: 10px; color: #888;"></div>
+                </div>
+                
+                <div id="section-bonds">
+                    <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
+                    <div class="section-desc-small">
+                        Ниже представлен к покупке список из 8 Облигаций Федерального займа с постоянным купоном, которые генерируют 16 выплат купонов в год.
+                    </div>
+                    
+                    <div class="allocation-info-connected" id="alloc-bonds">
+                        <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">0</b>&nbsp;₽</div>
+                        <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
+                    </div>
+                    <div id="listBonds" class="asset-list"></div>
+                </div>
+
+                <div class="coupon-box" id="couponBox">
+                    <div class="coupon-header" id="rainSection" onclick="toggleCouponSection()">
+                        <div class="coupon-title-wrapper">
+                            <div class="coupon-icon-lg">🌦</div>
+                            <div class="coupon-text-col">
+                                <span class="coupon-main-text">Купонный Дождь</span>
+                                <span class="coupon-preview-mini">Информация о ближайших выплатах</span>
+                            </div>
+                        </div>
+                        <svg class="arrow-icon" id="couponArrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    </div>
+                    <div class="coupon-content" id="couponContent">
+                        <div class="tax-selector-ui" id="taxGroup">
+                            <button class="tax-ui-btn" onclick="setTax(0, this)">Без налога</button>
+                            <button class="tax-ui-btn active" onclick="setTax(0.13, this)">НДФЛ 13%</button>
+                            <button class="tax-ui-btn" onclick="setTax(0.15, this)">НДФЛ 15%</button>
+                        </div>
+                        <div class="coupon-table-head">
+                            <span>ДАТА</span> <span>НАЗВАНИЕ</span> <span style="text-align:center">КОЛ-ВО</span> <span style="text-align:right">СУММА</span>
+                        </div>
+                        <div id="couponList">Загрузка данных...</div>
+                        <div style="text-align:right; margin-top:10px; font-weight:bold; font-size:12px; padding-top:5px; border-top:1px dashed #eee;">
+                            Итого ближайшие: <span id="couponTotalHeader">0 ₽</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-transition" id="section-separator">
+                    <div class="st-line"></div>
+                    <div class="st-icon">∞</div>
+                    <div class="st-line rev"></div>
+                </div>
+
+                <div id="section-stocks">
+                    <div class="section-header-highlight hl-blue" id="header-stocks">2. Растущая часть</div>
+                    <div class="section-desc-small">
+                        Ниже представлены Акции Публичных Компаний распределенные на 4 эшелона по уровню риска и дивидендной политике.
+                    </div>
+                    <div class="allocation-info-connected" id="alloc-stocks">
+                        <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">0</b>&nbsp;₽</div>
+                        <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
+                    </div>
+                    <div id="echelonContainer"></div>
+                </div>
+                
+                <div class="footer-disclaimer-important" id="footer-important">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-weight:800; font-size:14px; color:var(--accent-green); text-transform:uppercase; letter-spacing:0.5px;">
+                        <svg style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Важно
+                    </div>
+                    В Растущей части 70% средств мы держим в первых двух Эшелонах, так как они обеспечивают баланс надежности и потенциальной доходности.
                 </div>
             </div>
-           <div style="margin-bottom: 16px;">
-<div style="background: linear-gradient(135deg, var(--bg-color), var(--card-bg)); padding: 16px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 12px; box-shadow: 0 2px 8px var(--card-shadow);">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-        <div style="font-size: 10px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Компания</div>
-        <div style="background: var(--accent-blue); color: white; font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px;">${echelonName}</div>
-    </div>
-    <div style="font-size: 16px; font-weight: 800; color: var(--text-main); line-height: 1.4; margin-bottom: 8px;">${companyName}</div>
-    ${asset.sector ? `<div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(52, 152, 219, 0.1); color: var(--accent-blue); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 8px; margin-top: 4px;">
-        <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        ${asset.sector}
-    </div>` : ''}
-</div>
 
-<div class="et-details-grid">
-    <div class="et-detail-item">
-        <span class="et-detail-label">Тикер:</span>
-        <span class="et-detail-value" style="cursor:pointer; color:var(--accent-blue);" onclick="copyTicker(event, '${asset.t}')">${asset.t} 📋</span>
+            <button class="btn-action" id="btnShare" onclick="shareAsPDF()">
+                <svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                Поделиться PDF (Портфель)
+            </button>
+            <div class="footer-disclaimer">Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.</div>
+        </div>
     </div>
-    <div class="et-detail-item">
-        <span class="et-detail-label">Цель:</span>
-        <span class="et-detail-value">${asset.target}</span>
+
+    <div id="screen-assets" class="screen">
+        <div class="header"><h1>Ребалансировка</h1></div>
+        <div class="rebalance-intro-modern">
+            <div class="ri-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+            <b>Ребалансировка</b> — это пересмотр состава активов для увеличения доходности. Мы продаем то, что уже отыграло свой рост или дает низкий доход, и покупаем более выгодные инструменты. Используйте список ниже, чтобы найти лучшие идеи для замены.
+        </div>
+        
+        <div class="section-header-styled" onclick="toggleOfzTable(document.getElementById('expandArrowOfz'))">
+            <span>🛡️ ОФЗ для замены</span>
+            <span class="info-i-blue" onclick="showYieldInfo(event)">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </span>
+        </div>
+        <div class="info-preview-box" id="yield-info-box">
+            <b>Простая Доходность к Погашению</b> — это среднегодовая доходность, которую получает инвестор, продержавший облигацию до даты ее погашения.
+        </div>
+        
+        <div id="ofz-list-headers" class="list-header-row ofz-cols">
+            <span>Название</span>
+            <span>Цена</span>
+            <span>НКД</span>
+            <span>Доходность</span>
+        </div>
+        
+        <div id="ofz-wrapper" class="echelon-wrapper collapsed">
+             <div id="ofz-list"></div>
+        </div>
+
+        <div class="expand-arrow-btn" id="expandArrowOfz" onclick="toggleOfzTable(this)">
+            <div class="eab-line"></div>
+            <div class="eab-icon-box">
+                <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="eab-line"></div>
+        </div>
+
+        <div class="section-header-styled" onclick="toggleInfoBlock(this)">
+            <span>🚀 Акции для замены</span>
+            <span class="info-i-blue">
+                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </span>
+        </div>
+        
+        <div class="info-expanded-block" style="margin-top:10px;">
+            <div class="echelon-info-graphic">
+                <div class="eig-item e1">
+                    <div class="eig-icon">💎</div>
+                    <div class="eig-text">
+                        <div class="eig-title">I Эшелон <span class="eig-badge">Надежный</span></div>
+                        <div class="eig-desc">Компании, которые платят дивиденды и стараются их повышать каждый год</div>
+                    </div>
+                    <div class="eig-arrow">→</div>
+                </div>
+                <div class="eig-item e2">
+                    <div class="eig-icon">📊</div>
+                    <div class="eig-text">
+                        <div class="eig-title">II Эшелон <span class="eig-badge">Стабильный</span></div>
+                        <div class="eig-desc">Компании, которые платят дивиденды, но размер выплат может меняться</div>
+                    </div>
+                    <div class="eig-arrow">→</div>
+                </div>
+                <div class="eig-item e3">
+                    <div class="eig-icon">⚡</div>
+                    <div class="eig-text">
+                        <div class="eig-title">III Эшелон <span class="eig-badge">Рисковый</span></div>
+                        <div class="eig-desc">Компании с потенциалом выплат, но пока не платят регулярно</div>
+                    </div>
+                    <div class="eig-arrow">→</div>
+                </div>
+                <div class="eig-item e4">
+                    <div class="eig-icon">🚀</div>
+                    <div class="eig-text">
+                        <div class="eig-title">IV Эшелон <span class="eig-badge">Венчурный</span></div>
+                        <div class="eig-desc">Компании роста, которые реинвестируют прибыль вместо дивидендов</div>
+                    </div>
+                    <div class="eig-arrow">→</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="echelon-wrapper" class="echelon-wrapper collapsed">
+            <table class="echelon-table-styled">
+                <thead>
+                    <tr>
+                        <th><div class="echelon-header-pill">I</div></th>
+                        <th><div class="echelon-header-pill">II</div></th>
+                        <th><div class="echelon-header-pill">III</div></th>
+                        <th><div class="echelon-header-pill">IV</div></th>
+                    </tr>
+                </thead>
+                <tbody id="echelon-tickers-body"></tbody>
+            </table>
+        </div>
+        
+        <div class="expand-arrow-btn" id="expandArrowBtn" onclick="toggleEchelonTable(this)">
+            <div class="eab-line"></div>
+            <div class="eab-icon-box">
+                <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="eab-line"></div>
+        </div>
     </div>
-    <div class="et-detail-item">
-        <span class="et-detail-label">Прогноз:</span>
-        <span class="et-detail-value">до 36 мес.</span>
+
+    <div id="screen-interesting" class="screen">
+        <div class="header"><h1>ИНТЕРЕСНОЕ</h1></div>
+        
+        <div class="market-grid">
+            <div class="market-item-modern blue">
+                <div class="mk-left">
+                    <div class="mk-label">IMOEX</div>
+                    <div class="mk-val" id="val-imoex">---</div>
+                </div>
+                <div class="mk-dynamics neutral" id="dyn-imoex">--%</div>
+            </div>
+            <div class="market-item-modern green">
+                <div class="mk-left">
+                    <div class="mk-label">USD/RUB</div>
+                    <div class="mk-val" id="val-usdrub">---</div>
+                </div>
+                <div class="mk-dynamics neutral" id="dyn-usdrub">--%</div>
+            </div>
+            <div class="market-item-modern orange">
+                <div class="mk-left">
+                    <div class="mk-label">BTC/USD</div>
+                    <div class="mk-val" id="val-btc">---</div>
+                </div>
+                <div class="mk-dynamics neutral" id="dyn-btc">--%</div>
+            </div>
+        </div>
+
+        <div class="rates-vertical-block">
+            <div class="rv-title">ВЕРТИКАЛЬ СТАВОК</div>
+            <div class="rv-grid">
+                <div class="rv-item">
+                 <span>Ключевая ставка ЦБ</span>
+                 <b id="val-key-rate">21.0%</b>
+            </div>
+                 <div class="rv-item">
+                 <span>Макс. ставка по вкладам</span>
+                 <b id="val-deposit-rate">21.5%</b>
+           </div>
+                <div class="rv-item">
+                <span>Инфляция (г/г)</span>
+                <b id="val-inflation">9.1%</b>
+             </div>
+                <div class="rv-item">
+                <span>ОФЗ 10 лет</span>
+                <b id="val-ofz10">---%</b>
+              </div>
+            </div>
+        </div>
+
+        <div class="coupon-box" style="margin-top:20px;">
+            <div class="coupon-header" onclick="toggleAccordion('calc-income-wrapper')">
+                <span>📅 Ежемесячный доход</span>
+                <span class="calc-badge-modern">Калькулятор</span>
+            </div>
+            <div class="coupon-content" id="calc-income-wrapper" style="padding: 10px; display:block;">
+                
+                <div class="monthly-calc-box">
+                    <div class="input-container">
+                        <span class="input-label">Сумма Инвестиций</span>
+                        <div class="input-wrapper">
+                            <input type="number" id="monthlySumInput" value="100000" oninput="distributeMonthlyInvestment()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" style="background: transparent; border: none; color: var(--input-color); width: 100%; font-weight: 700;">
+                            <span class="currency" style="font-size: 24px;">₽</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="calc-expl-text">Калькулятор предлагает к покупке список ОФЗ, благодаря которому Вы будете получать ежемесячно выплаты купонов.</p>
+
+                <div class="tax-selector-ui">
+                    <button class="tax-ui-btn" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
+                    <button class="tax-ui-btn active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">НДФЛ 13%</button>
+                    <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
+                </div>
+                
+                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">.</div>
+                
+                <div class="list-header-row calc-cols">
+                    <span>НАЗВАНИЕ</span>
+                    <span style="text-align: center;">ДОХОДНОСТЬ</span>
+                    <span style="text-align: center;">КОЛИЧЕСТВО</span>
+                </div>
+                
+                <div id="calc-bonds-input-list"></div>
+                
+                <button class="btn-reset-wide" onclick="resetCustomCalc()">
+                    <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    Очистить все поля
+                </button>
+
+                <div class="result-list-container">
+                    <div style="font-weight:bold; font-size:12px; margin-bottom:8px; color:var(--accent-blue);">Выплаты:</div>
+                    <div class="coupon-table-head">
+                        <span>ДАТА</span> <span>НАЗВАНИЕ</span> <span style="text-align:center">КОЛ-ВО</span> <span style="text-align:right">СУММА</span>
+                    </div>
+                    <div id="calc-results-list" style="font-size:11px; color:#666;">Введите количество для расчета...</div>
+                    <div id="calc-results-footer" style="text-align:right; margin-top:10px; font-weight:bold; font-size:12px; border-top:1px dashed #ccc; padding-top:5px;"></div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-window.scrollTo({
-    top: offsetPosition,
-    behavior: 'smooth'
-});
-} else {
-    detailsRow.style.display = 'none';
-}
-for(let e of echelons) {
-    const found = e.assets.find(a => a.t === ticker);
-    if(found) {
-        foundAsset = found;
-        break;
-    }
+    
+    <div id="screen-company" class="screen">
+        <div class="company-header">
+            <div class="back-btn" onclick="goBackFromCompany()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </div>
+            <div class="company-title">О Компании</div>
+        </div>
+        
+        <div id="company-content"></div>
+    </div>
+
+    <div class="nav-wrapper" id="navWrapper">
+        <div class="nav-dock" id="standardNav">
+            <div class="nav-item active" id="nav-home" onclick="showScreen('screen-home')">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div class="nav-item" id="nav-app" onclick="showScreen('screen-app')">
+                <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+            </div>
+            <div class="nav-item" id="nav-portfolio" onclick="showScreen('screen-portfolio')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+            <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+        </div>
+
+        <div class="nav-search-btn" id="nav-search" onclick="expandSearch()">
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <button class="theme-toggle-mini" onclick="event.stopPropagation(); toggleTheme()" id="themeBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
+
+        <div class="nav-search-expanded" id="expandedNav">
+            <div class="nav-back-island" onclick="collapseSearch()">
+                 <!-- Icon will be injected here by JS -->
+            </div>
+            <input type="text" class="nav-search-input-bar" id="tickerSearchInput" placeholder="Тикер, название или ISIN..." onkeyup="handleSearchKeyup(event)">
+            <div class="nav-item" onclick="collapseSearch()">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </div>
+        </div>
+    </div>
+
+<script>
+        const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
+        const GID = '1213653337'; 
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+
+        let bonds = [];
+        let bondDataCache = {};
+        let monthlyIncomeBonds = []; // New list for the specific calculator
+        let allScheduledPayments = [];
+        let brokerFee = 0.0003; 
+        let currentTax = 0.13;
+        let customTax = 0.13;
+        let bondCouponsMap = {}; 
+        let bondDetailsMap = {};
+        let currentScreen = 'screen-home';
+        let lastNavScreen = 'screen-home';
+        let isPortfolioCalculated = false;
+        let isFirstVisit = true;
+        let isUpdatingProgrammatically = false;
+        // Переменные для вертикали ставок
+        let ratesData = {
+           keyRate: '21.0%',
+           depositRate: '21.5%',
+           inflation: '9.1%',
+           ofz10: '---'
+        };
+    
+
+        let echelons = [
+            { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
+            { title: 'II Эшелон', weight: 0.40, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ, НО ВЫПЛАТЫ РАЗНЯТСЯ' },
+            { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
+            { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
+        ];
+        let echelonTableData = [[], [], [], []];
+        
+        // Swipe navigation removed
+
+        function checkFirstVisit() {
+            const visited = localStorage.getItem('user_visited');
+            const startBlock = document.getElementById('start-calculation-block');
+            if (visited) {
+                isFirstVisit = false;
+                if(startBlock) startBlock.style.display = 'none';
+                document.getElementById('navWrapper').style.display = 'flex';
+                showScreen('screen-app');
+            } else {
+                isFirstVisit = true;
+                if(startBlock) startBlock.style.display = 'block';
+                document.getElementById('navWrapper').style.display = 'none';
+            }
+        }
+
+        function startCalculation() {
+            localStorage.setItem('user_visited', 'true');
+            isFirstVisit = false;
+            const startBlock = document.getElementById('start-calculation-block');
+            if(startBlock) startBlock.style.display = 'none';
+            document.getElementById('navWrapper').style.display = 'flex';
+            showScreen('screen-app');
+        }
+
+        function updateMarketStatus() {
+            const now = new Date();
+            const day = now.getDay(); const hour = now.getHours(); const min = now.getMinutes();
+            const dot = document.getElementById('market-status-dot');
+            const isWeekday = day >= 1 && day <= 5;
+            const isWorkingHours = (hour > 10 || (hour === 10 && min >= 0)) && (hour < 18 || (hour === 18 && min <= 50));
+            dot.className = (isWeekday && isWorkingHours) ? 'market-dot dot-online' : 'market-dot dot-offline';
+        }
+
+    function updateRatesDisplay() {
+    document.getElementById('val-key-rate').innerText = ratesData.keyRate;
+    document.getElementById('val-deposit-rate').innerText = ratesData.depositRate;
+    document.getElementById('val-inflation').innerText = ratesData.inflation;
+    document.getElementById('val-ofz10').innerText = ratesData.ofz10;  // <--- ЭТА СТРОКА
 }
 
-if(!foundAsset) {
-    for(let i = 0; i < echelonTableData.length; i++) {
-        const found = echelonTableData[i].find(a => a.t === ticker);
-        if(found) {
-            foundAsset = {
-                t: found.t,
-                n: companyName || found.t,
-                p: 0,
-                target: found.target
+        async function updateMarketData() {
+            const setDynamics = (el, change) => {
+                el.classList.remove('positive', 'negative', 'neutral');
+                if (change > 0.01) {
+                    el.classList.add('positive');
+                    el.innerText = `+${change.toFixed(2)}%`;
+                } else if (change < -0.01) {
+                    el.classList.add('negative');
+                    el.innerText = `${change.toFixed(2)}%`;
+                } else {
+                    el.classList.add('neutral');
+                    el.innerText = `${Math.abs(change).toFixed(2)}%`;
+                }
             };
-            break;
+            
+            // Bitcoin
+            try {
+                const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+                const data = await res.json();
+                if(data && data.lastPrice) {
+                    document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.lastPrice)).toLocaleString();
+                    setDynamics(document.getElementById('dyn-btc'), parseFloat(data.priceChangePercent));
+                }
+            } catch(e) { console.log("BTC fetch error:", e); }
+
+            // MOEX data
+            const fetchMoex = (url, valEl, dynEl) => {
+                fetch(url)
+                    .then(r => r.json())
+                    .then(d => {
+                        const marketdata = (d.marketdata && d.marketdata.data.length > 0) ? d.marketdata : ((d.marketdata_yields && d.marketdata_yields.data.length > 0) ? d.marketdata_yields : null);
+                        
+                        let last, open, prev;
+                        let changePercent = 0;
+
+                        const getVal = (block, colName) => {
+                            if(!block || !block.columns || !block.data || block.data.length === 0) return null;
+                            const idx = block.columns.indexOf(colName);
+                            return idx !== -1 ? block.data[0][idx] : null;
+                        };
+
+                        if (marketdata) {
+                            last = getVal(marketdata, 'LAST') || getVal(marketdata, 'CURRENTVALUE') || getVal(marketdata, 'YIELD');
+                            open = getVal(marketdata, 'OPEN');
+                        }
+
+                        if ((!last || !open) && d.securities && d.securities.data.length > 0) {
+                             prev = getVal(d.securities, 'PREVPRICE');
+                             if(!last) last = prev; 
+                             if(!open) open = prev; 
+                        }
+                        
+                        if(last && open && open > 0) {
+                            changePercent = ((last - open) / open) * 100;
+                        } else if (last && prev && prev > 0) {
+                             changePercent = ((last - prev) / prev) * 100;
+                        }
+                        
+                        if(last) valEl.innerText = last.toFixed(2).replace('.00', '') + (url.includes('USD') ? ' ₽' : '');
+                        setDynamics(dynEl, changePercent);
+                    }).catch(e => {
+                        console.log("MOEX error for:", valEl.id, e);
+                        valEl.innerText = "---";
+                    });
+            };
+
+            fetchMoex('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-imoex'), document.getElementById('dyn-imoex'));
+            fetchMoex('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-usdrub'), document.getElementById('dyn-usdrub'));
+            
+             fetch('https://iss.moex.com/iss/engines/stock/markets/bonds/securities/SU26244RMFS2.json?iss.meta=off&iss.only=securities,marketdata')
+                .then(r => r.json())
+                .then(d => {
+                     const md = d.marketdata || d.marketdata_yields;
+                     if(md && md.data.length > 0) {
+                         const yIdx = md.columns.indexOf('YIELD');
+                         const y = md.data[0][yIdx];
+                         if(y) document.getElementById('val-ofz10').innerText = y.toFixed(2) + '%';
+                     }
+                }).catch(e => console.log('OFZ fetch error'));
         }
-    }
-}
 
-if(foundAsset) {
-    const item = {
-        ...foundAsset,
-        type: 'Акция'
-    };
-    openCompanyPage(item);
-}
-function renderOfzList() {
-if (bonds.length === 0) return;
+        setInterval(updateMarketData, 30000);
+        setInterval(updateMarketStatus, 60000);
+        
+        function showScreen(screenId) {
+            if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
+                lastNavScreen = screenId;
+                collapseSearch(false);
+            }
+            
+            if (currentScreen === 'screen-home' && !isFirstVisit) {
+                 const startBlock = document.getElementById('start-calculation-block');
+                 if (startBlock) startBlock.style.display = 'none';
+            }
 
-let ofzHtml = '';
-bonds.forEach(b => {
-    const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
-    const calculatedCY = (b.p > 0 && details.couponValue && details.freq) ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) : '0.00';
-    ofzHtml += `
-    <div class="ofz-card-modern" onclick="toggleOfzDetails('details-${b.t}')">
-        <div class="ofz-main-info">
-            <div class="ofz-name-lg">${limitName(b.n)}</div>
-            <div class="ofz-ticker-sm">${b.t}</div>
-        </div>
-        <div class="ofz-price">${b.p}</div>
-        <div class="ofz-nkd-badge">${Math.round(b.nkd*10)/10}</div>
-        <div class="ofz-yield-badge" title="Доходность к погашению">
-            ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
-        </div>
-    </div>
-    <div id="details-${b.t}" class="ofz-details-panel">
-        <div class="ofz-detail-row"><span>Код:</span> <span class="ofz-detail-val">${b.t}</span></div>
-        <div class="ofz-detail-row"><span>НКД:</span> <span class="ofz-detail-val">${b.nkd.toFixed(2)} ₽</span></div>
-        <div class="ofz-detail-row"><span>Дата погашения:</span> <span class="ofz-detail-val">${details.matDate}</span></div>
-        <div class="ofz-detail-row"><span>Размер купона:</span> <span class="ofz-detail-val">${details.couponValue} ₽</span></div>
-        <div class="ofz-detail-row"><span>Дата ближайшего купона:</span> <span class="ofz-detail-val">${details.nextCoupon}</span></div>
-        <div class="ofz-detail-row"><span>Текущая купонная доходность:</span> <span class="ofz-detail-val">${calculatedCY}%</span></div>
-        <div class="ofz-detail-row"><span>Выплат в год:</span> <span class="ofz-detail-val">${details.freq}</span></div>
-    </div>`;
-});
-if(document.getElementById('ofz-list')) {
-    document.getElementById('ofz-list').innerHTML = ofzHtml;
-}
-async function fetchBondDetailsInBackground() {
-const promises = bonds.map(async (b) => {
-    try {
-        const extra = await fetchBondData(b.t);
-        b.nkd = extra.nkd || 0;
-        b.matDate = extra.matDate || '—';
-    } catch(e) {
-        console.log("Error fetching", b.t);
-    }
-});
-
-await Promise.all(promises);
-
-renderOfzList();
-draw();
-function performSearch(query) {
-        if(!query || query.length < 2) {
-            openCompanyPage(null, query);
-            return;
+            if (currentScreen === 'screen-assets' && screenId !== 'screen-assets') {
+                const inc = document.getElementById('calc-income-wrapper');
+                if(inc) inc.style.display = 'none';
+            }
+            currentScreen = screenId;
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById('nav-search').classList.remove('active');
+            
+            const navId = `nav-${screenId.split('-')[1]}`;
+            const navBtn = document.getElementById(navId);
+            if (navBtn) navBtn.classList.add('active');
+            
+            if(screenId === 'screen-interesting' || screenId === 'screen-company') {
+                document.getElementById('nav-search').classList.add('active');
+            }
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
         }
         
-        const q = query.toUpperCase();
-        let results = [];
-        echelons.forEach(e => {
-            e.assets.forEach(a => {
-                if(a.t.toUpperCase().includes(q) || a.n.toUpperCase().includes(q)) results.push({...a, type: 'Акция'});
+        function expandSearch() {
+            const backBtn = document.querySelector('#expandedNav .nav-back-island');
+            const activeNavId = `nav-${lastNavScreen.split('-')[1]}`;
+            const activeNav = document.getElementById(activeNavId);
+
+            if (activeNav && backBtn) {
+                const iconSvg = activeNav.querySelector('svg').cloneNode(true);
+                backBtn.innerHTML = '';
+                backBtn.appendChild(iconSvg);
+            }
+            
+            document.getElementById('standardNav').classList.add('hidden');
+            document.getElementById('nav-search').style.display = 'none';
+            document.getElementById('expandedNav').classList.add('active');
+            showScreen('screen-interesting');
+            setTimeout(() => {
+                document.getElementById('tickerSearchInput').focus();
+            }, 300);
+        }
+
+        function collapseSearch(goBack = true) {
+            document.getElementById('expandedNav').classList.remove('active');
+            document.getElementById('standardNav').classList.remove('hidden');
+            document.getElementById('nav-search').style.display = 'flex';
+            document.getElementById('tickerSearchInput').blur();
+            document.getElementById('tickerSearchInput').value = '';
+            
+            if(goBack) showScreen(lastNavScreen);
+        }
+
+        function goBackFromCompany() {
+            showScreen('screen-interesting');
+        }
+
+        function handleSearchKeyup(event) {
+            if(event.keyCode === 13) {
+                performSearch(event.target.value);
+            }
+        }
+
+        function togglePresetDropdown() {
+            const btn = document.getElementById('presetDropdownBtn');
+            const options = document.getElementById('presetOptions');
+            btn.classList.toggle('open');
+            options.classList.toggle('show');
+        }
+
+        function setPresetRatio(bondPct, btnElement) {
+            document.getElementById('ratioSlider').value = bondPct;
+            
+            document.querySelectorAll('.preset-btn-modern').forEach(b => b.classList.remove('selected-preset'));
+            if(btnElement) btnElement.classList.add('selected-preset');
+            
+            draw();
+        }
+
+        function calculateAndShowPortfolio() {
+            draw();
+            isPortfolioCalculated = true;
+            document.getElementById('portfolio-empty').style.display = 'none';
+            document.getElementById('portfolio-content').style.display = 'block';
+            showScreen('screen-portfolio');
+        }
+
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+        }
+
+        function toggleCouponSection() {
+            const content = document.getElementById('couponContent');
+            const arrow = document.getElementById('couponArrow');
+            content.classList.toggle('active');
+            arrow.classList.toggle('rotated');
+        }
+
+        function toggleEchelonTable(btn) {
+            const wrapper = document.getElementById('echelon-wrapper');
+            wrapper.classList.toggle('collapsed');
+            if(btn && btn.classList) btn.classList.toggle('open');
+        }
+
+        function toggleOfzTable(btn) {
+            const wrapper = document.getElementById('ofz-wrapper');
+            wrapper.classList.toggle('collapsed');
+            if(btn && btn.classList) btn.classList.toggle('open');
+        }
+        
+        function toggleOfzDetails(id) {
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('active');
+        }
+        
+        function toggleInfoBlock(headerElement) {
+            event.stopPropagation();
+            let nextEl = headerElement.nextElementSibling;
+            while(nextEl) {
+                if (nextEl.classList.contains('info-expanded-block')) {
+                    nextEl.classList.toggle('show');
+                    break;
+                }
+                nextEl = nextEl.nextElementSibling;
+            }
+        }
+
+        function toggleEchelonTip(event, tipId) {
+            event.stopPropagation();
+            const allTips = document.querySelectorAll('.echelon-tip');
+            allTips.forEach(t => {
+                if(t.id !== tipId) t.classList.remove('show');
             });
-        });
-        bonds.forEach(b => {
-            if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
-        });
+            const tip = document.getElementById(tipId);
+            if(tip) tip.classList.toggle('show');
+        }
+
+        function showYieldInfo(event) {
+            event.stopPropagation();
+            const infoBox = document.getElementById('yield-info-box');
+            if (infoBox) {
+                infoBox.classList.toggle('show');
+            }
+        }
         
-        const input = document.getElementById('tickerSearchInput');
-        input.value = '';
-        input.blur();
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeBtn');
+            const sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+            const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode'); body.classList.add('light-mode');
+                btn.innerHTML = moonIcon; localStorage.setItem('user_theme', 'light');
+            } else {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode'); btn.innerHTML = sunIcon; localStorage.setItem('user_theme', 'dark');
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('user_theme');
+            const btn = document.getElementById('themeBtn');
+            const sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+            const moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+            if (savedTheme === 'dark') { document.body.classList.add('dark-mode'); btn.innerHTML = sunIcon; }
+            else { document.body.classList.add('light-mode'); btn.innerHTML = moonIcon; }
+        }
+
+        function saveSettings() {
+            const settings = { sum: document.getElementById('sumInput').value, ratio: document.getElementById('ratioSlider').value, fee: brokerFee, tax: currentTax };
+            localStorage.setItem('invest_settings', JSON.stringify(settings));
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('invest_settings');
+            if (saved) {
+                const s = JSON.parse(saved);
+                document.getElementById('sumInput').value = s.sum || 100000;
+                document.getElementById('ratioSlider').value = s.ratio || 50;
+                brokerFee = parseFloat(s.fee) || 0.0003; currentTax = parseFloat(s.tax) || 0.13;
+                document.querySelectorAll('.fee-btn').forEach(btn => btn.classList.toggle('active', parseFloat(btn.getAttribute('onclick').match(/[\d.]+/)) === brokerFee));
+                document.querySelectorAll('.tax-ui-btn').forEach(btn => {
+                    if(!btn.id.includes('tax-custom')) {
+                        btn.classList.toggle('active', parseFloat(btn.getAttribute('onclick').match(/[\d.]+/)) === currentTax);
+                    }
+                });
+            }
+        }
+
+        function resetRatio() {
+            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+            document.getElementById('ratioSlider').value = 50; draw();
+        }
+
+        function setFee(val, btn) {
+            brokerFee = val;
+            document.querySelectorAll('.fee-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); draw();
+        }
+
+        function setTax(val, btn) {
+            currentTax = val;
+            document.querySelectorAll('#taxGroup .tax-ui-btn').forEach(b => b.classList.remove('active')); 
+            btn.classList.add('active'); 
+            draw();
+        }
         
-        openCompanyPage(results[0] || null, query);
+        function setCustomTax(val, btn) {
+            customTax = val;
+            document.getElementById('tax-custom-0').classList.remove('active');
+            document.getElementById('tax-custom-13').classList.remove('active');
+            document.getElementById('tax-custom-15').classList.remove('active');
+            btn.classList.add('active');
+            distributeMonthlyInvestment();
+        }
+
+        function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
+        function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
+        function hideAllTips(event) { 
+            document.querySelectorAll('.echelon-tip, .info-preview-box').forEach(el => {
+                if(!el.contains(event.target) && !event.target.closest('.section-header-styled')) {
+                    el.classList.remove('show')
+                }
+            });
+            if(event && event.target.tagName !== 'INPUT') { 
+                if(document.getElementById('sumInput')) document.getElementById('sumInput').blur();
+                if(document.getElementById('monthlySumInput')) document.getElementById('monthlySumInput').blur();
+            } 
+        }
+        function toggleRow(el) {
+    el.classList.toggle('is-expanded');
+}
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.innerText = `Скопировано: ${text}`;
+                toast.className = "toast show";
+                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2000);
+            });
+        }
+        
+        function copyTicker(e, text) {
+            e.stopPropagation();
+            copyToClipboard(text);
+        }
+        
+        function openTradingView(e, ticker) {
+            e.stopPropagation();
+            const url = `https://ru.tradingview.com/chart/?symbol=MOEX:${ticker}`;
+            window.open(url, '_blank');
+        }
+
+        async function fetchBondData(code) {
+    if (!code) return { nkd: 0, matDate: '—', price: 0 };
+    
+    // Проверяем кэш
+    if (bondDataCache[code]) {
+        return bondDataCache[code];
     }
     
-    async function openCompanyPage(item, searchQuery = '') {
-        const content = document.getElementById('company-content');
+    try {
+        const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities,marketdata`);
+        const data = await res.json(); 
         
-        if(!item) {
-            content.innerHTML = `
-                <div class="search-empty-state">
-                    <div class="icon">🔍</div>
-                    <div class="title">Ничего не найдено</div>
-                    <div class="desc">По запросу "${searchQuery}" не найдено результатов.<br>Попробуйте изменить запрос.</div>
-                </div>
-            `;
-            showScreen('screen-company');
-            return;
+        const sec_cols = data.securities.columns; 
+        const sec_row = data.securities.data[0];
+        
+        let lastPrice = 0;
+        
+        if (data.marketdata && data.marketdata.data.length > 0) {
+             const m_cols = data.marketdata.columns;
+             const m_row = data.marketdata.data[0];
+             const lastIdx = m_cols.indexOf('LAST');
+             const prevIdx = m_cols.indexOf('PREVPRICE');
+
+             if (lastIdx !== -1 && m_row[lastIdx]) {
+                lastPrice = m_row[lastIdx];
+             } 
+             else if (prevIdx !== -1 && m_row[prevIdx]) {
+                lastPrice = m_row[prevIdx];
+             }
         }
         
-        const isStock = item.type === 'Акция';
-        const target = isStock ? item.target : '-';
-        const yieldVal = isStock ? 'СМ. ТАБЛИЦУ' : item.y;
-        
-        let changeHtml = '<div class="cc-v2-change neutral">--</div>';
-        
-        try {
-            const url = `https://iss.moex.com/iss/engines/stock/markets/${isStock ? 'shares' : 'bonds'}/securities/${item.t}.json?iss.meta=off&iss.only=securities,marketdata`;
-            const res = await fetch(url);
-            const data = await res.json();
-            const marketdata = data.marketdata.data[0];
-            const marketcols = data.marketdata.columns;
-            const last = marketdata[marketcols.indexOf('LAST')];
-            const open = marketdata[marketcols.indexOf('OPEN')];
-            
-            if (last && open && open > 0) {
-                const change = last - open;
-                const changePct = (change / open) * 100;
-                const sign = change > 0 ? '+' : '';
-                const colorClass = change > 0 ? 'positive' : (change < 0 ? 'negative' : 'neutral');
-                changeHtml = `<div class="cc-v2-change ${colorClass}">${sign}${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)</div>`;
-            }
-        } catch (e) { console.log('Error fetching company details'); }
+        if (!lastPrice && sec_row) {
+             const prevPriceIdx = sec_cols.indexOf('PREVPRICE');
+             if (prevPriceIdx !== -1 && sec_row[prevPriceIdx]) {
+                 lastPrice = sec_row[prevPriceIdx];
+             }
+        }
 
-        let html = `
-            <div class="company-card-v2">
-                <div class="cc-v2-header">
-                    <div class="cc-v2-logo">${item.t}</div>
-                    <div>
-                        <div class="cc-v2-name">${item.n}</div>
-                        <div class="cc-v2-type">${item.type}</div>
+        bondCouponsMap[code] = { date: sec_row[sec_cols.indexOf('NEXTCOUPON')], value: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0 };
+        
+        const couponPeriod = parseFloat(sec_row[sec_cols.indexOf('COUPONPERIOD')]) || 0;
+        const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
+        bondDetailsMap[code] = {
+            matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—',
+            couponValue: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0,
+            nextCoupon: sec_row[sec_cols.indexOf('NEXTCOUPON')] || '—',
+            couponYield: sec_row[sec_cols.indexOf('COUPONPERCENT')] || '—',
+            freq: freq
+        };
+
+        const result = { 
+            nkd: parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0, 
+            matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—', 
+            price: lastPrice
+        };
+        
+        // Сохраняем в кэш
+        bondDataCache[code] = result;
+        
+        return result;
+    } catch (e) { 
+        console.error(`Failed to fetch data for ticker: ${code}`, e);
+        return { nkd: 0, matDate: '—', price: 0 }; 
+    }
+}
+
+        async function loadData() {
+            initTheme();
+            loadSettings();
+            checkFirstVisit();
+            updateMarketData();
+            updateMarketStatus();
+            
+            try {
+                const response = await fetch(CSV_URL);
+                const text = await response.text();
+                // 1. Парсим CSV в массив строк (ЭТА СТРОКА ОБЯЗАТЕЛЬНА)
+                const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
+
+                // 2. Вертикаль ставок (обновление данных из таблицы)
+                if (rows.length > 1 && rows[1].length > 42) {
+                    const keyRateVal = rows[1][42]; 
+                    if (keyRateVal) ratesData.keyRate = keyRateVal.includes('%') ? keyRateVal : keyRateVal + '%';
+                }
+                if (rows.length > 2 && rows[2].length > 42) {
+                    const depositRateVal = rows[2][42];
+                    if (depositRateVal) ratesData.depositRate = depositRateVal.includes('%') ? depositRateVal : depositRateVal + '%';
+                }
+                if (rows.length > 3 && rows[3].length > 42) {
+                    const inflationVal = rows[3][42];
+                    if (inflationVal) ratesData.inflation = inflationVal.includes('%') ? inflationVal : inflationVal + '%';
+                }
+                if (rows.length > 4 && rows[4].length > 42) {  
+                    const ofz10Val = rows[4][42];
+                    if (ofz10Val) ratesData.ofz10 = ofz10Val.includes('%') ? ofz10Val : ofz10Val + '%';
+                }
+                updateRatesDisplay();
+
+                // 3. Загрузка Облигаций (3 вкладка)
+                let bondList = [];
+                for (let i = 2; i <= 9; i++) { 
+                    if (rows[i] && rows[i].length > 13 && rows[i][10]) {
+                        bondList.push({ 
+                            t: rows[i][10], 
+                            n: rows[i][11], 
+                            p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
+                            y: rows[i][13] || '0%',
+                            nkd: 0,
+                            matDate: '—'
+                        }); 
+                    }
+                }
+                bonds = bondList;
+                fetchBondDetailsInBackground();
+
+                // 4. Ежемесячный доход (Калькулятор)
+                allScheduledPayments = []; 
+                let uniqueBondsMap = new Map();
+
+                for (let i = 2; i <= 13; i++) {
+                    if (!rows[i]) continue;
+                    const dateVal = rows[i][27] || "---"; 
+                    const nameVal = rows[i][28] || "---"; 
+                    const couponVal = parseFloat(String(rows[i][29]).replace(',', '.')) || 0; 
+                    const ticker = rows[i][31] ? String(rows[i][31]).trim() : ''; 
+
+                    allScheduledPayments.push({
+                        dateStr: dateVal,
+                        displayName: nameVal,
+                        paymentTicker: ticker,
+                        staticCouponVal: couponVal
+                    });
+
+                    if (ticker && !uniqueBondsMap.has(ticker)) {
+                        uniqueBondsMap.set(ticker, {
+                            t: ticker,          
+                            n: rows[i][32] || ticker, 
+                            y: rows[i][33] || "0%",
+                            p: 1000, 
+                            nkd: 0
+                        });
+                    }
+                }
+
+                monthlyIncomeBonds = Array.from(uniqueBondsMap.values());
+                renderMonthlyIncomeCards();
+                recalcCustomCoupons();
+                fetchPricesForMonthlyIncome();
+
+                // 5. Загрузка Акций (3 вкладка - Портфель)
+                let allStocks = [];
+                for (let i = 11; i <= 22; i++) { 
+                    if (rows[i] && rows[i].length > 13 && rows[i][10]) {
+                        allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
+                    }
+                }
+                if (allStocks.length > 0) { 
+                    echelons[0].assets = allStocks.slice(0, 3);
+                    echelons[1].assets = allStocks.slice(3, 6); 
+                    echelons[2].assets = allStocks.slice(6, 9); 
+                    echelons[3].assets = allStocks.slice(9, 12);
+                }
+
+                // === 6. НОВАЯ ЛОГИКА: 4 Вкладка (Ребалансировка) с поиском имен ===
+                
+                // Шаг А: Создаем справочник из колонок F, G, H
+                const tickerInfo = {};
+                for (let i = 2; i < rows.length; i++) { 
+                    if (rows[i] && rows[i].length > 7) {
+                        const ticker = rows[i][5] ? String(rows[i][5]).trim() : null; 
+                        const name = rows[i][6];       
+                        const sector = rows[i][7];      
+                        if(ticker) {
+                            tickerInfo[ticker] = { 
+                                n: name || ticker, 
+                                sector: sector || '' 
+                            };
+                        }
+                    }
+                }
+
+                // Шаг Б: Заполняем таблицу эшелонов данными из справочника
+                echelonTableData = [[], [], [], []];
+                for (let i = 2; i <= 13; i++) {
+                     if (rows[i] && rows[i].length > 23) {
+                        
+                        // Функция для обработки одной ячейки (чтобы не копировать код 4 раза)
+                        const processAsset = (tickerIndex, targetIndex, echelonArrIndex) => {
+                            if(rows[i][tickerIndex]) {
+                                const rawTicker = String(rows[i][tickerIndex]).trim();
+                                // Ищем в справочнике
+                                const info = tickerInfo[rawTicker] || { n: rawTicker, sector: '' };
+                                
+                                echelonTableData[echelonArrIndex].push({ 
+                                    t: rawTicker,        
+                                    n: info.n,           
+                                    sector: info.sector, 
+                                    target: rows[i][targetIndex] || '—' 
+                                });
+                            }
+                        };
+
+                        processAsset(16, 17, 0); // I Эшелон
+                        processAsset(18, 19, 1); // II Эшелон
+                        processAsset(20, 21, 2); // III Эшелон
+                        processAsset(22, 23, 3); // IV Эшелон
+                    }
+                }
+                
+                distributeMonthlyInvestment();
+                updateEchelonTable();
+                renderOfzList();
+                
+                draw();
+                
+                draw();
+            } catch (e) { 
+                console.error("Error in loadData:", e); 
+            }
+        }
+
+        // --- MONTHLY INCOME CALCULATOR LOGIC ---
+        
+        const mInput = document.getElementById('monthlySumInput');
+        if(mInput) {
+            mInput.addEventListener('focus', () => {
+                document.getElementById('navWrapper').style.display = 'none';
+                document.querySelector('.header').style.display = 'none';
+            });
+            mInput.addEventListener('blur', () => {
+                document.getElementById('navWrapper').style.display = 'flex';
+                document.querySelector('.header').style.display = 'block';
+            });
+        }
+
+        function changeQty(ticker, delta) {
+            const input = document.getElementById(`input-${ticker}`);
+            if(input) {
+                let val = parseInt(input.value) || 0;
+                val = Math.max(0, val + delta);
+                input.value = val;
+                updateMonthlySumFromQuantities();
+            }
+        }
+        
+        function resetOne(ticker) {
+             const input = document.getElementById(`input-${ticker}`);
+             if(input) {
+                 input.value = 0;
+                 updateMonthlySumFromQuantities();
+             }
+        }
+        
+        function updateMonthlySumFromQuantities() {
+            if (isUpdatingProgrammatically) return;
+            let totalSum = 0;
+            monthlyIncomeBonds.forEach(bond => {
+                const input = document.getElementById(`input-${bond.t}`);
+                if (input) {
+                    const qty = parseInt(input.value) || 0;
+                    if (qty > 0) {
+                        const fullCost = (bond.p + bond.nkd); 
+                        totalSum += qty * fullCost;
+                    }
+                }
+            });
+
+            isUpdatingProgrammatically = true;
+            document.getElementById('monthlySumInput').value = Math.round(totalSum);
+            isUpdatingProgrammatically = false;
+
+            recalcCustomCoupons(); // <--- ВАЖНОЕ ДОБАВЛЕНИЕ: Обновляем нижний список
+        }
+
+        function distributeMonthlyInvestment() {
+            if (isUpdatingProgrammatically) return;
+
+            const sumInput = document.getElementById('monthlySumInput');
+            const totalSum = parseFloat(sumInput.value) || 0;
+            
+            // Если сумма 0 или пустая, обнуляем входы и пересчитываем низ
+            if (monthlyIncomeBonds.length === 0 || totalSum <= 0) {
+                 monthlyIncomeBonds.forEach(bond => {
+                    const input = document.getElementById(`input-${bond.t}`);
+                    if(input) input.value = 0;
+                });
+                recalcCustomCoupons(); // <--- ДОБАВЛЕНО
+                return;
+            };
+
+            const budgetPerBond = totalSum / monthlyIncomeBonds.length;
+            let currentTotalSpent = 0;
+            
+            let calcList = monthlyIncomeBonds.map(b => {
+                let yieldNum = parseFloat(b.y.replace(/[^\d.-]/g, '')) || 0;
+                let fullPrice = b.p + b.nkd;
+                return { ...b, yieldNum, fullPrice, qty: 0, cost: 0 };
+            });
+
+            calcList.forEach(bond => {
+                if (bond.fullPrice > 0) {
+                    bond.qty = Math.floor(budgetPerBond / bond.fullPrice);
+                    bond.cost = bond.qty * bond.fullPrice;
+                    currentTotalSpent += bond.cost;
+                }
+            });
+
+            let remainder = totalSum - currentTotalSpent;
+
+            if (remainder > 0) {
+                calcList.sort((a,b) => b.yieldNum - a.yieldNum);
+                
+                for (const bond of calcList) {
+                    if (bond.fullPrice > 0 && remainder >= bond.fullPrice) {
+                        const extraQty = Math.floor(remainder / bond.fullPrice);
+                        if (extraQty > 0) {
+                            bond.qty += extraQty;
+                            remainder -= extraQty * bond.fullPrice;
+                        }
+                    }
+                }
+            }
+
+            isUpdatingProgrammatically = true; 
+            calcList.forEach(bond => {
+                const input = document.getElementById(`input-${bond.t}`);
+                if(input) input.value = bond.qty;
+            });
+            isUpdatingProgrammatically = false;
+
+            recalcCustomCoupons(); // <--- ВАЖНОЕ ДОБАВЛЕНИЕ: Обновляем нижний список
+        }
+
+        // ===== ФУНКЦИЯ 1: Отрисовка карточек =====
+function renderMonthlyIncomeCards() {
+    const container = document.getElementById('calc-bonds-input-list');
+    if(!container) return;
+    
+    let html = '';
+    
+    monthlyIncomeBonds.forEach(b => {
+        html += `
+        <div class="calc-bond-row">
+            <div class="unified-badge-container" style="flex-direction:column; align-items:flex-start; gap: 3px;">
+                <div class="ub-name" style="width:100%">${limitName(b.n)}</div>
+                <div style="font-size:9px; color:#888; margin-top:2px; padding-left:2px;">
+                   (Цена: ${b.p.toFixed(2)} + НКД: ${b.nkd.toFixed(2)})
+                </div>
+            </div>
+            
+            <div class="ub-yield">${b.y.replace('%', '')}%</div>
+            
+            <div class="qty-controls">
+                <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
+                <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="updateMonthlySumFromQuantities()">
+                <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
+                
+                <div class="btn-row-reset" onclick="resetOne('${b.t}')">
+                    <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </div>
+            </div>
+        </div>`;
+    });
+    
+    container.innerHTML = html;
+}
+
+// ===== ФУНКЦИЯ 2: Загрузка цен с биржи =====
+async function fetchPricesForMonthlyIncome() {
+    const promises = monthlyIncomeBonds.map(async (bond) => {
+        try {
+            const extra = await fetchBondData(bond.t);
+            bond.p = extra.price || 1000;
+            bond.nkd = extra.nkd || 0;
+        } catch(e) {
+            console.log("Error fetching price for", bond.t);
+        }
+    });
+    
+    await Promise.all(promises);
+    renderMonthlyIncomeCards();
+}
+// ===== ФУНКЦИЯ 3: Пересчёт выплат (ИСПРАВЛЕННАЯ) =====
+function recalcCustomCoupons() {
+    const resultList = document.getElementById('calc-results-list');
+    const footer = document.getElementById('calc-results-footer');
+    if (!resultList) return;
+    
+    let html = '';
+    const bondQtyMap = {};
+    let totalAmount = 0;
+    
+    // Собираем количества из полей ввода
+    monthlyIncomeBonds.forEach(bond => {
+        const input = document.getElementById(`input-${bond.t}`);
+        bondQtyMap[bond.t] = input ? (parseInt(input.value) || 0) : 0;
+    });
+
+    // Выводим все 12 строк выплат
+    allScheduledPayments.forEach(payment => {
+        const qty = bondQtyMap[payment.paymentTicker] || 0;
+        const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
+        totalAmount += netAmount;
+
+        html += `
+        <div class="coupon-row">
+            <div><b>${payment.dateStr}</b></div>
+            <div style="color:#8e8e93">${limitName(payment.displayName)}</div>
+            <div style="text-align:center">${qty} шт.</div>
+            <div style="text-align:right"><b>${Math.round(netAmount)} ₽</b></div>
+        </div>`;
+    });
+
+    resultList.innerHTML = html || '<div style="text-align:center; padding:15px; color:#aaa;">Введите количество для расчета...</div>';
+    
+    if (footer) {
+        footer.innerHTML = totalAmount > 0 ? `Итого за год: <span style="color:var(--accent-green)">${Math.round(totalAmount).toLocaleString()} ₽</span>` : '';
+    }
+}
+
+        function resetCustomCalc() {
+            isUpdatingProgrammatically = true;
+            document.getElementById('monthlySumInput').value = 0;
+            isUpdatingProgrammatically = false;
+            const inputs = document.querySelectorAll('.calc-input');
+            inputs.forEach(input => input.value = 0);
+            
+            recalcCustomCoupons(); // <--- ДОБАВЛЕНО
+            
+            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+        }
+
+      
+
+        // --- END OF MONTHLY CALC LOGIC ---
+
+        function updateEchelonTable() {
+    const body = document.getElementById('echelon-tickers-body');
+    if(!body) return;
+    let html = '';
+    const maxRows = Math.max(...echelonTableData.map(col => col.length));
+    
+    for(let i=0; i<maxRows; i++) {
+        // Основная строка с ячейками
+        html += '<tr>';
+        for(let j=0; j<4; j++) {
+            const asset = echelonTableData[j][i];
+            if(asset) {
+                // Убираем знак рубля из отображения в ячейке
+                const priceDisplay = asset.target.replace(' ₽', '');
+                html += `
+                <td class="et-cell" onclick="toggleEchelonCell('${i}-${j}')">
+                    <div class="et-cell-content">
+                        <span class="et-ticker">${asset.t}</span>
+                        <span class="et-price">${priceDisplay}</span>
+                    </div>
+                </td>`;
+            } else {
+                html += '<td class="et-cell-empty"></td>';
+            }
+        }
+        html += '</tr>';
+        
+        // Скрытая строка с деталями
+        html += `<tr class="et-details-row" id="details-row-${i}" style="display:none;">
+            <td colspan="4" class="et-details-container">
+                <div id="details-content-${i}"></div>
+            </td>
+        </tr>`;
+    }
+    body.innerHTML = html;
+}
+
+
+    function toggleEchelonCell(cellId) {
+    const [row, col] = cellId.split('-').map(Number);
+    const detailsRow = document.getElementById(`details-row-${row}`);
+    const detailsContent = document.getElementById(`details-content-${row}`);
+    
+    // Закрываем все остальные открытые строки
+    document.querySelectorAll('.et-details-row').forEach(r => {
+        if(r.id !== `details-row-${row}`) {
+            r.style.display = 'none';
+        }
+    });
+    
+    // Переключаем текущую строку
+    if(detailsRow.style.display === 'none') {
+        // НОВОЕ: Раскрываем таблицу автоматически
+        const wrapper = document.getElementById('echelon-wrapper');
+        const expandBtn = document.getElementById('expandArrowBtn');
+        if(wrapper && wrapper.classList.contains('collapsed')) {
+            wrapper.classList.remove('collapsed');
+            if(expandBtn) expandBtn.classList.add('open');
+        }
+        
+        // Получаем данные актива
+        const asset = echelonTableData[col][row];
+        if(!asset) return;
+        
+        // Берём название компании из самого asset (уже загружено из колонки G)
+const companyName = asset.n || asset.t;
+        
+        // Определяем эшелон
+        const echelonNum = col + 1;
+        const echelonName = ['I Эшелон', 'II Эшелон', 'III Эшелон', 'IV Эшелон'][col];
+        
+        // Формируем контент для деталей
+        detailsContent.innerHTML = `
+            <div class="et-expanded-details">
+                <div class="et-details-header">
+                    <div class="et-details-title">
+                        <span class="et-details-ticker">${asset.t}</span>
+                        <span class="et-details-echelon">${echelonName}</span>
                     </div>
                 </div>
-                <div class="cc-v2-price-block">
-                     <div class="cc-v2-price">${item.p} ₽</div>
-                     ${changeHtml}
-                </div>
-                <button class="btn-action" onclick="openTradingView(event, '${item.t}')">Открыть график TradingView</button>
-            </div>
-            
-            <div class="news-header">Характеристики</div>
-            <div class="stat-grid">
-                 <div class="stat-item">
-                    <div class="stat-label">${isStock ? 'Цель' : 'Доходность'}</div>
-                    <div class="stat-val" style="color:var(--accent-green)">${isStock ? target : yieldVal}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Эшелон</div>
-                    <div class="stat-val">${isStock ? (echelons.findIndex(e => e.assets.some(a => a.t === item.t)) + 1) : 'N/A'}</div>
-                </div>
-            </div>
-            
-            <div class="news-header">Новости компании</div>
-            <div id="company-news-list">
-                <div class="news-item">
-                     <div class="news-date">Сегодня</div>
-                     <div class="news-title">Обзор рыночной ситуации по ${item.t}</div>
-                     <div class="news-snippet">Аналитики отмечают стабильное положение компании на рынке. Технический анализ показывает консолидацию цены...</div>
-                </div>
-                 <div class="news-item">
-                     <div class="news-date">Вчера</div>
-                     <div class="news-title">Финансовые показатели</div>
-                     <div class="news-snippet">Компания опубликовала отчетность за последний квартал. Выручка соответствует ожиданиям экспертов...</div>
+               <div style="margin-bottom: 16px;">
+    <div style="background: linear-gradient(135deg, var(--bg-color), var(--card-bg)); padding: 16px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 12px; box-shadow: 0 2px 8px var(--card-shadow);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <div style="font-size: 10px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Компания</div>
+            <div style="background: var(--accent-blue); color: white; font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px;">${echelonName}</div>
+        </div>
+        <div style="font-size: 16px; font-weight: 800; color: var(--text-main); line-height: 1.4; margin-bottom: 8px;">${companyName}</div>
+        ${asset.sector ? `<div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(52, 152, 219, 0.1); color: var(--accent-blue); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 8px; margin-top: 4px;">
+            <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            ${asset.sector}
+        </div>` : ''}
+    </div>
+    
+    <div class="et-details-grid">
+        <div class="et-detail-item">
+            <span class="et-detail-label">Тикер:</span>
+            <span class="et-detail-value" style="cursor:pointer; color:var(--accent-blue);" onclick="copyTicker(event, '${asset.t}')">${asset.t} 📋</span>
+        </div>
+        <div class="et-detail-item">
+            <span class="et-detail-label">Цель:</span>
+            <span class="et-detail-value">${asset.target}</span>
+        </div>
+        <div class="et-detail-item">
+            <span class="et-detail-label">Прогноз:</span>
+            <span class="et-detail-value">до 36 мес.</span>
+        </div>
+    </div>
+</div>
+                <div class="et-details-actions">
+                    <button class="et-btn-chart" onclick="openTradingView(event, '${asset.t}')">
+                        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                        График
+                    </button>
+                    <button class="et-btn-company" onclick="openCompanyFromTable(event, '${asset.t}', '${companyName}')">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        О компании
+                    </button>
                 </div>
             </div>
         `;
-        content.innerHTML = html;
-        showScreen('screen-company');
+        detailsRow.style.display = 'table-row';
+        
+       // НОВОЕ: Плавная прокрутка с отступом от нижнего меню
+setTimeout(() => {
+    const rect = detailsRow.getBoundingClientRect();
+    const offset = 150; // Высота меню + отступ
+    const elementTop = rect.top + window.pageYOffset;
+    const offsetPosition = elementTop - offset;
+    
+    window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+    });
+}, 100);
+        
+    } else {
+        detailsRow.style.display = 'none';
     }
+}
 
-    function draw() {
-        saveSettings();
-        
-        // Получаем сумму из нового поля или старого
-        let inputSum = 0;
-        if(amountInput && amountInput.value) {
-            inputSum = parseFloat(amountInput.value.replace(/\./g, '')) || 0;
-        } else {
-            inputSum = parseFloat(document.getElementById('sumInput').value) || 0;
+function openCompanyFromTable(event, ticker, companyName) {
+    event.stopPropagation();
+    // Ищем полную информацию об активе
+    let foundAsset = null;
+    
+    // Сначала ищем в основных эшелонах
+    for(let e of echelons) {
+        const found = e.assets.find(a => a.t === ticker);
+        if(found) {
+            foundAsset = found;
+            break;
         }
-        
-        // Определяем соотношение
-        let bondPct = 50;
-        if(selectedId === 'custom') {
-            bondPct = customBonds;
-        } else {
-            const strategy = strategies.find(s => s.id === selectedId);
-            if(strategy) bondPct = strategy.bonds;
-        }
-        
-        const stockPct = 100 - bondPct;
-        
-        // Синхронизируем старый слайдер
-        const oldSlider = document.getElementById('ratioSlider');
-        if(oldSlider) oldSlider.value = bondPct;
-        
-        const bondBudget = (inputSum * bondPct) / 100;
-        const stockBudget = (inputSum * stockPct) / 100;
-        const feeVal = inputSum * brokerFee;
-
-        if(document.getElementById('labelBondsPct')) {
-            document.getElementById('labelBondsPct').innerText = bondPct;
-            document.getElementById('labelStocksPct').innerText = stockPct;
-            document.getElementById('dynamicSubtitle').innerText = `Система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
-            document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
-            document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
-            document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
-            document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
-        }
-
-        const bondSection = document.getElementById('section-bonds');
-        const couponBox = document.getElementById('couponBox');
-        const separator = document.getElementById('section-separator');
-        const stockSection = document.getElementById('section-stocks');
-        const stockHeader = document.getElementById('header-stocks');
-        const footerImportant = document.getElementById('footer-important');
-        
-        if(bondSection && stockSection) {
-            bondSection.style.display = 'block'; couponBox.style.display = 'block';
-            separator.style.display = 'flex'; stockSection.style.display = 'block';
-            footerImportant.style.display = 'block'; stockHeader.innerText = "2. Растущая часть";
-            if (bondPct === 0) {
-                bondSection.style.display = 'none'; couponBox.style.display = 'none';
-                separator.style.display = 'none'; stockHeader.innerText = "1. Растущая часть";
-            } else if (bondPct === 100) {
-                stockSection.style.display = 'none'; footerImportant.style.display = 'none';
-                separator.style.display = 'none';
-            }
-        }
-
-        let actualSpentTotal = 0; let bondQuantities = {};
-        let totalBondProjectedIncome = 0;
-        let rainData = [];
-        
-        let bHtml = '';
-        if (bonds.length > 0) {
-            const perBondBudget = bondBudget / bonds.length;
-            let bondCalculations = bonds.map(b => { const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; return { ...b, qty, fullCostPerUnit }; });
-            let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
-            if (bondCalculations.length > 0 && leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
-                bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
-            }
-            bondCalculations.forEach(b => {
-                actualSpentTotal += (b.qty * b.fullCostPerUnit); bondQuantities[b.t] = b.qty;
-                const bondYieldVal = parseFloat(b.y.replace('%', '')) || 0;
-                const investedInBond = b.qty * b.p;
-                totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
-                if(b.qty > 0 && bondCouponsMap[b.t]) {
-                     const info = bondCouponsMap[b.t];
-                     const netAmount = (info.value * b.qty) * (1 - currentTax);
-                     rainData.push({ date: info.date, name: b.n, qty: b.qty, amount: netAmount });
-                }
-                bHtml += `
-                <div class="asset-item" onclick="toggleRow(this)">
-                    <span class="ticker" style="font-weight:700; font-size:11px;">${limitName(b.n)}</span>
-                    <span class="asset-name"><span class="asset-yield-badge">${b.y}</span></span>
-                    <span class="qty">${b.qty} шт.</span>
-                    <span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span>
-                    <div class="details">
-                        <div class="detail-row"><span>Полное Наименование:</span> <span>${b.n}</span></div>
-                        <div class="detail-row"><span>Код:</span> <span>${b.t}</span></div>
-                        <div class="detail-row"><span>Дата погашения:</span> <span>${b.matDate}</span></div>
-                        <div class="detail-row"><span>Цена:</span> <span>${b.p} ₽</span></div>
-                        <div class="detail-row"><span>НКД:</span> <span>${b.nkd.toFixed(2)} ₽</span></div>
-                        <div class="detail-row"><span>Простая Доходность к Погашению:</span> <span>${b.y.replace(' ₽','')}</span></div>
-                        <button class="btn-tiny-graph" onclick="openTradingView(event, '${b.t}')">
-                            <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-                            Открыть график
-                        </button>
-                    </div>
-                </div>`;
-            });
-        }
-        if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml;
-        document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
-        
-        if(document.getElementById('couponList')) {
-            rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
-            let couponHtml = ''; let couponTotal = 0;
-            if(rainData.length === 0) { 
-                couponHtml = '<div style="text-align:center; padding:15px; color:#aaa; font-size:12px;">Нет ближайших выплат для выбранных активов.</div>';
-            } else { 
-                rainData.forEach(r => { 
-                    couponTotal += r.amount; 
-                    couponHtml += `
-                    <div class="coupon-row">
-                        <div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div>
-                        <div style="color:#8e8e93">${limitName(r.name)}</div>
-                        <div style="text-align:center">${r.qty}шт.</div>
-                        <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
-                    </div>`; 
-                }); 
-            }
-            document.getElementById('couponList').innerHTML = couponHtml;
-            document.getElementById('couponTotalHeader').innerText = Math.round(couponTotal).toLocaleString() + ' ₽';
-        }
-        
-        let ofzHtml = '';
-        bonds.forEach(b => {
-            const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
-            const calculatedCY = (b.p > 0 && details.couponValue && details.freq) ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) : '0.00';
-            ofzHtml += `
-            <div class="ofz-card-modern" onclick="toggleOfzDetails('details-${b.t}')">
-                <div class="ofz-main-info">
-                    <div class="ofz-name-lg">${limitName(b.n)}</div>
-                    <div class="ofz-ticker-sm">${b.t}</div>
-                </div>
-                <div class="ofz-price">${b.p}</div>
-                <div class="ofz-nkd-badge">${Math.round(b.nkd*10)/10}</div>
-                <div class="ofz-yield-badge" title="Доходность к погашению">
-                    ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
-                </div>
-            </div>
-            <div id="details-${b.t}" class="ofz-details-panel">
-                <div class="ofz-detail-row"><span>Код:</span> <span class="ofz-detail-val">${b.t}</span></div>
-                <div class="ofz-detail-row"><span>НКД:</span> <span class="ofz-detail-val">${b.nkd.toFixed(2)} ₽</span></div>
-                <div class="ofz-detail-row"><span>Дата погашения:</span> <span class="ofz-detail-val">${details.matDate}</span></div>
-                <div class="ofz-detail-row"><span>Размер купона:</span> <span class="ofz-detail-val">${details.couponValue} ₽</span></div>
-                <div class="ofz-detail-row"><span>Дата ближайшего купона:</span> <span class="ofz-detail-val">${details.nextCoupon}</span></div>
-                <div class="ofz-detail-row"><span>Текущая купонная доходность:</span> <span class="ofz-detail-val">${calculatedCY}%</span></div>
-                <div class="ofz-detail-row"><span>Выплат в год:</span> <span class="ofz-detail-val">${details.freq}</span></div>
-            </div>`;
-        });
-        if(document.getElementById('ofz-list')) document.getElementById('ofz-list').innerHTML = ofzHtml;
-
-        let eHtml = '';
-        let totalStockProjectedGrowth = 0;
-        let echelonIndex = 0;
-        echelons.forEach(e => {
-            const echelonBudget = stockBudget * e.weight; const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
-            let stockCalculations = e.assets.map(a => { const fullCostPerUnit = a.p * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0; return { ...a, qty, fullCostPerUnit }; });
-            let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
-            if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
-                stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
-            }
-            const tipId = `echelon-tip-${echelonIndex}`;
-            const echelonClass = `echelon-${echelonIndex + 1}`;
-            eHtml += `
-            <div class="echelon-separator-modern ${echelonClass}">
-                <div class="esm-left">
-                    <div class="esm-dot"></div>
-                    <span class="esm-title">${e.title}</span>
-                    <div class="esm-info-btn-light" onclick="toggleEchelonTip(event, '${tipId}')">
-                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                    </div>
-                </div>
-                <div class="esm-pct">
-                    <span class="esm-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
-                    <span class="esm-divider">|</span>
-                    <span class="esm-percent">${Math.round(e.weight*100)}%</span>
-                </div>
-            </div>
-            <div class="echelon-tip" id="${tipId}">${e.info}</div>
-            <div class="asset-list">`;
-            stockCalculations.forEach(s => {
-                actualSpentTotal += (s.qty * s.fullCostPerUnit);
-                const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
-                if(targetPrice > s.p) totalStockProjectedGrowth += (s.qty * (targetPrice - s.p));
-                eHtml += `
-                <div class="asset-item" onclick="toggleRow(this)">
-                    <span class="ticker">${s.t}</span>
-                    <span class="asset-name"><span class="asset-yield-badge blue">${s.target.replace(' ₽','')}</span></span>
-                    <span class="qty">${s.qty} шт.</span>
-                    <span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
-                    <div class="details">
-                        <div class="detail-row"><span>Компания:</span> <span>${s.n}</span></div>
-                        <div class="detail-row"><span>Тикер:</span> <span style="cursor:pointer; color:var(--accent-blue); font-weight:bold;" onclick="copyTicker(event, '${s.t}')">${s.t} ❐</span></div>
-                        <div class="detail-row"><span>Цена:</span> <span>${s.p} ₽</span></div>
-                        <div class="detail-row"><span>Цель:</span> <span>${s.target.replace(' ₽','')}</span></div>
-                        <div style="font-size:10px; color:#aaa; margin:5px 0 8px;">[ Прогноз на период до 36 мес. ]</div>
-                        <button class="btn-tiny-graph" onclick="openTradingView(event, '${s.t}')">
-                            <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-                            Открыть график
-                        </button>
-                    </div>
-                </div>`;
-            });
-            eHtml += `</div>`;
-            echelonIndex++;
-        });
-        if(document.getElementById('echelonContainer')) {
-            document.getElementById('echelonContainer').innerHTML = eHtml;
-            document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
-            document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
-            document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
-            document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString() + ' ₽';
-            document.getElementById('srl-bond-pct').innerText = bondPct + '%';
-            document.getElementById('srl-stock-pct').innerText = stockPct + '%';
-            document.getElementById('bar-bond-fill').style.width = bondPct + '%';
-            document.getElementById('bar-stock-fill').style.width = stockPct + '%';
-            const activeFeeBtn = document.querySelector('.fee-btn.active');
-            document.getElementById('summ-fee').innerText = activeFeeBtn ? activeFeeBtn.innerText : '0.03%';
-            document.getElementById('summ-bond-income').innerText = '+' + Math.round(totalBondProjectedIncome).toLocaleString() + ' ₽';
-            document.getElementById('summ-stock-growth').innerText = '+' + Math.round(totalStockProjectedGrowth).toLocaleString() + ' ₽';
-            const projectedTotal = inputSum + totalBondProjectedIncome + totalStockProjectedGrowth - feeVal;
-            let percentageChange = (inputSum > 0) ? ((projectedTotal - inputSum) / inputSum) * 100 : 0;
-            const changeSign = percentageChange >= 0 ? '+' : '';
-            const changeColor = percentageChange >= 0 ? '#27ae60' : '#e74c3c';
-            const changeHtml = ` <span style="font-size: 14px; color: ${changeColor}; font-weight: 500;">(${changeSign}${percentageChange.toFixed(1)}%)</span>`;
-            document.getElementById('summ-total-3y').innerHTML = Math.round(projectedTotal).toLocaleString() + ' ₽' + changeHtml;
-        }
-        updateEchelonTable();
     }
+    
+    // Если не нашли, создаем минимальный объект
+    if(!foundAsset) {
+        for(let i = 0; i < echelonTableData.length; i++) {
+            const found = echelonTableData[i].find(a => a.t === ticker);
+            if(found) {
+                foundAsset = {
+                    t: found.t,
+                    n: companyName || found.t,
+                    p: 0,
+                    target: found.target
+                };
+                break;
+            }
+        }
+    }
+    
+    if(foundAsset) {
+        const item = {
+            ...foundAsset,
+            type: 'Акция'
+        };
+        openCompanyPage(item);
+    }
+}
+    
+    function renderOfzList() {
+    if (bonds.length === 0) return;
+    
+    let ofzHtml = '';
+    bonds.forEach(b => {
+        const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
+        const calculatedCY = (b.p > 0 && details.couponValue && details.freq) ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) : '0.00';
+        ofzHtml += `
+        <div class="ofz-card-modern" onclick="toggleOfzDetails('details-${b.t}')">
+            <div class="ofz-main-info">
+                <div class="ofz-name-lg">${limitName(b.n)}</div>
+                <div class="ofz-ticker-sm">${b.t}</div>
+            </div>
+            <div class="ofz-price">${b.p}</div>
+            <div class="ofz-nkd-badge">${Math.round(b.nkd*10)/10}</div>
+            <div class="ofz-yield-badge" title="Доходность к погашению">
+                ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+            </div>
+        </div>
+        <div id="details-${b.t}" class="ofz-details-panel">
+            <div class="ofz-detail-row"><span>Код:</span> <span class="ofz-detail-val">${b.t}</span></div>
+            <div class="ofz-detail-row"><span>НКД:</span> <span class="ofz-detail-val">${b.nkd.toFixed(2)} ₽</span></div>
+            <div class="ofz-detail-row"><span>Дата погашения:</span> <span class="ofz-detail-val">${details.matDate}</span></div>
+            <div class="ofz-detail-row"><span>Размер купона:</span> <span class="ofz-detail-val">${details.couponValue} ₽</span></div>
+            <div class="ofz-detail-row"><span>Дата ближайшего купона:</span> <span class="ofz-detail-val">${details.nextCoupon}</span></div>
+            <div class="ofz-detail-row"><span>Текущая купонная доходность:</span> <span class="ofz-detail-val">${calculatedCY}%</span></div>
+            <div class="ofz-detail-row"><span>Выплат в год:</span> <span class="ofz-detail-val">${details.freq}</span></div>
+        </div>`;
+    });
+    if(document.getElementById('ofz-list')) {
+        document.getElementById('ofz-list').innerHTML = ofzHtml;
+    }
+}
 
-    async function shareAsPDF() {
-        const btn = document.getElementById('btnShare');
-        const container = document.getElementById('shareContainer');
-        const brand = document.getElementById('shareBrand'); 
-        const dateEl = document.getElementById('shareDate');
-        const originalText = btn.innerHTML;
-        btn.innerText = "⏳ Генерация PDF..."; btn.disabled = true; 
-        brand.style.display = 'block'; dateEl.innerText = new Date().toLocaleString();
+
+    async function fetchBondDetailsInBackground() {
+    const promises = bonds.map(async (b) => {
         try {
-            const canvas = await html2canvas(container, { backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), scale: 2, logging: false, useCORS: true });
-            const imgData = canvas.toDataURL('image/png');
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'p', unit: 'px', format: [canvas.width, canvas.height] });
-            doc.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-            const pdfBlob = doc.output('blob');
-            if (navigator.share && navigator.canShare) {
-                const file = new File([pdfBlob], "Madame_Solomina_Portfolio.pdf", { type: "application/pdf" });
-                if (navigator.canShare({ files: [file] })) {
-                    await navigator.share({ files: [file], title: 'Мой портфель', text: 'Расчет от Madame Solomi\'na' });
-                    btn.innerHTML = originalText; btn.disabled = false; brand.style.display = 'none'; return;
+            const extra = await fetchBondData(b.t);
+            b.nkd = extra.nkd || 0;
+            b.matDate = extra.matDate || '—';
+        } catch(e) {
+            console.log("Error fetching", b.t);
+        }
+    });
+    
+    await Promise.all(promises);
+    
+    // После загрузки обновляем отображение
+    renderOfzList();
+    draw();
+}
+
+        function performSearch(query) {
+            if(!query || query.length < 2) {
+                openCompanyPage(null, query);
+                return;
+            }
+            
+            const q = query.toUpperCase();
+            let results = [];
+            echelons.forEach(e => {
+                e.assets.forEach(a => {
+                    if(a.t.toUpperCase().includes(q) || a.n.toUpperCase().includes(q)) results.push({...a, type: 'Акция'});
+                });
+            });
+            bonds.forEach(b => {
+                if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
+            });
+            
+            const input = document.getElementById('tickerSearchInput');
+            input.value = '';
+            input.blur();
+            
+            openCompanyPage(results[0] || null, query);
+        }
+        
+        async function openCompanyPage(item, searchQuery = '') {
+            const content = document.getElementById('company-content');
+            
+            if(!item) {
+                content.innerHTML = `
+                    <div class="search-empty-state">
+                        <div class="icon">🔍</div>
+                        <div class="title">Ничего не найдено</div>
+                        <div class="desc">По запросу "${searchQuery}" не найдено результатов.<br>Попробуйте изменить запрос.</div>
+                    </div>
+                `;
+                showScreen('screen-company');
+                return;
+            }
+            
+            const isStock = item.type === 'Акция';
+            const target = isStock ? item.target : '-';
+            const yieldVal = isStock ? 'СМ. ТАБЛИЦУ' : item.y;
+            
+            let changeHtml = '<div class="cc-v2-change neutral">--</div>';
+            
+            try {
+                const url = `https://iss.moex.com/iss/engines/stock/markets/${isStock ? 'shares' : 'bonds'}/securities/${item.t}.json?iss.meta=off&iss.only=securities,marketdata`;
+                const res = await fetch(url);
+                const data = await res.json();
+                const marketdata = data.marketdata.data[0];
+                const marketcols = data.marketdata.columns;
+                const last = marketdata[marketcols.indexOf('LAST')];
+                const open = marketdata[marketcols.indexOf('OPEN')];
+                
+                if (last && open && open > 0) {
+                    const change = last - open;
+                    const changePct = (change / open) * 100;
+                    const sign = change > 0 ? '+' : '';
+                    const colorClass = change > 0 ? 'positive' : (change < 0 ? 'negative' : 'neutral');
+                    changeHtml = `<div class="cc-v2-change ${colorClass}">${sign}${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)</div>`;
+                }
+            } catch (e) { console.log('Error fetching company details'); }
+
+            let html = `
+                <div class="company-card-v2">
+                    <div class="cc-v2-header">
+                        <div class="cc-v2-logo">${item.t}</div>
+                        <div>
+                            <div class="cc-v2-name">${item.n}</div>
+                            <div class="cc-v2-type">${item.type}</div>
+                        </div>
+                    </div>
+                    <div class="cc-v2-price-block">
+                         <div class="cc-v2-price">${item.p} ₽</div>
+                         ${changeHtml}
+                    </div>
+                    <button class="btn-action" onclick="openTradingView(event, '${item.t}')">Открыть график TradingView</button>
+                </div>
+                
+                <div class="news-header">Характеристики</div>
+                <div class="stat-grid">
+                     <div class="stat-item">
+                        <div class="stat-label">${isStock ? 'Цель' : 'Доходность'}</div>
+                        <div class="stat-val" style="color:var(--accent-green)">${isStock ? target : yieldVal}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Эшелон</div>
+                        <div class="stat-val">${isStock ? (echelons.findIndex(e => e.assets.some(a => a.t === item.t)) + 1) : 'N/A'}</div>
+                    </div>
+                </div>
+                
+                <div class="news-header">Новости компании</div>
+                <div id="company-news-list">
+                    <div class="news-item">
+                         <div class="news-date">Сегодня</div>
+                         <div class="news-title">Обзор рыночной ситуации по ${item.t}</div>
+                         <div class="news-snippet">Аналитики отмечают стабильное положение компании на рынке. Технический анализ показывает консолидацию цены...</div>
+                    </div>
+                     <div class="news-item">
+                         <div class="news-date">Вчера</div>
+                         <div class="news-title">Финансовые показатели</div>
+                         <div class="news-snippet">Компания опубликовала отчетность за последний квартал. Выручка соответствует ожиданиям экспертов...</div>
+                    </div>
+                </div>
+            `;
+            content.innerHTML = html;
+            showScreen('screen-company');
+        }
+
+        function draw() {
+            saveSettings();
+            const inputSum = parseFloat(document.getElementById('sumInput').value) || 0;
+            const bondPct = parseInt(document.getElementById('ratioSlider').value);
+            const stockPct = 100 - bondPct;
+            
+            // Check Presets (for visual matching, but class removal handled by setPresetRatio)
+            // Just ensure consistent visual state if slider dragged manually
+            const presets = document.querySelectorAll('.preset-btn-modern');
+            presets.forEach(p => {
+                 const pct = parseInt(p.getAttribute('onclick').match(/\d+/)[0]);
+                 if(pct !== bondPct) p.classList.remove('selected-preset');
+                 else p.classList.add('selected-preset');
+            });
+
+
+            const bondBudget = (inputSum * bondPct) / 100;
+            const stockBudget = (inputSum * stockPct) / 100;
+            const feeVal = inputSum * brokerFee;
+
+            if(document.getElementById('labelBondsPct')) {
+                document.getElementById('labelBondsPct').innerText = bondPct;
+                document.getElementById('labelStocksPct').innerText = stockPct;
+                document.getElementById('dynamicSubtitle').innerText = `Система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
+                document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
+                document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
+                document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
+                document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
+            }
+
+            const bondSection = document.getElementById('section-bonds');
+            const couponBox = document.getElementById('couponBox');
+            const separator = document.getElementById('section-separator');
+            const stockSection = document.getElementById('section-stocks');
+            const stockHeader = document.getElementById('header-stocks');
+            const footerImportant = document.getElementById('footer-important');
+            
+            if(bondSection && stockSection) {
+                bondSection.style.display = 'block'; couponBox.style.display = 'block';
+                separator.style.display = 'flex'; stockSection.style.display = 'block';
+                footerImportant.style.display = 'block'; stockHeader.innerText = "2. Растущая часть";
+                if (bondPct === 0) {
+                    bondSection.style.display = 'none'; couponBox.style.display = 'none';
+                    separator.style.display = 'none'; stockHeader.innerText = "1. Растущая часть";
+                } else if (bondPct === 100) {
+                    stockSection.style.display = 'none'; footerImportant.style.display = 'none';
+                    separator.style.display = 'none';
                 }
             }
-            doc.save('Solomina_Portfolio.pdf');
-            setTimeout(() => { btn.innerHTML = `✅ Файл скачан`; setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000); }, 500);
-        } catch(e) {
-            console.error(e); alert("Не удалось открыть меню отправки. Файл будет скачан.");
-            btn.innerHTML = originalText; btn.disabled = false;
-        } finally { brand.style.display = 'none'; }
-    }
 
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js')
-            .then(function(registration) {
-                console.log('Service Worker зарегистрирован:', registration);
-            })
-            .catch(function(error) {
-                console.log('Ошибка регистрации Service Worker:', error);
+            let actualSpentTotal = 0; let bondQuantities = {};
+            let totalBondProjectedIncome = 0;
+            let rainData = [];
+            
+            let bHtml = '';
+            if (bonds.length > 0) {
+                const perBondBudget = bondBudget / bonds.length;
+                let bondCalculations = bonds.map(b => { const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; return { ...b, qty, fullCostPerUnit }; });
+                let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
+                if (bondCalculations.length > 0 && leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
+                    bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
+                }
+                bondCalculations.forEach(b => {
+                    actualSpentTotal += (b.qty * b.fullCostPerUnit); bondQuantities[b.t] = b.qty;
+                    const bondYieldVal = parseFloat(b.y.replace('%', '')) || 0;
+                    const investedInBond = b.qty * b.p;
+                    totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
+                    if(b.qty > 0 && bondCouponsMap[b.t]) {
+                         const info = bondCouponsMap[b.t];
+                         const netAmount = (info.value * b.qty) * (1 - currentTax);
+                         rainData.push({ date: info.date, name: b.n, qty: b.qty, amount: netAmount });
+                    }
+                    bHtml += `
+                    <div class="asset-item" onclick="toggleRow(this)">
+                        <span class="ticker" style="font-weight:700; font-size:11px;">${limitName(b.n)}</span>
+                        <span class="asset-name"><span class="asset-yield-badge">${b.y}</span></span>
+                        <span class="qty">${b.qty} шт.</span>
+                        <span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span>
+                        <div class="details">
+                            <div class="detail-row"><span>Полное Наименование:</span> <span>${b.n}</span></div>
+                            <div class="detail-row"><span>Код:</span> <span>${b.t}</span></div>
+                            <div class="detail-row"><span>Дата погашения:</span> <span>${b.matDate}</span></div>
+                            <div class="detail-row"><span>Цена:</span> <span>${b.p} ₽</span></div>
+                            <div class="detail-row"><span>НКД:</span> <span>${b.nkd.toFixed(2)} ₽</span></div>
+                            <div class="detail-row"><span>Простая Доходность к Погашению:</span> <span>${b.y.replace(' ₽','')}</span></div>
+                            <button class="btn-tiny-graph" onclick="openTradingView(event, '${b.t}')">
+                                <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                                Открыть график
+                            </button>
+                        </div>
+                    </div>`;
+                });
+            }
+            if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml;
+            document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
+            
+            if(document.getElementById('couponList')) {
+                rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
+                let couponHtml = ''; let couponTotal = 0;
+                if(rainData.length === 0) { 
+                    couponHtml = '<div style="text-align:center; padding:15px; color:#aaa; font-size:12px;">Нет ближайших выплат для выбранных активов.</div>';
+                } else { 
+                    rainData.forEach(r => { 
+                        couponTotal += r.amount; 
+                        couponHtml += `
+                        <div class="coupon-row">
+                            <div><b>${new Date(r.date).toLocaleDateString('ru-RU')}</b></div>
+                            <div style="color:#8e8e93">${limitName(r.name)}</div>
+                            <div style="text-align:center">${r.qty}шт.</div>
+                            <div style="text-align:right"><b>${Math.round(r.amount).toLocaleString()}₽</b></div>
+                        </div>`; 
+                    }); 
+                }
+                document.getElementById('couponList').innerHTML = couponHtml;
+                document.getElementById('couponTotalHeader').innerText = Math.round(couponTotal).toLocaleString() + ' ₽';
+            }
+            
+            let ofzHtml = '';
+            bonds.forEach(b => {
+                const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
+                const calculatedCY = (b.p > 0 && details.couponValue && details.freq) ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) : '0.00';
+                ofzHtml += `
+                <div class="ofz-card-modern" onclick="toggleOfzDetails('details-${b.t}')">
+                    <div class="ofz-main-info">
+                        <div class="ofz-name-lg">${limitName(b.n)}</div>
+                        <div class="ofz-ticker-sm">${b.t}</div>
+                    </div>
+                    <div class="ofz-price">${b.p}</div>
+                    <div class="ofz-nkd-badge">${Math.round(b.nkd*10)/10}</div>
+                    <div class="ofz-yield-badge" title="Доходность к погашению">
+                        ${b.y} <svg class="ofz-arrow" viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                    </div>
+                </div>
+                <div id="details-${b.t}" class="ofz-details-panel">
+                    <div class="ofz-detail-row"><span>Код:</span> <span class="ofz-detail-val">${b.t}</span></div>
+                    <div class="ofz-detail-row"><span>НКД:</span> <span class="ofz-detail-val">${b.nkd.toFixed(2)} ₽</span></div>
+                    <div class="ofz-detail-row"><span>Дата погашения:</span> <span class="ofz-detail-val">${details.matDate}</span></div>
+                    <div class="ofz-detail-row"><span>Размер купона:</span> <span class="ofz-detail-val">${details.couponValue} ₽</span></div>
+                    <div class="ofz-detail-row"><span>Дата ближайшего купона:</span> <span class="ofz-detail-val">${details.nextCoupon}</span></div>
+                    <div class="ofz-detail-row"><span>Текущая купонная доходность:</span> <span class="ofz-detail-val">${calculatedCY}%</span></div>
+                    <div class="ofz-detail-row"><span>Выплат в год:</span> <span class="ofz-detail-val">${details.freq}</span></div>
+                </div>`;
             });
-    }
+            if(document.getElementById('ofz-list')) document.getElementById('ofz-list').innerHTML = ofzHtml;
+
+            let eHtml = '';
+            let totalStockProjectedGrowth = 0;
+            let echelonIndex = 0;
+            echelons.forEach(e => {
+                const echelonBudget = stockBudget * e.weight; const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
+                let stockCalculations = e.assets.map(a => { const fullCostPerUnit = a.p * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0; return { ...a, qty, fullCostPerUnit }; });
+                let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
+                if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
+                    stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
+                }
+                const tipId = `echelon-tip-${echelonIndex}`;
+                const echelonClass = `echelon-${echelonIndex + 1}`;
+                eHtml += `
+                <div class="echelon-separator-modern ${echelonClass}">
+                    <div class="esm-left">
+                        <div class="esm-dot"></div>
+                        <span class="esm-title">${e.title}</span>
+                        <div class="esm-info-btn-light" onclick="toggleEchelonTip(event, '${tipId}')">
+                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        </div>
+                    </div>
+                    <div class="esm-pct">
+                        <span class="esm-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
+                        <span class="esm-divider">|</span>
+                        <span class="esm-percent">${Math.round(e.weight*100)}%</span>
+                    </div>
+                </div>
+                <div class="echelon-tip" id="${tipId}">${e.info}</div>
+                <div class="asset-list">`;
+                stockCalculations.forEach(s => {
+                    actualSpentTotal += (s.qty * s.fullCostPerUnit);
+                    const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
+                    if(targetPrice > s.p) totalStockProjectedGrowth += (s.qty * (targetPrice - s.p));
+                    eHtml += `
+                    <div class="asset-item" onclick="toggleRow(this)">
+                        <span class="ticker">${s.t}</span>
+                        <span class="asset-name"><span class="asset-yield-badge blue">${s.target.replace(' ₽','')}</span></span>
+                        <span class="qty">${s.qty} шт.</span>
+                        <span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
+                        <div class="details">
+                            <div class="detail-row"><span>Компания:</span> <span>${s.n}</span></div>
+                            <div class="detail-row"><span>Тикер:</span> <span style="cursor:pointer; color:var(--accent-blue); font-weight:bold;" onclick="copyTicker(event, '${s.t}')">${s.t} ❐</span></div>
+                            <div class="detail-row"><span>Цена:</span> <span>${s.p} ₽</span></div>
+                            <div class="detail-row"><span>Цель:</span> <span>${s.target.replace(' ₽','')}</span></div>
+                            <div style="font-size:10px; color:#aaa; margin:5px 0 8px;">[ Прогноз на период до 36 мес. ]</div>
+                            <button class="btn-tiny-graph" onclick="openTradingView(event, '${s.t}')">
+                                <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                                Открыть график
+                            </button>
+                        </div>
+                    </div>`;
+                });
+                eHtml += `</div>`;
+                echelonIndex++;
+            });
+            if(document.getElementById('echelonContainer')) {
+                document.getElementById('echelonContainer').innerHTML = eHtml;
+                document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
+                document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
+                document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
+                document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString() + ' ₽';
+                document.getElementById('srl-bond-pct').innerText = bondPct + '%';
+                document.getElementById('srl-stock-pct').innerText = stockPct + '%';
+                document.getElementById('bar-bond-fill').style.width = bondPct + '%';
+                document.getElementById('bar-stock-fill').style.width = stockPct + '%';
+                const activeFeeBtn = document.querySelector('.fee-btn.active');
+                document.getElementById('summ-fee').innerText = activeFeeBtn ? activeFeeBtn.innerText : '0.03%';
+                document.getElementById('summ-bond-income').innerText = '+' + Math.round(totalBondProjectedIncome).toLocaleString() + ' ₽';
+                document.getElementById('summ-stock-growth').innerText = '+' + Math.round(totalStockProjectedGrowth).toLocaleString() + ' ₽';
+                const projectedTotal = inputSum + totalBondProjectedIncome + totalStockProjectedGrowth - feeVal;
+                let percentageChange = (inputSum > 0) ? ((projectedTotal - inputSum) / inputSum) * 100 : 0;
+                const changeSign = percentageChange >= 0 ? '+' : '';
+                const changeColor = percentageChange >= 0 ? '#27ae60' : '#e74c3c';
+                const changeHtml = ` <span style="font-size: 14px; color: ${changeColor}; font-weight: 500;">(${changeSign}${percentageChange.toFixed(1)}%)</span>`;
+                document.getElementById('summ-total-3y').innerHTML = Math.round(projectedTotal).toLocaleString() + ' ₽' + changeHtml;
+            }
+            updateEchelonTable();
+        }
+
+        async function shareAsPDF() {
+            const btn = document.getElementById('btnShare');
+            const container = document.getElementById('shareContainer');
+            const brand = document.getElementById('shareBrand'); 
+            const dateEl = document.getElementById('shareDate');
+            const originalText = btn.innerHTML;
+            btn.innerText = "⏳ Генерация PDF..."; btn.disabled = true; 
+            brand.style.display = 'block'; dateEl.innerText = new Date().toLocaleString();
+            try {
+                const canvas = await html2canvas(container, { backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), scale: 2, logging: false, useCORS: true });
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: 'p', unit: 'px', format: [canvas.width, canvas.height] });
+                doc.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+                const pdfBlob = doc.output('blob');
+                if (navigator.share && navigator.canShare) {
+                    const file = new File([pdfBlob], "Madame_Solomina_Portfolio.pdf", { type: "application/pdf" });
+                    if (navigator.canShare({ files: [file] })) {
+                        await navigator.share({ files: [file], title: 'Мой портфель', text: 'Расчет от Madame Solomi\'na' });
+                        btn.innerHTML = originalText; btn.disabled = false; brand.style.display = 'none'; return;
+                    }
+                }
+                doc.save('Solomina_Portfolio.pdf');
+                setTimeout(() => { btn.innerHTML = `✅ Файл скачан`; setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000); }, 500);
+            } catch(e) {
+                console.error(e); alert("Не удалось открыть меню отправки. Файл будет скачан.");
+                btn.innerHTML = originalText; btn.disabled = false;
+            } finally { brand.style.display = 'none'; }
+        }
+
+    // Регистрация Service Worker для PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker зарегистрирован:', registration);
+                })
+                .catch(function(error) {
+                    console.log('Ошибка регистрации Service Worker:', error);
+                });
+        }
 
 
-    loadData(); 
-    if(window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.ready(); 
-        window.Telegram.WebApp.expand();
-        window.Telegram.WebApp.disableVerticalSwipes();
-    }
-</script>
+        loadData(); 
+        if(window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.ready(); 
+            window.Telegram.WebApp.expand();
+            
+            // Отключаем свайп вниз для закрытия приложения
+            window.Telegram.WebApp.disableVerticalSwipes();
+        }
+
+       
+        
+        
+    </script>
+</body>
+</html>
