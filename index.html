@@ -2642,14 +2642,6 @@ function recalcCustomCoupons() {
     const [row, col] = cellId.split('-').map(Number);
     const detailsRow = document.getElementById(`details-row-${row}`);
     const detailsContent = document.getElementById(`details-content-${row}`);
-    const wrapper = document.getElementById('echelon-wrapper');
-    const expandBtn = document.getElementById('expandArrowBtn');
-    
-    if(!detailsRow || !detailsContent) return;
-    
-    // Получаем данные актива
-    const asset = echelonTableData[col][row];
-    if(!asset) return;
     
     // Закрываем все остальные открытые строки
     document.querySelectorAll('.et-details-row').forEach(r => {
@@ -2659,21 +2651,21 @@ function recalcCustomCoupons() {
     });
     
     // Переключаем текущую строку
-    if(detailsRow.style.display === 'none' || detailsRow.style.display === '') {
-        // ОТКРЫВАЕМ подстроку
+    if(detailsRow.style.display === 'none') {
+        // Получаем данные актива
+        const asset = echelonTableData[col][row];
+        if(!asset) return;
         
-        // Раскрываем таблицу если свёрнута
-        if(wrapper && wrapper.classList.contains('collapsed')) {
-            wrapper.classList.remove('collapsed');
-            if(expandBtn) expandBtn.classList.add('open');
-        }
+        // Ищем полную информацию об активе в echelons
+        let fullAsset = null;
+        let companyName = asset.t; // По умолчанию используем тикер
         
-        // Ищем полную информацию об активе
-        let companyName = asset.t;
+        // Поиск в массиве echelons для получения полного названия
         for(let e of echelons) {
             const found = e.assets.find(a => a.t === asset.t);
             if(found) {
-                companyName = found.n;
+                fullAsset = found;
+                companyName = found.n; // Получаем полное название компании
                 break;
             }
         }
@@ -2725,20 +2717,11 @@ function recalcCustomCoupons() {
                 </div>
             </div>
         `;
-        
         detailsRow.style.display = 'table-row';
-        
-        // Прокручиваем к открытой строке
-        setTimeout(() => {
-            detailsRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 150);
-        
     } else {
-        // ЗАКРЫВАЕМ подстроку
         detailsRow.style.display = 'none';
     }
 }
-
 function openCompanyFromTable(event, ticker, companyName) {
     event.stopPropagation();
     // Ищем полную информацию об активе
