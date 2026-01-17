@@ -2616,7 +2616,7 @@ function recalcCustomCoupons() {
                 // Убираем знак рубля из отображения в ячейке
                 const priceDisplay = asset.target.replace(' ₽', '');
                 html += `
-                <td class="et-cell" onclick="toggleEchelonCell('${i}-${j}')">
+                <td class="et-cell" onclick="('${i}-${j}')">
                     <div class="et-cell-content">
                         <span class="et-ticker">${asset.t}</span>
                         <span class="et-price">${priceDisplay}</span>
@@ -2643,6 +2643,8 @@ function recalcCustomCoupons() {
     const [row, col] = cellId.split('-').map(Number);
     const detailsRow = document.getElementById(`details-row-${row}`);
     const detailsContent = document.getElementById(`details-content-${row}`);
+    const wrapper = document.getElementById('echelon-wrapper');
+    const expandBtn = document.getElementById('expandArrowBtn');
     
     // Закрываем все остальные открытые строки
     document.querySelectorAll('.et-details-row').forEach(r => {
@@ -2653,6 +2655,12 @@ function recalcCustomCoupons() {
     
     // Переключаем текущую строку
     if(detailsRow.style.display === 'none') {
+        // НОВЫЙ КОД: Раскрываем таблицу
+        if(wrapper && wrapper.classList.contains('collapsed')) {
+            wrapper.classList.remove('collapsed');
+            if(expandBtn) expandBtn.classList.add('open');
+        }
+        
         // Получаем данные актива
         const asset = echelonTableData[col][row];
         if(!asset) return;
@@ -2719,6 +2727,12 @@ function recalcCustomCoupons() {
             </div>
         `;
         detailsRow.style.display = 'table-row';
+        
+        // НОВЫЙ КОД: Прокручиваем к открытой строке с небольшой задержкой
+        setTimeout(() => {
+            detailsRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+        
     } else {
         detailsRow.style.display = 'none';
     }
