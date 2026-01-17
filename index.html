@@ -2693,10 +2693,10 @@ function recalcCustomCoupons() {
                     </div>
                 </div>
                 <div class="et-details-grid">
-                    <div class="et-detail-item" style="grid-column: 1 / -1;">
-                        <span class="et-detail-label">Компания:</span>
-                        <span class="et-detail-value">${companyName}</span>
-                    </div>
+                    <div class="et-detail-item" style="grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 8px;">
+    <span class="et-detail-label" style="flex-shrink: 0;">Компания:</span>
+    <span class="et-detail-value" style="text-align: left;">${companyName}</span>
+</div>
                     <div class="et-detail-item">
                         <span class="et-detail-label">Тикер:</span>
                         <span class="et-detail-value" style="cursor:pointer; color:var(--accent-blue);" onclick="copyTicker(event, '${asset.t}')">${asset.t} 📋</span>
