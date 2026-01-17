@@ -2377,7 +2377,7 @@ fetchBondDetailsInBackground();
                 distributeMonthlyInvestment();
                 updateRatesDisplay();
 
-                updateEchelonTable();
+                ();
                 renderOfzList();
                 
                 draw();
@@ -2601,7 +2601,7 @@ function recalcCustomCoupons() {
 
         // --- END OF MONTHLY CALC LOGIC ---
 
-        function updateEchelonTable() {
+       function updateEchelonTable() {
     const body = document.getElementById('echelon-tickers-body');
     if(!body) return;
     let html = '';
@@ -2616,7 +2616,7 @@ function recalcCustomCoupons() {
                 // Убираем знак рубля из отображения в ячейке
                 const priceDisplay = asset.target.replace(' ₽', '');
                 html += `
-                <td class="et-cell" onclick="('${i}-${j}')">
+                <td class="et-cell" onclick="toggleEchelonCell('${i}-${j}')">
                     <div class="et-cell-content">
                         <span class="et-ticker">${asset.t}</span>
                         <span class="et-price">${priceDisplay}</span>
@@ -2629,7 +2629,7 @@ function recalcCustomCoupons() {
         html += '</tr>';
         
         // Скрытая строка с деталями
-        html += `<tr class="et-details-row" id="details-row-${i}" style="display:none;">
+        html += `<tr class="et-details-row" id="details-row-${i}">
             <td colspan="4" class="et-details-container">
                 <div id="details-content-${i}"></div>
             </td>
@@ -2637,22 +2637,14 @@ function recalcCustomCoupons() {
     }
     body.innerHTML = html;
 }
-
-
     function toggleEchelonCell(cellId) {
-    console.log('toggleEchelonCell вызвана с cellId:', cellId);
-    
     const [row, col] = cellId.split('-').map(Number);
-    console.log('row:', row, 'col:', col);
-    
     const detailsRow = document.getElementById(`details-row-${row}`);
     const detailsContent = document.getElementById(`details-content-${row}`);
-    
-    console.log('detailsRow:', detailsRow);
-    console.log('detailsRow.style.display:', detailsRow ? detailsRow.style.display : 'element not found');
-    
     const wrapper = document.getElementById('echelon-wrapper');
     const expandBtn = document.getElementById('expandArrowBtn');
+    
+    if(!detailsRow || !detailsContent) return;
     
     // Закрываем все остальные открытые строки
     document.querySelectorAll('.et-details-row').forEach(r => {
@@ -2661,44 +2653,32 @@ function recalcCustomCoupons() {
         }
     });
     
-    // Проверяем текущее состояние
-    const isHidden = !detailsRow.style.display || detailsRow.style.display === 'none';
-    console.log('isHidden:', isHidden);
-    
     // Переключаем текущую строку
-    if(isHidden) {
-        console.log('Открываем подстроку');
+    if(detailsRow.style.display === 'table-row') {
+        // Закрываем
+        detailsRow.style.display = 'none';
+    } else {
+        // Открываем
         
-        // Раскрываем таблицу
+        // Раскрываем таблицу если свёрнута
         if(wrapper && wrapper.classList.contains('collapsed')) {
-            console.log('Раскрываем таблицу');
             wrapper.classList.remove('collapsed');
             if(expandBtn) expandBtn.classList.add('open');
         }
         
         // Получаем данные актива
         const asset = echelonTableData[col][row];
-        console.log('asset:', asset);
-        
-        if(!asset) {
-            console.log('Asset не найден!');
-            return;
-        }
+        if(!asset) return;
         
         // Ищем полную информацию об активе в echelons
-        let fullAsset = null;
         let companyName = asset.t;
-        
         for(let e of echelons) {
             const found = e.assets.find(a => a.t === asset.t);
             if(found) {
-                fullAsset = found;
                 companyName = found.n;
                 break;
             }
         }
-        
-        console.log('companyName:', companyName);
         
         // Определяем эшелон
         const echelonNum = col + 1;
@@ -2748,19 +2728,12 @@ function recalcCustomCoupons() {
             </div>
         `;
         
-        console.log('Устанавливаем display: table-row');
         detailsRow.style.display = 'table-row';
-        
-        console.log('После установки display:', detailsRow.style.display);
         
         // Прокручиваем к открытой строке
         setTimeout(() => {
             detailsRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
-        
-    } else {
-        console.log('Закрываем подстроку');
-        detailsRow.style.display = 'none';
+        }, 150);
     }
 }
 
