@@ -2364,14 +2364,29 @@ fetchBondDetailsInBackground();
                 }
 
                 echelonTableData = [[], [], [], []];
-                for (let i = 2; i <= 13; i++) {
-                     if (rows[i] && rows[i].length > 23) {
-                        if(rows[i][16]) echelonTableData[0].push({ t: rows[i][16], target: rows[i][17] || '' });
-                        if(rows[i][18]) echelonTableData[1].push({ t: rows[i][18], target: rows[i][19] || '' });
-                        if(rows[i][20]) echelonTableData[2].push({ t: rows[i][20], target: rows[i][21] || '' });
-                        if(rows[i][22]) echelonTableData[3].push({ t: rows[i][22], target: rows[i][23] || '' });
-                    }
-                }
+for (let i = 2; i <= 13; i++) {
+     if (rows[i] && rows[i].length > 7) {
+        // Колонка F (индекс 5) = Тикер
+        // Колонка G (индекс 6) = Название компании
+        // Колонка H (индекс 7) = Сектор
+        const ticker = rows[i][5];
+        const companyName = rows[i][6] || ticker;
+        const sector = rows[i][7] || '';
+        
+        // Определяем эшелон по первой букве тикера или другой логике
+        // Пока распределяем равномерно по 3 в каждый эшелон
+        const echelonIndex = Math.floor((i - 2) / 3) % 4;
+        
+        if(ticker) {
+            echelonTableData[echelonIndex].push({ 
+                t: ticker, 
+                n: companyName,
+                sector: sector,
+                target: '—' // Можно добавить из другой колонки если есть
+            });
+        }
+    }
+}
                 
                 
                 distributeMonthlyInvestment();
@@ -2665,17 +2680,8 @@ function recalcCustomCoupons() {
         const asset = echelonTableData[col][row];
         if(!asset) return;
         
-        // Ищем полное название компании (как в 3-й вкладке)
-let companyName = asset.t; // По умолчанию используем тикер
-
-// Сначала ищем в основных эшелонах (приоритет)
-for(let e of echelons) {
-    const found = e.assets.find(a => a.t === asset.t);
-    if(found && found.n) {
-        companyName = found.n;
-        break;
-    }
-}
+        // Берём название компании из самого asset (уже загружено из колонки G)
+const companyName = asset.n || asset.t;
         
         // Определяем эшелон
         const echelonNum = col + 1;
@@ -2691,9 +2697,16 @@ for(let e of echelons) {
                     </div>
                 </div>
                <div style="margin-bottom: 16px;">
-    <div style="background: var(--bg-color); padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 12px;">
-        <div style="font-size: 10px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 6px; font-weight: 600; letter-spacing: 0.5px;">Компания</div>
-        <div style="font-size: 15px; font-weight: 700; color: var(--text-main); line-height: 1.4;">${companyName}</div>
+    <div style="background: linear-gradient(135deg, var(--bg-color), var(--card-bg)); padding: 16px; border-radius: 16px; border: 1px solid var(--border-color); margin-bottom: 12px; box-shadow: 0 2px 8px var(--card-shadow);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+            <div style="font-size: 10px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Компания</div>
+            <div style="background: var(--accent-blue); color: white; font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px;">${echelonName}</div>
+        </div>
+        <div style="font-size: 16px; font-weight: 800; color: var(--text-main); line-height: 1.4; margin-bottom: 8px;">${companyName}</div>
+        ${asset.sector ? `<div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(52, 152, 219, 0.1); color: var(--accent-blue); font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 8px; margin-top: 4px;">
+            <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            ${asset.sector}
+        </div>` : ''}
     </div>
     
     <div class="et-details-grid">
