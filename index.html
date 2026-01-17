@@ -2653,6 +2653,14 @@ function recalcCustomCoupons() {
     
     // Переключаем текущую строку
     if(detailsRow.style.display === 'none') {
+        // НОВОЕ: Раскрываем таблицу автоматически
+        const wrapper = document.getElementById('echelon-wrapper');
+        const expandBtn = document.getElementById('expandArrowBtn');
+        if(wrapper && wrapper.classList.contains('collapsed')) {
+            wrapper.classList.remove('collapsed');
+            if(expandBtn) expandBtn.classList.add('open');
+        }
+        
         // Получаем данные актива
         const asset = echelonTableData[col][row];
         if(!asset) return;
@@ -2719,6 +2727,12 @@ function recalcCustomCoupons() {
             </div>
         `;
         detailsRow.style.display = 'table-row';
+        
+        // НОВОЕ: Плавная прокрутка к открытой подстроке
+        setTimeout(() => {
+            detailsRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+        
     } else {
         detailsRow.style.display = 'none';
     }
