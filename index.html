@@ -2665,19 +2665,17 @@ function recalcCustomCoupons() {
         const asset = echelonTableData[col][row];
         if(!asset) return;
         
-        // Ищем полную информацию об активе в echelons
-        let fullAsset = null;
-        let companyName = asset.t; // По умолчанию используем тикер
-        
-        // Поиск в массиве echelons для получения полного названия
-        for(let e of echelons) {
-            const found = e.assets.find(a => a.t === asset.t);
-            if(found) {
-                fullAsset = found;
-                companyName = found.n; // Получаем полное название компании
-                break;
-            }
-        }
+        // Ищем полное название компании (как в 3-й вкладке)
+let companyName = asset.t; // По умолчанию используем тикер
+
+// Сначала ищем в основных эшелонах (приоритет)
+for(let e of echelons) {
+    const found = e.assets.find(a => a.t === asset.t);
+    if(found && found.n) {
+        companyName = found.n;
+        break;
+    }
+}
         
         // Определяем эшелон
         const echelonNum = col + 1;
