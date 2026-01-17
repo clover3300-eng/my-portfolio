@@ -2259,64 +2259,51 @@
             try {
                 const response = await fetch(CSV_URL);
                 const text = await response.text();
+                // 1. Парсим CSV в массив строк (ЭТА СТРОКА ОБЯЗАТЕЛЬНА)
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
 
-                // Загрузка данных вертикали ставок из ячеек AQ2-AQ5
-// AQ это колонка 43 (0-based index = 42)
-if (rows.length > 1 && rows[1].length > 42) {
-    // AQ2 - Ключевая ставка
-    const keyRateVal = rows[1][42]; // строка 2, колонка AQ
-    if (keyRateVal) ratesData.keyRate = keyRateVal.includes('%') ? keyRateVal : keyRateVal + '%';
-}
-if (rows.length > 2 && rows[2].length > 42) {
-    // AQ3 - Максимальная ставка по вкладам
-    const depositRateVal = rows[2][42]; // строка 3, колонка AQ
-    if (depositRateVal) ratesData.depositRate = depositRateVal.includes('%') ? depositRateVal : depositRateVal + '%';
-}
-if (rows.length > 3 && rows[3].length > 42) {
-    // AQ4 - Инфляция
-    const inflationVal = rows[3][42]; // строка 4, колонка AQ
-    if (inflationVal) ratesData.inflation = inflationVal.includes('%') ? inflationVal : inflationVal + '%';
-}
-if (rows.length > 4 && rows[4].length > 42) {  
-    const ofz10Val = rows[4][42]; // строка 5, колонка AQ (AQ5)
-    if (ofz10Val) ratesData.ofz10 = ofz10Val.includes('%') ? ofz10Val : ofz10Val + '%';
-}
+                // 2. Вертикаль ставок (обновление данных из таблицы)
+                if (rows.length > 1 && rows[1].length > 42) {
+                    const keyRateVal = rows[1][42]; 
+                    if (keyRateVal) ratesData.keyRate = keyRateVal.includes('%') ? keyRateVal : keyRateVal + '%';
+                }
+                if (rows.length > 2 && rows[2].length > 42) {
+                    const depositRateVal = rows[2][42];
+                    if (depositRateVal) ratesData.depositRate = depositRateVal.includes('%') ? depositRateVal : depositRateVal + '%';
+                }
+                if (rows.length > 3 && rows[3].length > 42) {
+                    const inflationVal = rows[3][42];
+                    if (inflationVal) ratesData.inflation = inflationVal.includes('%') ? inflationVal : inflationVal + '%';
+                }
+                if (rows.length > 4 && rows[4].length > 42) {  
+                    const ofz10Val = rows[4][42];
+                    if (ofz10Val) ratesData.ofz10 = ofz10Val.includes('%') ? ofz10Val : ofz10Val + '%';
+                }
+                updateRatesDisplay();
 
-// Обновить отображение
-updateRatesDisplay();
-                
-                // Сначала загружаем облигации из таблицы (БЕЗ запросов к MOEX)
-let bondList = [];
-for (let i = 2; i <= 9; i++) { 
-    if (rows[i] && rows[i].length > 13 && rows[i][10]) {
-        bondList.push({ 
-            t: rows[i][10], 
-            n: rows[i][11], 
-            p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
-            y: rows[i][13] || '0%',
-            nkd: 0,
-            matDate: '—'
-        }); 
-    }
-}
-bonds = bondList;
+                // 3. Загрузка Облигаций (3 вкладка)
+                let bondList = [];
+                for (let i = 2; i <= 9; i++) { 
+                    if (rows[i] && rows[i].length > 13 && rows[i][10]) {
+                        bondList.push({ 
+                            t: rows[i][10], 
+                            n: rows[i][11], 
+                            p: parseFloat(rows[i][12].replace(',', '.')) || 0, 
+                            y: rows[i][13] || '0%',
+                            nkd: 0,
+                            matDate: '—'
+                        }); 
+                    }
+                }
+                bonds = bondList;
+                fetchBondDetailsInBackground();
 
-// Запросы к MOEX делаем В ФОНЕ (не блокируем отображение)
-fetchBondDetailsInBackground();
-
-                // --- НАЧАЛО: ИСПРАВЛЕННЫЙ БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА ---
-                
-                // --- БЛОК ЕЖЕМЕСЯЧНОГО ДОХОДА (ОБНОВЛЕННЫЙ) ---
+                // 4. Ежемесячный доход (Калькулятор)
                 allScheduledPayments = []; 
                 let uniqueBondsMap = new Map();
 
-                // Читаем ровно 12 строк из таблицы (ячейки AB3:AH14 -> индексы 2-13)
                 for (let i = 2; i <= 13; i++) {
                     if (!rows[i]) continue;
-                    
-                    // Сохраняем данные для нижней таблицы (12 строк)
-                    // AB = 27, AC = 28, AD = 29, AF = 31, AG = 32, AH = 33
                     const dateVal = rows[i][27] || "---"; 
                     const nameVal = rows[i][28] || "---"; 
                     const couponVal = parseFloat(String(rows[i][29]).replace(',', '.')) || 0; 
@@ -2329,7 +2316,6 @@ fetchBondDetailsInBackground();
                         staticCouponVal: couponVal
                     });
 
-                    // Собираем уникальные ОФЗ для верхних карточек калькулятора
                     if (ticker && !uniqueBondsMap.has(ticker)) {
                         uniqueBondsMap.set(ticker, {
                             t: ticker,          
@@ -2341,20 +2327,17 @@ fetchBondDetailsInBackground();
                     }
                 }
 
-                // Обновляем глобальную переменную для карточек
                 monthlyIncomeBonds = Array.from(uniqueBondsMap.values());
-                
-                // Отрисовываем верх и низ
                 renderMonthlyIncomeCards();
                 recalcCustomCoupons();
-                
-                // Запускаем обновление цен через API
                 fetchPricesForMonthlyIncome();
-                
-                // --- КОНЕЦ ИСПРАВЛЕННОГО БЛОКА ---
 
+                // 5. Загрузка Акций (3 вкладка - Портфель)
                 let allStocks = [];
-                for (let i = 11; i <= 22; i++) { if (rows[i] && rows[i].length > 13 && rows[i][10]) allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
+                for (let i = 11; i <= 22; i++) { 
+                    if (rows[i] && rows[i].length > 13 && rows[i][10]) {
+                        allStocks.push({ t: rows[i][10], n: rows[i][11], p: parseFloat(rows[i][12].replace(',', '.')) || 0, target: rows[i][13] || '—' });
+                    }
                 }
                 if (allStocks.length > 0) { 
                     echelons[0].assets = allStocks.slice(0, 3);
@@ -2363,94 +2346,57 @@ fetchBondDetailsInBackground();
                     echelons[3].assets = allStocks.slice(9, 12);
                 }
 
+                // === 6. НОВАЯ ЛОГИКА: 4 Вкладка (Ребалансировка) с поиском имен ===
                 
+                // Шаг А: Создаем справочник из колонок F, G, H
+                const tickerInfo = {};
+                for (let i = 2; i < rows.length; i++) { 
+                    if (rows[i] && rows[i].length > 7) {
+                        const ticker = rows[i][5] ? String(rows[i][5]).trim() : null; 
+                        const name = rows[i][6];       
+                        const sector = rows[i][7];      
+                        if(ticker) {
+                            tickerInfo[ticker] = { 
+                                n: name || ticker, 
+                                sector: sector || '' 
+                            };
+                        }
+                    }
+                }
 
-// Теперь загружаем данные для таблицы эшелонов с уже готовыми названиями
-// Сначала создаём справочник: тикер -> {название, сектор}
-const tickerInfo = {};
-for (let i = 2; i <= 100; i++) {
-    if (rows[i] && rows[i].length > 7) {
-        const ticker = rows[i][5];       // Колонка F - тикер
-        const name = rows[i][6];         // Колонка G - название
-        const sector = rows[i][7];       // Колонка H - сектор
-        
-        if(ticker) {
-            tickerInfo[ticker] = {
-                n: name || ticker,
-                sector: sector || ''
-            };
-        }
-    }
-}
+                // Шаг Б: Заполняем таблицу эшелонов данными из справочника
+                echelonTableData = [[], [], [], []];
+                for (let i = 2; i <= 13; i++) {
+                     if (rows[i] && rows[i].length > 23) {
+                        
+                        // Функция для обработки одной ячейки (чтобы не копировать код 4 раза)
+                        const processAsset = (tickerIndex, targetIndex, echelonArrIndex) => {
+                            if(rows[i][tickerIndex]) {
+                                const rawTicker = String(rows[i][tickerIndex]).trim();
+                                // Ищем в справочнике
+                                const info = tickerInfo[rawTicker] || { n: rawTicker, sector: '' };
+                                
+                                echelonTableData[echelonArrIndex].push({ 
+                                    t: rawTicker,        
+                                    n: info.n,           
+                                    sector: info.sector, 
+                                    target: rows[i][targetIndex] || '—' 
+                                });
+                            }
+                        };
 
-// 1. Создаем справочник (Словарь) из колонок F, G, H
-// Тикеры в F (индекс 5), Названия в G (индекс 6), Сектора в H (индекс 7)
-const tickerInfo = {};
-
-// Проходим по большому количеству строк (например, до 300), чтобы точно найти все расшифровки
-for (let i = 2; i < rows.length; i++) { 
-    if (rows[i] && rows[i].length > 7) {
-        // Важно: используем .trim(), чтобы убрать лишние пробелы, иначе поиск не сработает
-        const ticker = rows[i][5] ? String(rows[i][5]).trim() : null; 
-        const name = rows[i][6];       
-        const sector = rows[i][7];      
-        
-        if(ticker) {
-            tickerInfo[ticker] = {
-                n: name || ticker, // Если названия нет, подставим тикер
-                sector: sector || '' // Если сектора нет, будет пусто
-            };
-        }
-    }
-}
-
-// 2. Теперь заполняем данные для таблицы Эшелонов (4 вкладка)
-// Используем данные из справочника tickerInfo
-echelonTableData = [[], [], [], []];
-
-// Читаем строки с 2 по 13 (там, где у вас таблица эшелонов в приложении)
-for (let i = 2; i <= 13; i++) {
-     if (rows[i] && rows[i].length > 23) {
-
-        // Вспомогательная функция, чтобы не дублировать код 4 раза
-        const processAsset = (tickerIndex, targetIndex, echelonArrIndex) => {
-            if(rows[i][tickerIndex]) {
-                // Берем тикер из таблицы приложения (например, колонка Q)
-                const rawTicker = String(rows[i][tickerIndex]).trim();
-                
-                // Ищем его в нашем справочнике (данные из F:H)
-                // Если не нашли, ставим заглушку
-                const info = tickerInfo[rawTicker] || { n: rawTicker, sector: '' };
-                
-                echelonTableData[echelonArrIndex].push({ 
-                    t: rawTicker,        // Тикер
-                    n: info.n,           // Название (из G:G)
-                    sector: info.sector, // Сектор (из H:H)
-                    target: rows[i][targetIndex] || '—' // Цель
-                });
-            }
-        };
-
-        // ЭШЕЛОН 1 (Колонки Q, R -> индексы 16, 17)
-        processAsset(16, 17, 0);
-        
-        // ЭШЕЛОН 2 (Колонки S, T -> индексы 18, 19)
-        processAsset(18, 19, 1);
-        
-        // ЭШЕЛОН 3 (Колонки U, V -> индексы 20, 21)
-        processAsset(20, 21, 2);
-        
-        // ЭШЕЛОН 4 (Колонки W, X -> индексы 22, 23)
-        processAsset(22, 23, 3);
-    }
-}
-                
+                        processAsset(16, 17, 0); // I Эшелон
+                        processAsset(18, 19, 1); // II Эшелон
+                        processAsset(20, 21, 2); // III Эшелон
+                        processAsset(22, 23, 3); // IV Эшелон
+                    }
+                }
                 
                 distributeMonthlyInvestment();
-                updateRatesDisplay();
-
                 updateEchelonTable();
                 renderOfzList();
+                
+                draw();
                 
                 draw();
             } catch (e) { 
