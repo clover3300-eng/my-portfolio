@@ -2363,46 +2363,72 @@ fetchBondDetailsInBackground();
                     echelons[3].assets = allStocks.slice(9, 12);
                 }
 
-                echelonTableData = [[], [], [], []];
+                / Сначала создаём справочник: тикер -> {название, сектор}
+const tickerInfo = {};
+for (let i = 2; i <= 100; i++) {
+    if (rows[i] && rows[i].length > 7) {
+        const ticker = rows[i][5];       // Колонка F - тикер
+        const name = rows[i][6];         // Колонка G - название
+        const sector = rows[i][7];       // Колонка H - сектор
+        
+        if(ticker) {
+            tickerInfo[ticker] = {
+                n: name || ticker,
+                sector: sector || ''
+            };
+        }
+    }
+}
+
+// Теперь загружаем данные для таблицы эшелонов с уже готовыми названиями
+echelonTableData = [[], [], [], []];
 for (let i = 2; i <= 13; i++) {
      if (rows[i] && rows[i].length > 23) {
-        // ЭШЕЛОН 1 (колонки Q:R, индексы 16:17)
+        // ЭШЕЛОН 1 (колонки Q:R)
         if(rows[i][16]) {
+            const ticker = rows[i][16];
+            const info = tickerInfo[ticker] || { n: ticker, sector: '' };
             echelonTableData[0].push({ 
-                t: rows[i][16],           // Тикер из колонки Q
-                n: '',                    // Название пока пустое, заполним позже
-                sector: '',               // Сектор пока пустой, заполним позже
-                target: rows[i][17] || '—' // Цель из колонки R
+                t: ticker,
+                n: info.n,
+                sector: info.sector,
+                target: rows[i][17] || '—'
             });
         }
         
-        // ЭШЕЛОН 2 (колонки S:T, индексы 18:19)
+        // ЭШЕЛОН 2 (колонки S:T)
         if(rows[i][18]) {
+            const ticker = rows[i][18];
+            const info = tickerInfo[ticker] || { n: ticker, sector: '' };
             echelonTableData[1].push({ 
-                t: rows[i][18],           // Тикер из колонки S
-                n: '',
-                sector: '',
-                target: rows[i][19] || '—' // Цель из колонки T
+                t: ticker,
+                n: info.n,
+                sector: info.sector,
+                target: rows[i][19] || '—'
             });
         }
         
-        // ЭШЕЛОН 3 (колонки U:V, индексы 20:21)
+        // ЭШЕЛОН 3 (колонки U:V)
         if(rows[i][20]) {
+            const ticker = rows[i][20];
+            const info = tickerInfo[ticker] || { n: ticker, sector: '' };
             echelonTableData[2].push({ 
-                t: rows[i][20],           // Тикер из колонки U
-                n: '',
-                sector: '',
-                target: rows[i][21] || '—' // Цель из колонки V
+                t: ticker,
+                n: info.n,
+                sector: info.sector,
+                target: rows[i][21] || '—'
             });
         }
         
-        // ЭШЕЛОН 4 (колонки W:X, индексы 22:23)
+        // ЭШЕЛОН 4 (колонки W:X)
         if(rows[i][22]) {
+            const ticker = rows[i][22];
+            const info = tickerInfo[ticker] || { n: ticker, sector: '' };
             echelonTableData[3].push({ 
-                t: rows[i][22],           // Тикер из колонки W
-                n: '',
-                sector: '',
-                target: rows[i][23] || '—' // Цель из колонки X
+                t: ticker,
+                n: info.n,
+                sector: info.sector,
+                target: rows[i][23] || '—'
             });
         }
     }
@@ -2759,10 +2785,6 @@ const companyName = asset.n || asset.t;
         <div class="et-detail-item">
             <span class="et-detail-label">Цель:</span>
             <span class="et-detail-value">${asset.target}</span>
-        </div>
-        <div class="et-detail-item">
-            <span class="et-detail-label">Эшелон:</span>
-            <span class="et-detail-value">${echelonNum}</span>
         </div>
         <div class="et-detail-item">
             <span class="et-detail-label">Прогноз:</span>
