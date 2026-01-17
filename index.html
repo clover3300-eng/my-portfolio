@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Terminal Madame Solomi'na</title>
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
     
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1214,6 +1215,151 @@
     background: rgba(52, 152, 219, 0.05);
 }
 
+        /* ========== НОВЫЕ СТИЛИ ДЛЯ ТЕРМИНАЛА ========== */
+
+/* Amount Input Styling */
+.premium-input-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.premium-input-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+
+.premium-input {
+    background: transparent;
+    border: none;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 48px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    width: auto;
+    min-width: 40px;
+    outline: none;
+    color: var(--graphite-color);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "liga" 0;
+    z-index: 2;
+}
+
+.amount-wrapper {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    width: 100%;
+}
+
+.amount-underline {
+    width: 40px;
+    height: 2.5px;
+    background: var(--graphite-color);
+    border-radius: 10px;
+    opacity: 0.25;
+    margin-top: -4px;
+}
+
+/* Custom Premium Select */
+.custom-select-container {
+    position: relative;
+    user-select: none;
+}
+
+.select-trigger {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 20px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.select-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    border: 1px solid rgba(0,0,0,0.05);
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.select-options.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.option-item {
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    transition: background 0.2s;
+}
+
+.option-item:last-child { border-bottom: none; }
+.option-item:active { background: rgba(0,0,0,0.03); }
+
+/* Strategy Cards */
+.strategy-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 28px;
+    margin-bottom: 12px;
+}
+
+.strategy-card.active {
+    border-color: var(--graphite-color);
+    background: #FFFFFF;
+    box-shadow: 0 15px 30px rgba(51, 61, 77, 0.08);
+    transform: scale(1.01);
+}
+
+/* Gear Icon Premium Styling */
+.gear-container {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #ffffff 0%, #f4f6f9 100%);
+    border: 1px solid rgba(51, 61, 77, 0.12);
+    box-shadow: inset 0 2px 4px rgba(255,255,255,1), 0 4px 12px rgba(0,0,0,0.04);
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+}
+
+.gear-container::after {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 100%;
+    border: 0.5px solid rgba(51, 61, 77, 0.05);
         
         
     </style>
@@ -1258,116 +1404,95 @@
         </div>
     </div>
 
-    <div id="screen-app" class="screen">
-        <div class="header">
-            <h1>Как Вложить и Наслаждаться?</h1>
-            <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
-        </div>
+   <div id="screen-app" class="screen">
+    <header class="terminal-header-new">
+        <div class="terminal-brand-new">Terminal</div>
+        <div class="terminal-subtitle-new">Madame Solomi'na • Private Strategy</div>
+    </header>
 
-        <div class="calc-box" id="calcSection">
-            <div class="calc-top">
-                <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
-                    <span class="input-label">ВВЕДИТЕ СУММУ</span>
-                    <div class="input-wrapper">
-                        <input type="number" id="sumInput" value="0" oninput="draw()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
-                        <span class="currency">₽</span>
-                    </div>
+    <main style="padding-bottom: 180px;">
+        
+        <!-- Amount Section -->
+        <section style="padding: 0 24px; margin-bottom: 40px;">
+            <label class="section-label-new">Сумма к размещению</label>
+            <div class="premium-input-container">
+                <div class="amount-wrapper">
+                    <input type="text" id="sumInput" placeholder="0" class="premium-input" inputmode="numeric" oninput="formatAmountInput(this); draw()">
+                    <span style="font-size: 30px; font-weight: 300; color: #D1D5DB; margin-left: 8px; margin-bottom: 4px;">₽</span>
                 </div>
-                <div id="mainChart" class="chart-mini" data-pct="50/50" onclick="resetRatio()"></div>
+                <div class="amount-underline"></div>
             </div>
+        </section>
+
+        <!-- Custom Dropdown Section -->
+        <section style="padding: 0 24px; margin-bottom: 40px;">
+            <label class="section-label-new">Тариф комиссии</label>
+            <div class="custom-select-container">
+                <div class="select-trigger" id="fee-select-trigger" onclick="toggleFeeDropdown()">
+                    <span id="selected-fee-value" style="font-weight: 600; color: var(--graphite-color);">0.03% — Премиум (стандарт)</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: #9ca3af;"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+                <div class="select-options" id="fee-select-options">
+                    <div class="option-item" onclick="selectFee(0.0001, '0.01% — Институциональный')">0.01% — Институциональный</div>
+                    <div class="option-item" onclick="selectFee(0.0003, '0.03% — Премиум (стандарт)')">0.03% — Премиум (стандарт)</div>
+                    <div class="option-item" onclick="selectFee(0.0005, '0.05% — Премиум Плюс')">0.05% — Премиум Плюс</div>
+                    <div class="option-item" onclick="selectFee(0.001, '0.1% — Трейдер')">0.1% — Трейдер</div>
+                    <div class="option-item" onclick="selectFee(0.003, '0.3% — Инвестор')">0.3% — Инвестор</div>
+                    <div class="option-item" onclick="selectFee(0.005, '0.5% — Стандарт')">0.5% — Стандарт</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Strategies Section -->
+        <section style="padding: 0 24px;">
+            <label class="section-label-new">Инвестиционная стратегия</label>
+            <div id="strategy-grid"></div>
             
-            <div class="usage-bar-container">
-                <div class="usage-label">
-                    <span>ЗАДЕЙСТВОВАНО СРЕДСТВ</span>
-                    <span id="usageLabelText">0 ₽</span>
-                </div>
-                <div class="usage-track">
-                    <div id="usageFill"></div>
+            <!-- Custom Ratio Control -->
+            <div id="custom-ratio-controls" class="hidden" style="margin-top: 32px;">
+                <div class="premium-slider-block fade-in-up">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;">
+                        <div>
+                            <span style="font-size: 10px; font-weight: 900; text-transform: uppercase; color: #9ca3af; letter-spacing: 0.1em; display: block; margin-bottom: 4px;">Ручная настройка</span>
+                            <h3 style="font-size: 20px; font-weight: 700; color: var(--graphite-color); margin: 0;">Баланс активов</h3>
+                        </div>
+                        <button id="reset-slider" onclick="resetCustomSlider()" style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; border: 1px solid #e5e7eb; padding: 8px 16px; border-radius: 12px; background: transparent; cursor: pointer;">
+                            Сброс 50/50
+                        </button>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <div style="text-align: left;">
+                            <span id="custom-bonds-val" style="font-size: 30px; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--graphite-color);">50%</span>
+                            <span style="font-size: 9px; font-weight: 800; color: #9ca3af; display: block; letter-spacing: 0.1em;">ОБЛИГАЦИИ</span>
+                        </div>
+                        <div style="height: 40px; width: 1px; background: #f3f4f6;"></div>
+                        <div style="text-align: right;">
+                            <span id="custom-stocks-val" style="font-size: 30px; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--graphite-color);">50%</span>
+                            <span style="font-size: 9px; font-weight: 800; color: #9ca3af; display: block; letter-spacing: 0.1em;">АКЦИИ</span>
+                        </div>
+                    </div>
+
+                    <input type="range" id="ratioSlider" class="new-ratio-slider" min="0" max="100" value="50" oninput="updateCustomSlider()">
+                    
+                    <div style="display: flex; justify-content: space-between; font-size: 9px; font-weight: 700; color: #d1d5db; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 16px;">
+                        <span>Защита</span>
+                        <span>Доходность</span>
+                    </div>
                 </div>
             </div>
+        </section>
+    </main>
 
-            <div class="fee-selector">
-                <span class="fee-label">Комиссия брокера</span>
-                <div class="fee-buttons" id="feeGroup">
-                    <button class="fee-btn" onclick="setFee(0.0001, this)">0.01%</button>
-                    <button class="fee-btn active" onclick="setFee(0.0003, this)">0.03%</button>
-                    <button class="fee-btn" onclick="setFee(0.0005, this)">0.05%</button>
-                    <button class="fee-btn" onclick="setFee(0.001, this)">0.1%</button>
-                    <button class="fee-btn" onclick="setFee(0.003, this)">0.3%</button>
-                    <button class="fee-btn" onclick="setFee(0.004, this)">0.4%</button>
-                    <button class="fee-btn" onclick="setFee(0.005, this)">0.5%</button>
-                </div>
-            </div>
-
-            <div class="ratio-control">
-                <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">
-                    <span>Облигации <span id="labelBondsPct">50</span>%</span>
-                    <span>Акции <span id="labelStocksPct">50</span>%</span>
-                </div>
-                <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
-                <div class="slider-hint-wrapper">
-                    <span class="slider-hint">Выберите готовую стратегию или настройте вручную</span>
-                    <div class="preset-dropdown-btn" id="presetDropdownBtn" onclick="togglePresetDropdown()">
-                        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </div>
-                </div>
-                
-                <div class="preset-options" id="presetOptions">
-                    <div class="preset-btn-modern" onclick="setPresetRatio(80, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">🛡️</div>
-                            <div>
-                                <div class="preset-title">Консервативная</div>
-                                <div class="preset-subtitle">Максимальная защита капитала</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">80/20</div>
-                    </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(60, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">⚖️</div>
-                            <div>
-                                <div class="preset-title">Сбалансированная</div>
-                                <div class="preset-subtitle">Стабильный доход + рост</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">60/40</div>
-                    </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(40, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">📈</div>
-                            <div>
-                                <div class="preset-title">Умеренная</div>
-                                <div class="preset-subtitle">Баланс надежности и роста</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">40/60</div>
-                    </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(20, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">🚀</div>
-                            <div>
-                                <div class="preset-title">Агрессивная</div>
-                                <div class="preset-subtitle">Максимальный потенциал роста</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">20/80</div>
-                    </div>
-                    <div class="preset-footer-hint">Пример: 60/40 означает 60% Облигаций и 40% Акций</div>
-                </div>
-            </div>
-        </div>
-
-        <button class="btn-graphite" style="margin-bottom: 25px;" onclick="calculateAndShowPortfolio()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M7.5 5.6L10 7 8.6 4.5 10 2 7.5 3.4 5 2 6.4 4.5 5 7zM19.5 15.4L22 14l-2.5-1.4L21 10l-2.5 1.4L16 10l1.4 2.6L16 14l2.5 1.4zM22 2l-2.5 1.4L21 6l-1.5-2.6L16 2l1.4 2.5L16 7l2.5-1.4L21 7 19.5 4.6z M2 22l6-6-1.5-1.5-6 6V22h1.5z m11-11l-2.5-2.5-6.5 6.5 2.5 2.5 6.5-6.5z"/>
-            </svg>
-            Сформировать Портфель
+    <div style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); padding: 20px 24px 100px 24px; z-index: 50;">
+        <button class="btn-graphite" onclick="calculateAndShowPortfolio()">
+            Сформировать портфель
         </button>
-        <p class="start-expl">
-            При нажатии на эту кнопку Вам будет предложен список из 8 Облигаций Федерального Займа и 12 Акций Публичных Компаний к Покупке
+        <p style="font-size: 10px; text-align: center; color: #9ca3af; margin-top: 20px; line-height: 1.5; opacity: 0.6; padding: 0 8px;">
+            Madame Solomi'na предложит вам 8 ОФЗ и 12 ликвидных акций на основе выбранного риска.
         </p>
     </div>
+</div>
 
     <div id="screen-portfolio" class="screen">
         <div class="header"><h1>Портфель</h1></div>
@@ -2397,8 +2522,8 @@
                 renderOfzList();
                 
                 draw();
+                renderStrategyGrid();
                 
-                draw();
             } catch (e) { 
                 console.error("Error in loadData:", e); 
             }
@@ -2962,7 +3087,7 @@ function openCompanyFromTable(event, ticker, companyName) {
 
         function draw() {
             saveSettings();
-            const inputSum = parseFloat(document.getElementById('sumInput').value) || 0;
+            const inputSum = getNumericSum();
             const bondPct = parseInt(document.getElementById('ratioSlider').value);
             const stockPct = 100 - bondPct;
             
@@ -3225,6 +3350,175 @@ function openCompanyFromTable(event, ticker, companyName) {
                 });
         }
 
+    // ========== НОВЫЕ ФУНКЦИИ ДЛЯ ТЕРМИНАЛА ==========
+
+        const strategies = [
+            { id: 'cons', name: 'Консервативная', desc: 'Защита и стабильность.', bonds: 80, stocks: 20 },
+            { id: 'bal', name: 'Сбалансированная', desc: 'Умеренный риск.', bonds: 60, stocks: 40 },
+            { id: 'har', name: 'Гармония', desc: 'Классический баланс.', bonds: 50, stocks: 50 },
+            { id: 'mod', name: 'Умеренная', desc: 'Потенциал роста.', bonds: 40, stocks: 60 },
+            { id: 'agr', name: 'Агрессивная', desc: 'Максимальный доход.', bonds: 15, stocks: 85 },
+            { id: 'custom', name: 'Настроить свой', desc: 'Ваш риск-профиль.', bonds: 50, stocks: 50 }
+        ];
+
+        let selectedStrategyId = 'har';
+        let customBonds = 50;
+        let customStocks = 50;
+        let hasCustomStarted = false;
+
+        function formatAmountInput(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value) {
+                input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            } else {
+                input.value = "";
+            }
+        }
+
+        function getNumericSum() {
+            const input = document.getElementById('sumInput');
+            return parseFloat(input.value.replace(/\s/g, '')) || 0;
+        }
+
+        function toggleFeeDropdown() {
+            const options = document.getElementById('fee-select-options');
+            options.classList.toggle('open');
+        }
+
+        function selectFee(val, label) {
+            brokerFee = val;
+            document.getElementById('selected-fee-value').innerText = label;
+            document.getElementById('fee-select-options').classList.remove('open');
+            draw();
+        }
+
+        document.addEventListener('click', function(e) {
+            const trigger = document.getElementById('fee-select-trigger');
+            const options = document.getElementById('fee-select-options');
+            if (trigger && options && !trigger.contains(e.target)) {
+                options.classList.remove('open');
+            }
+        });
+
+        function createStrategyIndicator(id, stocks) {
+            if (id === 'custom' && !hasCustomStarted) {
+                return `
+                    <div class="gear-container">
+                        <svg class="gear-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                            <circle cx="12" cy="12" r="3" fill="rgba(51, 61, 77, 0.1)"/>
+                        </svg>
+                    </div>`;
+            }
+
+            const radius = 20;
+            const circum = 2 * Math.PI * radius;
+            const offset = circum - (stocks / 100) * circum;
+            return `
+                <svg width="56" height="56" viewBox="0 0 48 48" style="transform: rotate(-90deg);">
+                    <circle cx="24" cy="24" r="${radius}" stroke="rgba(0,0,0,0.05)" stroke-width="5" fill="transparent" />
+                    <circle class="chart-ring" cx="24" cy="24" r="${radius}" stroke-width="5" 
+                        stroke-dasharray="${circum}" 
+                        stroke-dashoffset="${offset}" 
+                        stroke-linecap="round" fill="transparent" />
+                </svg>
+            `;
+        }
+
+        function renderStrategyGrid() {
+            const grid = document.getElementById('strategy-grid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            strategies.forEach(s => {
+                const isActive = selectedStrategyId === s.id;
+                const b = s.id === 'custom' ? customBonds : s.bonds;
+                const st = s.id === 'custom' ? customStocks : s.stocks;
+                
+                const card = document.createElement('div');
+                card.className = `strategy-card ${isActive ? 'active' : ''}`;
+                card.style.padding = '20px';
+                card.style.display = 'flex';
+                card.style.alignItems = 'center';
+                card.style.cursor = 'pointer';
+                
+                card.onclick = () => {
+                    if (selectedStrategyId === 'custom' && s.id !== 'custom') {
+                        hasCustomStarted = false;
+                        document.getElementById('ratioSlider').value = 50;
+                        customBonds = 50;
+                        customStocks = 50;
+                        updateCustomSliderDisplay();
+                    }
+                    selectedStrategyId = s.id;
+                    
+                    const customControls = document.getElementById('custom-ratio-controls');
+                    if (s.id === 'custom') {
+                        customControls.classList.remove('hidden');
+                    } else {
+                        customControls.classList.add('hidden');
+                    }
+                    
+                    // Синхронизируем слайдер
+                    const slider = document.getElementById('ratioSlider');
+                    if (slider && s.id !== 'custom') {
+                        slider.value = s.bonds;
+                    }
+                    
+                    renderStrategyGrid();
+                    draw();
+                };
+                
+                const bondLabel = `<span style="color: ${b >= st ? 'var(--graphite-color)' : '#9ca3af'}">Облигации ${b}%</span>`;
+                const stockLabel = `<span style="color: ${st > b ? 'var(--graphite-color)' : '#9ca3af'}">Акции ${st}%</span>`;
+
+                card.innerHTML = `
+                    <div style="flex-shrink: 0;">${createStrategyIndicator(s.id, st)}</div>
+                    <div style="flex-grow: 1; display: flex; align-items: center; justify-content: space-between; margin-left: 16px; overflow: hidden;">
+                        <div style="display: flex; flex-direction: column; flex-grow: 1; min-width: 0;">
+                            <span style="font-weight: 700; font-size: 17px; color: ${isActive ? 'var(--graphite-color)' : '#374151'};">${s.name}</span>
+                            <span style="font-size: 11px; color: #9ca3af; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${s.desc}</span>
+                        </div>
+                        <div class="divider-line-new"></div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: -0.02em;">
+                            ${st > b ? stockLabel + bondLabel : bondLabel + stockLabel}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function updateCustomSlider() {
+            hasCustomStarted = true;
+            const slider = document.getElementById('ratioSlider');
+            customStocks = parseInt(slider.value);
+            customBonds = 100 - customStocks;
+            updateCustomSliderDisplay();
+            renderStrategyGrid();
+            draw();
+        }
+
+        function updateCustomSliderDisplay() {
+            const bondsEl = document.getElementById('custom-bonds-val');
+            const stocksEl = document.getElementById('custom-stocks-val');
+            if (bondsEl) bondsEl.innerText = `${customBonds}%`;
+            if (stocksEl) stocksEl.innerText = `${customStocks}%`;
+        }
+
+        function resetCustomSlider() {
+            hasCustomStarted = false;
+            const slider = document.getElementById('ratioSlider');
+            if (slider) slider.value = 50;
+            customStocks = 50;
+            customBonds = 50;
+            updateCustomSliderDisplay();
+            renderStrategyGrid();
+            draw();
+        }
+
+        // ========== КОНЕЦ НОВЫХ ФУНКЦИЙ ==========
 
         loadData(); 
         if(window.Telegram && window.Telegram.WebApp) {
