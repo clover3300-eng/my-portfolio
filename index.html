@@ -2728,10 +2728,18 @@ function recalcCustomCoupons() {
         `;
         detailsRow.style.display = 'table-row';
         
-        // НОВОЕ: Плавная прокрутка к открытой подстроке
-        setTimeout(() => {
-            detailsRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
+       // НОВОЕ: Плавная прокрутка с отступом от нижнего меню
+setTimeout(() => {
+    const rect = detailsRow.getBoundingClientRect();
+    const offset = 150; // Высота меню + отступ
+    const elementTop = rect.top + window.pageYOffset;
+    const offsetPosition = elementTop - offset;
+    
+    window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+    });
+}, 100);
         
     } else {
         detailsRow.style.display = 'none';
