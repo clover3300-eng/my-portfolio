@@ -2381,13 +2381,74 @@ for (let i = 2; i <= 100; i++) {
 }
 
 // Теперь загружаем данные для таблицы эшелонов с уже готовыми названиями
+// Сначала создаём справочник: тикер -> {название, сектор}
+const tickerInfo = {};
+for (let i = 2; i <= 100; i++) {
+    if (rows[i] && rows[i].length > 7) {
+        const ticker = rows[i][5];       // Колонка F - тикер
+        const name = rows[i][6];         // Колонка G - название
+        const sector = rows[i][7];       // Колонка H - сектор
+        
+        if(ticker) {
+            tickerInfo[ticker] = {
+                n: name || ticker,
+                sector: sector || ''
+            };
+        }
+    }
+}
+
+// Теперь загружаем данные для таблицы эшелонов с уже готовыми названиями
 echelonTableData = [[], [], [], []];
 for (let i = 2; i <= 13; i++) {
      if (rows[i] && rows[i].length > 23) {
-        if(rows[i][16]) echelonTableData[0].push({ t: rows[i][16], target: rows[i][17] || '' });
-        if(rows[i][18]) echelonTableData[1].push({ t: rows[i][18], target: rows[i][19] || '' });
-        if(rows[i][20]) echelonTableData[2].push({ t: rows[i][20], target: rows[i][21] || '' });
-        if(rows[i][22]) echelonTableData[3].push({ t: rows[i][22], target: rows[i][23] || '' });
+        // ЭШЕЛОН 1 (колонки Q:R)
+        if(rows[i][16]) {
+            const ticker = rows[i][16];
+            const info = tickerInfo[ticker] || { n: ticker, sector: '' };
+            echelonTableData[0].push({ 
+                t: ticker,
+                n: info.n,
+                sector: info.sector,
+                target: rows[i][17] || '—'
+            });
+        }
+        
+        // ЭШЕЛОН 2 (колонки S:T)
+        if(rows[i][18]) {
+            const ticker = rows[i][18];
+            const info = tickerInfo[ticker] || { n: ticker, sector: '' };
+            echelonTableData[1].push({ 
+                t: ticker,
+                n: info.n,
+                sector: info.sector,
+                target: rows[i][19] || '—'
+            });
+        }
+        
+        // ЭШЕЛОН 3 (колонки U:V)
+        if(rows[i][20]) {
+            const ticker = rows[i][20];
+            const info = tickerInfo[ticker] || { n: ticker, sector: '' };
+            echelonTableData[2].push({ 
+                t: ticker,
+                n: info.n,
+                sector: info.sector,
+                target: rows[i][21] || '—'
+            });
+        }
+        
+        // ЭШЕЛОН 4 (колонки W:X)
+        if(rows[i][22]) {
+            const ticker = rows[i][22];
+            const info = tickerInfo[ticker] || { n: ticker, sector: '' };
+            echelonTableData[3].push({ 
+                t: ticker,
+                n: info.n,
+                sector: info.sector,
+                target: rows[i][23] || '—'
+            });
+        }
     }
 }
                 
