@@ -2629,7 +2629,7 @@ function recalcCustomCoupons() {
         html += '</tr>';
         
         // Скрытая строка с деталями
-        html += `<tr class="et-details-row" id="details-row-${i}">
+        html += `<tr class="et-details-row" id="details-row-${i}" style="display:none;">
             <td colspan="4" class="et-details-container">
                 <div id="details-content-${i}"></div>
             </td>
@@ -2637,6 +2637,7 @@ function recalcCustomCoupons() {
     }
     body.innerHTML = html;
 }
+
     function toggleEchelonCell(cellId) {
     const [row, col] = cellId.split('-').map(Number);
     const detailsRow = document.getElementById(`details-row-${row}`);
@@ -2646,6 +2647,10 @@ function recalcCustomCoupons() {
     
     if(!detailsRow || !detailsContent) return;
     
+    // Получаем данные актива
+    const asset = echelonTableData[col][row];
+    if(!asset) return;
+    
     // Закрываем все остальные открытые строки
     document.querySelectorAll('.et-details-row').forEach(r => {
         if(r.id !== `details-row-${row}`) {
@@ -2654,11 +2659,8 @@ function recalcCustomCoupons() {
     });
     
     // Переключаем текущую строку
-    if(detailsRow.style.display === 'table-row') {
-        // Закрываем
-        detailsRow.style.display = 'none';
-    } else {
-        // Открываем
+    if(detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+        // ОТКРЫВАЕМ подстроку
         
         // Раскрываем таблицу если свёрнута
         if(wrapper && wrapper.classList.contains('collapsed')) {
@@ -2666,11 +2668,7 @@ function recalcCustomCoupons() {
             if(expandBtn) expandBtn.classList.add('open');
         }
         
-        // Получаем данные актива
-        const asset = echelonTableData[col][row];
-        if(!asset) return;
-        
-        // Ищем полную информацию об активе в echelons
+        // Ищем полную информацию об активе
         let companyName = asset.t;
         for(let e of echelons) {
             const found = e.assets.find(a => a.t === asset.t);
@@ -2734,6 +2732,10 @@ function recalcCustomCoupons() {
         setTimeout(() => {
             detailsRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 150);
+        
+    } else {
+        // ЗАКРЫВАЕМ подстроку
+        detailsRow.style.display = 'none';
     }
 }
 
