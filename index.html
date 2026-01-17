@@ -2363,22 +2363,7 @@ fetchBondDetailsInBackground();
                     echelons[3].assets = allStocks.slice(9, 12);
                 }
 
-                // Сначала создаём справочник: тикер -> {название, сектор}
-const tickerInfo = {};
-for (let i = 2; i <= 100; i++) {
-    if (rows[i] && rows[i].length > 7) {
-        const ticker = rows[i][5];       // Колонка F - тикер
-        const name = rows[i][6];         // Колонка G - название
-        const sector = rows[i][7];       // Колонка H - сектор
-        
-        if(ticker) {
-            tickerInfo[ticker] = {
-                n: name || ticker,
-                sector: sector || ''
-            };
-        }
-    }
-}
+                
 
 // Теперь загружаем данные для таблицы эшелонов с уже готовыми названиями
 // Сначала создаём справочник: тикер -> {название, сектор}
