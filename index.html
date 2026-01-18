@@ -110,8 +110,8 @@
         /* ========== NEW: Terminal Header V2 для 2й вкладки ========== */
 .terminal-header-v2 {
     background: linear-gradient(90deg, #F1F6FB 0%, #F9FAFC 100%);
-    padding: 30px 20px 40px;
-    margin: -16px -16px 20px -16px;
+    padding: 30px 20px 25px;
+    margin: -16px -16px 15px -16px;
     text-align: left;
 }
 
@@ -316,6 +316,24 @@
     z-index: 800;
     border-top: 1px solid rgba(255, 255, 255, 0.5);
 }
+        /* ========== NEW: Скрытие элементов при фокусе на вводе ========== */
+body.input-focused .nav-wrapper {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+body.input-focused .bottom-sticky-panel {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.nav-wrapper,
+.bottom-sticky-panel {
+    transition: opacity 0.2s ease;
+}
+/* ========== END: Скрытие элементов при фокусе ========== */
 
 .dark-mode .bottom-sticky-panel {
     background: rgba(15, 23, 42, 0.92);
@@ -389,13 +407,13 @@ h1 {
     border-bottom: 2px solid #E8EDF2;
 }
 
-input#sumInput { 
+nput#sumInput { 
     border: none; 
     font-family: 'JetBrains Mono', monospace;
     font-size: 48px; 
     font-weight: 300; 
-    width: auto;
-    max-width: 200px;
+    width: 100%;
+    max-width: 100%;
     outline: none; 
     color: #2C364C;
     background: transparent; 
@@ -403,6 +421,23 @@ input#sumInput {
     padding: 0; 
     line-height: 1;
     text-align: center;
+    transition: font-size 0.15s ease;
+}
+
+input#sumInput.size-large {
+    font-size: 48px;
+}
+
+input#sumInput.size-medium {
+    font-size: 36px;
+}
+
+input#sumInput.size-small {
+    font-size: 28px;
+}
+
+input#sumInput.size-xsmall {
+    font-size: 22px;
 }
 
 .currency { 
@@ -650,6 +685,56 @@ input#sumInput {
             display: flex; align-items: center; justify-content: center; gap: 8px;
             margin-top: 8px; 
         }
+        /* ========== NEW: Кнопка сброса 50/50 ========== */
+.reset-ratio-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px dashed #CBD5E1;
+    border-radius: 10px;
+    color: #8A9AB0;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.reset-ratio-btn:hover {
+    border-color: #2C364C;
+    color: #2C364C;
+    background: rgba(44, 54, 76, 0.03);
+}
+
+.reset-ratio-btn:active {
+    transform: scale(0.98);
+}
+
+.reset-ratio-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}
+
+.dark-mode .reset-ratio-btn {
+    border-color: #475569;
+    color: #64748b;
+}
+
+.dark-mode .reset-ratio-btn:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: rgba(56, 189, 248, 0.05);
+}
+/* ========== END: Кнопка сброса 50/50 ========== */
         .slider-hint { font-size: 10px; color: #8e8e93; text-align: center; }
         .preset-dropdown-btn {
             width: 24px; height: 24px; border-radius: 50%; background: var(--accent-blue);
@@ -1634,7 +1719,14 @@ input#sumInput {
         <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
             <span class="input-label">Сумма к размещению</span>
             <div class="input-wrapper">
-                <input type="text" id="sumInput" value="0" oninput="formatSumInput(this)" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" enterkeyhint="done">
+                <input type="text" id="sumInput" value="0" 
+                       oninput="formatSumInput(this)" 
+                       onfocus="onSumInputFocus()" 
+                       onblur="onSumInputBlur()"
+                       onclick="event.stopPropagation(); this.select()" 
+                       onkeyup="if(event.keyCode===13) this.blur()" 
+                       inputmode="numeric" 
+                       enterkeyhint="done">
                 <span class="currency">₽</span>
             </div>
         </div>
@@ -1672,7 +1764,7 @@ input#sumInput {
                             </svg>
                         </div>
                     </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.0005, '0.05%', 'Премиум')">
+                    <div class="fee-dropdown-item" onclick="selectFee(0.0005, '0.05%', 'Премиум (стандарт)')">
                         <div class="fee-item-left">
                             <span class="fee-item-rate">0.05%</span>
                             <span class="fee-item-name">Премиум (стандарт)</span>
@@ -1781,17 +1873,15 @@ input#sumInput {
                     </div>
                     <div class="preset-footer-hint">Пример: 60/40 означает 60% Облигаций и 40% Акций</div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Использовано средств -->
-        <div class="usage-bar-container" style="margin-top: 25px;">
-            <div class="usage-label">
-                <span>ЗАДЕЙСТВОВАНО СРЕДСТВ</span>
-                <span id="usageLabelText">0 ₽</span>
-            </div>
-            <div class="usage-track">
-                <div id="usageFill"></div>
+                
+                <!-- Кнопка сброса -->
+                <button class="reset-ratio-btn" onclick="resetRatioTo50()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                        <path d="M3 3v5h5"/>
+                    </svg>
+                    Сбросить на 50/50
+                </button>
             </div>
         </div>
     </div>
@@ -2566,7 +2656,11 @@ input#sumInput {
             if (saved) {
                 const s = JSON.parse(saved);
                 const sumVal = s.sum || 100000;
-                document.getElementById('sumInput').value = sumVal.toLocaleString('ru-RU').replace(/\s/g, '.');
+const sumInput = document.getElementById('sumInput');
+if (sumInput) {
+    sumInput.value = sumVal.toLocaleString('ru-RU').replace(/\s/g, '.');
+    adjustSumInputSize(sumInput);
+}
                 document.getElementById('ratioSlider').value = s.ratio || 50;
                 brokerFee = parseFloat(s.fee) || 0.0005; 
 currentTax = parseFloat(s.tax) || 0.13;
@@ -2607,10 +2701,7 @@ if (feeMap[brokerFee]) {
             }
         }
 
-        function resetRatio() {
-            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-            document.getElementById('ratioSlider').value = 50; draw();
-        }
+        
 
         // NEW: Dropdown для тарифа комиссии
 let isFeeSelected = false;
@@ -2703,6 +2794,7 @@ function setFee(val, btn) {
         }
 
     // NEW: Форматирование суммы с разделителями
+// NEW: Форматирование суммы с разделителями и адаптивным размером
 function formatSumInput(input) {
     // Убираем все нецифровые символы
     let value = input.value.replace(/\D/g, '');
@@ -2719,8 +2811,30 @@ function formatSumInput(input) {
     // Обновляем отображение
     input.value = formatted;
     
+    // Адаптивный размер шрифта
+    adjustSumInputSize(input);
+    
     // Вызываем перерасчёт
     draw();
+}
+
+// NEW: Адаптивный размер шрифта в зависимости от длины
+function adjustSumInputSize(input) {
+    const length = input.value.length;
+    
+    // Убираем все классы размера
+    input.classList.remove('size-large', 'size-medium', 'size-small', 'size-xsmall');
+    
+    // Добавляем нужный класс
+    if (length <= 7) {
+        input.classList.add('size-large');      // до 999.999
+    } else if (length <= 11) {
+        input.classList.add('size-medium');     // до 99.999.999
+    } else if (length <= 15) {
+        input.classList.add('size-small');      // до 999.999.999.999
+    } else {
+        input.classList.add('size-xsmall');     // больше
+    }
 }
 
 // NEW: Получить числовое значение из форматированного поля
@@ -2729,6 +2843,37 @@ function getSumInputValue() {
     if (!input) return 0;
     // Убираем все точки и получаем число
     return parseInt(input.value.replace(/\./g, '')) || 0;
+}
+
+// NEW: Скрытие меню при фокусе на вводе
+function onSumInputFocus() {
+    document.body.classList.add('input-focused');
+}
+
+// NEW: Показ меню при потере фокуса
+function onSumInputBlur() {
+    document.body.classList.remove('input-focused');
+}
+
+// NEW: Сброс соотношения на 50/50
+function resetRatioTo50() {
+    document.getElementById('ratioSlider').value = 50;
+    
+    // Убираем выделение с пресетов
+    document.querySelectorAll('.preset-btn-modern').forEach(b => b.classList.remove('selected-preset'));
+    
+    // Закрываем dropdown пресетов если открыт
+    const presetOptions = document.getElementById('presetOptions');
+    const presetBtn = document.getElementById('presetDropdownBtn');
+    if (presetOptions) presetOptions.classList.remove('show');
+    if (presetBtn) presetBtn.classList.remove('open');
+    
+    draw();
+    
+    // Haptic feedback
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
 }
         function toggleRow(el) {
     el.classList.toggle('is-expanded');
