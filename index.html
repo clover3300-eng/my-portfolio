@@ -561,7 +561,7 @@ h1 {
     align-items: baseline; 
     justify-content: center;
     gap: 8px;
-    padding: 40px 0 20px 0;
+    padding: 20px 0 20px 0;
     position: relative;
 }
 
@@ -2166,7 +2166,7 @@ input#sumInput.size-xsmall {
 #sumInput::placeholder {
     color: #CBD5E1;
     opacity: 1;
-    font-size: 1.5rem; 
+    font-size: 1.125rem; /* 18px - аккуратный размер */
     font-family: 'JetBrains Mono', monospace;
     font-weight: 300;
     letter-spacing: 0.02em;
@@ -2222,7 +2222,7 @@ input#sumInput.size-xsmall {
     <div class="calc-box" id="calcSection">
         <!-- Ввод суммы -->
         <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
-            <span class="input-label">Сумма к размещению</span>
+            
             <div class="input-wrapper">
                 <input type="text" id="sumInput" 
        placeholder="Введите сумму..." 
@@ -2237,8 +2237,7 @@ input#sumInput.size-xsmall {
             </div>
         </div>
         
-        <!-- Белая карточка начинается здесь -->
-    <div class="calc-box-white-section">
+       
         <!-- Тариф комиссии - Dropdown -->
         <div class="fee-selector">
             <span class="fee-label">Тариф комиссии</span>
@@ -2320,6 +2319,8 @@ input#sumInput.size-xsmall {
             </div>
         </div>
 
+        <!-- Белая карточка начинается здесь -->
+        <div class="calc-box-white-section">
         <!-- Инвестиционная стратегия -->
 <div class="strategy-section" style="margin-top: 25px;">
     <span class="fee-label">Инвестиционная стратегия</span>
