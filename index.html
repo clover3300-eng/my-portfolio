@@ -2144,8 +2144,7 @@ input#sumInput.size-xsmall {
             <span class="welcome-subtitle">ЧАСТНЫЙ ИНВЕСТИЦИОННЫЙ<br>ТЕРМИНАЛ</span>
         </div>
         
-        <div class="welcome-cta-block">
-          <button class="btn-welcome" onclick="alert('test'); showScreen('screen-app');">
+        <button class="btn-welcome" onclick="localStorage.setItem('user_visited', 'true'); document.getElementById('navWrapper').style.display = 'flex'; document.getElementById('stickyPanel').style.display = 'block'; showScreen('screen-app');">
     ОТКРЫТЬ ТЕРМИНАЛ
 </button>
             <div class="welcome-secure-text">
