@@ -11,6 +11,10 @@
     <meta name="apple-mobile-web-app-title" content="Solomi'na">
     <link rel="apple-touch-icon" href="./icon-192.png">
     <meta name="theme-color" content="#3498db">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -40,6 +44,8 @@
             --coupon-blue-bg: rgba(52, 152, 219, 0.08);
             --badge-blue-bg: rgba(52, 152, 219, 0.15);
             --badge-green-bg: rgba(46, 204, 113, 0.15);
+            --terminal-gradient: linear-gradient(90deg, #F1F6FB 0%, #F9FAFC 100%);
+            --graphite-btn: #2C364C;
         }
     
 
@@ -100,6 +106,48 @@
         }
 
         .terminal-header { padding: 10px 10px 30px; text-align: left; }
+
+        /* ========== NEW: Terminal Header V2 для 2й вкладки ========== */
+.terminal-header-v2 {
+    background: linear-gradient(90deg, #F1F6FB 0%, #F9FAFC 100%);
+    padding: 30px 20px 40px;
+    margin: -16px -16px 20px -16px;
+    text-align: left;
+}
+
+.terminal-title-main {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 32px;
+    color: #2C364C;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+    line-height: 1.1;
+}
+
+.terminal-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #8A9AB0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.dark-mode .terminal-header-v2 {
+    background: linear-gradient(90deg, #1a2234 0%, #1e293b 100%);
+}
+
+.dark-mode .terminal-title-main {
+    color: #f1f5f9;
+}
+
+.dark-mode .terminal-subtitle {
+    color: #64748b;
+}
+/* ========== END: Terminal Header V2 ========== */
+
+        
         .terminal-badge {
             display: inline-flex;
             align-items: center; gap: 6px; padding: 4px 10px;
@@ -212,56 +260,219 @@
         .btn-action:active { opacity: 0.7; transform: scale(0.98); }
 
         @keyframes shimmerBtn {
-            0% { box-shadow: 0 12px 25px rgba(48, 61, 79, 0.3); transform: scale(1); }
-            50% { box-shadow: 0 12px 30px rgba(48, 61, 79, 0.5); transform: scale(1.01); }
-            100% { box-shadow: 0 12px 25px rgba(48, 61, 79, 0.3); transform: scale(1); }
-        }
+    0% { box-shadow: 0 10px 25px rgba(44, 54, 76, 0.2); transform: scale(1); }
+    50% { box-shadow: 0 12px 30px rgba(44, 54, 76, 0.3); transform: scale(1.005); }
+    100% { box-shadow: 0 10px 25px rgba(44, 54, 76, 0.2); transform: scale(1); }
+}
 
-        .btn-graphite {
-            position: relative;
-            background: var(--graphite-color); color: white; border: none; overflow: hidden;
-            box-shadow: 0 12px 25px rgba(48, 61, 79, 0.3); margin-top: 15px;
-            padding: 20px; font-size: 16px; border-radius: 20px;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            width: 100%; box-sizing: border-box; font-weight: 900;
-            animation: shimmerBtn 3s infinite ease-in-out;
-            cursor: pointer;
-        }
-        .btn-graphite svg { width: 32px; height: 32px; fill: none; stroke: white; stroke-width: 2; }
-        .btn-graphite:active { transform: scale(0.98); animation: none; }
+.btn-graphite {
+    position: relative;
+    background: #2C364C; 
+    color: white; 
+    border: none; 
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(44, 54, 76, 0.2);
+    margin-top: 15px;
+    padding: 20px; 
+    font-family: 'Inter', sans-serif;
+    font-size: 17px; 
+    border-radius: 16px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 12px;
+    width: 100%; 
+    box-sizing: border-box; 
+    font-weight: 700;
+    animation: shimmerBtn 3s infinite ease-in-out;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-graphite svg { 
+    width: 28px; 
+    height: 28px; 
+    fill: none; 
+    stroke: white; 
+    stroke-width: 2; 
+}
+
+.btn-graphite:active { 
+    transform: scale(0.98); 
+    opacity: 0.9;
+    animation: none; 
+}
+
+/* Sticky панель для кнопки на 2й вкладке */
+.bottom-sticky-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 16px 20px 100px 20px;
+    z-index: 800;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.dark-mode .bottom-sticky-panel {
+    background: rgba(15, 23, 42, 0.92);
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.bottom-sticky-panel .btn-graphite {
+    margin-top: 0;
+}
+
+.sticky-hint {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #8A9AB0;
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5;
+    padding: 0 10px;
+}
 
         .start-expl { font-size: 11px; color: #8e8e93; text-align: center; margin-top: 8px; padding: 0 10px; line-height: 1.5; }
 
         .header { text-align: center; margin-bottom: 20px; }
-        h1 { font-size: 20px; margin-bottom: 4px; }
+h1 { 
+    font-family: 'Inter', sans-serif;
+    font-size: 20px; 
+    font-weight: 800;
+    margin-bottom: 4px; 
+}
+
+#dynamicSubtitle {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+}
         
         .calc-box {
-            background: var(--card-bg); padding: 24px; border-radius: 24px;
-            box-shadow: 0 15px 35px var(--card-shadow); margin-bottom: 25px; border: 1px solid var(--border-color);
-        }
-        .calc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-        .input-container { flex: 1; }
-        .input-label { font-size: 13px; color: #8e8e93; font-weight: 600; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
-        .input-wrapper { display: flex; align-items: baseline; gap: 8px; }
-        input#sumInput { 
-            border: none; font-size: 34px; font-weight: 700; width: 100%; outline: none; 
-            color: var(--input-color); background: transparent; margin: 0; padding: 0; line-height: 1;
-        }
-        .currency { font-size: 28px; color: #d1d1d6; font-weight: 500; }
+    background: var(--card-bg); 
+    padding: 24px; 
+    border-radius: 24px;
+    box-shadow: 0 15px 35px var(--card-shadow); 
+    margin-bottom: 25px; 
+    border: 1px solid var(--border-color);
+}
+
+.calc-top { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    margin-bottom: 10px; 
+}
+
+.input-container { flex: 1; }
+
+.input-label { 
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; 
+    color: #8A9AB0; 
+    font-weight: 700; 
+    margin-bottom: 12px; 
+    display: block; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+}
+
+.input-wrapper { 
+    display: flex; 
+    align-items: baseline; 
+    justify-content: center;
+    gap: 8px;
+    padding: 20px 0;
+    border-bottom: 2px solid #E8EDF2;
+}
+
+input#sumInput { 
+    border: none; 
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 48px; 
+    font-weight: 300; 
+    width: auto;
+    max-width: 200px;
+    outline: none; 
+    color: #2C364C;
+    background: transparent; 
+    margin: 0; 
+    padding: 0; 
+    line-height: 1;
+    text-align: center;
+}
+
+.currency { 
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 42px; 
+    color: #C5CDD8; 
+    font-weight: 300; 
+}
+
+.dark-mode input#sumInput {
+    color: #f1f5f9;
+}
+
+.dark-mode .currency {
+    color: #475569;
+}
+
+.dark-mode .input-wrapper {
+    border-bottom-color: #334155;
+}
 
         .usage-bar-container { margin-bottom: 20px; }
         .usage-label { font-size: 10px; color: #8e8e93; display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: bold; }
         .usage-track { height: 4px; background: #eee; border-radius: 2px; overflow: hidden; }
         #usageFill { height: 100%; width: 0%; background: var(--accent-green); transition: width 0.3s; }
 
-        .fee-selector { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--item-border); }
-        .fee-label { font-size: 11px; color: #8e8e93; font-weight: bold; margin-bottom: 8px; display: block; text-transform: uppercase; }
+        .fee-selector { 
+    margin-bottom: 20px; 
+    padding-bottom: 15px; 
+    border-bottom: 1px solid var(--item-border); 
+}
+
+.fee-label { 
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; 
+    color: #8A9AB0; 
+    font-weight: 700; 
+    margin-bottom: 10px; 
+    display: block; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+}
         .fee-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
         .fee-btn {
-            padding: 6px 10px; border-radius: 8px; border: 1px solid #e1e8ed; background: var(--card-bg);
-            font-size: 11px; font-weight: 600; color: #5d7185; cursor: pointer; transition: all 0.2s;
-        }
-        .fee-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
+    padding: 8px 12px; 
+    border-radius: 10px; 
+    border: 1px solid #E8EDF2; 
+    background: var(--card-bg);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; 
+    font-weight: 600; 
+    color: #5d7185; 
+    cursor: pointer; 
+    transition: all 0.2s;
+}
+
+.fee-btn.active { 
+    background: #2C364C; 
+    color: white; 
+    border-color: #2C364C; 
+}
+
+.dark-mode .fee-btn {
+    border-color: #334155;
+}
+
+.dark-mode .fee-btn.active {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
 
         .chart-mini {
             width: 60px; height: 60px; border-radius: 18px; 
@@ -1258,116 +1469,117 @@
         </div>
     </div>
 
-    <div id="screen-app" class="screen">
-        <div class="header">
-            <h1>Как Вложить и Наслаждаться?</h1>
-            <p id="dynamicSubtitle" style="font-size: 13px; color: #666;">Простая система 50/50: Денежный Поток и Рост.</p>
+   <div id="screen-app" class="screen">
+    <!-- NEW: Terminal Header -->
+    <div class="terminal-header-v2">
+        <div class="terminal-title-main">Terminal</div>
+        <div class="terminal-subtitle">Madame Solomi'na • Private Strategy</div>
+    </div>
+
+    <div class="calc-box" id="calcSection">
+        <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
+            <span class="input-label">Сумма к размещению</span>
+            <div class="input-wrapper">
+                <input type="number" id="sumInput" value="0" oninput="draw()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
+                <span class="currency">₽</span>
+            </div>
+        </div>
+        
+        <div class="usage-bar-container" style="margin-top: 20px;">
+            <div class="usage-label">
+                <span>ЗАДЕЙСТВОВАНО СРЕДСТВ</span>
+                <span id="usageLabelText">0 ₽</span>
+            </div>
+            <div class="usage-track">
+                <div id="usageFill"></div>
+            </div>
         </div>
 
-        <div class="calc-box" id="calcSection">
-            <div class="calc-top">
-                <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
-                    <span class="input-label">ВВЕДИТЕ СУММУ</span>
-                    <div class="input-wrapper">
-                        <input type="number" id="sumInput" value="0" oninput="draw()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
-                        <span class="currency">₽</span>
-                    </div>
+        <div class="fee-selector" style="margin-top: 20px;">
+            <span class="fee-label">Тариф комиссии</span>
+            <div class="fee-buttons" id="feeGroup">
+                <button class="fee-btn" onclick="setFee(0.0001, this)">0.01%</button>
+                <button class="fee-btn" onclick="setFee(0.0003, this)">0.03%</button>
+                <button class="fee-btn active" onclick="setFee(0.0005, this)">0.05% — Премиум</button>
+                <button class="fee-btn" onclick="setFee(0.001, this)">0.1%</button>
+                <button class="fee-btn" onclick="setFee(0.003, this)">0.3%</button>
+                <button class="fee-btn" onclick="setFee(0.004, this)">0.4%</button>
+                <button class="fee-btn" onclick="setFee(0.005, this)">0.5%</button>
+            </div>
+        </div>
+
+        <div class="ratio-control">
+            <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8A9AB0; text-transform: uppercase; letter-spacing: 0.5px;">
+                <span>Облигации <span id="labelBondsPct">50</span>%</span>
+                <span>Акции <span id="labelStocksPct">50</span>%</span>
+            </div>
+            <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
+            <div class="slider-hint-wrapper">
+                <span class="slider-hint">Выберите готовую стратегию или настройте вручную</span>
+                <div class="preset-dropdown-btn" id="presetDropdownBtn" onclick="togglePresetDropdown()">
+                    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </div>
-                <div id="mainChart" class="chart-mini" data-pct="50/50" onclick="resetRatio()"></div>
             </div>
             
-            <div class="usage-bar-container">
-                <div class="usage-label">
-                    <span>ЗАДЕЙСТВОВАНО СРЕДСТВ</span>
-                    <span id="usageLabelText">0 ₽</span>
-                </div>
-                <div class="usage-track">
-                    <div id="usageFill"></div>
-                </div>
-            </div>
-
-            <div class="fee-selector">
-                <span class="fee-label">Комиссия брокера</span>
-                <div class="fee-buttons" id="feeGroup">
-                    <button class="fee-btn" onclick="setFee(0.0001, this)">0.01%</button>
-                    <button class="fee-btn active" onclick="setFee(0.0003, this)">0.03%</button>
-                    <button class="fee-btn" onclick="setFee(0.0005, this)">0.05%</button>
-                    <button class="fee-btn" onclick="setFee(0.001, this)">0.1%</button>
-                    <button class="fee-btn" onclick="setFee(0.003, this)">0.3%</button>
-                    <button class="fee-btn" onclick="setFee(0.004, this)">0.4%</button>
-                    <button class="fee-btn" onclick="setFee(0.005, this)">0.5%</button>
-                </div>
-            </div>
-
-            <div class="ratio-control">
-                <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8e8e93; text-transform: uppercase;">
-                    <span>Облигации <span id="labelBondsPct">50</span>%</span>
-                    <span>Акции <span id="labelStocksPct">50</span>%</span>
-                </div>
-                <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
-                <div class="slider-hint-wrapper">
-                    <span class="slider-hint">Выберите готовую стратегию или настройте вручную</span>
-                    <div class="preset-dropdown-btn" id="presetDropdownBtn" onclick="togglePresetDropdown()">
-                        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </div>
-                </div>
-                
-                <div class="preset-options" id="presetOptions">
-                    <div class="preset-btn-modern" onclick="setPresetRatio(80, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">🛡️</div>
-                            <div>
-                                <div class="preset-title">Консервативная</div>
-                                <div class="preset-subtitle">Максимальная защита капитала</div>
-                            </div>
+            <div class="preset-options" id="presetOptions">
+                <div class="preset-btn-modern" onclick="setPresetRatio(80, this)">
+                    <div class="preset-left">
+                        <div class="preset-icon">🛡️</div>
+                        <div>
+                            <div class="preset-title">Консервативная</div>
+                            <div class="preset-subtitle">Максимальная защита капитала</div>
                         </div>
-                        <div class="preset-right">80/20</div>
                     </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(60, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">⚖️</div>
-                            <div>
-                                <div class="preset-title">Сбалансированная</div>
-                                <div class="preset-subtitle">Стабильный доход + рост</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">60/40</div>
-                    </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(40, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">📈</div>
-                            <div>
-                                <div class="preset-title">Умеренная</div>
-                                <div class="preset-subtitle">Баланс надежности и роста</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">40/60</div>
-                    </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(20, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">🚀</div>
-                            <div>
-                                <div class="preset-title">Агрессивная</div>
-                                <div class="preset-subtitle">Максимальный потенциал роста</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">20/80</div>
-                    </div>
-                    <div class="preset-footer-hint">Пример: 60/40 означает 60% Облигаций и 40% Акций</div>
+                    <div class="preset-right">80/20</div>
                 </div>
+                <div class="preset-btn-modern" onclick="setPresetRatio(60, this)">
+                    <div class="preset-left">
+                        <div class="preset-icon">⚖️</div>
+                        <div>
+                            <div class="preset-title">Сбалансированная</div>
+                            <div class="preset-subtitle">Стабильный доход + рост</div>
+                        </div>
+                    </div>
+                    <div class="preset-right">60/40</div>
+                </div>
+                <div class="preset-btn-modern" onclick="setPresetRatio(40, this)">
+                    <div class="preset-left">
+                        <div class="preset-icon">📈</div>
+                        <div>
+                            <div class="preset-title">Умеренная</div>
+                            <div class="preset-subtitle">Баланс надежности и роста</div>
+                        </div>
+                    </div>
+                    <div class="preset-right">40/60</div>
+                </div>
+                <div class="preset-btn-modern" onclick="setPresetRatio(20, this)">
+                    <div class="preset-left">
+                        <div class="preset-icon">🚀</div>
+                        <div>
+                            <div class="preset-title">Агрессивная</div>
+                            <div class="preset-subtitle">Максимальный потенциал роста</div>
+                        </div>
+                    </div>
+                    <div class="preset-right">20/80</div>
+                </div>
+                <div class="preset-footer-hint">Пример: 60/40 означает 60% Облигаций и 40% Акций</div>
             </div>
         </div>
+    </div>
 
-        <button class="btn-graphite" style="margin-bottom: 25px;" onclick="calculateAndShowPortfolio()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M7.5 5.6L10 7 8.6 4.5 10 2 7.5 3.4 5 2 6.4 4.5 5 7zM19.5 15.4L22 14l-2.5-1.4L21 10l-2.5 1.4L16 10l1.4 2.6L16 14l2.5 1.4zM22 2l-2.5 1.4L21 6l-1.5-2.6L16 2l1.4 2.5L16 7l2.5-1.4L21 7 19.5 4.6z M2 22l6-6-1.5-1.5-6 6V22h1.5z m11-11l-2.5-2.5-6.5 6.5 2.5 2.5 6.5-6.5z"/>
-            </svg>
-            Сформировать Портфель
+    <!-- Отступ для sticky кнопки -->
+    <div style="height: 120px;"></div>
+
+    <!-- NEW: Sticky Bottom Panel -->
+    <div class="bottom-sticky-panel" id="stickyPanel">
+        <button class="btn-graphite" onclick="calculateAndShowPortfolio()">
+            Сформировать портфель
         </button>
-        <p class="start-expl">
-            При нажатии на эту кнопку Вам будет предложен список из 8 Облигаций Федерального Займа и 12 Акций Публичных Компаний к Покупке
+        <p class="sticky-hint">
+            Вам будет предложен список из 8 ОФЗ и 12 Акций к покупке
         </p>
     </div>
+</div>
 
     <div id="screen-portfolio" class="screen">
         <div class="header"><h1>Портфель</h1></div>
@@ -1920,38 +2132,49 @@
         setInterval(updateMarketStatus, 60000);
         
         function showScreen(screenId) {
-            if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
-                lastNavScreen = screenId;
-                collapseSearch(false);
-            }
-            
-            if (currentScreen === 'screen-home' && !isFirstVisit) {
-                 const startBlock = document.getElementById('start-calculation-block');
-                 if (startBlock) startBlock.style.display = 'none';
-            }
+    if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
+        lastNavScreen = screenId;
+        collapseSearch(false);
+    }
+    
+    if (currentScreen === 'screen-home' && !isFirstVisit) {
+         const startBlock = document.getElementById('start-calculation-block');
+         if (startBlock) startBlock.style.display = 'none';
+    }
 
-            if (currentScreen === 'screen-assets' && screenId !== 'screen-assets') {
-                const inc = document.getElementById('calc-income-wrapper');
-                if(inc) inc.style.display = 'none';
-            }
-            currentScreen = screenId;
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('nav-search').classList.remove('active');
-            
-            const navId = `nav-${screenId.split('-')[1]}`;
-            const navBtn = document.getElementById(navId);
-            if (navBtn) navBtn.classList.add('active');
-            
-            if(screenId === 'screen-interesting' || screenId === 'screen-company') {
-                document.getElementById('nav-search').classList.add('active');
-            }
-            
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    if (currentScreen === 'screen-assets' && screenId !== 'screen-assets') {
+        const inc = document.getElementById('calc-income-wrapper');
+        if(inc) inc.style.display = 'none';
+    }
+    
+    currentScreen = screenId;
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.getElementById('nav-search').classList.remove('active');
+    
+    const navId = `nav-${screenId.split('-')[1]}`;
+    const navBtn = document.getElementById(navId);
+    if (navBtn) navBtn.classList.add('active');
+    
+    if(screenId === 'screen-interesting' || screenId === 'screen-company') {
+        document.getElementById('nav-search').classList.add('active');
+    }
+    
+    // NEW: Управление sticky панелью
+    const stickyPanel = document.getElementById('stickyPanel');
+    if (stickyPanel) {
+        if (screenId === 'screen-app') {
+            stickyPanel.style.display = 'block';
+        } else {
+            stickyPanel.style.display = 'none';
         }
+    }
+    
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+}
         
         function expandSearch() {
             const backBtn = document.querySelector('#expandedNav .nav-back-island');
@@ -2126,9 +2349,11 @@
         }
 
         function setFee(val, btn) {
-            brokerFee = val;
-            document.querySelectorAll('.fee-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); draw();
-        }
+    brokerFee = val;
+    document.querySelectorAll('.fee-btn').forEach(b => b.classList.remove('active')); 
+    btn.classList.add('active'); 
+    draw();
+}
 
         function setTax(val, btn) {
             currentTax = val;
@@ -3234,6 +3459,14 @@ function openCompanyFromTable(event, ticker, companyName) {
             // Отключаем свайп вниз для закрытия приложения
             window.Telegram.WebApp.disableVerticalSwipes();
         }
+
+        // NEW: Скрыть sticky панель при начальной загрузке если не на screen-app
+        setTimeout(() => {
+            const stickyPanel = document.getElementById('stickyPanel');
+            if (stickyPanel && currentScreen !== 'screen-app') {
+                stickyPanel.style.display = 'none';
+            }
+        }, 100);
 
        
         
