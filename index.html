@@ -4662,20 +4662,19 @@ function openCompanyFromTable(event, ticker, companyName) {
             }
         }, 100);
 
-        // NEW: Обработчик кнопки "Открыть терминал"
-        document.addEventListener('DOMContentLoaded', function() {
-            var btn = document.getElementById('openTerminalBtn');
-            if (btn) {
-                btn.onclick = function() {
-                    localStorage.setItem('user_visited', 'true');
-                    isFirstVisit = false;
-                    document.getElementById('navWrapper').style.display = 'flex';
-                    var sticky = document.getElementById('stickyPanel');
-                    if (sticky) sticky.style.display = 'block';
-                    showScreen('screen-app');
-                };
-            }
-        });
+        / NEW: Обработчик кнопки "Открыть терминал"
+        var openBtn = document.getElementById('openTerminalBtn');
+        if (openBtn) {
+            openBtn.onclick = function(e) {
+                e.stopPropagation();
+                localStorage.setItem('user_visited', 'true');
+                isFirstVisit = false;
+                document.getElementById('navWrapper').style.display = 'flex';
+                var sticky = document.getElementById('stickyPanel');
+                if (sticky) sticky.style.display = 'block';
+                showScreen('screen-app');
+            };
+        }
 
        
         
