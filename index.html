@@ -2144,7 +2144,7 @@ input#sumInput.size-xsmall {
             <span class="welcome-subtitle">ЧАСТНЫЙ ИНВЕСТИЦИОННЫЙ<br>ТЕРМИНАЛ</span>
         </div>
         
-        <button class="btn-welcome" onclick="localStorage.setItem('user_visited', 'true'); document.getElementById('navWrapper').style.display = 'flex'; document.getElementById('stickyPanel').style.display = 'block'; showScreen('screen-app');">
+        <button class="btn-welcome" id="openTerminalBtn">
     ОТКРЫТЬ ТЕРМИНАЛ
 </button>
             <div class="welcome-secure-text">
@@ -4660,6 +4660,21 @@ function openCompanyFromTable(event, ticker, companyName) {
                 stickyPanel.style.display = 'none';
             }
         }, 100);
+
+        // NEW: Обработчик кнопки "Открыть терминал"
+        document.addEventListener('DOMContentLoaded', function() {
+            var btn = document.getElementById('openTerminalBtn');
+            if (btn) {
+                btn.onclick = function() {
+                    localStorage.setItem('user_visited', 'true');
+                    isFirstVisit = false;
+                    document.getElementById('navWrapper').style.display = 'flex';
+                    var sticky = document.getElementById('stickyPanel');
+                    if (sticky) sticky.style.display = 'block';
+                    showScreen('screen-app');
+                };
+            }
+        });
 
        
         
