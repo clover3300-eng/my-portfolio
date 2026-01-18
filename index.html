@@ -2123,6 +2123,20 @@ input#sumInput.size-xsmall {
 
 .asset-item.is-expanded {
     background: rgba(52, 152, 219, 0.05);
+
+    /* Стили для заглушки (placeholder) */
+#sumInput::placeholder {
+    color: #8A9AB0; /* Цвет как у ваших подписей */
+    opacity: 0.5;   /* Степень прозрачности */
+    font-size: 24px; /* Размер шрифта чуть меньше основного для красоты */
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 1px;
+}
+
+/* Если в теме есть темный режим, добавьте и для него */
+.dark-mode #sumInput::placeholder {
+    color: #475569;
+}
 }
 
         
@@ -2170,14 +2184,15 @@ input#sumInput.size-xsmall {
         <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
             <span class="input-label">Сумма к размещению</span>
             <div class="input-wrapper">
-                <input type="text" id="sumInput" value="0" 
-                       oninput="formatSumInput(this)" 
-                       onfocus="onSumInputFocus()" 
-                       onblur="onSumInputBlur()"
-                       onclick="event.stopPropagation(); this.select()" 
-                       onkeyup="if(event.keyCode===13) this.blur()" 
-                       inputmode="numeric" 
-                       enterkeyhint="done">
+                <input type="text" id="sumInput" 
+       placeholder="ВВЕДИТЕ СУММУ..." 
+       oninput="formatSumInput(this)" 
+       onfocus="onSumInputFocus(this)" 
+       onblur="onSumInputBlur(this)"
+       onclick="event.stopPropagation(); this.select()" 
+       onkeyup="if(event.keyCode===13) this.blur()" 
+       inputmode="numeric" 
+       enterkeyhint="done">
                 <span class="currency">₽</span>
             </div>
         </div>
