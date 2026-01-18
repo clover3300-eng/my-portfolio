@@ -3438,7 +3438,17 @@ function getSumInputValue() {
 
 // NEW: Скрытие меню при фокусе на вводе
 function onSumInputFocus() {
+    const input = document.getElementById('sumInput');
     document.body.classList.add('input-focused');
+    
+    // Если в поле "0" или любая старая сумма, очищаем её при нажатии
+    // Чтобы пользователь сразу видел placeholder или пустую строку
+    if (input.value === "0" || input.value === "") {
+        input.value = ""; 
+    }
+    
+    // Если вы хотите, чтобы при клике всегда всё удалялось:
+    // input.value = ""; 
 }
 
 // NEW: Показ меню при потере фокуса
