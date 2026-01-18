@@ -561,15 +561,32 @@ h1 {
     align-items: baseline; 
     justify-content: center;
     gap: 8px;
-    padding: 20px 0;
-    border-bottom: 2px solid #E8EDF2;
+    padding: 40px 0 20px 0;
+    position: relative;
+}
+
+.input-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: rgba(44, 54, 76, 0.2);
+    transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within::after {
+    width: 80%;
+    background: rgba(44, 54, 76, 0.4);
 }
 
 input#sumInput { 
     border: none; 
     font-family: 'JetBrains Mono', monospace;
-    font-size: 48px; 
-    font-weight: 300; 
+    font-size: 56px; 
+    font-weight: 500; 
     width: 100%;
     max-width: 100%;
     outline: none; 
@@ -577,32 +594,44 @@ input#sumInput {
     background: transparent; 
     margin: 0; 
     padding: 0; 
-    line-height: 1;
+    line-height: 1.2;
     text-align: center;
     transition: font-size 0.15s ease;
+    letter-spacing: -0.02em;
+}
+
+/* Убираем стрелочки для числового поля */
+input#sumInput::-webkit-outer-spin-button,
+input#sumInput::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input#sumInput[type=number] {
+    -moz-appearance: textfield;
 }
 
 input#sumInput.size-large {
-    font-size: 48px;
+    font-size: 56px;
 }
 
 input#sumInput.size-medium {
-    font-size: 36px;
+    font-size: 42px;
 }
 
 input#sumInput.size-small {
-    font-size: 28px;
+    font-size: 32px;
 }
 
 input#sumInput.size-xsmall {
-    font-size: 22px;
+    font-size: 24px;
 }
-
 .currency { 
     font-family: 'JetBrains Mono', monospace;
-    font-size: 42px; 
-    color: #C5CDD8; 
-    font-weight: 300; 
+    font-size: 48px; 
+    color: #94A3B8; 
+    font-weight: 400;
+    opacity: 0.6;
 }
 
 .dark-mode input#sumInput {
@@ -2126,13 +2155,13 @@ input#sumInput.size-xsmall {
 
   /* Единый стиль для заглушки */
 #sumInput::placeholder {
-    color: #8A9AB0;
-    opacity: 0.5;
-    /* Используем 0.8em или 20px, чтобы текст точно влез в поле */
-    font-size: 0.8em; 
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 1px;
-    text-transform: uppercase; /* Делает текст заглавными буквами */
+    color: #CBD5E1;
+    opacity: 1;
+    font-size: 1.5rem; 
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    text-transform: none;
 }
 
 /* Цвет для темной темы (если она у вас переключается классом .dark-mode) */
@@ -2187,7 +2216,7 @@ input#sumInput.size-xsmall {
             <span class="input-label">Сумма к размещению</span>
             <div class="input-wrapper">
                 <input type="text" id="sumInput" 
-       placeholder="ВВЕДИТЕ СУММУ..." 
+       placeholder="Введите сумму..." 
        oninput="formatSumInput(this)" 
        onfocus="onSumInputFocus(this)" 
        onblur="onSumInputBlur(this)"
