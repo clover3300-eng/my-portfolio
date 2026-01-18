@@ -268,8 +268,8 @@
         /* ========== NEW: Terminal Header V2 для 2й вкладки ========== */
 .terminal-header-v2 {
     background: linear-gradient(90deg, #F1F6FB 0%, #F9FAFC 100%);
-    padding: 30px 20px 25px;
-    margin: -16px -16px 15px -16px;
+    padding: 30px 20px 15px; /* Уменьшили нижний отступ */
+    margin: -16px -16px 10px -16px; /* Уменьшили нижний margin */
     text-align: left;
 }
 
@@ -561,7 +561,7 @@ h1 {
     align-items: baseline; 
     justify-content: center;
     gap: 8px;
-    padding: 20px 0 20px 0;
+    padding: 10px 0 20px 0; /* Уменьшили верхний отступ */
     position: relative;
 }
 
@@ -2166,10 +2166,10 @@ input#sumInput.size-xsmall {
 #sumInput::placeholder {
     color: #CBD5E1;
     opacity: 1;
-    font-size: 1.125rem; /* 18px - аккуратный размер */
+    font-size: 0.875rem; /* 14px - компактный размер */
     font-family: 'JetBrains Mono', monospace;
     font-weight: 300;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     text-transform: none;
 }
 
@@ -2239,8 +2239,8 @@ input#sumInput.size-xsmall {
         
        
         <!-- Тариф комиссии - Dropdown -->
-        <div class="fee-selector">
-            <span class="fee-label">Тариф комиссии</span>
+    <div class="fee-selector" style="margin-top: 30px; margin-bottom: 30px;">
+        <span class="fee-label">Тариф комиссии</span>
             <div class="fee-dropdown-container">
                 <div class="fee-dropdown-trigger" id="feeDropdownTrigger" onclick="toggleFeeDropdown()">
                     <span class="fee-selected-text placeholder" id="feeSelectedText">Выберите тариф</span>
