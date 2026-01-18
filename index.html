@@ -527,13 +527,13 @@ h1 {
     font-weight: 400;
 }
         
-        .calc-box {
-    background: var(--card-bg); 
-    padding: 24px; 
-    border-radius: 24px;
-    box-shadow: 0 15px 35px var(--card-shadow); 
+       .calc-box {
+    background: transparent; 
+    padding: 0; 
+    border-radius: 0;
+    box-shadow: none; 
     margin-bottom: 25px; 
-    border: 1px solid var(--border-color);
+    border: none;
 }
 
 .calc-top { 
@@ -653,6 +653,15 @@ input#sumInput.size-xsmall {
 
 
         /* ========== NEW: Dropdown для тарифа комиссии ========== */
+        /* Белая карточка начинается с тарифа */
+.calc-box-white-section {
+    background: var(--card-bg);
+    padding: 24px;
+    border-radius: 24px;
+    box-shadow: 0 15px 35px var(--card-shadow);
+    border: 1px solid var(--border-color);
+    margin-top: 25px;
+}
 .fee-selector {
     margin-bottom: 20px;
 }
@@ -2228,8 +2237,10 @@ input#sumInput.size-xsmall {
             </div>
         </div>
         
+        <!-- Белая карточка начинается здесь -->
+    <div class="calc-box-white-section">
         <!-- Тариф комиссии - Dropdown -->
-        <div class="fee-selector" style="margin-top: 25px;">
+        <div class="fee-selector">
             <span class="fee-label">Тариф комиссии</span>
             <div class="fee-dropdown-container">
                 <div class="fee-dropdown-trigger" id="feeDropdownTrigger" onclick="toggleFeeDropdown()">
@@ -2474,6 +2485,7 @@ input#sumInput.size-xsmall {
     <span id="labelBondsPct" style="display: none;">50</span>
     <span id="labelStocksPct" style="display: none;">50</span>
 </div>
+         </div> <!-- Закрываем calc-box-white-section -->
 
     <!-- Отступ для sticky кнопки -->
     <div style="height: 140px;"></div>
@@ -3269,15 +3281,15 @@ input#sumInput.size-xsmall {
 }
 
         function loadSettings() {
-            const saved = localStorage.getItem('invest_settings');
-            if (saved) {
-                const s = JSON.parse(saved);
-                const sumVal = s.sum || 100000;
-const sumInput = document.getElementById('sumInput');
-if (sumInput) {
-    sumInput.value = sumVal.toLocaleString('ru-RU').replace(/\s/g, '.');
-    adjustSumInputSize(sumInput);
-}
+    const saved = localStorage.getItem('invest_settings');
+    if (saved) {
+        const s = JSON.parse(saved);
+        // НЕ загружаем сумму, оставляем поле пустым для плейсхолдера
+        const sumInput = document.getElementById('sumInput');
+        if (sumInput) {
+            sumInput.value = ''; // Пустое поле = виден плейсхолдер
+            adjustSumInputSize(sumInput);
+        }
                 document.getElementById('ratioSlider').value = s.ratio || 50;
                 brokerFee = parseFloat(s.fee) || 0.0005; 
 currentTax = parseFloat(s.tax) || 0.13;
@@ -3866,13 +3878,12 @@ function resetCustomTo50() {
                     }
                 }
                 
-                distributeMonthlyInvestment();
+                 distributeMonthlyInvestment();
                 updateEchelonTable();
                 renderOfzList();
                 
-                draw();
-                
-                draw();
+                // Не вызываем draw() при первой загрузке, чтобы был виден плейсхолдер
+                // draw() вызовется когда пользователь начнет вводить сумму
             } catch (e) { 
                 console.error("Error in loadData:", e); 
             }
@@ -4435,8 +4446,12 @@ function openCompanyFromTable(event, ticker, companyName) {
         }
 
         function draw() {
-            saveSettings();
-            const inputSum = getSumInputValue();
+    const inputSum = getSumInputValue();
+    
+    // Если сумма = 0 (поле пустое), не сохраняем и не рисуем
+    if (inputSum === 0) return;
+    
+    saveSettings();
             const bondPct = parseInt(document.getElementById('ratioSlider').value);
             const stockPct = 100 - bondPct;
 
