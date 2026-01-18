@@ -735,63 +735,157 @@ input#sumInput.size-xsmall {
     background: rgba(56, 189, 248, 0.05);
 }
 /* ========== END: Кнопка сброса 50/50 ========== */
-        .slider-hint { font-size: 10px; color: #8e8e93; text-align: center; }
-        .preset-dropdown-btn {
-            width: 24px; height: 24px; border-radius: 50%; background: var(--accent-blue);
-            color: white; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: transform 0.3s;
-        }
-        .preset-dropdown-btn.open { transform: rotate(180deg); }
-        .preset-dropdown-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
-        
-        .preset-options {
-            display: none; margin-top: 15px; background: var(--card-bg);
-            border-radius: 16px; padding: 12px; gap: 10px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 8px 20px var(--card-shadow);
-        }
-        .preset-options.show { display: flex; flex-direction: column; }
-        
-        .preset-btn-modern {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 16px; border-radius: 12px; border: 1px solid var(--item-border);
-            background: var(--bg-color); cursor: pointer; 
-            transition: transform 0.1s, border-color 0.2s; /* Removed background transition to avoid flicker */
-        }
-        
-        .preset-btn-modern.selected-preset {
-            border: 2px solid var(--accent-blue);
-            background: transparent !important;
-            box-shadow: none;
-        }
-        .preset-btn-modern.selected-preset .preset-right {
-            color: var(--accent-blue);
-        }
-        
-        /* Updated Hover/Active states to prevent flicker */
-        .preset-btn-modern:hover:not(.selected-preset) {
-            background: var(--accent-blue); border-color: var(--accent-blue);
-        }
-        .preset-btn-modern:hover:not(.selected-preset) .preset-left { color: white; }
-        .preset-btn-modern:hover:not(.selected-preset) .preset-right { color: rgba(255,255,255,0.8); }
-        .preset-btn-modern:hover:not(.selected-preset) .preset-icon { background: rgba(255,255,255,0.2); }
-        
-        /* Active state now only scales, no color change to prevent flash */
-        .preset-btn-modern:active:not(.selected-preset) {
-            transform: scale(0.98);
-            /* No background change here to avoid flickering to blue and back */
-        }
+        /* ========== NEW: Карточки инвестиционных стратегий ========== */
+.strategy-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
 
-        .preset-left { display: flex; align-items: center; gap: 12px; color: var(--text-main); }
-        .preset-icon {
-            width: 36px; height: 36px; border-radius: 10px;
-            background: var(--coupon-blue-bg); display: flex; align-items: center; justify-content: center;
-            font-size: 16px;
-        }
-        .preset-title { font-weight: 700; font-size: 14px; }
-        .preset-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
-        .preset-right { font-size: 18px; font-weight: 800; color: var(--accent-blue); }
-        .preset-footer-hint { font-size: 10px; color: #8e8e93; text-align: center; margin-top: 8px; font-style: italic; }
+.strategy-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: #F8FAFC;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.strategy-card:hover {
+    background: #F1F5F9;
+}
+
+.strategy-card.selected {
+    background: #FFFFFF;
+    border-color: #2C364C;
+    box-shadow: 0 4px 20px rgba(44, 54, 76, 0.12);
+}
+
+.strategy-card-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Круговая диаграмма */
+.strategy-ring {
+    width: 52px;
+    height: 52px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.strategy-ring svg {
+    width: 52px;
+    height: 52px;
+    transform: rotate(-90deg);
+}
+
+.strategy-ring-bg {
+    fill: none;
+    stroke: #E2E8F0;
+    stroke-width: 4;
+}
+
+.strategy-ring-progress {
+    fill: none;
+    stroke: #2C364C;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.4s ease;
+}
+
+.strategy-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.strategy-card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #2C364C;
+    line-height: 1.2;
+}
+
+.strategy-card-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #8A9AB0;
+}
+
+.strategy-card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    text-align: right;
+}
+
+.strategy-percent-row {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.strategy-percent-bonds {
+    color: #2C364C;
+}
+
+.strategy-percent-stocks {
+    color: #A0AEC0;
+}
+
+/* Dark mode */
+.dark-mode .strategy-card {
+    background: #1E293B;
+}
+
+.dark-mode .strategy-card:hover {
+    background: #2D3A4F;
+}
+
+.dark-mode .strategy-card.selected {
+    background: #0F172A;
+    border-color: var(--accent-blue);
+    box-shadow: 0 4px 20px rgba(56, 189, 248, 0.15);
+}
+
+.dark-mode .strategy-ring-bg {
+    stroke: #334155;
+}
+
+.dark-mode .strategy-ring-progress {
+    stroke: var(--accent-blue);
+}
+
+.dark-mode .strategy-card-title {
+    color: #F1F5F9;
+}
+
+.dark-mode .strategy-card-subtitle {
+    color: #64748B;
+}
+
+.dark-mode .strategy-percent-bonds {
+    color: #F1F5F9;
+}
+
+.dark-mode .strategy-percent-stocks {
+    color: #64748B;
+}
+/* ========== END: Карточки инвестиционных стратегий ========== */
+        .slider-hint { font-size: 10px; color: #8e8e93; text-align: center; }
+        
+        
+        
 
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
         .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
@@ -1813,66 +1907,122 @@ input#sumInput.size-xsmall {
         </div>
 
         <!-- Инвестиционная стратегия -->
-        <div class="strategy-section" style="margin-top: 25px;">
-            <span class="fee-label">Инвестиционная стратегия</span>
-            
-            <div class="ratio-control" style="margin-top: 15px;">
-                <div style="display:flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #8A9AB0; text-transform: uppercase; letter-spacing: 0.5px;">
-                    <span>Облигации <span id="labelBondsPct">50</span>%</span>
-                    <span>Акции <span id="labelStocksPct">50</span>%</span>
+<div class="strategy-section" style="margin-top: 25px;">
+    <span class="fee-label">Инвестиционная стратегия</span>
+    
+    <!-- Карточки стратегий -->
+    <div class="strategy-cards-container">
+        <!-- Консервативная 80/20 -->
+        <div class="strategy-card" onclick="selectStrategy(80, this)" data-bonds="80">
+            <div class="strategy-card-left">
+                <div class="strategy-ring">
+                    <svg viewBox="0 0 36 36">
+                        <circle class="strategy-ring-bg" cx="18" cy="18" r="15.5"></circle>
+                        <circle class="strategy-ring-progress" cx="18" cy="18" r="15.5" 
+                                stroke-dasharray="78, 97.4" stroke-dashoffset="0"></circle>
+                    </svg>
                 </div>
-                <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()">
-                
-                <div class="slider-hint-wrapper">
-                    <span class="slider-hint">Выберите готовую стратегию или настройте вручную</span>
-                    <div class="preset-dropdown-btn" id="presetDropdownBtn" onclick="togglePresetDropdown()">
-                        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </div>
+                <div class="strategy-card-info">
+                    <div class="strategy-card-title">Консервативная</div>
+                    <div class="strategy-card-subtitle">Защита и стабильность.</div>
                 </div>
-                
-                <div class="preset-options" id="presetOptions">
-                    <div class="preset-btn-modern" onclick="setPresetRatio(80, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">🛡️</div>
-                            <div>
-                                <div class="preset-title">Консервативная</div>
-                                <div class="preset-subtitle">Максимальная защита капитала</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">80/20</div>
-                    </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(60, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">⚖️</div>
-                            <div>
-                                <div class="preset-title">Сбалансированная</div>
-                                <div class="preset-subtitle">Стабильный доход + рост</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">60/40</div>
-                    </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(40, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">📈</div>
-                            <div>
-                                <div class="preset-title">Умеренная</div>
-                                <div class="preset-subtitle">Баланс надежности и роста</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">40/60</div>
-                    </div>
-                    <div class="preset-btn-modern" onclick="setPresetRatio(20, this)">
-                        <div class="preset-left">
-                            <div class="preset-icon">🚀</div>
-                            <div>
-                                <div class="preset-title">Агрессивная</div>
-                                <div class="preset-subtitle">Максимальный потенциал роста</div>
-                            </div>
-                        </div>
-                        <div class="preset-right">20/80</div>
-                    </div>
-                    <div class="preset-footer-hint">Пример: 60/40 означает 60% Облигаций и 40% Акций</div>
+            </div>
+            <div class="strategy-card-right">
+                <div class="strategy-percent-row strategy-percent-bonds">ОБЛИГАЦИИ 80%</div>
+                <div class="strategy-percent-row strategy-percent-stocks">АКЦИИ 20%</div>
+            </div>
+        </div>
+        
+        <!-- Сбалансированная 60/40 -->
+        <div class="strategy-card" onclick="selectStrategy(60, this)" data-bonds="60">
+            <div class="strategy-card-left">
+                <div class="strategy-ring">
+                    <svg viewBox="0 0 36 36">
+                        <circle class="strategy-ring-bg" cx="18" cy="18" r="15.5"></circle>
+                        <circle class="strategy-ring-progress" cx="18" cy="18" r="15.5" 
+                                stroke-dasharray="58.5, 97.4" stroke-dashoffset="0"></circle>
+                    </svg>
                 </div>
+                <div class="strategy-card-info">
+                    <div class="strategy-card-title">Сбалансированная</div>
+                    <div class="strategy-card-subtitle">Умеренный риск.</div>
+                </div>
+            </div>
+            <div class="strategy-card-right">
+                <div class="strategy-percent-row strategy-percent-bonds">ОБЛИГАЦИИ 60%</div>
+                <div class="strategy-percent-row strategy-percent-stocks">АКЦИИ 40%</div>
+            </div>
+        </div>
+        
+        <!-- Гармония 50/50 (выбрана по умолчанию) -->
+        <div class="strategy-card selected" onclick="selectStrategy(50, this)" data-bonds="50">
+            <div class="strategy-card-left">
+                <div class="strategy-ring">
+                    <svg viewBox="0 0 36 36">
+                        <circle class="strategy-ring-bg" cx="18" cy="18" r="15.5"></circle>
+                        <circle class="strategy-ring-progress" cx="18" cy="18" r="15.5" 
+                                stroke-dasharray="48.7, 97.4" stroke-dashoffset="0"></circle>
+                    </svg>
+                </div>
+                <div class="strategy-card-info">
+                    <div class="strategy-card-title">Гармония</div>
+                    <div class="strategy-card-subtitle">Классический баланс.</div>
+                </div>
+            </div>
+            <div class="strategy-card-right">
+                <div class="strategy-percent-row strategy-percent-bonds">ОБЛИГАЦИИ 50%</div>
+                <div class="strategy-percent-row strategy-percent-stocks">АКЦИИ 50%</div>
+            </div>
+        </div>
+        
+        <!-- Умеренная 40/60 -->
+        <div class="strategy-card" onclick="selectStrategy(40, this)" data-bonds="40">
+            <div class="strategy-card-left">
+                <div class="strategy-ring">
+                    <svg viewBox="0 0 36 36">
+                        <circle class="strategy-ring-bg" cx="18" cy="18" r="15.5"></circle>
+                        <circle class="strategy-ring-progress" cx="18" cy="18" r="15.5" 
+                                stroke-dasharray="39, 97.4" stroke-dashoffset="0"></circle>
+                    </svg>
+                </div>
+                <div class="strategy-card-info">
+                    <div class="strategy-card-title">Умеренная</div>
+                    <div class="strategy-card-subtitle">Баланс роста и дохода.</div>
+                </div>
+            </div>
+            <div class="strategy-card-right">
+                <div class="strategy-percent-row strategy-percent-bonds">ОБЛИГАЦИИ 40%</div>
+                <div class="strategy-percent-row strategy-percent-stocks">АКЦИИ 60%</div>
+            </div>
+        </div>
+        
+        <!-- Агрессивная 20/80 -->
+        <div class="strategy-card" onclick="selectStrategy(20, this)" data-bonds="20">
+            <div class="strategy-card-left">
+                <div class="strategy-ring">
+                    <svg viewBox="0 0 36 36">
+                        <circle class="strategy-ring-bg" cx="18" cy="18" r="15.5"></circle>
+                        <circle class="strategy-ring-progress" cx="18" cy="18" r="15.5" 
+                                stroke-dasharray="19.5, 97.4" stroke-dashoffset="0"></circle>
+                    </svg>
+                </div>
+                <div class="strategy-card-info">
+                    <div class="strategy-card-title">Агрессивная</div>
+                    <div class="strategy-card-subtitle">Максимальный рост.</div>
+                </div>
+            </div>
+            <div class="strategy-card-right">
+                <div class="strategy-percent-row strategy-percent-bonds">ОБЛИГАЦИИ 20%</div>
+                <div class="strategy-percent-row strategy-percent-stocks">АКЦИИ 80%</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Скрытый ползунок для совместимости -->
+    <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()" style="display: none;">
+    <span id="labelBondsPct" style="display: none;">50</span>
+    <span id="labelStocksPct" style="display: none;">50</span>
+</div>
                 
                 <!-- Кнопка сброса -->
                 <button class="reset-ratio-btn" onclick="resetRatioTo50()">
@@ -2535,22 +2685,6 @@ input#sumInput.size-xsmall {
             }
         }
 
-        function togglePresetDropdown() {
-            const btn = document.getElementById('presetDropdownBtn');
-            const options = document.getElementById('presetOptions');
-            btn.classList.toggle('open');
-            options.classList.toggle('show');
-        }
-
-        function setPresetRatio(bondPct, btnElement) {
-            document.getElementById('ratioSlider').value = bondPct;
-            
-            document.querySelectorAll('.preset-btn-modern').forEach(b => b.classList.remove('selected-preset'));
-            if(btnElement) btnElement.classList.add('selected-preset');
-            
-            draw();
-        }
-
         function calculateAndShowPortfolio() {
             draw();
             isPortfolioCalculated = true;
@@ -2664,6 +2798,11 @@ if (sumInput) {
                 document.getElementById('ratioSlider').value = s.ratio || 50;
                 brokerFee = parseFloat(s.fee) || 0.0005; 
 currentTax = parseFloat(s.tax) || 0.13;
+                // Восстановление выбранной стратегии
+const savedRatio = parseInt(s.ratio) || 50;
+setTimeout(() => {
+    updateStrategyCardSelection(savedRatio);
+}, 100);
 
 // Восстановление выбранного тарифа в dropdown
 const feeMap = {
@@ -2859,14 +2998,8 @@ function onSumInputBlur() {
 function resetRatioTo50() {
     document.getElementById('ratioSlider').value = 50;
     
-    // Убираем выделение с пресетов
-    document.querySelectorAll('.preset-btn-modern').forEach(b => b.classList.remove('selected-preset'));
-    
-    // Закрываем dropdown пресетов если открыт
-    const presetOptions = document.getElementById('presetOptions');
-    const presetBtn = document.getElementById('presetDropdownBtn');
-    if (presetOptions) presetOptions.classList.remove('show');
-    if (presetBtn) presetBtn.classList.remove('open');
+    // Обновляем выделение карточек
+    updateStrategyCardSelection(50);
     
     draw();
     
@@ -2874,6 +3007,42 @@ function resetRatioTo50() {
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
+}
+
+    // NEW: Выбор стратегии по карточке
+function selectStrategy(bondPercent, cardElement) {
+    // Обновляем скрытый ползунок
+    document.getElementById('ratioSlider').value = bondPercent;
+    
+    // Убираем выделение со всех карточек
+    document.querySelectorAll('.strategy-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Выделяем выбранную карточку
+    if (cardElement) {
+        cardElement.classList.add('selected');
+    }
+    
+    // Перерисовываем
+    draw();
+    
+    // Haptic feedback
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+    }
+}
+
+// NEW: Обновление выделения карточки при изменении ползунка
+function updateStrategyCardSelection(bondPercent) {
+    document.querySelectorAll('.strategy-card').forEach(card => {
+        const cardBonds = parseInt(card.getAttribute('data-bonds'));
+        if (cardBonds === bondPercent) {
+            card.classList.add('selected');
+        } else {
+            card.classList.remove('selected');
+        }
+    });
 }
         function toggleRow(el) {
     el.classList.toggle('is-expanded');
@@ -3681,6 +3850,9 @@ function openCompanyFromTable(event, ticker, companyName) {
             const inputSum = getSumInputValue();
             const bondPct = parseInt(document.getElementById('ratioSlider').value);
             const stockPct = 100 - bondPct;
+
+            // Обновляем выделение карточек стратегий
+            updateStrategyCardSelection(bondPct);
             
             // Check Presets (for visual matching, but class removal handled by setPresetRatio)
             // Just ensure consistent visual state if slider dragged manually
