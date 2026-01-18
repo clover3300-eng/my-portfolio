@@ -557,28 +557,27 @@ h1 {
 }
 
 .input-wrapper { 
-    display: flex; 
+    display: inline-flex; 
     align-items: baseline; 
     justify-content: center;
     gap: 8px;
-    padding: 10px 0 20px 0; /* Уменьшили верхний отступ */
+    padding: 10px 20px 8px 20px;
     position: relative;
+    margin: 0 auto;
 }
 
 .input-wrapper::after {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
+    left: 0;
+    right: 0;
     height: 1px;
     background: rgba(44, 54, 76, 0.2);
     transition: all 0.3s ease;
 }
 
 .input-wrapper:focus-within::after {
-    width: 80%;
     background: rgba(44, 54, 76, 0.4);
 }
 
@@ -587,7 +586,8 @@ input#sumInput {
     font-family: 'JetBrains Mono', monospace;
     font-size: 42px; 
     font-weight: 500; 
-    width: 100%;
+    width: auto;
+    min-width: 120px;
     max-width: 100%;
     outline: none; 
     color: #2C364C;
@@ -595,7 +595,7 @@ input#sumInput {
     margin: 0; 
     padding: 0; 
     line-height: 1.2;
-    text-align: center;
+    text-align: right;
     transition: font-size 0.15s ease;
     letter-spacing: -0.02em;
 }
@@ -633,6 +633,7 @@ input#sumInput.size-xsmall {
     color: #94A3B8; 
     font-weight: 400;
     opacity: 0.6;
+    flex-shrink: 0;
 }
 
 .dark-mode input#sumInput {
@@ -2223,18 +2224,19 @@ input#sumInput.size-xsmall {
     <div class="calc-box" id="calcSection">
         <!-- Ввод суммы -->
         <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
-            
-            <div class="input-wrapper">
-                <input type="text" id="sumInput" 
-       placeholder="Введите сумму..." 
-       oninput="formatSumInput(this)" 
-       onfocus="onSumInputFocus(this)" 
-       onblur="onSumInputBlur(this)"
-       onclick="event.stopPropagation(); this.select()" 
-       onkeyup="if(event.keyCode===13) this.blur()" 
-       inputmode="numeric" 
-       enterkeyhint="done">
-                <span class="currency">₽</span>
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <div class="input-wrapper">
+                    <input type="text" id="sumInput" 
+           placeholder="Сумма..." 
+           oninput="formatSumInput(this)" 
+           onfocus="onSumInputFocus(this)" 
+           onblur="onSumInputBlur(this)"
+           onclick="event.stopPropagation(); this.select()" 
+           onkeyup="if(event.keyCode===13) this.blur()" 
+           inputmode="numeric" 
+           enterkeyhint="done">
+                    <span class="currency">₽</span>
+                </div>
             </div>
         </div>
         
