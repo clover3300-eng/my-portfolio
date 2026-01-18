@@ -2124,20 +2124,22 @@ input#sumInput.size-xsmall {
 .asset-item.is-expanded {
     background: rgba(52, 152, 219, 0.05);
 
-    /* Стили для заглушки (placeholder) */
+  /* Единый стиль для заглушки */
 #sumInput::placeholder {
-    color: #8A9AB0; /* Цвет как у ваших подписей */
-    opacity: 0.5;   /* Степень прозрачности */
-    font-size: 24px; /* Размер шрифта чуть меньше основного для красоты */
+    color: #8A9AB0;
+    opacity: 0.5;
+    /* Используем 0.8em или 20px, чтобы текст точно влез в поле */
+    font-size: 0.8em; 
     font-family: 'Inter', sans-serif;
     letter-spacing: 1px;
+    text-transform: uppercase; /* Делает текст заглавными буквами */
 }
 
-/* Если в теме есть темный режим, добавьте и для него */
+/* Цвет для темной темы (если она у вас переключается классом .dark-mode) */
 .dark-mode #sumInput::placeholder {
     color: #475569;
 }
-}
+
 
         
         
@@ -3437,23 +3439,23 @@ function getSumInputValue() {
 }
 
 // NEW: Скрытие меню при фокусе на вводе
-function onSumInputFocus() {
-    const input = document.getElementById('sumInput');
+function onSumInputFocus(input) {
     document.body.classList.add('input-focused');
-    
-    // Если в поле "0" или любая старая сумма, очищаем её при нажатии
-    // Чтобы пользователь сразу видел placeholder или пустую строку
-    if (input.value === "0" || input.value === "") {
-        input.value = ""; 
+    // Если в поле сейчас 0 или оно пустое, при нажатии оно станет абсолютно чистым
+    // и пользователь увидит placeholder (если поле пустое)
+    if (input.value === "0") {
+        input.value = "";
     }
-    
-    // Если вы хотите, чтобы при клике всегда всё удалялось:
-    // input.value = ""; 
 }
 
 // NEW: Показ меню при потере фокуса
-function onSumInputBlur() {
+function onSumInputBlur(input) {
     document.body.classList.remove('input-focused');
+    // Если пользователь ничего не ввел и ушел из поля, 
+    // мы оставляем его пустым, чтобы была видна заглушка.
+    if (input.value === "") {
+        input.value = ""; 
+    }
 }
 
 // NEW: Сброс соотношения на 50/50
