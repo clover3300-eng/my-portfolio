@@ -2145,9 +2145,9 @@ input#sumInput.size-xsmall {
         </div>
         
         <div class="welcome-cta-block">
-            <button class="btn-welcome" id="openTerminalBtn">
-                ОТКРЫТЬ ТЕРМИНАЛ
-            </button>
+            <button class="btn-welcome" onclick="event.stopPropagation(); localStorage.setItem('user_visited', 'true'); document.getElementById('navWrapper').style.display='flex'; document.getElementById('stickyPanel').style.display='block'; showScreen('screen-app');">
+            ОТКРЫТЬ ТЕРМИНАЛ
+        </button>
             <div class="welcome-secure-text">
                 <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                 Secure Biometric Access
@@ -4662,19 +4662,7 @@ function openCompanyFromTable(event, ticker, companyName) {
             }
         }, 100);
 
-        / NEW: Обработчик кнопки "Открыть терминал"
-        var openBtn = document.getElementById('openTerminalBtn');
-        if (openBtn) {
-            openBtn.onclick = function(e) {
-                e.stopPropagation();
-                localStorage.setItem('user_visited', 'true');
-                isFirstVisit = false;
-                document.getElementById('navWrapper').style.display = 'flex';
-                var sticky = document.getElementById('stickyPanel');
-                if (sticky) sticky.style.display = 'block';
-                showScreen('screen-app');
-            };
-        }
+        
 
        
         
