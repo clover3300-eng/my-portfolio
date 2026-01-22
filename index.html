@@ -1152,6 +1152,7 @@ input#sumInput.size-xsmall {
     margin-right: 8px;
 }
 
+
 .custom-adjust-btn {
     width: 48px;
     height: 48px;
@@ -1178,8 +1179,10 @@ input#sumInput.size-xsmall {
 
 .custom-adjust-btn:active {
     transform: scale(0.95);
-    background: #E2E8F0;
+    background: var(--accent-blue);
 }
+
+
 
 .custom-value-display {
     font-family: 'JetBrains Mono', monospace;
@@ -1192,11 +1195,11 @@ input#sumInput.size-xsmall {
     padding: 6px 12px;
     border-radius: 10px;
 }
-
-.custom-value-display span {
+    .custom-value-display span {
     color: #94A3B8;
     font-size: 20px;
 }
+
 
 .custom-reset-btn {
     width: 100%;
@@ -2262,14 +2265,14 @@ input#sumInput::placeholder {
             <div class="input-wrapper">
     <div class="input-wrapper-inner">
         <input type="text" id="sumInput" 
-           placeholder="Введите сумму..." 
-           oninput="formatSumInput(this)" 
-           onfocus="onSumInputFocus(this)" 
-           onblur="onSumInputBlur(this)"
-           onclick="event.stopPropagation(); this.select()" 
-           onkeyup="if(event.keyCode===13) this.blur()" 
-           inputmode="numeric" 
-           enterkeyhint="done">
+       placeholder="Введите сумму..." 
+       oninput="formatSumInput(this)" 
+       onfocus="onSumInputFocus(this)" 
+       onblur="onSumInputBlur(this)"
+       onclick="event.stopPropagation(); this.select()" 
+       onkeyup="if(event.keyCode===13) this.blur()" 
+       inputmode="numeric" 
+       enterkeyhint="done">
         <span class="currency" id="currencySymbol" style="display: none;">₽</span>
     </div>
 </div>
