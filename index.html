@@ -561,9 +561,16 @@ h1 {
     display: flex; 
     align-items: center; 
     justify-content: center;
-    gap: 4px;
+    gap: 0;
     padding: 10px 0 20px 0;
     position: relative;
+    width: 100%;
+}
+
+.input-wrapper-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .input-wrapper::after {
@@ -591,18 +598,9 @@ input#sumInput {
     font-family: 'JetBrains Mono', monospace;
     font-size: 42px; 
     font-weight: 500; 
-    width: 100%;
+    width: auto;
+    min-width: 100px;
     max-width: 100%;
-    outline: none; 
-    color: #2C364C;
-    background: transparent; 
-    margin: 0; 
-    padding: 0; 
-    line-height: 1.2;
-    text-align: center;
-    transition: font-size 0.15s ease;
-    letter-spacing: -0.02em;
-}
 
 /* Убираем стрелочки для числового поля */
 input#sumInput::-webkit-outer-spin-button,
@@ -723,7 +721,7 @@ input#sumInput.size-xsmall {
 }
 
 .fee-selected-text.placeholder {
-    color: #A0AEC0;
+    color: #CBD5E1;
     font-weight: 400;
 }
 
@@ -1072,23 +1070,34 @@ input#sumInput.size-xsmall {
 .custom-slider-labels {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    gap: 10px;
 }
 
 .custom-slider-label {
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
 .custom-slider-label.bonds {
-    color: #2C364C;
+    color: var(--accent-blue);
+    background: rgba(52, 152, 219, 0.1);
 }
 
 .custom-slider-label.stocks {
-    color: #22C55E;
+    color: var(--accent-green);
+    background: rgba(46, 204, 113, 0.1);
 }
-
+    
 .custom-slider-track {
     position: relative;
     height: 6px;
@@ -1130,8 +1139,17 @@ input#sumInput.size-xsmall {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 15px;
+}
+
+.custom-controls-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 8px;
 }
 
 .custom-adjust-btn {
@@ -1165,14 +1183,14 @@ input#sumInput.size-xsmall {
 
 .custom-value-display {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 36px;
+    font-size: 28px;
     font-weight: 600;
     color: var(--text-main);
-    min-width: 140px;
+    min-width: 110px;
     text-align: center;
     background: var(--bg-color);
-    padding: 8px 16px;
-    border-radius: 12px;
+    padding: 6px 12px;
+    border-radius: 10px;
 }
 
 .custom-value-display span {
@@ -2242,16 +2260,18 @@ input#sumInput::placeholder {
         <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
             
             <div class="input-wrapper">
-    <input type="text" id="sumInput" 
-       placeholder="Введите сумму..." 
-       oninput="formatSumInput(this)" 
-       onfocus="onSumInputFocus(this)" 
-       onblur="onSumInputBlur(this)"
-       onclick="event.stopPropagation(); this.select()" 
-       onkeyup="if(event.keyCode===13) this.blur()" 
-       inputmode="numeric" 
-       enterkeyhint="done">
-    <span class="currency" id="currencySymbol" style="display: none;">₽</span>
+    <div class="input-wrapper-inner">
+        <input type="text" id="sumInput" 
+           placeholder="Введите сумму..." 
+           oninput="formatSumInput(this)" 
+           onfocus="onSumInputFocus(this)" 
+           onblur="onSumInputBlur(this)"
+           onclick="event.stopPropagation(); this.select()" 
+           onkeyup="if(event.keyCode===13) this.blur()" 
+           inputmode="numeric" 
+           enterkeyhint="done">
+        <span class="currency" id="currencySymbol" style="display: none;">₽</span>
+    </div>
 </div>
         
        
@@ -2475,19 +2495,33 @@ input#sumInput::placeholder {
     <div class="custom-strategy-inner">
         <div class="custom-slider-block">
             <div class="custom-slider-labels">
-                <span class="custom-slider-label bonds">Облигации <span id="customBondsPct">50</span>%</span>
-                <span class="custom-slider-label stocks">Акции <span id="customStocksPct">50</span>%</span>
-            </div>
+    <div class="custom-slider-label bonds">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        Облигации <span id="customBondsPct">50</span>%
+    </div>
+    <div class="custom-slider-label stocks">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3v18h18"></path>
+            <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"></path>
+        </svg>
+        Акции <span id="customStocksPct">50</span>%
+    </div>
+</div>
             <input type="range" id="customRatioSlider" class="custom-ratio-slider" min="0" max="100" value="50" oninput="updateCustomSlider(this.value)">
         </div>
         
         <div class="custom-controls-row">
-            <button class="custom-adjust-btn" onclick="adjustCustomRatio(-5)">−</button>
-            <div class="custom-value-display">
-                <span id="customBondsDisplay">50</span><span>/</span><span id="customStocksDisplay">50</span>
-            </div>
-            <button class="custom-adjust-btn" onclick="adjustCustomRatio(5)">+</button>
-        </div>
+    <span class="custom-controls-label">Облигации</span>
+    <button class="custom-adjust-btn" onclick="adjustCustomRatio(-5)" title="Уменьшить облигации">−</button>
+    <div class="custom-value-display">
+        <span id="customBondsDisplay">50</span><span>/</span><span id="customStocksDisplay">50</span>
+    </div>
+    <button class="custom-adjust-btn" onclick="adjustCustomRatio(5)" title="Увеличить облигации">+</button>
+    <span class="custom-controls-label">Акции</span>
+</div>
         
         <button class="custom-reset-btn" onclick="resetCustomTo50()">
             <svg viewBox="0 0 24 24">
@@ -3339,7 +3373,7 @@ if (feeMap[brokerFee]) {
     const selectedText = document.getElementById('feeSelectedText');
     const trigger = document.getElementById('feeDropdownTrigger');
     if (selectedText && trigger) {
-        selectedText.textContent = `${feeMap[brokerFee].rate} — ${feeMap[brokerFee].name}`;
+        selectedText.textContent = feeMap[brokerFee].rate;
         selectedText.classList.remove('placeholder');
         trigger.classList.add('active');
         isFeeSelected = true;
@@ -3367,6 +3401,9 @@ if (feeMap[brokerFee]) {
 let isFeeSelected = false;
 
 function toggleFeeDropdown() {
+    // Убираем фокус с любых input полей
+    document.activeElement.blur();
+    
     const trigger = document.getElementById('feeDropdownTrigger');
     const menu = document.getElementById('feeDropdownMenu');
     
@@ -3613,6 +3650,9 @@ function updateStrategyCardSelection(bondPercent) {
 }
     // NEW: Переключение кастомной стратегии
 function toggleCustomStrategy(cardElement) {
+    // Убираем фокус с любых input полей
+    document.activeElement.blur();
+    
     const expandedBlock = document.getElementById('customStrategyExpanded');
     const isExpanded = expandedBlock.classList.contains('show');
     
@@ -3671,6 +3711,9 @@ function adjustCustomRatio(delta) {
 
 // NEW: Сброс кастомной стратегии на 50/50
 function resetCustomTo50() {
+    event.preventDefault();
+    event.stopPropagation();
+    
     document.getElementById('customRatioSlider').value = 50;
     document.getElementById('ratioSlider').value = 50;
     updateCustomSliderDisplay(50);
