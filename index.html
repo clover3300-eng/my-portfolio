@@ -4674,6 +4674,7 @@ function openCompanyFromTable(event, ticker, companyName) {
                 document.getElementById('summ-total-3y').innerHTML = Math.round(projectedTotal).toLocaleString() + ' ₽' + changeHtml;
             }
             updateEchelonTable();
+            renderOfzList();
         }
 
         async function shareAsPDF() {
