@@ -2508,7 +2508,7 @@ input#sumInput.size-xsmall {
     <div id="screen-portfolio" class="screen">
         <div class="header"><h1>Портфель</h1></div>
         
-        <div id="portfolio-empty" class="portfolio-empty">
+        <div id="portfolio-empty" class="portfolio-empty" style="display: block;">
             <div class="portfolio-empty-icon">📂</div>
             <div>Расчет еще не производился.<br>Перейдите в терминал и сформируйте портфель.</div>
             <button class="btn-action" style="margin-top:20px; border-style:dashed;" onclick="showScreen('screen-app')">Перейти к расчету</button>
@@ -3878,7 +3878,7 @@ function resetCustomTo50() {
                     }
                 }
                 
-                 distributeMonthlyInvestment();
+                distributeMonthlyInvestment();
                 updateEchelonTable();
                 renderOfzList();
                 
