@@ -4689,9 +4689,15 @@ function openCompanyFromTable(event, ticker, companyName) {
             });
             if(document.getElementById('echelonContainer')) {
                 document.getElementById('echelonContainer').innerHTML = eHtml;
-                document.getElementById('valStocks').innerText = Math.round(stockBudget).toLocaleString();
-                document.getElementById('usageFill').style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
-                document.getElementById('usageLabelText').innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
+                
+                const valStocks = document.getElementById('valStocks');
+                if(valStocks) valStocks.innerText = Math.round(stockBudget).toLocaleString();
+                
+                const usageFill = document.getElementById('usageFill');
+                if(usageFill) usageFill.style.width = Math.min((actualSpentTotal / inputSum) * 100, 100) + '%';
+                
+                const usageLabelText = document.getElementById('usageLabelText');
+                if(usageLabelText) usageLabelText.innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
                 document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString() + ' ₽';
                 document.getElementById('srl-bond-pct').innerText = bondPct + '%';
                 document.getElementById('srl-stock-pct').innerText = stockPct + '%';
