@@ -51,6 +51,7 @@
 
         body.dark-mode {
             --bg-color: #0f172a;
+            background: linear-gradient(180deg, #0f172a 0%, #1a2234 100%);
             --card-bg: #1e293b;
             --text-main: #f1f5f9;
             --text-secondary: #94a3b8;
@@ -77,7 +78,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
+            background: linear-gradient(180deg, #F1F6FB 0%, #F9FAFC 100%);
             color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
             -webkit-tap-highlight-color: transparent;
@@ -558,20 +559,30 @@ h1 {
 
 .input-wrapper { 
     display: flex; 
-    align-items: baseline; 
+    align-items: center; 
     justify-content: center;
-    gap: 8px;
-    padding: 10px 0 20px 0; /* Уменьшили верхний отступ */
+    gap: 0;
+    padding: 10px 0 20px 0;
     position: relative;
+    width: 100%;
+}
+
+.input-wrapper-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .input-wrapper::after {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: fit-content;
+    min-width: 200px;
+    max-width: 90%;
     height: 1px;
     background: rgba(44, 54, 76, 0.2);
     transition: all 0.3s ease;
@@ -587,18 +598,9 @@ input#sumInput {
     font-family: 'JetBrains Mono', monospace;
     font-size: 42px; 
     font-weight: 500; 
-    width: 100%;
+    width: auto;
+    min-width: 100px;
     max-width: 100%;
-    outline: none; 
-    color: #2C364C;
-    background: transparent; 
-    margin: 0; 
-    padding: 0; 
-    line-height: 1.2;
-    text-align: center;
-    transition: font-size 0.15s ease;
-    letter-spacing: -0.02em;
-}
 
 /* Убираем стрелочки для числового поля */
 input#sumInput::-webkit-outer-spin-button,
@@ -629,10 +631,11 @@ input#sumInput.size-xsmall {
 
 .currency { 
     font-family: 'JetBrains Mono', monospace;
-    font-size: 36px; 
+    font-size: 42px; 
     color: #94A3B8; 
     font-weight: 400;
     opacity: 0.6;
+    margin-left: 8px;
 }
 
 .dark-mode input#sumInput {
@@ -718,7 +721,7 @@ input#sumInput.size-xsmall {
 }
 
 .fee-selected-text.placeholder {
-    color: #A0AEC0;
+    color: #CBD5E1;
     font-weight: 400;
 }
 
@@ -993,26 +996,28 @@ input#sumInput.size-xsmall {
 
 /* Карточка "Настроить свою" */
 .strategy-card-custom {
-    background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
-    border: 2px dashed #38BDF8;
-    padding: 20px 16px;
+    background: #FAFBFC;
+    border: 2px dashed #E2E8F0;
+    padding: 16px;
 }
 
 .strategy-card-custom:hover {
-    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+    background: #F8FAFC;
+    border-color: #CBD5E1;
 }
 
 .strategy-card-custom.selected {
-    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+    background: #FFFFFF;
     border-style: solid;
-    border-color: #0EA5E9;
+    border-color: #2C364C;
+    box-shadow: 0 4px 20px rgba(44, 54, 76, 0.12);
 }
 
 .strategy-custom-icon {
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #38BDF8, #0EA5E9);
+    background: #F1F5F9;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1022,43 +1027,40 @@ input#sumInput.size-xsmall {
 .strategy-custom-icon svg {
     width: 24px;
     height: 24px;
-    stroke: white;
+    stroke: #64748B;
     fill: none;
     stroke-width: 2;
 }
 
 .strategy-card-custom .strategy-card-title {
-    color: #0369A1;
+    color: #2C364C;
 }
 
 .strategy-card-custom .strategy-card-subtitle {
-    color: #0284C7;
+    color: #8A9AB0;
 }
 
 /* Развернутый блок настройки */
 .custom-strategy-expanded {
-    display: none;
-    background: #FFFFFF;
-    border: 2px solid #0EA5E9;
+    display: grid;
+    grid-template-rows: 0fr;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
-    padding: 20px;
-    margin-top: -8px;
-    animation: expandIn 0.3s ease;
+    margin-top: 10px;
+    overflow: hidden;
+    transition: grid-template-rows 0.4s ease, padding 0.4s ease, margin 0.4s ease;
+    padding: 0 20px;
 }
 
 .custom-strategy-expanded.show {
-    display: block;
+    grid-template-rows: 1fr;
+    padding: 20px;
+    box-shadow: 0 4px 12px var(--card-shadow);
 }
 
-@keyframes expandIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.custom-strategy-inner {
+    overflow: hidden;
 }
 
 .custom-slider-block {
@@ -1068,29 +1070,41 @@ input#sumInput.size-xsmall {
 .custom-slider-labels {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    gap: 10px;
 }
 
 .custom-slider-label {
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
 .custom-slider-label.bonds {
-    color: #2C364C;
+    color: var(--accent-blue);
+    background: rgba(52, 152, 219, 0.1);
 }
 
 .custom-slider-label.stocks {
-    color: #22C55E;
+    color: var(--accent-green);
+    background: rgba(46, 204, 113, 0.1);
 }
-
+    
 .custom-slider-track {
     position: relative;
-    height: 8px;
-    background: linear-gradient(90deg, #2C364C 0%, #22C55E 100%);
-    border-radius: 4px;
-    margin: 15px 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-green) 100%);
+    border-radius: 3px;
+    margin: 10px 0 20px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .custom-ratio-slider {
@@ -1125,24 +1139,41 @@ input#sumInput.size-xsmall {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 15px;
 }
 
+.custom-controls-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 8px;
+}
+
 .custom-adjust-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: #F1F5F9;
-    border: 1px solid #E2E8F0;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 300;
-    color: #2C364C;
+    color: var(--accent-blue);
     cursor: pointer;
     transition: all 0.15s ease;
+    box-shadow: 0 2px 6px var(--card-shadow);
+}
+
+.custom-adjust-btn:hover {
+    background: var(--accent-blue);
+    color: white;
+    border-color: var(--accent-blue);
+    transform: scale(1.05);
 }
 
 .custom-adjust-btn:active {
@@ -1152,11 +1183,14 @@ input#sumInput.size-xsmall {
 
 .custom-value-display {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 32px;
-    font-weight: 500;
-    color: #2C364C;
-    min-width: 120px;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-main);
+    min-width: 110px;
     text-align: center;
+    background: var(--bg-color);
+    padding: 6px 12px;
+    border-radius: 10px;
 }
 
 .custom-value-display span {
@@ -1166,26 +1200,26 @@ input#sumInput.size-xsmall {
 
 .custom-reset-btn {
     width: 100%;
-    padding: 12px;
-    background: transparent;
-    border: 1px dashed #CBD5E1;
-    border-radius: 10px;
-    color: #8A9AB0;
+    padding: 14px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-main);
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     transition: all 0.2s ease;
 }
 
 .custom-reset-btn:hover {
-    border-color: #2C364C;
-    color: #2C364C;
-    background: rgba(44, 54, 76, 0.03);
+    background: var(--card-bg);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
 }
 
 .custom-reset-btn:active {
@@ -2165,10 +2199,10 @@ input#sumInput.size-xsmall {
 }
 
 /* Единый стиль для заглушки */
-#sumInput::placeholder {
+input#sumInput::placeholder {
     color: #CBD5E1;
     opacity: 1;
-    font-size: 0.875rem; /* 14px - компактный размер */
+    font-size: 1.5rem; /* 24px - увеличенный размер */
     font-family: 'JetBrains Mono', monospace;
     font-weight: 300;
     letter-spacing: 0.01em;
@@ -2226,18 +2260,19 @@ input#sumInput.size-xsmall {
         <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
             
             <div class="input-wrapper">
-                <input type="text" id="sumInput" 
-       placeholder="Введите сумму..." 
-       oninput="formatSumInput(this)" 
-       onfocus="onSumInputFocus(this)" 
-       onblur="onSumInputBlur(this)"
-       onclick="event.stopPropagation(); this.select()" 
-       onkeyup="if(event.keyCode===13) this.blur()" 
-       inputmode="numeric" 
-       enterkeyhint="done">
-                <span class="currency">₽</span>
-            </div>
-        </div>
+    <div class="input-wrapper-inner">
+        <input type="text" id="sumInput" 
+           placeholder="Введите сумму..." 
+           oninput="formatSumInput(this)" 
+           onfocus="onSumInputFocus(this)" 
+           onblur="onSumInputBlur(this)"
+           onclick="event.stopPropagation(); this.select()" 
+           onkeyup="if(event.keyCode===13) this.blur()" 
+           inputmode="numeric" 
+           enterkeyhint="done">
+        <span class="currency" id="currencySymbol" style="display: none;">₽</span>
+    </div>
+</div>
         
        
         <!-- Тариф комиссии - Dropdown -->
@@ -2245,78 +2280,77 @@ input#sumInput.size-xsmall {
         <span class="fee-label">Тариф комиссии</span>
             <div class="fee-dropdown-container">
                 <div class="fee-dropdown-trigger" id="feeDropdownTrigger" onclick="toggleFeeDropdown()">
-                    <span class="fee-selected-text placeholder" id="feeSelectedText">Выберите тариф</span>
+                    <span class="fee-selected-text placeholder" id="feeSelectedText">Выберите тариф Вашего Брокера</span>
                     <svg class="fee-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </div>
                 <div class="fee-dropdown-menu" id="feeDropdownMenu">
-                    <div class="fee-dropdown-item" onclick="selectFee(0.0001, '0.01%', 'Лайт')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.01%</span>
-                            <span class="fee-item-name">Лайт</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.0003, '0.03%', 'Стандарт')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.03%</span>
-                            <span class="fee-item-name">Стандарт</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.0005, '0.05%', 'Премиум (стандарт)')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.05%</span>
-                            <span class="fee-item-name">Премиум (стандарт)</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.001, '0.1%', 'Бизнес')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.1%</span>
-                            <span class="fee-item-name">Бизнес</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.003, '0.3%', 'VIP')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.3%</span>
-                            <span class="fee-item-name">VIP</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.005, '0.5%', 'Private')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.5%</span>
-                            <span class="fee-item-name">Private</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
+                   <div class="fee-dropdown-item" onclick="selectFee(0.0001, '0.01%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.01%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
+
+<div class="fee-dropdown-item" onclick="selectFee(0.0003, '0.03%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.03%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
+
+<div class="fee-dropdown-item" onclick="selectFee(0.0005, '0.05%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.05%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
+
+<div class="fee-dropdown-item" onclick="selectFee(0.001, '0.1%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.1%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
+
+<div class="fee-dropdown-item" onclick="selectFee(0.003, '0.3%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.3%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
+
+<div class="fee-dropdown-item" onclick="selectFee(0.005, '0.5%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.5%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
                 </div>
             </div>
         </div>
@@ -2324,7 +2358,7 @@ input#sumInput.size-xsmall {
         <!-- Белая карточка начинается здесь -->
         <div class="calc-box-white-section">
         <!-- Инвестиционная стратегия -->
-<div class="strategy-section" style="margin-top: 25px;">
+<div class="strategy-section" style="margin-top: 8px;">
     <span class="fee-label">Инвестиционная стратегия</span>
     
     <!-- Карточки стратегий -->
@@ -2457,22 +2491,37 @@ input#sumInput.size-xsmall {
     </div>
     
     <!-- Развернутый блок настройки -->
-    <div class="custom-strategy-expanded" id="customStrategyExpanded">
+<div class="custom-strategy-expanded" id="customStrategyExpanded">
+    <div class="custom-strategy-inner">
         <div class="custom-slider-block">
             <div class="custom-slider-labels">
-                <span class="custom-slider-label bonds">Облигации <span id="customBondsPct">50</span>%</span>
-                <span class="custom-slider-label stocks">Акции <span id="customStocksPct">50</span>%</span>
-            </div>
+    <div class="custom-slider-label bonds">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        Облигации <span id="customBondsPct">50</span>%
+    </div>
+    <div class="custom-slider-label stocks">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3v18h18"></path>
+            <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"></path>
+        </svg>
+        Акции <span id="customStocksPct">50</span>%
+    </div>
+</div>
             <input type="range" id="customRatioSlider" class="custom-ratio-slider" min="0" max="100" value="50" oninput="updateCustomSlider(this.value)">
         </div>
         
         <div class="custom-controls-row">
-            <button class="custom-adjust-btn" onclick="adjustCustomRatio(-5)">−</button>
-            <div class="custom-value-display">
-                <span id="customBondsDisplay">50</span><span>/</span><span id="customStocksDisplay">50</span>
-            </div>
-            <button class="custom-adjust-btn" onclick="adjustCustomRatio(5)">+</button>
-        </div>
+    <span class="custom-controls-label">Облигации</span>
+    <button class="custom-adjust-btn" onclick="adjustCustomRatio(-5)" title="Уменьшить облигации">−</button>
+    <div class="custom-value-display">
+        <span id="customBondsDisplay">50</span><span>/</span><span id="customStocksDisplay">50</span>
+    </div>
+    <button class="custom-adjust-btn" onclick="adjustCustomRatio(5)" title="Увеличить облигации">+</button>
+    <span class="custom-controls-label">Акции</span>
+</div>
         
         <button class="custom-reset-btn" onclick="resetCustomTo50()">
             <svg viewBox="0 0 24 24">
@@ -2482,6 +2531,8 @@ input#sumInput.size-xsmall {
             Сбросить на 50/50
         </button>
     </div>
+    </div>
+</div>
     
     <!-- Скрытый основной ползунок для совместимости -->
     <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()" style="display: none;">
@@ -3322,7 +3373,7 @@ if (feeMap[brokerFee]) {
     const selectedText = document.getElementById('feeSelectedText');
     const trigger = document.getElementById('feeDropdownTrigger');
     if (selectedText && trigger) {
-        selectedText.textContent = `${feeMap[brokerFee].rate} — ${feeMap[brokerFee].name}`;
+        selectedText.textContent = feeMap[brokerFee].rate;
         selectedText.classList.remove('placeholder');
         trigger.classList.add('active');
         isFeeSelected = true;
@@ -3350,6 +3401,9 @@ if (feeMap[brokerFee]) {
 let isFeeSelected = false;
 
 function toggleFeeDropdown() {
+    // Убираем фокус с любых input полей
+    document.activeElement.blur();
+    
     const trigger = document.getElementById('feeDropdownTrigger');
     const menu = document.getElementById('feeDropdownMenu');
     
@@ -3363,7 +3417,7 @@ function selectFee(value, rateText, nameText) {
     
     // Обновляем текст в триггере
     const selectedText = document.getElementById('feeSelectedText');
-    selectedText.textContent = `${rateText} — ${nameText}`;
+    selectedText.textContent = rateText;
     selectedText.classList.remove('placeholder');
     
     // Обновляем активный класс триггера
@@ -3447,11 +3501,17 @@ function formatSumInput(input) {
     
     // Сохраняем числовое значение для расчётов
     const numericValue = parseInt(value) || 0;
-
-     console.log('formatSumInput - value:', value, 'numeric:', numericValue);
+    
+    console.log('formatSumInput - value:', value, 'numeric:', numericValue);
     
     // Форматируем с разделителями (точки)
     const formatted = numericValue.toLocaleString('ru-RU').replace(/\s/g, '.');
+    
+    // Показываем/скрываем значок рубля
+    const currencySymbol = document.getElementById('currencySymbol');
+    if (currencySymbol) {
+        currencySymbol.style.display = (numericValue > 0) ? 'inline' : 'none';
+    }
     
     // Обновляем отображение
     input.value = formatted;
@@ -3590,6 +3650,9 @@ function updateStrategyCardSelection(bondPercent) {
 }
     // NEW: Переключение кастомной стратегии
 function toggleCustomStrategy(cardElement) {
+    // Убираем фокус с любых input полей
+    document.activeElement.blur();
+    
     const expandedBlock = document.getElementById('customStrategyExpanded');
     const isExpanded = expandedBlock.classList.contains('show');
     
@@ -3648,6 +3711,9 @@ function adjustCustomRatio(delta) {
 
 // NEW: Сброс кастомной стратегии на 50/50
 function resetCustomTo50() {
+    event.preventDefault();
+    event.stopPropagation();
+    
     document.getElementById('customRatioSlider').value = 50;
     document.getElementById('ratioSlider').value = 50;
     updateCustomSliderDisplay(50);
