@@ -3354,7 +3354,13 @@ const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=
             adjustSumInputSize(sumInput);
         }
                 document.getElementById('ratioSlider').value = s.ratio || 50;
-                brokerFee = parseFloat(s.fee) || 0.0005; 
+                if (s.fee !== undefined) {
+    brokerFee = parseFloat(s.fee);
+    isFeeSelected = true;
+} else {
+    brokerFee = 0.0005; // дефолтное значение
+    isFeeSelected = false;
+}
 currentTax = parseFloat(s.tax) || 0.13;
                 // Восстановление выбранной стратегии
 const savedRatio = parseInt(s.ratio) || 50;
@@ -3362,32 +3368,35 @@ setTimeout(() => {
     updateStrategyCardSelection(savedRatio);
 }, 100);
 
-// Восстановление выбранного тарифа в dropdown
-const feeMap = {
-    0.0001: { rate: '0.01%', name: 'Лайт' },
-    0.0003: { rate: '0.03%', name: 'Стандарт' },
-    0.0005: { rate: '0.05%', name: 'Премиум (стандарт)' },
-    0.001: { rate: '0.1%', name: 'Бизнес' },
-    0.003: { rate: '0.3%', name: 'VIP' },
-    0.005: { rate: '0.5%', name: 'Private' }
-};
+// Восстановление выбранного тарифа в dropdown - только если он был выбран
+if (isFeeSelected && brokerFee) {
+    const feeMap = {
+        0.0001: '0.01%',
+        0.0003: '0.03%',
+        0.0005: '0.05%',
+        0.001: '0.1%',
+        0.003: '0.3%',
+        0.005: '0.5%'
+    };
 
-if (feeMap[brokerFee]) {
-    const selectedText = document.getElementById('feeSelectedText');
-    const trigger = document.getElementById('feeDropdownTrigger');
-    if (selectedText && trigger) {
-        selectedText.textContent = feeMap[brokerFee].rate;
-        selectedText.classList.remove('placeholder');
-        trigger.classList.add('active');
-        isFeeSelected = true;
-        
-        // Отмечаем выбранный элемент в меню
-        document.querySelectorAll('.fee-dropdown-item').forEach(item => {
-            const itemRate = item.querySelector('.fee-item-rate')?.textContent;
-            if (itemRate === feeMap[brokerFee].rate) {
-                item.classList.add('selected');
-            }
-        });
+    if (feeMap[brokerFee]) {
+        const selectedText = document.getElementById('feeSelectedText');
+        const trigger = document.getElementById('feeDropdownTrigger');
+        if (selectedText && trigger) {
+            selectedText.textContent = feeMap[brokerFee];
+            selectedText.classList.remove('placeholder');
+            trigger.classList.add('active');
+            
+            // Отмечаем выбранный элемент в меню
+            document.querySelectorAll('.fee-dropdown-item').forEach(item => {
+                const itemRate = item.querySelector('.fee-item-rate')?.textContent;
+                if (itemRate === feeMap[brokerFee]) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
     }
 }
                 document.querySelectorAll('.tax-ui-btn').forEach(btn => {
