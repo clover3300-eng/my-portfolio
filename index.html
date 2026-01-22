@@ -3000,13 +3000,22 @@ input#sumInput.size-xsmall {
 }
 
         function updateMarketStatus() {
-            const now = new Date();
-            const day = now.getDay(); const hour = now.getHours(); const min = now.getMinutes();
-            const dot = document.getElementById('market-status-dot');
-            const isWeekday = day >= 1 && day <= 5;
-            const isWorkingHours = (hour > 10 || (hour === 10 && min >= 0)) && (hour < 18 || (hour === 18 && min <= 50));
-            dot.className = (isWeekday && isWorkingHours) ? 'market-dot dot-online' : 'market-dot dot-offline';
-        }
+    const now = new Date();
+    const day = now.getDay(); 
+    const hour = now.getHours(); 
+    const min = now.getMinutes();
+    const dot = document.getElementById('market-status-dot');
+    
+    if (!dot) {
+        console.log('market-status-dot не найден');
+        return;
+    }
+    
+    const isWeekday = day >= 1 && day <= 5;
+    const isWorkingHours = (hour > 10 || (hour === 10 && min >= 0)) && (hour < 18 || (hour === 18 && min <= 50));
+    dot.className = (isWeekday && isWorkingHours) ? 'market-dot dot-online' : 'market-dot dot-offline';
+}
+
 
     function updateRatesDisplay() {
     document.getElementById('val-key-rate').innerText = ratesData.keyRate;
@@ -3097,7 +3106,7 @@ input#sumInput.size-xsmall {
         }
 
         setInterval(updateMarketData, 30000);
-        setInterval(updateMarketStatus, 60000);
+        //setInterval(updateMarketStatus, 60000); // Отключено
         
         function showScreen(screenId) {
     if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
@@ -3740,7 +3749,7 @@ function resetCustomTo50() {
             loadSettings();
             checkFirstVisit();
             updateMarketData();
-            updateMarketStatus();
+            //updateMarketStatus(); //Временно отключаем, т.к. элемент не существует
             
             try {
                 const response = await fetch(CSV_URL);
