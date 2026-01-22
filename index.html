@@ -2931,19 +2931,18 @@ input#sumInput.size-xsmall {
         // Swipe navigation removed
 
         function checkFirstVisit() {
-            const visited = localStorage.getItem('user_visited');
-            const startBlock = document.getElementById('start-calculation-block');
-            if (visited) {
-                isFirstVisit = false;
-                if(startBlock) startBlock.style.display = 'none';
-                document.getElementById('navWrapper').style.display = 'flex';
-                showScreen('screen-app');
-            } else {
-                isFirstVisit = true;
-                if(startBlock) startBlock.style.display = 'block';
-                document.getElementById('navWrapper').style.display = 'none';
-            }
-        }
+    const visited = localStorage.getItem('user_visited');
+    if (visited) {
+        isFirstVisit = false;
+        document.getElementById('navWrapper').style.display = 'flex';
+        document.getElementById('stickyPanel').style.display = 'block';
+        showScreen('screen-app');
+    } else {
+        isFirstVisit = true;
+        document.getElementById('navWrapper').style.display = 'none';
+        document.getElementById('stickyPanel').style.display = 'none';
+    }
+}
 
         function startCalculation() {
     localStorage.setItem('user_visited', 'true');
@@ -4720,7 +4719,8 @@ function openCompanyFromTable(event, ticker, companyName) {
                 });
         }
 
-
+             // Показываем навигацию принудительно для отладки
+             document.getElementById('navWrapper').style.display = 'flex';
         loadData(); 
         if(window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready(); 
