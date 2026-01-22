@@ -4284,7 +4284,11 @@ function openCompanyFromTable(event, ticker, companyName) {
 }
     
     function renderOfzList() {
-    if (bonds.length === 0) return;
+    console.log('renderOfzList called, bonds:', bonds.length);
+    if (bonds.length === 0) {
+        console.log('No bonds to render');
+        return;
+    }
     
     let ofzHtml = '';
     bonds.forEach(b => {
@@ -4312,8 +4316,14 @@ function openCompanyFromTable(event, ticker, companyName) {
             <div class="ofz-detail-row"><span>Выплат в год:</span> <span class="ofz-detail-val">${details.freq}</span></div>
         </div>`;
     });
-    if(document.getElementById('ofz-list')) {
-        document.getElementById('ofz-list').innerHTML = ofzHtml;
+    
+    const ofzListElement = document.getElementById('ofz-list');
+    console.log('ofz-list element:', ofzListElement);
+    if(ofzListElement) {
+        ofzListElement.innerHTML = ofzHtml;
+        console.log('ОФЗ список обновлён, элементов:', bonds.length);
+    } else {
+        console.error('ofz-list element not found!');
     }
 }
 
@@ -4449,7 +4459,12 @@ function openCompanyFromTable(event, ticker, companyName) {
     const inputSum = getSumInputValue();
     
     // Если сумма = 0 (поле пустое), не сохраняем и не рисуем
-    if (inputSum === 0) return;
+    if (inputSum === 0) {
+        console.log('Sum is zero, skipping draw');
+        return;
+    }
+    
+    console.log('Drawing with sum:', inputSum);
     
     saveSettings();
             const bondPct = parseInt(document.getElementById('ratioSlider').value);
