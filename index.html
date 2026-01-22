@@ -51,6 +51,7 @@
 
         body.dark-mode {
             --bg-color: #0f172a;
+            background: linear-gradient(180deg, #0f172a 0%, #1a2234 100%);
             --card-bg: #1e293b;
             --text-main: #f1f5f9;
             --text-secondary: #94a3b8;
@@ -77,7 +78,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
+            background: linear-gradient(180deg, #F1F6FB 0%, #F9FAFC 100%);
             color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
             -webkit-tap-highlight-color: transparent;
@@ -558,10 +559,10 @@ h1 {
 
 .input-wrapper { 
     display: flex; 
-    align-items: baseline; 
+    align-items: center; 
     justify-content: center;
-    gap: 8px;
-    padding: 10px 0 20px 0; /* Уменьшили верхний отступ */
+    gap: 4px;
+    padding: 10px 0 20px 0;
     position: relative;
 }
 
@@ -629,10 +630,11 @@ input#sumInput.size-xsmall {
 
 .currency { 
     font-family: 'JetBrains Mono', monospace;
-    font-size: 36px; 
+    font-size: 42px; 
     color: #94A3B8; 
     font-weight: 400;
     opacity: 0.6;
+    margin-left: 8px;
 }
 
 .dark-mode input#sumInput {
@@ -993,26 +995,28 @@ input#sumInput.size-xsmall {
 
 /* Карточка "Настроить свою" */
 .strategy-card-custom {
-    background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
-    border: 2px dashed #38BDF8;
-    padding: 20px 16px;
+    background: #FAFBFC;
+    border: 2px dashed #E2E8F0;
+    padding: 16px;
 }
 
 .strategy-card-custom:hover {
-    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+    background: #F8FAFC;
+    border-color: #CBD5E1;
 }
 
 .strategy-card-custom.selected {
-    background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+    background: #FFFFFF;
     border-style: solid;
-    border-color: #0EA5E9;
+    border-color: #2C364C;
+    box-shadow: 0 4px 20px rgba(44, 54, 76, 0.12);
 }
 
 .strategy-custom-icon {
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #38BDF8, #0EA5E9);
+    background: #F1F5F9;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1022,17 +1026,17 @@ input#sumInput.size-xsmall {
 .strategy-custom-icon svg {
     width: 24px;
     height: 24px;
-    stroke: white;
+    stroke: #64748B;
     fill: none;
     stroke-width: 2;
 }
 
 .strategy-card-custom .strategy-card-title {
-    color: #0369A1;
+    color: #2C364C;
 }
 
 .strategy-card-custom .strategy-card-subtitle {
-    color: #0284C7;
+    color: #8A9AB0;
 }
 
 /* Развернутый блок настройки */
@@ -2165,10 +2169,10 @@ input#sumInput.size-xsmall {
 }
 
 /* Единый стиль для заглушки */
-#sumInput::placeholder {
+input#sumInput::placeholder {
     color: #CBD5E1;
     opacity: 1;
-    font-size: 0.875rem; /* 14px - компактный размер */
+    font-size: 1.5rem; /* 24px - увеличенный размер */
     font-family: 'JetBrains Mono', monospace;
     font-weight: 300;
     letter-spacing: 0.01em;
@@ -2245,78 +2249,77 @@ input#sumInput.size-xsmall {
         <span class="fee-label">Тариф комиссии</span>
             <div class="fee-dropdown-container">
                 <div class="fee-dropdown-trigger" id="feeDropdownTrigger" onclick="toggleFeeDropdown()">
-                    <span class="fee-selected-text placeholder" id="feeSelectedText">Выберите тариф</span>
+                    <span class="fee-selected-text placeholder" id="feeSelectedText">Выберите тариф Вашего Брокера</span>
                     <svg class="fee-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </div>
                 <div class="fee-dropdown-menu" id="feeDropdownMenu">
-                    <div class="fee-dropdown-item" onclick="selectFee(0.0001, '0.01%', 'Лайт')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.01%</span>
-                            <span class="fee-item-name">Лайт</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.0003, '0.03%', 'Стандарт')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.03%</span>
-                            <span class="fee-item-name">Стандарт</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.0005, '0.05%', 'Премиум (стандарт)')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.05%</span>
-                            <span class="fee-item-name">Премиум (стандарт)</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.001, '0.1%', 'Бизнес')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.1%</span>
-                            <span class="fee-item-name">Бизнес</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.003, '0.3%', 'VIP')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.3%</span>
-                            <span class="fee-item-name">VIP</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="fee-dropdown-item" onclick="selectFee(0.005, '0.5%', 'Private')">
-                        <div class="fee-item-left">
-                            <span class="fee-item-rate">0.5%</span>
-                            <span class="fee-item-name">Private</span>
-                        </div>
-                        <div class="fee-item-check">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                    </div>
+                   <div class="fee-dropdown-item" onclick="selectFee(0.0001, '0.01%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.01%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
+
+<div class="fee-dropdown-item" onclick="selectFee(0.0003, '0.03%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.03%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
+
+<div class="fee-dropdown-item" onclick="selectFee(0.0005, '0.05%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.05%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
+
+<div class="fee-dropdown-item" onclick="selectFee(0.001, '0.1%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.1%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
+
+<div class="fee-dropdown-item" onclick="selectFee(0.003, '0.3%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.3%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
+
+<div class="fee-dropdown-item" onclick="selectFee(0.005, '0.5%', '')">
+    <div class="fee-item-left">
+        <span class="fee-item-rate">0.5%</span>
+    </div>
+    <div class="fee-item-check">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+    </div>
+</div>
                 </div>
             </div>
         </div>
@@ -2324,7 +2327,7 @@ input#sumInput.size-xsmall {
         <!-- Белая карточка начинается здесь -->
         <div class="calc-box-white-section">
         <!-- Инвестиционная стратегия -->
-<div class="strategy-section" style="margin-top: 25px;">
+<div class="strategy-section" style="margin-top: 8px;">
     <span class="fee-label">Инвестиционная стратегия</span>
     
     <!-- Карточки стратегий -->
@@ -3363,7 +3366,7 @@ function selectFee(value, rateText, nameText) {
     
     // Обновляем текст в триггере
     const selectedText = document.getElementById('feeSelectedText');
-    selectedText.textContent = `${rateText} — ${nameText}`;
+    selectedText.textContent = rateText;
     selectedText.classList.remove('placeholder');
     
     // Обновляем активный класс триггера
