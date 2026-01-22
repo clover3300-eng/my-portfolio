@@ -4500,14 +4500,22 @@ function openCompanyFromTable(event, ticker, companyName) {
             const feeVal = inputSum * brokerFee;
 
             if(document.getElementById('labelBondsPct')) {
-                document.getElementById('labelBondsPct').innerText = bondPct;
-                document.getElementById('labelStocksPct').innerText = stockPct;
-                document.getElementById('dynamicSubtitle').innerText = `Система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
-                document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
+    document.getElementById('labelBondsPct').innerText = bondPct;
+    document.getElementById('labelStocksPct').innerText = stockPct;
+    
+    const dynamicSubtitle = document.getElementById('dynamicSubtitle');
+    if(dynamicSubtitle) {
+        dynamicSubtitle.innerText = `Система ${bondPct}/${stockPct}: Денежный Поток и Рост.`;
+    }
+    
+    document.querySelectorAll('.bond-pct-text').forEach(el => el.innerText = bondPct);
                 document.querySelectorAll('.stock-pct-text').forEach(el => el.innerText = stockPct);
-                document.getElementById('mainChart').style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
-                document.getElementById('mainChart').setAttribute('data-pct', `${bondPct}/${stockPct}`);
-            }
+                const mainChart = document.getElementById('mainChart');
+    if(mainChart) {
+        mainChart.style.background = `conic-gradient(var(--accent-blue) 0% ${bondPct}%, var(--accent-green) ${bondPct}% 100%)`;
+        mainChart.setAttribute('data-pct', `${bondPct}/${stockPct}`);
+    }
+}
 
             const bondSection = document.getElementById('section-bonds');
             const couponBox = document.getElementById('couponBox');
