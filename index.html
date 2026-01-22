@@ -3103,20 +3103,16 @@ input#sumInput.size-xsmall {
         collapseSearch(false);
     }
     
-    if (currentScreen === 'screen-home' && !isFirstVisit) {
-         const startBlock = document.getElementById('start-calculation-block');
-         if (startBlock) startBlock.style.display = 'none';
-    }
-
-    if (currentScreen === 'screen-assets' && screenId !== 'screen-assets') {
-        const inc = document.getElementById('calc-income-wrapper');
-        if(inc) inc.style.display = 'none';
-    }
-    
     currentScreen = screenId;
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(screenId).classList.add('active');
     
+    // Показываем нужный экран
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const targetScreen = document.getElementById(screenId);
+    if(targetScreen) {
+        targetScreen.classList.add('active');
+    }
+    
+    // Обновляем навигацию
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
     document.getElementById('nav-search').classList.remove('active');
     
