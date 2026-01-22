@@ -570,9 +570,12 @@ h1 {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: fit-content;
+    min-width: 200px;
+    max-width: 90%;
     height: 1px;
     background: rgba(44, 54, 76, 0.2);
     transition: all 0.3s ease;
@@ -1041,28 +1044,25 @@ input#sumInput.size-xsmall {
 
 /* Развернутый блок настройки */
 .custom-strategy-expanded {
-    display: none;
-    background: #FFFFFF;
-    border: 2px solid #0EA5E9;
+    display: grid;
+    grid-template-rows: 0fr;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
-    padding: 20px;
-    margin-top: -8px;
-    animation: expandIn 0.3s ease;
+    margin-top: 10px;
+    overflow: hidden;
+    transition: grid-template-rows 0.4s ease, padding 0.4s ease, margin 0.4s ease;
+    padding: 0 20px;
 }
 
 .custom-strategy-expanded.show {
-    display: block;
+    grid-template-rows: 1fr;
+    padding: 20px;
+    box-shadow: 0 4px 12px var(--card-shadow);
 }
 
-@keyframes expandIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.custom-strategy-inner {
+    overflow: hidden;
 }
 
 .custom-slider-block {
@@ -1091,10 +1091,11 @@ input#sumInput.size-xsmall {
 
 .custom-slider-track {
     position: relative;
-    height: 8px;
-    background: linear-gradient(90deg, #2C364C 0%, #22C55E 100%);
-    border-radius: 4px;
-    margin: 15px 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-green) 100%);
+    border-radius: 3px;
+    margin: 10px 0 20px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .custom-ratio-slider {
@@ -1134,19 +1135,27 @@ input#sumInput.size-xsmall {
 }
 
 .custom-adjust-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: #F1F5F9;
-    border: 1px solid #E2E8F0;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 300;
-    color: #2C364C;
+    color: var(--accent-blue);
     cursor: pointer;
     transition: all 0.15s ease;
+    box-shadow: 0 2px 6px var(--card-shadow);
+}
+
+.custom-adjust-btn:hover {
+    background: var(--accent-blue);
+    color: white;
+    border-color: var(--accent-blue);
+    transform: scale(1.05);
 }
 
 .custom-adjust-btn:active {
@@ -1156,11 +1165,14 @@ input#sumInput.size-xsmall {
 
 .custom-value-display {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 32px;
-    font-weight: 500;
-    color: #2C364C;
-    min-width: 120px;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--text-main);
+    min-width: 140px;
     text-align: center;
+    background: var(--bg-color);
+    padding: 8px 16px;
+    border-radius: 12px;
 }
 
 .custom-value-display span {
@@ -1170,26 +1182,26 @@ input#sumInput.size-xsmall {
 
 .custom-reset-btn {
     width: 100%;
-    padding: 12px;
-    background: transparent;
-    border: 1px dashed #CBD5E1;
-    border-radius: 10px;
-    color: #8A9AB0;
+    padding: 14px;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-main);
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     transition: all 0.2s ease;
 }
 
 .custom-reset-btn:hover {
-    border-color: #2C364C;
-    color: #2C364C;
-    background: rgba(44, 54, 76, 0.03);
+    background: var(--card-bg);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
 }
 
 .custom-reset-btn:active {
@@ -2230,7 +2242,7 @@ input#sumInput::placeholder {
         <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
             
             <div class="input-wrapper">
-                <input type="text" id="sumInput" 
+    <input type="text" id="sumInput" 
        placeholder="Введите сумму..." 
        oninput="formatSumInput(this)" 
        onfocus="onSumInputFocus(this)" 
@@ -2239,9 +2251,8 @@ input#sumInput::placeholder {
        onkeyup="if(event.keyCode===13) this.blur()" 
        inputmode="numeric" 
        enterkeyhint="done">
-                <span class="currency">₽</span>
-            </div>
-        </div>
+    <span class="currency" id="currencySymbol" style="display: none;">₽</span>
+</div>
         
        
         <!-- Тариф комиссии - Dropdown -->
@@ -2460,7 +2471,8 @@ input#sumInput::placeholder {
     </div>
     
     <!-- Развернутый блок настройки -->
-    <div class="custom-strategy-expanded" id="customStrategyExpanded">
+<div class="custom-strategy-expanded" id="customStrategyExpanded">
+    <div class="custom-strategy-inner">
         <div class="custom-slider-block">
             <div class="custom-slider-labels">
                 <span class="custom-slider-label bonds">Облигации <span id="customBondsPct">50</span>%</span>
@@ -2485,6 +2497,8 @@ input#sumInput::placeholder {
             Сбросить на 50/50
         </button>
     </div>
+    </div>
+</div>
     
     <!-- Скрытый основной ползунок для совместимости -->
     <input type="range" id="ratioSlider" class="ratio-slider" min="0" max="100" value="50" oninput="draw()" style="display: none;">
@@ -3450,11 +3464,17 @@ function formatSumInput(input) {
     
     // Сохраняем числовое значение для расчётов
     const numericValue = parseInt(value) || 0;
-
-     console.log('formatSumInput - value:', value, 'numeric:', numericValue);
+    
+    console.log('formatSumInput - value:', value, 'numeric:', numericValue);
     
     // Форматируем с разделителями (точки)
     const formatted = numericValue.toLocaleString('ru-RU').replace(/\s/g, '.');
+    
+    // Показываем/скрываем значок рубля
+    const currencySymbol = document.getElementById('currencySymbol');
+    if (currencySymbol) {
+        currencySymbol.style.display = (numericValue > 0) ? 'inline' : 'none';
+    }
     
     // Обновляем отображение
     input.value = formatted;
