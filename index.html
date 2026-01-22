@@ -2896,8 +2896,8 @@ input#sumInput.size-xsmall {
 
 <script>
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
-        const GID = '1213653337'; 
-        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+const GID = '1213653337'; 
+const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
 
         let bonds = [];
         let bondDataCache = {};
@@ -3447,6 +3447,8 @@ function formatSumInput(input) {
     
     // Сохраняем числовое значение для расчётов
     const numericValue = parseInt(value) || 0;
+
+     console.log('formatSumInput - value:', value, 'numeric:', numericValue);
     
     // Форматируем с разделителями (точки)
     const formatted = numericValue.toLocaleString('ru-RU').replace(/\s/g, '.');
@@ -3460,6 +3462,7 @@ function formatSumInput(input) {
     // Вызываем перерасчёт
     draw();
 }
+    
 
 // NEW: Адаптивный размер шрифта в зависимости от длины
 function adjustSumInputSize(input) {
