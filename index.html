@@ -666,7 +666,7 @@ input#sumInput.size-xsmall {
         /* Белая карточка начинается с тарифа */
 .calc-box-white-section {
     background: var(--card-bg);
-    padding: 24px;
+    padding: 20px 24px 24px 24px; /* верх меньше, чем остальные стороны */
     border-radius: 24px;
     box-shadow: 0 15px 35px var(--card-shadow);
     border: 1px solid var(--border-color);
@@ -2326,7 +2326,7 @@ input#sumInput::placeholder {
                     </svg>
                 </div>
                 <div class="fee-dropdown-menu" id="feeDropdownMenu">
-                   <div class="fee-dropdown-item" onclick="selectFee(0.0001, '0.01%', '')">
+                   <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0001, '0.01%', '')">
     <div class="fee-item-left">
         <span class="fee-item-rate">0.01%</span>
     </div>
@@ -2337,7 +2337,7 @@ input#sumInput::placeholder {
     </div>
 </div>
 
-<div class="fee-dropdown-item" onclick="selectFee(0.0003, '0.03%', '')">
+<div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0003, '0.03%', '')">
     <div class="fee-item-left">
         <span class="fee-item-rate">0.03%</span>
     </div>
@@ -2348,7 +2348,7 @@ input#sumInput::placeholder {
     </div>
 </div>
 
-<div class="fee-dropdown-item" onclick="selectFee(0.0005, '0.05%', '')">
+<div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0005, '0.05%', '')">
     <div class="fee-item-left">
         <span class="fee-item-rate">0.05%</span>
     </div>
@@ -2359,7 +2359,7 @@ input#sumInput::placeholder {
     </div>
 </div>
 
-<div class="fee-dropdown-item" onclick="selectFee(0.001, '0.1%', '')">
+<div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.001, '0.1%', '')">
     <div class="fee-item-left">
         <span class="fee-item-rate">0.1%</span>
     </div>
@@ -2370,7 +2370,7 @@ input#sumInput::placeholder {
     </div>
 </div>
 
-<div class="fee-dropdown-item" onclick="selectFee(0.003, '0.3%', '')">
+<div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.003, '0.3%', '')">
     <div class="fee-item-left">
         <span class="fee-item-rate">0.3%</span>
     </div>
@@ -2381,7 +2381,7 @@ input#sumInput::placeholder {
     </div>
 </div>
 
-<div class="fee-dropdown-item" onclick="selectFee(0.005, '0.5%', '')">
+<div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.005, '0.5%', '')">
     <div class="fee-item-left">
         <span class="fee-item-rate">0.5%</span>
     </div>
@@ -3305,13 +3305,18 @@ input#sumInput::placeholder {
         }
 
         function calculateAndShowPortfolio() {
-            draw();
-            savePortfolio(); // Сохраняем портфель
-            isPortfolioCalculated = true;
-            document.getElementById('portfolio-empty').style.display = 'none';
-            document.getElementById('portfolio-content').style.display = 'block';
-            showScreen('screen-portfolio');
-        }
+    try {
+        draw();
+        savePortfolio();
+        isPortfolioCalculated = true;
+        document.getElementById('portfolio-empty').style.display = 'none';
+        document.getElementById('portfolio-content').style.display = 'block';
+        showScreen('screen-portfolio');
+    } catch(e) {
+        console.error('Error calculating portfolio:', e);
+        alert('Ошибка при формировании портфеля. Проверьте введённые данные.');
+    }
+}
 
         function toggleAccordion(id) {
             const el = document.getElementById(id);
@@ -3402,16 +3407,20 @@ input#sumInput::placeholder {
 
     // ========== НОВАЯ ФУНКЦИЯ - НАЧАЛО ==========
 function savePortfolio() {
-    const portfolioData = {
-        sum: getSumInputValue(),
-        ratio: parseInt(document.getElementById('ratioSlider').value),
-        fee: brokerFee,
-        tax: currentTax,
-        timestamp: new Date().toISOString()
-    };
-    
-    localStorage.setItem('portfolio_snapshot', JSON.stringify(portfolioData));
-    console.log('Portfolio saved:', portfolioData);
+    try {
+        const portfolioData = {
+            sum: getSumInputValue(),
+            ratio: parseInt(document.getElementById('ratioSlider').value),
+            fee: brokerFee,
+            tax: currentTax,
+            timestamp: new Date().toISOString()
+        };
+        
+        localStorage.setItem('portfolio_snapshot', JSON.stringify(portfolioData));
+        console.log('Portfolio saved:', portfolioData);
+    } catch(e) {
+        console.error('Error saving portfolio:', e);
+    }
 }
 // ========== НОВАЯ ФУНКЦИЯ - КОНЕЦ ==========
 
@@ -3448,6 +3457,13 @@ function toggleFeeDropdown() {
 }
 
 function selectFee(value, rateText, nameText) {
+    
+    // Закрываем клавиатуру если открыта
+    const sumInput = document.getElementById('sumInput');
+    if (sumInput && document.activeElement === sumInput) {
+        sumInput.blur();
+    }
+    
     brokerFee = value;
     isFeeSelected = true;
     
