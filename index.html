@@ -3724,24 +3724,16 @@ function updateStrategyCardSelection(bondPercent) {
     
     document.querySelectorAll('.strategy-card').forEach(card => {
         const cardBonds = card.getAttribute('data-bonds');
+        
         if (cardBonds === 'custom') {
-            // Кастомная карточка - выделяем только если есть сохранённые значения
+            // Кастомная карточка - выделяем ТОЛЬКО если есть сохранённые значения
             if (savedCustomBonds !== null && savedCustomBonds === bondPercent) {
                 card.classList.add('selected');
-            } else if (!isPreset && savedCustomBonds === null) {
-                // Если значение не пресетное и нет сохранённых - открываем кастом
-                card.classList.add('selected');
-                const expandedBlock = document.getElementById('customStrategyExpanded');
-                if (expandedBlock && !expandedBlock.classList.contains('show')) {
-                    expandedBlock.classList.add('show');
-                }
-                updateCustomSliderDisplay(bondPercent);
-                document.getElementById('customRatioSlider').value = bondPercent;
             } else {
                 card.classList.remove('selected');
             }
         } else {
-            // Обычные карточки
+            // Обычные карточки (включая Гармонию 50/50)
             if (parseInt(cardBonds) === bondPercent) {
                 card.classList.add('selected');
             } else {
