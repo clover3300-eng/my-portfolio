@@ -2650,7 +2650,7 @@ input#sumInput::placeholder {
     
     <!-- Кнопка раскрытия других стратегий -->
     <div class="strategy-expand-trigger" id="strategyExpandTrigger" onclick="event.stopPropagation(); toggleStrategyCards()">
-        <span class="strategy-expand-text">Другие стратегии или настроить свою</span>
+        <span class="strategy-expand-text">Другие стратегии</span>
         <svg class="strategy-expand-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
@@ -4185,7 +4185,7 @@ function toggleStrategyCards() {
     if (hiddenCards.classList.contains('show')) {
         textEl.textContent = 'Скрыть стратегии';
     } else {
-        textEl.textContent = 'Другие стратегии или настроить свою';
+        textEl.textContent = 'Другие стратегии';
     }
     
     if (window.Telegram?.WebApp?.HapticFeedback) {
