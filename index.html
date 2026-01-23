@@ -3479,19 +3479,25 @@ function formatSumInput(input) {
     // Обновляем отображение
     input.value = formatted;
     
-    // Адаптивный размер шрифта
+    // СНАЧАЛА адаптивный размер шрифта
     adjustSumInputSize(input);
+    
+    // ПОТОМ ширина (чтобы учесть новый размер шрифта)
     adjustInputWidth(input);
     
     // Вызываем перерасчёт
     draw();
 }
+
     function adjustInputWidth(input) {
     // Создаем временный span для измерения ширины текста
     const span = document.createElement('span');
-    span.style.font = window.getComputedStyle(input).font;
-    span.style.fontSize = window.getComputedStyle(input).fontSize;
-    span.style.letterSpacing = window.getComputedStyle(input).letterSpacing;
+    const computedStyle = window.getComputedStyle(input);
+    span.style.font = computedStyle.font;
+    span.style.fontSize = computedStyle.fontSize; // Берём ТЕКУЩИЙ размер шрифта (с учётом классов)
+    span.style.fontWeight = computedStyle.fontWeight;
+    span.style.letterSpacing = computedStyle.letterSpacing;
+    span.style.fontFamily = computedStyle.fontFamily;
     span.style.visibility = 'hidden';
     span.style.position = 'absolute';
     span.style.whiteSpace = 'nowrap';
@@ -3501,8 +3507,8 @@ function formatSumInput(input) {
     const width = span.offsetWidth;
     document.body.removeChild(span);
     
-    // Устанавливаем ширину с небольшим запасом
-    input.style.width = Math.max(200, Math.min(width + 20, window.innerWidth * 0.85)) + 'px';
+    // Устанавливаем ширину с небольшим запасом (10px вместо 20px)
+    input.style.width = Math.max(200, Math.min(width + 10, window.innerWidth * 0.85)) + 'px';
 }
     
 
