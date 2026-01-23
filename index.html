@@ -591,17 +591,16 @@ input#sumInput {
     font-family: 'JetBrains Mono', monospace;
     font-size: 42px; 
     font-weight: 500; 
-    width: auto; /* ИЗМЕНЕНО: автоматическая ширина */
-    min-width: 200px; /* ДОБАВЛЕНО: минимальная ширина для плейсхолдера */
-    max-width: 85%; /* ИЗМЕНЕНО: максимум 85% экрана */
+    width: 200px; /* Начальная ширина */
+    max-width: 85%;
     outline: none; 
     color: #2C364C;
     background: transparent; 
     margin: 0; 
-    padding: 0 8px; /* ДОБАВЛЕНО: небольшие отступы для визуального комфорта */
+    padding: 0;
     line-height: 1.2;
     text-align: center;
-    transition: font-size 0.15s ease;
+    transition: width 0.2s ease, font-size 0.15s ease; /* ДОБАВЛЕНО: анимация ширины */
     letter-spacing: -0.02em;
 }
 /* Убираем стрелочки для числового поля */
@@ -3482,9 +3481,28 @@ function formatSumInput(input) {
     
     // Адаптивный размер шрифта
     adjustSumInputSize(input);
+    adjustInputWidth(input);
     
     // Вызываем перерасчёт
     draw();
+}
+    function adjustInputWidth(input) {
+    // Создаем временный span для измерения ширины текста
+    const span = document.createElement('span');
+    span.style.font = window.getComputedStyle(input).font;
+    span.style.fontSize = window.getComputedStyle(input).fontSize;
+    span.style.letterSpacing = window.getComputedStyle(input).letterSpacing;
+    span.style.visibility = 'hidden';
+    span.style.position = 'absolute';
+    span.style.whiteSpace = 'nowrap';
+    span.textContent = input.value || input.placeholder;
+    
+    document.body.appendChild(span);
+    const width = span.offsetWidth;
+    document.body.removeChild(span);
+    
+    // Устанавливаем ширину с небольшим запасом
+    input.style.width = Math.max(200, Math.min(width + 20, window.innerWidth * 0.85)) + 'px';
 }
     
 
