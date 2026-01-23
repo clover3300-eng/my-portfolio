@@ -561,7 +561,7 @@ h1 {
     display: flex; 
     align-items: center; 
     justify-content: center;
-    gap: 4px;
+    gap: 0; /* ИЗМЕНЕНО: убираем gap */
     padding: 10px 0 20px 0;
     position: relative;
 }
@@ -591,7 +591,7 @@ input#sumInput {
     font-family: 'JetBrains Mono', monospace;
     font-size: 42px; 
     font-weight: 500; 
-    width: 60%; /* ИЗМЕНЕНО: фиксированная ширина вместо 100% */
+    width: 50%; /* ИЗМЕНЕНО: уменьшаем до 50% */
     max-width: 100%;
     outline: none; 
     color: #2C364C;
@@ -599,7 +599,7 @@ input#sumInput {
     margin: 0; 
     padding: 0; 
     line-height: 1.2;
-    text-align: right; /* ИЗМЕНЕНО: выравнивание вправо */
+    text-align: center; /* ИЗМЕНЕНО: возвращаем center */
     transition: font-size 0.15s ease;
     letter-spacing: -0.02em;
 }
