@@ -2974,9 +2974,22 @@ input#sumInput::placeholder {
     </div>
 
 <script>
+    
+        // ========== НОВЫЙ КОД - НАЧАЛО ==========
+        document.addEventListener('click', function(event) {
+            const sumInput = document.getElementById('sumInput');
+            const inputWrapper = document.querySelector('.input-wrapper');
+            
+            // Если клик НЕ по полю ввода и НЕ по его обёртке
+            if (sumInput && !sumInput.contains(event.target) && !inputWrapper?.contains(event.target)) {
+                sumInput.blur();
+            }
+        });
+        // ========== НОВЫЙ КОД - КОНЕЦ ==========
+        
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
-const GID = '1213653337'; 
-const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
+        const GID = '1213653337'; 
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
 
         let bonds = [];
         let bondDataCache = {};
@@ -3640,7 +3653,16 @@ function resetRatioTo50() {
 
     
 // NEW: Выбор стратегии по карточке
+// NEW: Выбор стратегии по карточке
 function selectStrategy(bondPercent, cardElement) {
+    // ========== НОВАЯ СТРОКА ==========
+    // Убираем фокус с поля ввода если оно активно
+    const sumInput = document.getElementById('sumInput');
+    if (sumInput && document.activeElement === sumInput) {
+        sumInput.blur();
+    }
+    // ========== КОНЕЦ НОВОЙ СТРОКИ ==========
+    
     // Закрываем кастомный блок если открыт
     const expandedBlock = document.getElementById('customStrategyExpanded');
     if (expandedBlock) {
@@ -3710,6 +3732,14 @@ function updateStrategyCardSelection(bondPercent) {
 function toggleCustomStrategy(cardElement) {
     const expandedBlock = document.getElementById('customStrategyExpanded');
     const isExpanded = expandedBlock.classList.contains('show');
+    
+    // ========== НОВЫЕ СТРОКИ ==========
+    // Убираем фокус с поля ввода
+    const sumInput = document.getElementById('sumInput');
+    if (sumInput && document.activeElement === sumInput) {
+        sumInput.blur();
+    }
+    // ========== КОНЕЦ НОВЫХ СТРОК ==========
     
     // Снимаем выделение со всех карточек
     document.querySelectorAll('.strategy-card').forEach(card => {
