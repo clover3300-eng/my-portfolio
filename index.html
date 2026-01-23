@@ -2440,7 +2440,7 @@ input#sumInput::placeholder {
     </div>
     
     <!-- Гармония 50/50 -->
-    <div class="strategy-card selected" onclick="event.stopPropagation(); selectStrategy(50, this)" data-bonds="50">
+   <div class="strategy-card selected" onclick="event.stopPropagation(); selectStrategy(50, this)" data-bonds="50">
         <div class="strategy-card-left">
             <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 50%, #94A8B8 50%, #94A8B8 100%);"></div>
             <div class="strategy-card-info">
@@ -3413,11 +3413,14 @@ input#sumInput::placeholder {
                 document.getElementById('ratioSlider').value = s.ratio || 50;
                 brokerFee = parseFloat(s.fee) || 0.0005; 
 currentTax = parseFloat(s.tax) || 0.13;
-                // Восстановление выбранной стратегии
-const savedRatio = parseInt(s.ratio) || 50;
-setTimeout(() => {
-    updateStrategyCardSelection(savedRatio);
-}, 100);
+                // Восстановление выбранной стратегии (только если она не 50/50)
+const savedRatio = parseInt(s.ratio);
+if (savedRatio && savedRatio !== 50) {
+    setTimeout(() => {
+        updateStrategyCardSelection(savedRatio);
+    }, 100);
+}
+// Если сохранено 50/50 или ничего не сохранено - оставляем Гармонию по умолчанию
 
 // Восстановление выбранного тарифа в dropdown
 const feeMap = {
@@ -3873,8 +3876,8 @@ function updateCustomCardDisplay(bondPct, stockPct) {
     subtitle.textContent = 'Индивидуальная';
     
     // Обновляем проценты
-    bondsText.textContent = `Облигации ${bondPct}%`;
-    stocksText.textContent = `Акции ${stockPct}%`;
+    bondsText.textContent = `Обл. ${bondPct}%`;
+    stocksText.textContent = `Акц. ${stockPct}%`;
 }
 
     // NEW: Сброс отображения кастомной карточки
