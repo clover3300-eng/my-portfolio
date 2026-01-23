@@ -559,9 +559,9 @@ h1 {
 
 .input-wrapper { 
     display: flex; 
-    align-items: baseline; 
+    align-items: center; 
     justify-content: center;
-    gap: 2px;
+    gap: 4px;
     padding: 10px 0 20px 0;
     position: relative;
 }
@@ -591,15 +591,15 @@ input#sumInput {
     font-family: 'JetBrains Mono', monospace;
     font-size: 42px; 
     font-weight: 500; 
-    width: auto;
-    max-width: fit-content;
+    width: auto; /* ОСТАВИТЬ */
+    max-width: 100%;
     outline: none; 
     color: #2C364C;
     background: transparent; 
     margin: 0; 
     padding: 0; 
     line-height: 1.2;
-    text-align: right;
+    text-align: center; /* ВЕРНУТЬ center */
     transition: font-size 0.15s ease;
     letter-spacing: -0.02em;
 }
