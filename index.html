@@ -3478,6 +3478,26 @@ input#sumInput::placeholder {
             }
         });
     } else {
+        // ИСПРАВЛЕНИЕ: Если нет сохранённых настроек - явно устанавливаем Гармонию
+        document.getElementById('ratioSlider').value = 50;
+        setTimeout(() => {
+            // Убираем selected со всех карточек
+            document.querySelectorAll('.strategy-card').forEach(c => c.classList.remove('selected'));
+            // Добавляем selected только к Гармонии
+            const harmonyCard = document.querySelector('.strategy-card[data-bonds="50"]');
+            if (harmonyCard) {
+                harmonyCard.classList.add('selected');
+            }
+        }, 200);
+    }
+}
+        
+        document.querySelectorAll('.tax-ui-btn').forEach(btn => {
+            if(!btn.id.includes('tax-custom')) {
+                btn.classList.toggle('active', parseFloat(btn.getAttribute('onclick').match(/[\d.]+/)) === currentTax);
+            }
+        });
+    } else {
         // Если нет сохранённых настроек - устанавливаем Гармонию 50/50 по умолчанию
         document.getElementById('ratioSlider').value = 50;
         setTimeout(() => {
