@@ -2527,13 +2527,13 @@ input#sumInput::placeholder {
         </div>
         
         <div class="custom-controls-row">
-            <button class="custom-adjust-btn" onclick="adjustCustomRatio(-5)">−</button>
+            <button class="custom-adjust-btn" onclick="event.stopPropagation(); adjustCustomRatio(-5)">−</button>
             <div class="custom-value-display">
                 <span class="custom-value-bonds" id="customBondsDisplay">50</span>
                 <span class="custom-value-divider">/</span>
                 <span class="custom-value-stocks" id="customStocksDisplay">50</span>
             </div>
-            <button class="custom-adjust-btn" onclick="adjustCustomRatio(5)">+</button>
+            <button class="custom-adjust-btn" onclick="event.stopPropagation(); adjustCustomRatio(5)">+</button>
         </div>
         
         <div class="custom-dots-indicator" id="customDotsIndicator">
@@ -2545,14 +2545,14 @@ input#sumInput::placeholder {
         </div>
         
         <div class="custom-actions-row">
-            <button class="custom-reset-btn" onclick="resetCustomTo50()">
+            <button class="custom-reset-btn" onclick="event.stopPropagation(); resetCustomTo50()">
                 <svg viewBox="0 0 24 24">
                     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                     <path d="M3 3v5h5"/>
                 </svg>
                 Сбросить
             </button>
-            <button class="custom-done-btn" onclick="saveCustomStrategy()">
+            <button class="custom-done-btn" onclick="event.stopPropagation(); saveCustomStrategy()">
                 <svg viewBox="0 0 24 24">
                     <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
