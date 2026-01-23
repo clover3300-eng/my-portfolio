@@ -2980,6 +2980,8 @@ input#sumInput::placeholder {
     </div>
 
 <script>
+    // Очистка старых настроек при загрузке
+        localStorage.removeItem('invest_settings');
     
         // ========== ИСПРАВЛЕННЫЙ КОД - НАЧАЛО ==========
         document.addEventListener('click', function(event) {
@@ -3003,6 +3005,8 @@ input#sumInput::placeholder {
             }
         });
         // ========== ИСПРАВЛЕННЫЙ КОД - КОНЕЦ ==========
+
+    
         
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
         const GID = '1213653337'; 
@@ -3302,6 +3306,7 @@ input#sumInput::placeholder {
 
         function calculateAndShowPortfolio() {
             draw();
+            savePortfolio(); // Сохраняем портфель
             isPortfolioCalculated = true;
             document.getElementById('portfolio-empty').style.display = 'none';
             document.getElementById('portfolio-content').style.display = 'block';
@@ -3391,85 +3396,43 @@ input#sumInput::placeholder {
         }
 
         function saveSettings() {
-    const settings = { 
-        sum: getSumInputValue(), 
-        ratio: document.getElementById('ratioSlider').value, 
-        fee: brokerFee, 
-        tax: currentTax 
-    };
-    localStorage.setItem('invest_settings', JSON.stringify(settings));
+    // Автосохранение отключено
+    // Настройки сбрасываются при каждом открытии
 }
 
+    // ========== НОВАЯ ФУНКЦИЯ - НАЧАЛО ==========
+function savePortfolio() {
+    const portfolioData = {
+        sum: getSumInputValue(),
+        ratio: parseInt(document.getElementById('ratioSlider').value),
+        fee: brokerFee,
+        tax: currentTax,
+        timestamp: new Date().toISOString()
+    };
+    
+    localStorage.setItem('portfolio_snapshot', JSON.stringify(portfolioData));
+    console.log('Portfolio saved:', portfolioData);
+}
+// ========== НОВАЯ ФУНКЦИЯ - КОНЕЦ ==========
+
        function loadSettings() {
-    const saved = localStorage.getItem('invest_settings');
-    if (saved) {
-        const s = JSON.parse(saved);
+    // Загрузка настроек отключена
+    // Всегда используем значения по умолчанию
+    
+    // Устанавливаем Гармонию 50/50 по умолчанию
+    document.getElementById('ratioSlider').value = 50;
+    
+    // Небольшая задержка для корректной инициализации
+    setTimeout(() => {
+        // Убираем selected со всех карточек
+        document.querySelectorAll('.strategy-card').forEach(c => c.classList.remove('selected'));
         
-        // НЕ загружаем сумму, оставляем поле пустым для плейсхолдера
-        const sumInput = document.getElementById('sumInput');
-        if (sumInput) {
-            sumInput.value = ''; 
-            adjustSumInputSize(sumInput);
+        // Добавляем selected только к Гармонии
+        const harmonyCard = document.querySelector('.strategy-card[data-bonds="50"]');
+        if (harmonyCard) {
+            harmonyCard.classList.add('selected');
         }
-        
-        // ИСПРАВЛЕНИЕ: Загружаем ratio, но если его нет - используем 50 (Гармония)
-        const savedRatio = s.ratio !== undefined ? parseInt(s.ratio) : 50;
-        document.getElementById('ratioSlider').value = savedRatio;
-        
-        brokerFee = parseFloat(s.fee) || 0.0005; 
-        currentTax = parseFloat(s.tax) || 0.13;
-        
-        // ИСПРАВЛЕНИЕ: Добавляем небольшую задержку для корректной загрузки
-        setTimeout(() => {
-            updateStrategyCardSelection(savedRatio);
-        }, 200); // Увеличили задержку с 100 до 200мс
-
-        // Восстановление выбранного тарифа в dropdown
-        const feeMap = {
-            0.0001: { rate: '0.01%', name: '' },
-            0.0003: { rate: '0.03%', name: '' },
-            0.0005: { rate: '0.05%', name: '' },
-            0.001: { rate: '0.1%', name: '' },
-            0.003: { rate: '0.3%', name: '' },
-            0.005: { rate: '0.5%', name: '' }
-        };
-
-        if (feeMap[brokerFee]) {
-            const selectedText = document.getElementById('feeSelectedText');
-            const trigger = document.getElementById('feeDropdownTrigger');
-            if (selectedText && trigger) {
-                selectedText.textContent = feeMap[brokerFee].rate;
-                selectedText.classList.remove('placeholder');
-                trigger.classList.add('active');
-                isFeeSelected = true;
-                
-                document.querySelectorAll('.fee-dropdown-item').forEach(item => {
-                    const itemRate = item.querySelector('.fee-item-rate')?.textContent;
-                    if (itemRate === feeMap[brokerFee].rate) {
-                        item.classList.add('selected');
-                    }
-                });
-            }
-        }
-        
-        document.querySelectorAll('.tax-ui-btn').forEach(btn => {
-            if(!btn.id.includes('tax-custom')) {
-                btn.classList.toggle('active', parseFloat(btn.getAttribute('onclick').match(/[\d.]+/)) === currentTax);
-            }
-        });
-    } else {
-        // ИСПРАВЛЕНИЕ: Если нет сохранённых настроек - явно устанавливаем Гармонию
-        document.getElementById('ratioSlider').value = 50;
-        setTimeout(() => {
-            // Убираем selected со всех карточек
-            document.querySelectorAll('.strategy-card').forEach(c => c.classList.remove('selected'));
-            // Добавляем selected только к Гармонии
-            const harmonyCard = document.querySelector('.strategy-card[data-bonds="50"]');
-            if (harmonyCard) {
-                harmonyCard.classList.add('selected');
-            }
-        }, 200);
-    }
+    }, 100);
 }
         
 
@@ -4746,7 +4709,7 @@ function openCompanyFromTable(event, ticker, companyName) {
     
     console.log('Drawing with sum:', inputSum);
     
-    saveSettings();
+   
             const bondPct = parseInt(document.getElementById('ratioSlider').value);
             const stockPct = 100 - bondPct;
 
