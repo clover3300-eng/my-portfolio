@@ -3410,53 +3410,60 @@ input#sumInput::placeholder {
             sumInput.value = ''; // Пустое поле = виден плейсхолдер
             adjustSumInputSize(sumInput);
         }
-                document.getElementById('ratioSlider').value = s.ratio || 50;
-                brokerFee = parseFloat(s.fee) || 0.0005; 
-currentTax = parseFloat(s.tax) || 0.13;
-                // Восстановление выбранной стратегии (только если она не 50/50)
-const savedRatio = parseInt(s.ratio);
-if (savedRatio && savedRatio !== 50) {
-    setTimeout(() => {
-        updateStrategyCardSelection(savedRatio);
-    }, 100);
-}
-// Если сохранено 50/50 или ничего не сохранено - оставляем Гармонию по умолчанию
-
-// Восстановление выбранного тарифа в dropdown
-const feeMap = {
-    0.0001: { rate: '0.01%', name: 'Лайт' },
-    0.0003: { rate: '0.03%', name: 'Стандарт' },
-    0.0005: { rate: '0.05%', name: 'Премиум (стандарт)' },
-    0.001: { rate: '0.1%', name: 'Бизнес' },
-    0.003: { rate: '0.3%', name: 'VIP' },
-    0.005: { rate: '0.5%', name: 'Private' }
-};
-
-if (feeMap[brokerFee]) {
-    const selectedText = document.getElementById('feeSelectedText');
-    const trigger = document.getElementById('feeDropdownTrigger');
-    if (selectedText && trigger) {
-        selectedText.textContent = `${feeMap[brokerFee].rate} — ${feeMap[brokerFee].name}`;
-        selectedText.classList.remove('placeholder');
-        trigger.classList.add('active');
-        isFeeSelected = true;
         
-        // Отмечаем выбранный элемент в меню
-        document.querySelectorAll('.fee-dropdown-item').forEach(item => {
-            const itemRate = item.querySelector('.fee-item-rate')?.textContent;
-            if (itemRate === feeMap[brokerFee].rate) {
-                item.classList.add('selected');
-            }
-        });
-    }
-}
-                document.querySelectorAll('.tax-ui-btn').forEach(btn => {
-                    if(!btn.id.includes('tax-custom')) {
-                        btn.classList.toggle('active', parseFloat(btn.getAttribute('onclick').match(/[\d.]+/)) === currentTax);
+        const savedRatio = parseInt(s.ratio);
+        document.getElementById('ratioSlider').value = savedRatio || 50;
+        
+        brokerFee = parseFloat(s.fee) || 0.0005; 
+        currentTax = parseFloat(s.tax) || 0.13;
+        
+        // Восстановление выбранной стратегии
+        setTimeout(() => {
+            updateStrategyCardSelection(savedRatio || 50);
+        }, 100);
+
+        // Восстановление выбранного тарифа в dropdown
+        const feeMap = {
+            0.0001: { rate: '0.01%', name: 'Лайт' },
+            0.0003: { rate: '0.03%', name: 'Стандарт' },
+            0.0005: { rate: '0.05%', name: 'Премиум (стандарт)' },
+            0.001: { rate: '0.1%', name: 'Бизнес' },
+            0.003: { rate: '0.3%', name: 'VIP' },
+            0.005: { rate: '0.5%', name: 'Private' }
+        };
+
+        if (feeMap[brokerFee]) {
+            const selectedText = document.getElementById('feeSelectedText');
+            const trigger = document.getElementById('feeDropdownTrigger');
+            if (selectedText && trigger) {
+                selectedText.textContent = `${feeMap[brokerFee].rate} — ${feeMap[brokerFee].name}`;
+                selectedText.classList.remove('placeholder');
+                trigger.classList.add('active');
+                isFeeSelected = true;
+                
+                // Отмечаем выбранный элемент в меню
+                document.querySelectorAll('.fee-dropdown-item').forEach(item => {
+                    const itemRate = item.querySelector('.fee-item-rate')?.textContent;
+                    if (itemRate === feeMap[brokerFee].rate) {
+                        item.classList.add('selected');
                     }
                 });
             }
         }
+        
+        document.querySelectorAll('.tax-ui-btn').forEach(btn => {
+            if(!btn.id.includes('tax-custom')) {
+                btn.classList.toggle('active', parseFloat(btn.getAttribute('onclick').match(/[\d.]+/)) === currentTax);
+            }
+        });
+    } else {
+        // Если нет сохранённых настроек - устанавливаем Гармонию 50/50 по умолчанию
+        document.getElementById('ratioSlider').value = 50;
+        setTimeout(() => {
+            updateStrategyCardSelection(50);
+        }, 100);
+    }
+}
 
         
 
