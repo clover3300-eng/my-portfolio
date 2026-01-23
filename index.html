@@ -559,9 +559,9 @@ h1 {
 
 .input-wrapper { 
     display: flex; 
-    align-items: center; 
+    align-items: baseline; 
     justify-content: center;
-    gap: 0px;
+    gap: 2px;
     padding: 10px 0 20px 0;
     position: relative;
 }
@@ -591,15 +591,15 @@ input#sumInput {
     font-family: 'JetBrains Mono', monospace;
     font-size: 42px; 
     font-weight: 500; 
-    width: 100%;
-    max-width: 100%;
+    width: auto;
+    max-width: fit-content;
     outline: none; 
     color: #2C364C;
     background: transparent; 
     margin: 0; 
     padding: 0; 
     line-height: 1.2;
-    text-align: center;
+    text-align: right;
     transition: font-size 0.15s ease;
     letter-spacing: -0.02em;
 }
@@ -637,8 +637,9 @@ input#sumInput.size-xsmall {
     color: #94A3B8; 
     font-weight: 400;
     opacity: 0.6;
-    margin-left: 4px;
+    margin-left: 0px;
     flex-shrink: 0;
+    line-height: 1.2;
 }
 
 .dark-mode input#sumInput {
