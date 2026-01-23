@@ -675,6 +675,159 @@ input#sumInput.size-xsmall {
 .fee-selector {
     margin-bottom: 20px;
 }
+        /* ========== Fee Selector Inline ========== */
+/* ========== Unified Fee Selector (одна рамка) ========== */
+.fee-selector-unified {
+    position: relative;
+}
+
+.fee-unified-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 14px 18px;
+    background: var(--card-bg);
+    border: 1px solid #E8EDF2;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+}
+
+.fee-unified-wrapper:hover {
+    border-color: #CBD5E1;
+}
+
+.fee-unified-wrapper.active {
+    border-color: #2C364C;
+}
+
+.fee-unified-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--text-main);
+    font-weight: 600;
+    white-space: nowrap;
+    flex: 1;
+}
+
+.fee-unified-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fee-unified-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.fee-unified-trigger:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.fee-unified-trigger .fee-selected-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    min-width: 50px;
+    text-align: right;
+}
+
+.fee-unified-trigger .fee-selected-text.placeholder {
+    color: #A0AEC0;
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.fee-unified-trigger .fee-dropdown-arrow {
+    width: 16px;
+    height: 16px;
+    color: #8A9AB0;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.fee-unified-trigger.open .fee-dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown menu позиционируется относительно контейнера */
+.fee-selector-unified .fee-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    left: auto;
+    width: 200px;
+    background: var(--card-bg);
+    border: 1px solid #E8EDF2;
+    border-radius: 14px;
+    overflow: hidden;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.fee-selector-unified .fee-dropdown-menu.show {
+    display: block;
+    animation: dropdownSlide 0.2s ease;
+}
+
+/* Dark mode */
+.dark-mode .fee-unified-wrapper {
+    border-color: #334155;
+}
+
+.dark-mode .fee-unified-wrapper:hover {
+    border-color: #475569;
+}
+
+.dark-mode .fee-unified-wrapper.active {
+    border-color: var(--accent-blue);
+}
+
+.dark-mode .fee-unified-trigger {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .fee-unified-trigger:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Компактный размер триггера */
+.fee-dropdown-trigger {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--card-bg);
+    border: 1px solid #E8EDF2;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+/* Компактный текст */
+.fee-selected-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.fee-selected-text.placeholder {
+    color: #A0AEC0;
+    font-weight: 500;
+    font-size: 12px;
+}
 
 .fee-label {
     font-family: 'Inter', sans-serif;
@@ -694,7 +847,7 @@ input#sumInput.size-xsmall {
 
 .fee-dropdown-trigger {
     width: 100%;
-    padding: 16px 20px;
+    padding: 12px 16px; /* ИЗМЕНЕНО: было 16px 20px */
     background: var(--card-bg);
     border: 1px solid #E8EDF2;
     border-radius: 14px;
@@ -721,14 +874,15 @@ input#sumInput.size-xsmall {
 
 .fee-selected-text {
     font-family: 'Inter', sans-serif;
-    font-size: 15px;
+    font-size: 13px; /* ИЗМЕНЕНО: было 15px */
     font-weight: 600;
     color: var(--text-main);
 }
 
 .fee-selected-text.placeholder {
     color: #A0AEC0;
-    font-weight: 400;
+    font-weight: 500; /* ИЗМЕНЕНО: было 400 */
+    font-size: 12px; /* ДОБАВЛЕНО */
 }
 
 .fee-dropdown-arrow {
@@ -2315,85 +2469,90 @@ input#sumInput::placeholder {
 </div>
         
        
-        <!-- Тариф комиссии - Dropdown -->
-    <div class="fee-selector" style="margin-top: 30px; margin-bottom: 30px;">
-        <span class="fee-label">Тариф комиссии</span>
-            <div class="fee-dropdown-container">
-                <div class="fee-dropdown-trigger" id="feeDropdownTrigger" onclick="event.stopPropagation(); toggleFeeDropdown()">
-                    <span class="fee-selected-text placeholder" id="feeSelectedText">Выберите тариф Вашего Брокера</span>
-                    <svg class="fee-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                </div>
-                <div class="fee-dropdown-menu" id="feeDropdownMenu">
-                   <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0001, '0.01%', '')">
-    <div class="fee-item-left">
-        <span class="fee-item-rate">0.01%</span>
-    </div>
-    <div class="fee-item-check">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-    </div>
-</div>
-
-<div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0003, '0.03%', '')">
-    <div class="fee-item-left">
-        <span class="fee-item-rate">0.03%</span>
-    </div>
-    <div class="fee-item-check">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-    </div>
-</div>
-
-<div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0005, '0.05%', '')">
-    <div class="fee-item-left">
-        <span class="fee-item-rate">0.05%</span>
-    </div>
-    <div class="fee-item-check">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-    </div>
-</div>
-
-<div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.001, '0.1%', '')">
-    <div class="fee-item-left">
-        <span class="fee-item-rate">0.1%</span>
-    </div>
-    <div class="fee-item-check">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-    </div>
-</div>
-
-<div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.003, '0.3%', '')">
-    <div class="fee-item-left">
-        <span class="fee-item-rate">0.3%</span>
-    </div>
-    <div class="fee-item-check">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-    </div>
-</div>
-
-<div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.005, '0.5%', '')">
-    <div class="fee-item-left">
-        <span class="fee-item-rate">0.5%</span>
-    </div>
-    <div class="fee-item-check">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-    </div>
-</div>
-                </div>
+       <!-- Комиссия брокера - одна рамка -->
+<div class="fee-selector-unified" style="margin-top: 30px; margin-bottom: 30px;">
+    <div class="fee-unified-wrapper">
+        <span class="fee-unified-label">Комиссия Вашего Брокера</span>
+        
+        <div class="fee-unified-dropdown">
+            <div class="fee-unified-trigger" id="feeDropdownTrigger" onclick="event.stopPropagation(); toggleFeeDropdown()">
+                <span class="fee-selected-text placeholder" id="feeSelectedText">Выбрать</span>
+                <svg class="fee-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
             </div>
         </div>
+    </div>
+    
+    <!-- Dropdown menu вне wrapper -->
+    <div class="fee-dropdown-menu" id="feeDropdownMenu">
+        <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0001, '0.01%', '')">
+            <div class="fee-item-left">
+                <span class="fee-item-rate">0.01%</span>
+            </div>
+            <div class="fee-item-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0003, '0.03%', '')">
+            <div class="fee-item-left">
+                <span class="fee-item-rate">0.03%</span>
+            </div>
+            <div class="fee-item-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0005, '0.05%', '')">
+            <div class="fee-item-left">
+                <span class="fee-item-rate">0.05%</span>
+            </div>
+            <div class="fee-item-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.001, '0.1%', '')">
+            <div class="fee-item-left">
+                <span class="fee-item-rate">0.1%</span>
+            </div>
+            <div class="fee-item-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.003, '0.3%', '')">
+            <div class="fee-item-left">
+                <span class="fee-item-rate">0.3%</span>
+            </div>
+            <div class="fee-item-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+        </div>
+        
+        <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.005, '0.5%', '')">
+            <div class="fee-item-left">
+                <span class="fee-item-rate">0.5%</span>
+            </div>
+            <div class="fee-item-check">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
 
         <!-- Белая карточка начинается здесь -->
         <div class="calc-box-white-section">
@@ -3451,15 +3610,28 @@ function savePortfolio() {
 let isFeeSelected = false;
 
 function toggleFeeDropdown() {
+    // Закрываем клавиатуру если открыта
+    const sumInput = document.getElementById('sumInput');
+    if (sumInput && document.activeElement === sumInput) {
+        sumInput.blur();
+    }
+    
     const trigger = document.getElementById('feeDropdownTrigger');
     const menu = document.getElementById('feeDropdownMenu');
+    const wrapper = document.querySelector('.fee-unified-wrapper');
     
     trigger.classList.toggle('open');
     menu.classList.toggle('show');
+    
+    // Добавляем класс active к wrapper
+    if (menu.classList.contains('show')) {
+        wrapper?.classList.add('active');
+    } else {
+        wrapper?.classList.remove('active');
+    }
 }
 
 function selectFee(value, rateText, nameText) {
-    
     // Закрываем клавиатуру если открыта
     const sumInput = document.getElementById('sumInput');
     if (sumInput && document.activeElement === sumInput) {
@@ -3474,9 +3646,9 @@ function selectFee(value, rateText, nameText) {
     selectedText.textContent = rateText;
     selectedText.classList.remove('placeholder');
     
-    // Обновляем активный класс триггера
-    const trigger = document.getElementById('feeDropdownTrigger');
-    trigger.classList.add('active');
+    // Обновляем активный класс wrapper
+    const wrapper = document.querySelector('.fee-unified-wrapper');
+    wrapper?.classList.add('active');
     
     // Обновляем выбранный элемент в списке
     document.querySelectorAll('.fee-dropdown-item').forEach(item => {
@@ -3498,23 +3670,21 @@ function selectFee(value, rateText, nameText) {
 
 // Закрытие dropdown при клике вне его
 document.addEventListener('click', function(event) {
-    const container = document.querySelector('.fee-dropdown-container');
+    const container = document.querySelector('.fee-selector-unified');
     const menu = document.getElementById('feeDropdownMenu');
     const trigger = document.getElementById('feeDropdownTrigger');
+    const wrapper = document.querySelector('.fee-unified-wrapper');
     
     if (container && !container.contains(event.target)) {
         menu?.classList.remove('show');
         trigger?.classList.remove('open');
         
-        // НЕ закрываем клавиатуру здесь - она закроется основным обработчиком
+        // Убираем active только если не выбран тариф
+        if (!isFeeSelected) {
+            wrapper?.classList.remove('active');
+        }
     }
 });
-
-// Старая функция setFee для совместимости (если где-то используется)
-function setFee(val, btn) {
-    brokerFee = val;
-    draw();
-}
 
         function setTax(val, btn) {
             currentTax = val;
