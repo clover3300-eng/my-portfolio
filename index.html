@@ -4711,6 +4711,14 @@ function openCompanyFromTable(event, ticker, companyName) {
         }
 
         function draw() {
+    // ========== НОВЫЕ СТРОКИ - НАЧАЛО ==========
+    // Убираем фокус с поля ввода перед перерисовкой
+    const sumInput = document.getElementById('sumInput');
+    if (sumInput && document.activeElement === sumInput) {
+        sumInput.blur();
+    }
+    // ========== НОВЫЕ СТРОКИ - КОНЕЦ ==========
+    
     const inputSum = getSumInputValue();
     
     // Если сумма = 0 (поле пустое), не сохраняем и не рисуем
