@@ -3010,7 +3010,7 @@ input#sumInput::placeholder {
         
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
         const GID = '1213653337'; 
-        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
         let bonds = [];
         let bondDataCache = {};
@@ -3623,9 +3623,21 @@ function adjustSumInputSize(input) {
 // NEW: Получить числовое значение из форматированного поля
 function getSumInputValue() {
     const input = document.getElementById('sumInput');
-    if (!input) return 0;
-    // Убираем все точки и получаем число
-    return parseInt(input.value.replace(/\./g, '')) || 0;
+    if (!input) {
+        console.log('getSumInputValue: input not found');
+        return 0;
+    }
+    
+    const value = input.value;
+    console.log('getSumInputValue: raw value:', value);
+    
+    const cleanValue = value.replace(/\./g, '');
+    console.log('getSumInputValue: clean value:', cleanValue);
+    
+    const result = parseInt(cleanValue) || 0;
+    console.log('getSumInputValue: result:', result);
+    
+    return result;
 }
 
 // NEW: Скрытие меню при фокусе на вводе
@@ -4001,8 +4013,19 @@ function resetCustomTo50() {
             //updateMarketStatus(); //Временно отключаем, т.к. элемент не существует
             
             try {
-                const response = await fetch(CSV_URL);
-                const text = await response.text();
+    console.log('Fetching data from:', CSV_URL);
+    const response = await fetch(CSV_URL, {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache'
+    });
+    
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const text = await response.text();
+    console.log('Data loaded successfully, length:', text.length);
                 // 1. Парсим CSV в массив строк (ЭТА СТРОКА ОБЯЗАТЕЛЬНА)
                 const rows = text.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim()));
 
@@ -4997,15 +5020,17 @@ function openCompanyFromTable(event, ticker, companyName) {
         }
 
     // Регистрация Service Worker для PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./service-worker.js')
-                .then(function(registration) {
-                    console.log('Service Worker зарегистрирован:', registration);
-                })
-                .catch(function(error) {
-                    console.log('Ошибка регистрации Service Worker:', error);
-                });
-        }
+        if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    navigator.serviceWorker.register('./service-worker.js')
+        .then(function(registration) {
+            console.log('Service Worker зарегистрирован:', registration);
+        })
+        .catch(function(error) {
+            console.log('Ошибка регистрации Service Worker:', error);
+        });
+} else {
+    console.log('Service Worker not registered: not HTTPS or not supported');
+}
 
              // Показываем навигацию принудительно для отладки
              document.getElementById('navWrapper').style.display = 'flex';
