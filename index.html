@@ -2319,7 +2319,7 @@ input#sumInput::placeholder {
     <div class="fee-selector" style="margin-top: 30px; margin-bottom: 30px;">
         <span class="fee-label">Тариф комиссии</span>
             <div class="fee-dropdown-container">
-                <div class="fee-dropdown-trigger" id="feeDropdownTrigger" onclick="toggleFeeDropdown()">
+                <div class="fee-dropdown-trigger" id="feeDropdownTrigger" onclick="event.stopPropagation(); toggleFeeDropdown()">
                     <span class="fee-selected-text placeholder" id="feeSelectedText">Выберите тариф Вашего Брокера</span>
                     <svg class="fee-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"></polyline>
@@ -2985,16 +2985,18 @@ input#sumInput::placeholder {
     
         // ========== ИСПРАВЛЕННЫЙ КОД - НАЧАЛО ==========
         document.addEventListener('click', function(event) {
-            const sumInput = document.getElementById('sumInput');
-            const inputWrapper = document.querySelector('.input-wrapper');
-            const currencySymbol = document.getElementById('currencySymbol');
-            
-            // Игнорируем клики по полю ввода, его обёртке, символу валюты и карточкам стратегий
-            if (event.target.closest('.strategy-card') || 
-                event.target.closest('.fee-dropdown-container') ||
-                event.target.closest('.custom-strategy-expanded')) {
-                return; // Не закрываем клавиатуру при клике на эти элементы
-            }
+    const sumInput = document.getElementById('sumInput');
+    const inputWrapper = document.querySelector('.input-wrapper');
+    const currencySymbol = document.getElementById('currencySymbol');
+    
+    // Игнорируем клики по полю ввода, его обёртке, символу валюты и карточкам стратегий
+    if (event.target.closest('.strategy-card') || 
+        event.target.closest('.fee-dropdown-container') ||
+        event.target.closest('.fee-dropdown-trigger') || // ДОБАВЛЕНО
+        event.target.closest('.fee-dropdown-menu') ||    // ДОБАВЛЕНО
+        event.target.closest('.custom-strategy-expanded')) {
+        return; // Не закрываем клавиатуру при клике на эти элементы
+    }
             
             // Если клик НЕ по полю ввода и НЕ по его обёртке - закрываем клавиатуру
             if (sumInput && 
@@ -3503,6 +3505,8 @@ document.addEventListener('click', function(event) {
     if (container && !container.contains(event.target)) {
         menu?.classList.remove('show');
         trigger?.classList.remove('open');
+        
+        // НЕ закрываем клавиатуру здесь - она закроется основным обработчиком
     }
 });
 
