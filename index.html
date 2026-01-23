@@ -591,19 +591,19 @@ input#sumInput {
     font-family: 'JetBrains Mono', monospace;
     font-size: 42px; 
     font-weight: 500; 
-    width: 80%; /* ИЗМЕНЕНО: увеличиваем с 50% до 80% */
-    max-width: 100%;
+    width: auto; /* ИЗМЕНЕНО: автоматическая ширина */
+    min-width: 200px; /* ДОБАВЛЕНО: минимальная ширина для плейсхолдера */
+    max-width: 85%; /* ИЗМЕНЕНО: максимум 85% экрана */
     outline: none; 
     color: #2C364C;
     background: transparent; 
     margin: 0; 
-    padding: 0; 
+    padding: 0 8px; /* ДОБАВЛЕНО: небольшие отступы для визуального комфорта */
     line-height: 1.2;
-    text-align: center; /* ИЗМЕНЕНО: возвращаем center */
+    text-align: center;
     transition: font-size 0.15s ease;
     letter-spacing: -0.02em;
 }
-
 /* Убираем стрелочки для числового поля */
 input#sumInput::-webkit-outer-spin-button,
 input#sumInput::-webkit-inner-spin-button {
