@@ -2398,7 +2398,7 @@ input#sumInput::placeholder {
     <!-- Карточки стратегий -->
 <div class="strategy-cards-container">
     <!-- Депозит 80/20 -->
-    <div class="strategy-card" onclick="selectStrategy(80, this)" data-bonds="80">
+    <div class="strategy-card" onclick="event.stopPropagation(); selectStrategy(80, this)" data-bonds="80">
         <div class="strategy-card-left">
             <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 80%, #94A8B8 80%, #94A8B8 100%);"></div>
             <div class="strategy-card-info">
@@ -2416,7 +2416,7 @@ input#sumInput::placeholder {
     </div>
     
     <!-- Баланс 60/40 -->
-    <div class="strategy-card" onclick="selectStrategy(60, this)" data-bonds="60">
+    <div class="strategy-card" onclick="event.stopPropagation(); selectStrategy(60, this)" data-bonds="60">
         <div class="strategy-card-left">
             <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 60%, #94A8B8 60%, #94A8B8 100%);"></div>
             <div class="strategy-card-info">
@@ -2434,7 +2434,7 @@ input#sumInput::placeholder {
     </div>
     
     <!-- Гармония 50/50 -->
-    <div class="strategy-card selected" onclick="selectStrategy(50, this)" data-bonds="50">
+    <div class="strategy-card selected" onclick="event.stopPropagation(); selectStrategy(50, this)" data-bonds="50">
         <div class="strategy-card-left">
             <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 50%, #94A8B8 50%, #94A8B8 100%);"></div>
             <div class="strategy-card-info">
@@ -2452,7 +2452,7 @@ input#sumInput::placeholder {
     </div>
     
     <!-- Умеренная 40/60 -->
-    <div class="strategy-card" onclick="selectStrategy(40, this)" data-bonds="40">
+    <div class="strategy-card" onclick="event.stopPropagation(); selectStrategy(40, this)" data-bonds="40">
         <div class="strategy-card-left">
             <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 40%, #94A8B8 40%, #94A8B8 100%);"></div>
             <div class="strategy-card-info">
@@ -2470,7 +2470,7 @@ input#sumInput::placeholder {
     </div>
     
     <!-- Агрессивная 20/80 -->
-    <div class="strategy-card" onclick="selectStrategy(20, this)" data-bonds="20">
+    <div class="strategy-card" onclick="event.stopPropagation(); selectStrategy(20, this)" data-bonds="20">
         <div class="strategy-card-left">
             <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 20%, #94A8B8 20%, #94A8B8 100%);"></div>
             <div class="strategy-card-info">
@@ -2488,7 +2488,7 @@ input#sumInput::placeholder {
     </div>
     
     <!-- Настроить свою -->
-    <div class="strategy-card strategy-card-custom" id="customStrategyCard" onclick="toggleCustomStrategy(this)" data-bonds="custom">
+    <div class="strategy-card strategy-card-custom" id="customStrategyCard" onclick="event.stopPropagation(); toggleCustomStrategy(this)" data-bonds="custom">
         <div class="strategy-card-left">
             <div class="strategy-indicator" id="customIndicator"></div>
             <div class="strategy-custom-icon" id="customIcon">
@@ -2975,17 +2975,28 @@ input#sumInput::placeholder {
 
 <script>
     
-        // ========== НОВЫЙ КОД - НАЧАЛО ==========
+        // ========== ИСПРАВЛЕННЫЙ КОД - НАЧАЛО ==========
         document.addEventListener('click', function(event) {
             const sumInput = document.getElementById('sumInput');
             const inputWrapper = document.querySelector('.input-wrapper');
+            const currencySymbol = document.getElementById('currencySymbol');
             
-            // Если клик НЕ по полю ввода и НЕ по его обёртке
-            if (sumInput && !sumInput.contains(event.target) && !inputWrapper?.contains(event.target)) {
+            // Игнорируем клики по полю ввода, его обёртке, символу валюты и карточкам стратегий
+            if (event.target.closest('.strategy-card') || 
+                event.target.closest('.fee-dropdown-container') ||
+                event.target.closest('.custom-strategy-expanded')) {
+                return; // Не закрываем клавиатуру при клике на эти элементы
+            }
+            
+            // Если клик НЕ по полю ввода и НЕ по его обёртке - закрываем клавиатуру
+            if (sumInput && 
+                !sumInput.contains(event.target) && 
+                !inputWrapper?.contains(event.target) &&
+                !currencySymbol?.contains(event.target)) {
                 sumInput.blur();
             }
         });
-        // ========== НОВЫЙ КОД - КОНЕЦ ==========
+        // ========== ИСПРАВЛЕННЫЙ КОД - КОНЕЦ ==========
         
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
         const GID = '1213653337'; 
@@ -3655,13 +3666,8 @@ function resetRatioTo50() {
 // NEW: Выбор стратегии по карточке
 // NEW: Выбор стратегии по карточке
 function selectStrategy(bondPercent, cardElement) {
-    // ========== НОВАЯ СТРОКА ==========
-    // Убираем фокус с поля ввода если оно активно
-    const sumInput = document.getElementById('sumInput');
-    if (sumInput && document.activeElement === sumInput) {
-        sumInput.blur();
-    }
-    // ========== КОНЕЦ НОВОЙ СТРОКИ ==========
+    // Предотвращаем скролл и закрытие клавиатуры
+    event?.preventDefault();
     
     // Закрываем кастомный блок если открыт
     const expandedBlock = document.getElementById('customStrategyExpanded');
@@ -3730,6 +3736,9 @@ function updateStrategyCardSelection(bondPercent) {
 }
     // NEW: Переключение кастомной стратегии
 function toggleCustomStrategy(cardElement) {
+    // Предотвращаем скролл
+    event?.preventDefault();
+    
     const expandedBlock = document.getElementById('customStrategyExpanded');
     const isExpanded = expandedBlock.classList.contains('show');
     
@@ -4711,13 +4720,6 @@ function openCompanyFromTable(event, ticker, companyName) {
         }
 
         function draw() {
-    // ========== НОВЫЕ СТРОКИ - НАЧАЛО ==========
-    // Убираем фокус с поля ввода перед перерисовкой
-    const sumInput = document.getElementById('sumInput');
-    if (sumInput && document.activeElement === sumInput) {
-        sumInput.blur();
-    }
-    // ========== НОВЫЕ СТРОКИ - КОНЕЦ ==========
     
     const inputSum = getSumInputValue();
     
