@@ -3083,8 +3083,10 @@ body.dark-mode #screen-interesting {
     border-radius: 20px;
     display: inline-flex;
     align-items: center;
+    justify-content: center; /* ДОБАВЛЕНО */
     gap: 4px;
     width: fit-content;
+    margin: 0 auto; /* ДОБАВЛЕНО - центрирует элемент */
 }
 
 #screen-interesting .market-tile-change.positive {
@@ -4128,46 +4130,45 @@ body.dark-mode #screen-interesting .results-glass-footer {
     <div class="rv-title">Вертикаль ставок</div>
     
     <div class="rates-row-list">
-        <div class="rate-row-item">
-            <span class="rate-row-label">Ключевая ставка ЦБ</span>
-            <span class="rate-row-value" id="val-key-rate">21.0%</span>
-        </div>
-        
-        <div class="rate-row-item">
-            <span class="rate-row-label">Макс. ставка по вкладам</span>
-            <span class="rate-row-value" id="val-deposit-rate">21.5%</span>
-        </div>
-        
-        <div class="rate-row-item">
-            <span class="rate-row-label">Инфляция (г/г)</span>
-            <span class="rate-row-value" id="val-inflation">9.1%</span>
-        </div>
-        
-        <div class="rate-row-item">
-            <span class="rate-row-label">ОФЗ 10 лет</span>
-            <span class="rate-row-value" id="val-ofz10">---%</span>
-        </div>
+    <div class="rate-row-item">
+        <span class="rate-row-label">Инфляция (г/г)</span>
+        <span class="rate-row-value" id="val-inflation">9.1%</span>
     </div>
+    
+    <div class="rate-row-item">
+        <span class="rate-row-label">Макс. ставка по вкладам</span>
+        <span class="rate-row-value" id="val-deposit-rate">21.5%</span>
+    </div>
+    
+    <div class="rate-row-item">
+        <span class="rate-row-label">Ключевая ставка ЦБ</span>
+        <span class="rate-row-value" id="val-key-rate">21.0%</span>
+    </div>
+    
+    <div class="rate-row-item">
+        <span class="rate-row-label">ОФЗ 10 лет</span>
+        <span class="rate-row-value" id="val-ofz10">---%</span>
+    </div>
+</div>
 </div>
 
     <!-- Калькулятор ежемесячного дохода (Аккордеон) -->
     <div class="calc-accordion" id="calcAccordion">
         <!-- Заголовок аккордеона -->
         <div class="calc-accordion-header" onclick="toggleCalcAccordion()">
-            <div class="calc-accordion-header-left">
-                <div class="calc-accordion-icon">📅</div>
-                <div>
-                    <div class="calc-accordion-title">Ежемесячный доход</div>
-                    <div class="calc-accordion-subtitle">Рассчитайте выплаты по ОФЗ</div>
-                </div>
-            </div>
-           
-               
-                <svg class="calc-accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </div>
+    <div class="calc-accordion-header-left">
+        <div class="calc-accordion-icon">📅</div>
+        <div>
+            <div class="calc-accordion-title">Ежемесячный доход</div>
+            <div class="calc-accordion-subtitle">Рассчитайте выплаты по ОФЗ</div>
         </div>
+    </div>
+    <div style="display: flex; align-items: center;">
+        <svg class="calc-accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+    </div>
+</div>
         
         <!-- Контент аккордеона -->
         <div class="calc-accordion-content">
