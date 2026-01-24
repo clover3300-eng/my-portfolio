@@ -3661,7 +3661,48 @@ input#sumInput::placeholder {
         const GID_DESCRIPTIONS = '88183976';
         const CSV_DESCRIPTIONS_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSl8uP-rbiQbK57e9L5xxu8dHKzN05jNsJukOMclUn0wuaT2UNsnX-PIAaCctInmwDOzffdPuah4bER/pub?gid=${GID_DESCRIPTIONS}&single=true&output=csv`;
         
+          // URL вашего Google Apps Script (ЗАМЕНИТЕ НА СВОЙ!)
+        const NEWS_API_URL = 'https://script.google.com/macros/s/AKfycbxDEhAz8Cd9wB3Q6ln_UY_0mxPp0bqRXv0HKFVdsMUt3S0vAejpmITCWkzRdDgWqfmB/exec';
+
+         // Кэш новостей чтобы не загружать повторно
+          let newsCache = {};
+
+        // Функция загрузки новостей для тикера
+        async function loadNewsForTicker(ticker) {
+         // Проверяем кэш
+        if (newsCache[ticker]) {
+        return newsCache[ticker];
+    }
     
+    try {
+        const response = await fetch(`${NEWS_API_URL}?ticker=${ticker}`);
+        const data = await response.json();
+        
+        if (!data.error && data.news) {
+            newsCache[ticker] = data.news;
+            return data.news;
+        }
+        return [];
+    } catch (e) {
+        console.error('Ошибка загрузки новостей:', e);
+        return [];
+    }
+}
+
+// Функция форматирования даты новости
+function formatNewsDate(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    if (diffHours < 1) return 'Только что';
+    if (diffHours < 24) return `${diffHours} ч. назад`;
+    if (diffDays < 7) return `${diffDays} дн. назад`;
+    
+    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+}
 
     
 
@@ -5598,7 +5639,7 @@ function openCompanyFromTable(event, ticker, companyName) {
             </div>
         </div>
         
-        <!-- События терминала -->
+       <!-- События терминала (новости) -->
         <div class="glass-card events-section">
             <div class="company-section-title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -5607,46 +5648,77 @@ function openCompanyFromTable(event, ticker, companyName) {
                     <line x1="8" y1="2" x2="8" y2="6"/>
                     <line x1="3" y1="10" x2="21" y2="10"/>
                 </svg>
-                События терминала
+                Новости Smart-Lab
             </div>
             
-            <div class="event-item">
-                <div class="event-date">
-                    <span class="event-date-day">${new Date().getDate()}</span>
-                    <span class="event-date-month">${getMonthShort(new Date().getMonth())}</span>
-                </div>
-                <div class="event-content">
-                    <div class="event-title">Обзор рыночной ситуации</div>
-                    <div class="event-description">Аналитики отмечают стабильное положение на рынке</div>
-                </div>
-            </div>
-            
-            <div class="event-item">
-                <div class="event-date">
-                    <span class="event-date-day">${new Date().getDate() + 7}</span>
-                    <span class="event-date-month">${getMonthShort(new Date().getMonth())}</span>
-                </div>
-                <div class="event-content">
-                    <div class="event-title">${isStock ? 'Ожидаемый отчёт' : 'Выплата купона'}</div>
-                    <div class="event-description">${isStock ? 'Квартальная отчётность компании' : 'Очередная купонная выплата'}</div>
-                </div>
-            </div>
-            
-            <div class="event-item">
-                <div class="event-date">
-                    <span class="event-date-day">${new Date().getDate() + 14}</span>
-                    <span class="event-date-month">${getMonthShort((new Date().getMonth() + 1) % 12)}</span>
-                </div>
-                <div class="event-content">
-                    <div class="event-title">Прогноз аналитиков</div>
-                    <div class="event-description">Обновление целевых цен от ведущих аналитиков</div>
+            <div id="company-news-list">
+                <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                    <div style="font-size: 24px; margin-bottom: 10px;">⏳</div>
+                    Загрузка новостей...
                 </div>
             </div>
         </div>
     `;
     
     content.innerHTML = html;
+            // Загружаем новости асинхронно после отрисовки страницы
+    loadAndDisplayNews(item.t);
     showScreen('screen-company');
+}
+
+    // Функция загрузки и отображения новостей
+async function loadAndDisplayNews(ticker) {
+    const newsContainer = document.getElementById('company-news-list');
+    if (!newsContainer) return;
+    
+    // Показываем загрузку
+    newsContainer.innerHTML = `
+        <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
+            <div style="font-size: 24px; margin-bottom: 10px;">⏳</div>
+            Загрузка новостей для ${ticker}...
+        </div>
+    `;
+    
+    // Загружаем новости
+    const news = await loadNewsForTicker(ticker);
+    
+    // Если новостей нет
+    if (!news || news.length === 0) {
+        newsContainer.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
+                <div style="font-size: 24px; margin-bottom: 10px;">📭</div>
+                Новостей по ${ticker} не найдено
+            </div>
+        `;
+        return;
+    }
+    
+    // Формируем HTML для новостей
+    let html = '';
+    news.forEach((item, index) => {
+        // Генерируем дату (сегодня минус индекс дней для разнообразия)
+        const newsDate = new Date();
+        newsDate.setDate(newsDate.getDate() - index);
+        
+        html += `
+            <div class="event-item" onclick="window.open('${item.link}', '_blank')" style="cursor: pointer;">
+                <div class="event-date">
+                    <span class="event-date-day">${newsDate.getDate()}</span>
+                    <span class="event-date-month">${getMonthShort(newsDate.getMonth())}</span>
+                </div>
+                <div class="event-content">
+                    <div class="event-title">${item.title.substring(0, 60)}${item.title.length > 60 ? '...' : ''}</div>
+                    <div class="event-description" style="display: flex; align-items: center; gap: 5px;">
+                        <span style="color: var(--accent-blue);">Smart-Lab</span>
+                        <span>•</span>
+                        <span>Нажмите чтобы открыть</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    newsContainer.innerHTML = html;
 }
 
 // Вспомогательная функция: генерация точек для SVG тренда
