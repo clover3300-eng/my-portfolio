@@ -5687,7 +5687,7 @@ async function loadAndDisplayNews(ticker) {
         newsContainer.innerHTML = `
             <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
                 <div style="font-size: 24px; margin-bottom: 10px;">📭</div>
-                Новостей по ${ticker} не найдено
+                Новостей по ${ticker} пока нет
             </div>
         `;
         return;
@@ -5695,23 +5695,29 @@ async function loadAndDisplayNews(ticker) {
     
     // Формируем HTML для новостей
     let html = '';
-    news.forEach((item, index) => {
-        // Генерируем дату (сегодня минус индекс дней для разнообразия)
-        const newsDate = new Date();
-        newsDate.setDate(newsDate.getDate() - index);
+    news.forEach((item) => {
+        // Парсим реальную дату из ответа API
+        const newsDate = new Date(item.date);
+        
+        // Проверяем валидность даты
+        const isValidDate = !isNaN(newsDate.getTime());
+        const displayDate = isValidDate ? newsDate : new Date();
+        
+        // Форматируем относительную дату для описания
+        const relativeDate = getRelativeDateText(displayDate);
         
         html += `
             <div class="event-item" onclick="window.open('${item.link}', '_blank')" style="cursor: pointer;">
                 <div class="event-date">
-                    <span class="event-date-day">${newsDate.getDate()}</span>
-                    <span class="event-date-month">${getMonthShort(newsDate.getMonth())}</span>
+                    <span class="event-date-day">${displayDate.getDate()}</span>
+                    <span class="event-date-month">${getMonthShort(displayDate.getMonth())}</span>
                 </div>
                 <div class="event-content">
                     <div class="event-title">${item.title.substring(0, 60)}${item.title.length > 60 ? '...' : ''}</div>
                     <div class="event-description" style="display: flex; align-items: center; gap: 5px;">
                         <span style="color: var(--accent-blue);">Smart-Lab</span>
                         <span>•</span>
-                        <span>Нажмите чтобы открыть</span>
+                        <span>${relativeDate}</span>
                     </div>
                 </div>
             </div>
@@ -5719,6 +5725,44 @@ async function loadAndDisplayNews(ticker) {
     });
     
     newsContainer.innerHTML = html;
+}
+
+// Функция для получения относительной даты (сегодня, вчера, 3 дня назад и т.д.)
+function getRelativeDateText(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    
+    if (diffMinutes < 60) {
+        return diffMinutes <= 1 ? 'Только что' : `${diffMinutes} мин. назад`;
+    }
+    
+    if (diffHours < 24) {
+        return `${diffHours} ${getHoursWord(diffHours)} назад`;
+    }
+    
+    if (diffDays === 0) return 'Сегодня';
+    if (diffDays === 1) return 'Вчера';
+    if (diffDays < 7) return `${diffDays} ${getDaysWord(diffDays)} назад`;
+    
+    // Для более старых новостей показываем полную дату
+    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+}
+
+// Склонение слова "час"
+function getHoursWord(n) {
+    if (n === 1 || n === 21) return 'час';
+    if (n >= 2 && n <= 4 || n >= 22 && n <= 24) return 'часа';
+    return 'часов';
+}
+
+// Склонение слова "день"
+function getDaysWord(n) {
+    if (n === 1) return 'день';
+    if (n >= 2 && n <= 4) return 'дня';
+    return 'дней';
 }
 
 // Вспомогательная функция: генерация точек для SVG тренда
