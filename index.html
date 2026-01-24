@@ -3255,6 +3255,14 @@ input#sumInput::placeholder {
         const PUBLISHED_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSl8uP-rbiQbK57e9L5xxu8dHKzN05jNsJukOMclUn0wuaT2UNsnX-PIAaCctInmwDOzffdPuah4bER/pub?gid=${GID}&single=true&output=csv`;
         const CSV_URL = `https://corsproxy.io/?${encodeURIComponent(PUBLISHED_URL)}`;
 
+           // Лист с описаниями компаний
+        const GID_DESCRIPTIONS = '88183976';
+        const DESCRIPTIONS_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSl8uP-rbiQbK57e9L5xxu8dHKzN05jNsJukOMclUn0wuaT2UNsnX-PIAaCctInmwDOzffdPuah4bER/pub?gid=${GID_DESCRIPTIONS}&single=true&output=csv`;
+        const CSV_DESCRIPTIONS_URL = `https://corsproxy.io/?${encodeURIComponent(DESCRIPTIONS_URL)}`;
+    
+
+    
+
         let bonds = [];
         let bondDataCache = {};
         let monthlyIncomeBonds = []; // New list for the specific calculator
@@ -3264,6 +3272,7 @@ input#sumInput::placeholder {
         let customTax = 0.13;
         let bondCouponsMap = {}; 
         let bondDetailsMap = {};
+        let companyDescriptions = {};
         let currentScreen = 'screen-home';
         let lastNavScreen = 'screen-home';
         let isPortfolioCalculated = false;
@@ -4294,11 +4303,37 @@ function resetCustomTo50() {
     }
 }
 
+    async function loadCompanyDescriptions() {
+    try {
+        const response = await fetch(CSV_DESCRIPTIONS_URL);
+        if (!response.ok) return;
+        
+        const text = await response.text();
+        const rows = text.split('\n').map(row => 
+            row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/"/g, '').trim())
+        );
+        
+        for (let i = 1; i < rows.length; i++) {
+            if (rows[i] && rows[i].length > 8) {
+                const ticker = rows[i][4] ? String(rows[i][4]).trim() : null;
+                const description = rows[i][8] ? String(rows[i][8]).trim() : '';
+                if (ticker && description) {
+                    companyDescriptions[ticker] = description;
+                }
+            }
+        }
+        console.log('Описания загружены:', Object.keys(companyDescriptions).length);
+    } catch (e) {
+        console.error('Ошибка загрузки описаний:', e);
+    }
+}
+
         async function loadData() {
             initTheme();
             loadSettings();
             checkFirstVisit();
             updateMarketData();
+            loadCompanyDescriptions();
             //updateMarketStatus(); // Временно отключаем, т.к. элемент не существует
             
             try {
@@ -4994,6 +5029,19 @@ function openCompanyFromTable(event, ticker, companyName) {
                     </div>
                     <button class="btn-action" onclick="openTradingView(event, '${item.t}')">Открыть график TradingView</button>
                 </div>
+                
+                ${companyDescriptions[item.t] ? `
+                <div style="margin: 20px 0;">
+                    <div style="background: linear-gradient(135deg, var(--card-bg), var(--bg-color)); border-radius: 20px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 8px 25px var(--card-shadow); position: relative; overflow: hidden;">
+                        <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--accent-blue), #2980b9);"></div>
+                        <div style="font-size: 11px; color: var(--accent-blue); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-left: 12px; display: flex; align-items: center; gap: 8px;">
+                            <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            О компании
+                        </div>
+                        <div style="font-size: 13px; line-height: 1.7; color: var(--text-main); padding-left: 12px;">${companyDescriptions[item.t]}</div>
+                    </div>
+                </div>
+                ` : ''}
                 
                 <div class="news-header">Характеристики</div>
                 <div class="stat-grid">
