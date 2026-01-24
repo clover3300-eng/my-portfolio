@@ -3251,7 +3251,8 @@ input#sumInput::placeholder {
         
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
         const GID = '1213653337'; 
-        const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSl8uP-rbiQbK57e9L5xxu8dHKzN05jNsJukOMclUn0wuaT2UNsnX-PIAaCctInmwDOzffdPuah4bER/pub?gid=${GID}&single=true&output=csv`;
+        const PUBLISHED_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSl8uP-rbiQbK57e9L5xxu8dHKzN05jNsJukOMclUn0wuaT2UNsnX-PIAaCctInmwDOzffdPuah4bER/pub?gid=${GID}&single=true&output=csv`;
+        const CSV_URL = `https://corsproxy.io/?${encodeURIComponent(PUBLISHED_URL)}`;
 
         let bonds = [];
         let bondDataCache = {};
