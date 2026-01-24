@@ -50,6 +50,15 @@
             --bg-gradient-end: #F9FAFC;
             --bonds-color: #5B7C99;
             --stocks-color: #94A8B8;
+            /* === Claude AI Glassmorphism Variables === */
+            --claude-bg-base: #F7F5F3;
+            --claude-glass: rgba(255, 255, 255, 0.65);
+            --claude-glass-border: rgba(255, 255, 255, 0.8);
+            --claude-glass-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.04);
+            --claude-accent: #D97757;
+            --claude-accent-subtle: rgba(217, 119, 87, 0.1);
+            --claude-text-primary: #1a1a1a;
+            --claude-text-secondary: #6b6b6b;
         }
     
 
@@ -78,6 +87,15 @@
             --coupon-blue-bg: rgba(56, 189, 248, 0.1);
             --badge-blue-bg: rgba(56, 189, 248, 0.15);
             --badge-green-bg: rgba(74, 222, 128, 0.15);
+            /* === Claude AI Dark Mode Variables === */
+            --claude-bg-base: #1a1a2e;
+            --claude-glass: rgba(30, 41, 59, 0.75);
+            --claude-glass-border: rgba(255, 255, 255, 0.1);
+            --claude-glass-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.3);
+            --claude-accent: #E8956A;
+            --claude-accent-subtle: rgba(232, 149, 106, 0.15);
+            --claude-text-primary: #f1f5f9;
+            --claude-text-secondary: #94a3b8;
         }
 
         body {
@@ -2883,6 +2901,568 @@ input#sumInput::placeholder {
 
 /* ========== END: BLOOMBERG/HUD COMPANY CARD DESIGN ========== */
 
+        /* ========================================================================
+   ИНТЕРЕСНОЕ - GLASSMORPHISM REDESIGN (Claude AI Style)
+   ======================================================================== */
+
+/* Специальный фон для экрана Интересное */
+#screen-interesting {
+    position: relative;
+    background: linear-gradient(180deg, var(--claude-bg-base) 0%, #EDE9E6 100%);
+    min-height: 100vh;
+    padding-bottom: 140px;
+}
+
+body.dark-mode #screen-interesting {
+    background: linear-gradient(180deg, #0f172a 0%, #1a1a2e 100%);
+}
+
+/* Динамическое свечение фона */
+#screen-interesting::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at 30% 30%,
+        rgba(217, 119, 87, 0.08) 0%,
+        transparent 50%
+    ),
+    radial-gradient(
+        circle at 70% 70%,
+        rgba(52, 152, 219, 0.06) 0%,
+        transparent 50%
+    );
+    pointer-events: none;
+    z-index: 0;
+    animation: breatheGlow 8s ease-in-out infinite;
+}
+
+@keyframes breatheGlow {
+    0%, 100% { 
+        opacity: 0.6; 
+        transform: scale(1) rotate(0deg); 
+    }
+    50% { 
+        opacity: 1; 
+        transform: scale(1.05) rotate(2deg); 
+    }
+}
+
+/* Контейнер контента поверх свечения */
+#screen-interesting > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* === Заголовок экрана === */
+#screen-interesting .header {
+    padding: 30px 0 20px;
+    text-align: left;
+}
+
+#screen-interesting .header h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -0.06em;
+    color: var(--claude-text-primary);
+    margin: 0;
+}
+
+/* === Базовая стеклянная карточка === */
+#screen-interesting .glass-card-claude {
+    background: var(--claude-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--claude-glass-border);
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--claude-glass-shadow);
+    transition: all 0.3s ease;
+}
+
+#screen-interesting .glass-card-claude:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px -2px rgba(0, 0, 0, 0.08);
+}
+
+/* === Секция рыночных данных === */
+#screen-interesting .market-section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--claude-text-secondary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#screen-interesting .market-section-title::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--claude-accent);
+    border-radius: 50%;
+}
+
+/* Сетка рыночных плиток */
+#screen-interesting .market-tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+#screen-interesting .market-tiles-grid.three-cols {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Индивидуальная плитка */
+#screen-interesting .market-tile {
+    background: var(--claude-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--claude-glass-border);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+#screen-interesting .market-tile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--claude-accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#screen-interesting .market-tile:hover::before {
+    opacity: 1;
+}
+
+#screen-interesting .market-tile-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--claude-text-secondary);
+}
+
+#screen-interesting .market-tile-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--claude-text-primary);
+    letter-spacing: -0.02em;
+}
+
+#screen-interesting .market-tile-change {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+}
+
+#screen-interesting .market-tile-change.positive {
+    background: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+}
+
+#screen-interesting .market-tile-change.negative {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+}
+
+#screen-interesting .market-tile-change.neutral {
+    background: rgba(127, 140, 141, 0.15);
+    color: var(--claude-text-secondary);
+}
+
+/* === Вертикаль ставок === */
+#screen-interesting .rates-glass-card {
+    background: var(--claude-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--claude-glass-border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+#screen-interesting .rates-glass-card .rv-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--claude-accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#screen-interesting .rates-glass-card .rv-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--claude-accent), transparent);
+}
+
+#screen-interesting .rates-glass-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+#screen-interesting .rate-item-glass {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode #screen-interesting .rate-item-glass {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+#screen-interesting .rate-item-glass span {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--claude-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+#screen-interesting .rate-item-glass b {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--claude-text-primary);
+}
+
+/* === Аккордеон калькулятора === */
+#screen-interesting .calc-accordion {
+    background: var(--claude-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--claude-glass-border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+#screen-interesting .calc-accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    user-select: none;
+}
+
+#screen-interesting .calc-accordion-header:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode #screen-interesting .calc-accordion-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+#screen-interesting .calc-accordion-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#screen-interesting .calc-accordion-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--claude-accent-subtle);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+#screen-interesting .calc-accordion-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--claude-text-primary);
+}
+
+#screen-interesting .calc-accordion-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--claude-text-secondary);
+    margin-top: 2px;
+}
+
+#screen-interesting .calc-accordion-badge {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+#screen-interesting .calc-accordion-arrow {
+    width: 24px;
+    height: 24px;
+    color: var(--claude-text-secondary);
+    transition: transform 0.3s ease;
+}
+
+#screen-interesting .calc-accordion.open .calc-accordion-arrow {
+    transform: rotate(180deg);
+}
+
+#screen-interesting .calc-accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0 20px;
+}
+
+#screen-interesting .calc-accordion.open .calc-accordion-content {
+    max-height: 2000px;
+    padding: 0 20px 20px;
+}
+
+/* Поле ввода суммы в калькуляторе */
+#screen-interesting .glass-input-wrapper {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+}
+
+body.dark-mode #screen-interesting .glass-input-wrapper {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+#screen-interesting .glass-input-wrapper:focus-within {
+    border-color: var(--claude-accent);
+    box-shadow: 0 0 0 3px var(--claude-accent-subtle);
+}
+
+#screen-interesting .glass-input-wrapper .input-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--claude-text-secondary);
+    margin-bottom: 8px;
+    display: block;
+}
+
+#screen-interesting .glass-input-wrapper input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--claude-text-primary);
+    outline: none;
+}
+
+#screen-interesting .glass-input-wrapper input::placeholder {
+    color: var(--claude-text-secondary);
+    opacity: 0.5;
+}
+
+/* Сегментированный переключатель налога */
+#screen-interesting .tax-segmented-control {
+    display: flex;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 16px;
+    gap: 4px;
+}
+
+body.dark-mode #screen-interesting .tax-segmented-control {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#screen-interesting .tax-segmented-control .tax-segment {
+    flex: 1;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--claude-text-secondary);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#screen-interesting .tax-segmented-control .tax-segment.active {
+    background: white;
+    color: var(--claude-text-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--claude-text-primary);
+}
+
+/* Информационный текст */
+#screen-interesting .calc-info-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--claude-text-secondary);
+    text-align: center;
+    line-height: 1.6;
+    padding: 12px 16px;
+    background: var(--claude-accent-subtle);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    border-left: 3px solid var(--claude-accent);
+}
+
+/* Заголовки таблицы в калькуляторе */
+#screen-interesting .calc-table-header {
+    display: grid;
+    grid-template-columns: 1fr 70px 100px;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    margin-bottom: 8px;
+}
+
+body.dark-mode #screen-interesting .calc-table-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+#screen-interesting .calc-table-header span {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--claude-text-secondary);
+}
+
+#screen-interesting .calc-table-header span:nth-child(2),
+#screen-interesting .calc-table-header span:nth-child(3) {
+    text-align: center;
+}
+
+/* Кнопка сброса */
+#screen-interesting .btn-reset-glass {
+    width: 100%;
+    padding: 14px;
+    border: 1px dashed rgba(0, 0, 0, 0.15);
+    background: transparent;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--claude-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    transition: all 0.2s ease;
+}
+
+#screen-interesting .btn-reset-glass:hover {
+    border-color: var(--claude-accent);
+    color: var(--claude-accent);
+    background: var(--claude-accent-subtle);
+}
+
+body.dark-mode #screen-interesting .btn-reset-glass {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Блок результатов */
+#screen-interesting .results-glass-container {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    padding: 16px;
+    margin-top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode #screen-interesting .results-glass-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+#screen-interesting .results-glass-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--claude-accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#screen-interesting .results-glass-footer {
+    text-align: right;
+    padding-top: 12px;
+    margin-top: 12px;
+    border-top: 1px dashed rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--claude-text-primary);
+}
+
+body.dark-mode #screen-interesting .results-glass-footer {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ========== END: ИНТЕРЕСНОЕ GLASSMORPHISM ========== */
+
         
         
     </style>
@@ -3479,105 +4059,153 @@ input#sumInput::placeholder {
     </div>
 
     <div id="screen-interesting" class="screen">
-        <div class="header"><h1>ИНТЕРЕСНОЕ</h1></div>
-        
-        <div class="market-grid">
-            <div class="market-item-modern blue">
-                <div class="mk-left">
-                    <div class="mk-label">IMOEX</div>
-                    <div class="mk-val" id="val-imoex">---</div>
-                </div>
-                <div class="mk-dynamics neutral" id="dyn-imoex">--%</div>
-            </div>
-            <div class="market-item-modern green">
-                <div class="mk-left">
-                    <div class="mk-label">USD/RUB</div>
-                    <div class="mk-val" id="val-usdrub">---</div>
-                </div>
-                <div class="mk-dynamics neutral" id="dyn-usdrub">--%</div>
-            </div>
-            <div class="market-item-modern orange">
-                <div class="mk-left">
-                    <div class="mk-label">BTC/USD</div>
-                    <div class="mk-val" id="val-btc">---</div>
-                </div>
-                <div class="mk-dynamics neutral" id="dyn-btc">--%</div>
-            </div>
+    <!-- Заголовок экрана -->
+    <div class="header">
+        <h1>Интересное</h1>
+    </div>
+    
+    <!-- Секция рыночных данных -->
+    <div class="market-section-title">Рыночные данные</div>
+    
+    <div class="market-tiles-grid three-cols">
+        <!-- IMOEX -->
+        <div class="market-tile">
+            <span class="market-tile-label">IMOEX</span>
+            <span class="market-tile-value" id="val-imoex">---</span>
+            <span class="market-tile-change neutral" id="dyn-imoex">--%</span>
         </div>
+        
+        <!-- USD/RUB -->
+        <div class="market-tile">
+            <span class="market-tile-label">USD/RUB</span>
+            <span class="market-tile-value" id="val-usdrub">---</span>
+            <span class="market-tile-change neutral" id="dyn-usdrub">--%</span>
+        </div>
+        
+        <!-- BTC/USD -->
+        <div class="market-tile">
+            <span class="market-tile-label">BTC/USD</span>
+            <span class="market-tile-value" id="val-btc">---</span>
+            <span class="market-tile-change neutral" id="dyn-btc">--%</span>
+        </div>
+    </div>
 
-        <div class="rates-vertical-block">
-            <div class="rv-title">ВЕРТИКАЛЬ СТАВОК</div>
-            <div class="rv-grid">
-                <div class="rv-item">
-                 <span>Ключевая ставка ЦБ</span>
-                 <b id="val-key-rate">21.0%</b>
+    <!-- Вертикаль ставок -->
+    <div class="rates-glass-card">
+        <div class="rv-title">Вертикаль ставок</div>
+        <div class="rates-glass-grid">
+            <div class="rate-item-glass">
+                <span>Ключевая ставка ЦБ</span>
+                <b id="val-key-rate">21.0%</b>
             </div>
-                 <div class="rv-item">
-                 <span>Макс. ставка по вкладам</span>
-                 <b id="val-deposit-rate">21.5%</b>
-           </div>
-                <div class="rv-item">
+            <div class="rate-item-glass">
+                <span>Макс. ставка по вкладам</span>
+                <b id="val-deposit-rate">21.5%</b>
+            </div>
+            <div class="rate-item-glass">
                 <span>Инфляция (г/г)</span>
                 <b id="val-inflation">9.1%</b>
-             </div>
-                <div class="rv-item">
+            </div>
+            <div class="rate-item-glass">
                 <span>ОФЗ 10 лет</span>
                 <b id="val-ofz10">---%</b>
-              </div>
-            </div>
-        </div>
-
-        <div class="coupon-box" style="margin-top:20px;">
-            <div class="coupon-header" onclick="toggleAccordion('calc-income-wrapper')">
-                <span>📅 Ежемесячный доход</span>
-                <span class="calc-badge-modern">Калькулятор</span>
-            </div>
-            <div class="coupon-content" id="calc-income-wrapper" style="padding: 10px; display:block;">
-                
-                <div class="monthly-calc-box">
-                    <div class="input-container">
-                        <span class="input-label">Сумма Инвестиций</span>
-                        <div class="input-wrapper">
-                            <input type="number" id="monthlySumInput" value="100000" oninput="distributeMonthlyInvestment()" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" style="background: transparent; border: none; color: var(--input-color); width: 100%; font-weight: 700;">
-                            <span class="currency" style="font-size: 24px;">₽</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <p class="calc-expl-text">Калькулятор предлагает к покупке список ОФЗ, благодаря которому Вы будете получать ежемесячно выплаты купонов.</p>
-
-                <div class="tax-selector-ui">
-                    <button class="tax-ui-btn" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
-                    <button class="tax-ui-btn active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">НДФЛ 13%</button>
-                    <button class="tax-ui-btn" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
-                </div>
-                
-                <div style="font-size:10px; color:#8e8e93; margin-bottom:5px; text-transform:uppercase;">.</div>
-                
-                <div class="list-header-row calc-cols">
-                    <span>НАЗВАНИЕ</span>
-                    <span style="text-align: center;">ДОХОДНОСТЬ</span>
-                    <span style="text-align: center;">КОЛИЧЕСТВО</span>
-                </div>
-                
-                <div id="calc-bonds-input-list"></div>
-                
-                <button class="btn-reset-wide" onclick="resetCustomCalc()">
-                    <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                    Очистить все поля
-                </button>
-
-                <div class="result-list-container">
-                    <div style="font-weight:bold; font-size:12px; margin-bottom:8px; color:var(--accent-blue);">Выплаты:</div>
-                    <div class="coupon-table-head">
-                        <span>ДАТА</span> <span>НАЗВАНИЕ</span> <span style="text-align:center">КОЛ-ВО</span> <span style="text-align:right">СУММА</span>
-                    </div>
-                    <div id="calc-results-list" style="font-size:11px; color:#666;">Введите количество для расчета...</div>
-                    <div id="calc-results-footer" style="text-align:right; margin-top:10px; font-weight:bold; font-size:12px; border-top:1px dashed #ccc; padding-top:5px;"></div>
-                </div>
             </div>
         </div>
     </div>
+
+    <!-- Калькулятор ежемесячного дохода (Аккордеон) -->
+    <div class="calc-accordion" id="calcAccordion">
+        <!-- Заголовок аккордеона -->
+        <div class="calc-accordion-header" onclick="toggleCalcAccordion()">
+            <div class="calc-accordion-header-left">
+                <div class="calc-accordion-icon">📅</div>
+                <div>
+                    <div class="calc-accordion-title">Ежемесячный доход</div>
+                    <div class="calc-accordion-subtitle">Рассчитайте выплаты по ОФЗ</div>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span class="calc-accordion-badge">Калькулятор</span>
+                <svg class="calc-accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Контент аккордеона -->
+        <div class="calc-accordion-content">
+            <!-- Поле ввода суммы -->
+            <div class="glass-input-wrapper">
+                <span class="input-label">Сумма инвестиций</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <input type="number" id="monthlySumInput" value="100000" 
+                           oninput="distributeMonthlyInvestment()" 
+                           onclick="event.stopPropagation(); this.select()" 
+                           onkeyup="if(event.keyCode===13) this.blur()" 
+                           inputmode="numeric" 
+                           pattern="[0-9]*" 
+                           enterkeyhint="done"
+                           placeholder="Введите сумму...">
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 24px; color: var(--claude-text-secondary);">₽</span>
+                </div>
+            </div>
+            
+            <!-- Информационный текст -->
+            <div class="calc-info-text">
+                Калькулятор предлагает к покупке список ОФЗ, благодаря которому Вы будете получать ежемесячно выплаты купонов.
+            </div>
+            
+            <!-- Переключатель налога -->
+            <div class="tax-segmented-control">
+                <button class="tax-segment" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
+                <button class="tax-segment active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">НДФЛ 13%</button>
+                <button class="tax-segment" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
+            </div>
+            
+            <!-- Заголовки таблицы -->
+            <div class="calc-table-header">
+                <span>Название</span>
+                <span>Доходность</span>
+                <span>Количество</span>
+            </div>
+            
+            <!-- Список облигаций для ввода -->
+            <div id="calc-bonds-input-list"></div>
+            
+            <!-- Кнопка сброса -->
+            <button class="btn-reset-glass" onclick="resetCustomCalc()">
+                <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Очистить все поля
+            </button>
+
+            <!-- Блок результатов -->
+            <div class="results-glass-container">
+                <div class="results-glass-title">
+                    <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    Выплаты
+                </div>
+                
+                <div class="coupon-table-head" style="margin-top: 0;">
+                    <span>ДАТА</span> 
+                    <span>НАЗВАНИЕ</span> 
+                    <span style="text-align:center">КОЛ-ВО</span> 
+                    <span style="text-align:right">СУММА</span>
+                </div>
+                
+                <div id="calc-results-list" style="font-size:11px; color: var(--claude-text-secondary);">
+                    Введите количество для расчета...
+                </div>
+                
+                <div id="calc-results-footer" class="results-glass-footer"></div>
+            </div>
+        </div>
+    </div>
+</div>
     
     <div id="screen-company" class="screen">
     <div id="company-content"></div>
@@ -4017,6 +4645,18 @@ function formatNewsDate(dateString) {
             const el = document.getElementById(id);
             el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
         }
+    // Новая функция для аккордеона калькулятора в "Интересное"
+function toggleCalcAccordion() {
+    const accordion = document.getElementById('calcAccordion');
+    if (accordion) {
+        accordion.classList.toggle('open');
+        
+        // Haptic feedback
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        }
+    }
+}
 
         function toggleCouponSection() {
             const content = document.getElementById('couponContent');
@@ -4228,13 +4868,17 @@ document.addEventListener('click', function(event) {
         }
         
         function setCustomTax(val, btn) {
-            customTax = val;
-            document.getElementById('tax-custom-0').classList.remove('active');
-            document.getElementById('tax-custom-13').classList.remove('active');
-            document.getElementById('tax-custom-15').classList.remove('active');
-            btn.classList.add('active');
-            distributeMonthlyInvestment();
-        }
+    customTax = val;
+    
+    // Убираем active со всех кнопок налога
+    const taxButtons = document.querySelectorAll('#screen-interesting .tax-segment, #tax-custom-0, #tax-custom-13, #tax-custom-15');
+    taxButtons.forEach(b => b.classList.remove('active'));
+    
+    // Добавляем active на нажатую кнопку
+    btn.classList.add('active');
+    
+    distributeMonthlyInvestment();
+}
 
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
