@@ -2477,6 +2477,411 @@ input#sumInput::placeholder {
     color: #475569;
 }
 
+/* ========== BLOOMBERG/HUD COMPANY CARD DESIGN ========== */
+
+/* Динамическое свечение фона для страницы компании */
+#screen-company.company-screen-active {
+    position: relative;
+}
+
+#screen-company.company-screen-active::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 20%, var(--glow-color, rgba(46, 204, 113, 0.15)) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+    animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* Верхняя панель навигации */
+.company-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    margin-bottom: 20px;
+}
+
+.company-back-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-main);
+    transition: all 0.2s ease;
+}
+
+.company-back-btn:active {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.company-ticker-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: 0.5px;
+}
+
+.company-ticker-badge .ticker-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent-green);
+}
+
+/* Hero секция с названием и ценой */
+.company-hero {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+}
+
+.company-hero-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.06em;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.company-hero-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 56px;
+    font-weight: 500;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+.company-hero-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.company-hero-change.positive {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.company-hero-change.negative {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+.company-hero-change.neutral {
+    background: rgba(127, 140, 141, 0.2);
+    color: var(--text-secondary);
+}
+
+/* SVG мини-тренд */
+.company-trend-svg {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.trend-line {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    animation: drawLine 2s ease forwards;
+}
+
+@keyframes drawLine {
+    to { stroke-dashoffset: 0; }
+}
+
+/* Кнопки действий */
+.company-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.company-action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.company-action-btn:active {
+    transform: scale(0.98);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.company-action-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}
+
+.company-action-btn.primary {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: white;
+}
+
+/* Glassmorphism карточки */
+.glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.dark-mode .glass-card {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Секция описания */
+.company-description-section {
+    margin-bottom: 24px;
+}
+
+.company-section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.company-section-title svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--accent-blue);
+}
+
+.company-description-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-main);
+}
+
+.company-description-text .highlight {
+    background: linear-gradient(120deg, rgba(52, 152, 219, 0.2) 0%, rgba(52, 152, 219, 0.1) 100%);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Сетка аналитики */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.analytics-tile {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.analytics-tile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+}
+
+.analytics-tile.tile-forecast::before { background: linear-gradient(90deg, #3498db, #2ecc71); }
+.analytics-tile.tile-dividends::before { background: linear-gradient(90deg, #2ecc71, #27ae60); }
+.analytics-tile.tile-risk::before { background: linear-gradient(90deg, #f1c40f, #e67e22); }
+.analytics-tile.tile-cap::before { background: linear-gradient(90deg, #9b59b6, #8e44ad); }
+
+.analytics-tile-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.analytics-tile-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+
+.analytics-tile-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* Прогресс-бар для Target Forecast */
+.forecast-progress {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.forecast-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+    border-radius: 3px;
+    transition: width 1s ease;
+}
+
+/* Секция событий */
+.events-section {
+    margin-bottom: 24px;
+}
+
+.event-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.event-item:last-child {
+    border-bottom: none;
+}
+
+.event-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 50px;
+}
+
+.event-date-day {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent-blue);
+    line-height: 1;
+}
+
+.event-date-month {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.event-content {
+    flex: 1;
+}
+
+.event-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 4px;
+}
+
+.event-description {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Dark mode адаптация */
+.dark-mode .company-back-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .company-ticker-badge {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .company-action-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .analytics-tile {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ========== END: BLOOMBERG/HUD COMPANY CARD DESIGN ========== */
 
         
         
@@ -3175,10 +3580,8 @@ input#sumInput::placeholder {
     </div>
     
     <div id="screen-company" class="screen">
-        <div class="company-header">
-            <div class="back-btn" onclick="goBackFromCompany()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </div>
+    <div id="company-content"></div>
+</div>
             <div class="company-title">О Компании</div>
         </div>
         
@@ -4976,102 +5379,289 @@ function openCompanyFromTable(event, ticker, companyName) {
         }
         
         async function openCompanyPage(item, searchQuery = '') {
-            const content = document.getElementById('company-content');
+    const content = document.getElementById('company-content');
+    const screenCompany = document.getElementById('screen-company');
+    
+    // Убираем класс активности при закрытии
+    screenCompany.classList.remove('company-screen-active');
+    
+    if(!item) {
+        content.innerHTML = `
+            <div class="search-empty-state">
+                <div class="icon">🔍</div>
+                <div class="title">Ничего не найдено</div>
+                <div class="desc">По запросу "${searchQuery}" не найдено результатов.<br>Попробуйте изменить запрос.</div>
+            </div>
+        `;
+        showScreen('screen-company');
+        return;
+    }
+    
+    const isStock = item.type === 'Акция';
+    const target = isStock ? item.target : '-';
+    
+    // Определяем цвет свечения в зависимости от профита
+    let glowColor = 'rgba(46, 204, 113, 0.15)'; // зелёный по умолчанию
+    let changeClass = 'neutral';
+    let changeText = '--';
+    let changePercent = 0;
+    
+    // Загружаем данные о цене и изменении
+    try {
+        const url = `https://iss.moex.com/iss/engines/stock/markets/${isStock ? 'shares' : 'bonds'}/securities/${item.t}.json?iss.meta=off&iss.only=securities,marketdata`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const marketdata = data.marketdata.data[0];
+        const marketcols = data.marketdata.columns;
+        const last = marketdata[marketcols.indexOf('LAST')];
+        const open = marketdata[marketcols.indexOf('OPEN')];
+        
+        if (last && open && open > 0) {
+            const change = last - open;
+            changePercent = (change / open) * 100;
+            const sign = change > 0 ? '+' : '';
             
-            if(!item) {
-                content.innerHTML = `
-                    <div class="search-empty-state">
-                        <div class="icon">🔍</div>
-                        <div class="title">Ничего не найдено</div>
-                        <div class="desc">По запросу "${searchQuery}" не найдено результатов.<br>Попробуйте изменить запрос.</div>
-                    </div>
-                `;
-                showScreen('screen-company');
-                return;
+            if (change > 0) {
+                changeClass = 'positive';
+                glowColor = 'rgba(46, 204, 113, 0.15)';
+                changeText = `${sign}${change.toFixed(2)} ₽ (${sign}${changePercent.toFixed(2)}%)`;
+            } else if (change < 0) {
+                changeClass = 'negative';
+                glowColor = 'rgba(231, 76, 60, 0.15)';
+                changeText = `${change.toFixed(2)} ₽ (${changePercent.toFixed(2)}%)`;
+            } else {
+                changeClass = 'neutral';
+                changeText = '0.00 ₽ (0.00%)';
             }
+        }
+    } catch (e) { 
+        console.log('Error fetching company details'); 
+    }
+    
+    // Устанавливаем цвет свечения
+    screenCompany.style.setProperty('--glow-color', glowColor);
+    screenCompany.classList.add('company-screen-active');
+    
+    // Определяем эшелон для акций
+    let echelonNum = 0;
+    let echelonName = '';
+    if (isStock) {
+        echelonNum = echelons.findIndex(e => e.assets.some(a => a.t === item.t)) + 1;
+        if (echelonNum > 0) {
+            echelonName = ['I Эшелон', 'II Эшелон', 'III Эшелон', 'IV Эшелон'][echelonNum - 1];
+        }
+    }
+    
+    // Рассчитываем прогресс к цели (для акций)
+    let progressPercent = 0;
+    if (isStock && item.target) {
+        const targetPrice = parseFloat(item.target.replace(/[^\d.]/g, '')) || 0;
+        if (targetPrice > 0 && item.p > 0) {
+            progressPercent = Math.min((item.p / targetPrice) * 100, 100);
+        }
+    }
+    
+    // Определяем уровень риска
+    const riskLevels = ['Низкий', 'Умеренный', 'Средний', 'Высокий'];
+    const riskLevel = isStock ? riskLevels[Math.min(echelonNum - 1, 3)] || 'Н/Д' : 'Низкий';
+    
+    // Генерируем SVG мини-тренд (случайный для демо)
+    const trendPoints = generateTrendLine(changePercent >= 0);
+    const trendColor = changePercent >= 0 ? '#2ecc71' : '#e74c3c';
+    
+    // Формируем HTML
+    let html = `
+        <!-- Верхняя панель -->
+        <div class="company-top-bar">
+            <div class="company-back-btn" onclick="goBackFromCompany()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </div>
+            <div class="company-ticker-badge">
+                <span class="ticker-dot"></span>
+                <span>${item.t}</span>
+                <span style="opacity: 0.5;">•</span>
+                <span style="opacity: 0.7;">MOEX</span>
+            </div>
+        </div>
+        
+        <!-- Hero секция -->
+        <div class="company-hero">
+            <div class="company-hero-name">${item.n}</div>
+            <div class="company-hero-price">${item.p.toLocaleString('ru-RU')} ₽</div>
+            <div class="company-hero-change ${changeClass}">
+                ${changeClass === 'positive' ? '↑' : changeClass === 'negative' ? '↓' : '→'} ${changeText}
+            </div>
             
-            const isStock = item.type === 'Акция';
-            const target = isStock ? item.target : '-';
-            const yieldVal = isStock ? 'СМ. ТАБЛИЦУ' : item.y;
-            
-            let changeHtml = '<div class="cc-v2-change neutral">--</div>';
-            
-            try {
-                const url = `https://iss.moex.com/iss/engines/stock/markets/${isStock ? 'shares' : 'bonds'}/securities/${item.t}.json?iss.meta=off&iss.only=securities,marketdata`;
-                const res = await fetch(url);
-                const data = await res.json();
-                const marketdata = data.marketdata.data[0];
-                const marketcols = data.marketdata.columns;
-                const last = marketdata[marketcols.indexOf('LAST')];
-                const open = marketdata[marketcols.indexOf('OPEN')];
-                
-                if (last && open && open > 0) {
-                    const change = last - open;
-                    const changePct = (change / open) * 100;
-                    const sign = change > 0 ? '+' : '';
-                    const colorClass = change > 0 ? 'positive' : (change < 0 ? 'negative' : 'neutral');
-                    changeHtml = `<div class="cc-v2-change ${colorClass}">${sign}${change.toFixed(2)} (${sign}${changePct.toFixed(2)}%)</div>`;
-                }
-            } catch (e) { console.log('Error fetching company details'); }
-
-            let html = `
-                <div class="company-card-v2">
-                    <div class="cc-v2-header">
-                        <div class="cc-v2-logo">${item.t}</div>
-                        <div>
-                            <div class="cc-v2-name">${item.n}</div>
-                            <div class="cc-v2-type">${item.type}</div>
-                        </div>
-                    </div>
-                    <div class="cc-v2-price-block">
-                         <div class="cc-v2-price">${item.p} ₽</div>
-                         ${changeHtml}
-                    </div>
-                    <button class="btn-action" onclick="openTradingView(event, '${item.t}')">Открыть график TradingView</button>
-                </div>
-                
-                ${companyDescriptions[item.t] ? `
-                <div style="margin: 20px 0;">
-                    <div style="background: linear-gradient(135deg, var(--card-bg), var(--bg-color)); border-radius: 20px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 8px 25px var(--card-shadow); position: relative; overflow: hidden;">
-                        <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--accent-blue), #2980b9);"></div>
-                        <div style="font-size: 11px; color: var(--accent-blue); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; padding-left: 12px; display: flex; align-items: center; gap: 8px;">
-                            <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            О компании
-                        </div>
-                        <div style="font-size: 13px; line-height: 1.7; color: var(--text-main); padding-left: 12px;">${companyDescriptions[item.t]}</div>
-                    </div>
+            <!-- SVG мини-тренд -->
+            <div class="company-trend-svg">
+                <svg width="200" height="50" viewBox="0 0 200 50">
+                    <defs>
+                        <linearGradient id="trendGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:${trendColor};stop-opacity:0.3" />
+                            <stop offset="100%" style="stop-color:${trendColor};stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <polyline class="trend-line" fill="none" stroke="url(#trendGradient)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${trendPoints}" />
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Кнопки действий -->
+        <div class="company-actions">
+            <button class="company-action-btn primary" onclick="openTradingView(event, '${item.t}')">
+                <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                График
+            </button>
+            <button class="company-action-btn" onclick="copyTicker(event, '${item.t}')">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                История див.
+            </button>
+        </div>
+        
+        <!-- Описание актива -->
+        ${companyDescriptions[item.t] ? `
+        <div class="glass-card company-description-section">
+            <div class="company-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                Описание актива
+            </div>
+            <div class="company-description-text">
+                ${highlightKeywords(companyDescriptions[item.t])}
+            </div>
+        </div>
+        ` : ''}
+        
+        <!-- Аналитика -->
+        <div class="company-section-title" style="padding: 0 4px; margin-bottom: 12px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+            </svg>
+            Аналитика
+        </div>
+        <div class="analytics-grid">
+            <div class="analytics-tile tile-forecast">
+                <div class="analytics-tile-label">Target Forecast</div>
+                <div class="analytics-tile-value">${isStock ? target.replace(' ₽', '') : item.y}</div>
+                <div class="analytics-tile-sub">${isStock ? 'Целевая цена' : 'Доходность к погашению'}</div>
+                ${isStock ? `
+                <div class="forecast-progress">
+                    <div class="forecast-progress-fill" style="width: ${progressPercent}%"></div>
                 </div>
                 ` : ''}
-                
-                <div class="news-header">Характеристики</div>
-                <div class="stat-grid">
-                     <div class="stat-item">
-                        <div class="stat-label">${isStock ? 'Цель' : 'Доходность'}</div>
-                        <div class="stat-val" style="color:var(--accent-green)">${isStock ? target : yieldVal}</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Эшелон</div>
-                        <div class="stat-val">${isStock ? (echelons.findIndex(e => e.assets.some(a => a.t === item.t)) + 1) : 'N/A'}</div>
-                    </div>
+            </div>
+            
+            <div class="analytics-tile tile-dividends">
+                <div class="analytics-tile-label">Dividends</div>
+                <div class="analytics-tile-value">${isStock ? (echelonNum <= 2 ? 'Да' : 'Нет') : 'Купоны'}</div>
+                <div class="analytics-tile-sub">${isStock ? 'Выплата дивидендов' : 'Регулярные выплаты'}</div>
+            </div>
+            
+            <div class="analytics-tile tile-risk">
+                <div class="analytics-tile-label">Risk Tier</div>
+                <div class="analytics-tile-value">${riskLevel}</div>
+                <div class="analytics-tile-sub">${isStock ? echelonName || 'Не определён' : 'ОФЗ - гос. гарантия'}</div>
+            </div>
+            
+            <div class="analytics-tile tile-cap">
+                <div class="analytics-tile-label">Market Cap</div>
+                <div class="analytics-tile-value">${isStock ? 'Large' : 'Gov'}</div>
+                <div class="analytics-tile-sub">${isStock ? 'Капитализация' : 'Государственная'}</div>
+            </div>
+        </div>
+        
+        <!-- События терминала -->
+        <div class="glass-card events-section">
+            <div class="company-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                События терминала
+            </div>
+            
+            <div class="event-item">
+                <div class="event-date">
+                    <span class="event-date-day">${new Date().getDate()}</span>
+                    <span class="event-date-month">${getMonthShort(new Date().getMonth())}</span>
                 </div>
-                
-                <div class="news-header">Новости компании</div>
-                <div id="company-news-list">
-                    <div class="news-item">
-                         <div class="news-date">Сегодня</div>
-                         <div class="news-title">Обзор рыночной ситуации по ${item.t}</div>
-                         <div class="news-snippet">Аналитики отмечают стабильное положение компании на рынке. Технический анализ показывает консолидацию цены...</div>
-                    </div>
-                     <div class="news-item">
-                         <div class="news-date">Вчера</div>
-                         <div class="news-title">Финансовые показатели</div>
-                         <div class="news-snippet">Компания опубликовала отчетность за последний квартал. Выручка соответствует ожиданиям экспертов...</div>
-                    </div>
+                <div class="event-content">
+                    <div class="event-title">Обзор рыночной ситуации</div>
+                    <div class="event-description">Аналитики отмечают стабильное положение на рынке</div>
                 </div>
-            `;
-            content.innerHTML = html;
-            showScreen('screen-company');
-        }
+            </div>
+            
+            <div class="event-item">
+                <div class="event-date">
+                    <span class="event-date-day">${new Date().getDate() + 7}</span>
+                    <span class="event-date-month">${getMonthShort(new Date().getMonth())}</span>
+                </div>
+                <div class="event-content">
+                    <div class="event-title">${isStock ? 'Ожидаемый отчёт' : 'Выплата купона'}</div>
+                    <div class="event-description">${isStock ? 'Квартальная отчётность компании' : 'Очередная купонная выплата'}</div>
+                </div>
+            </div>
+            
+            <div class="event-item">
+                <div class="event-date">
+                    <span class="event-date-day">${new Date().getDate() + 14}</span>
+                    <span class="event-date-month">${getMonthShort((new Date().getMonth() + 1) % 12)}</span>
+                </div>
+                <div class="event-content">
+                    <div class="event-title">Прогноз аналитиков</div>
+                    <div class="event-description">Обновление целевых цен от ведущих аналитиков</div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    content.innerHTML = html;
+    showScreen('screen-company');
+}
+
+// Вспомогательная функция: генерация точек для SVG тренда
+function generateTrendLine(isPositive) {
+    let points = [];
+    let y = 25;
+    
+    for (let x = 0; x <= 200; x += 20) {
+        // Добавляем случайность, но с общим трендом вверх или вниз
+        const randomDelta = (Math.random() - 0.5) * 15;
+        const trendDelta = isPositive ? -1.5 : 1.5;
+        y = Math.max(5, Math.min(45, y + randomDelta + trendDelta));
+        points.push(`${x},${y}`);
+    }
+    
+    return points.join(' ');
+}
+
+// Вспомогательная функция: получить короткое название месяца
+function getMonthShort(monthIndex) {
+    const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+    return months[monthIndex];
+}
+
+// Вспомогательная функция: выделение ключевых слов в описании
+function highlightKeywords(text) {
+    // Список ключевых слов для выделения
+    const keywords = ['нефтегазовый', 'банк', 'ритейл', 'телеком', 'металлургия', 'энергетика', 'IT', 'технологии', 'добыча', 'производство', 'экспорт', 'дивиденды', 'лидер', 'крупнейший'];
+    
+    let result = text;
+    keywords.forEach(keyword => {
+        const regex = new RegExp(`(${keyword})`, 'gi');
+        result = result.replace(regex, '<span class="highlight">$1</span>');
+    });
+    
+    return result;
+}
 
         function draw() {
             console.log('draw() called');
