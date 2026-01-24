@@ -5354,28 +5354,51 @@ function openCompanyFromTable(event, ticker, companyName) {
 }
 
         function performSearch(query) {
-            if(!query || query.length < 2) {
-                openCompanyPage(null, query);
-                return;
+    if(!query || query.length < 2) {
+        openCompanyPage(null, query);
+        return;
+    }
+    
+    const q = query.toUpperCase();
+    let results = [];
+    
+    // 1. Ищем в акциях портфеля (12 шт)
+    echelons.forEach(e => {
+        e.assets.forEach(a => {
+            if(a.t.toUpperCase().includes(q) || a.n.toUpperCase().includes(q)) {
+                results.push({...a, type: 'Акция'});
             }
-            
-            const q = query.toUpperCase();
-            let results = [];
-            echelons.forEach(e => {
-                e.assets.forEach(a => {
-                    if(a.t.toUpperCase().includes(q) || a.n.toUpperCase().includes(q)) results.push({...a, type: 'Акция'});
-                });
-            });
-            bonds.forEach(b => {
-                if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) results.push({...b, type: 'Облигация'});
-            });
-            
-            const input = document.getElementById('tickerSearchInput');
-            input.value = '';
-            input.blur();
-            
-            openCompanyPage(results[0] || null, query);
+        });
+    });
+    
+    // 2. Ищем в ОФЗ портфеля (8 шт)
+    bonds.forEach(b => {
+        if(b.t.toUpperCase().includes(q) || b.n.toUpperCase().includes(q)) {
+            results.push({...b, type: 'Облигация'});
         }
+    });
+    
+    // 3. НОВОЕ: Ищем в таблице эшелонов (до 48 акций)
+    echelonTableData.forEach((column, echelonIndex) => {
+        column.forEach(asset => {
+            // Проверяем, что актив ещё не добавлен
+            const alreadyAdded = results.some(r => r.t === asset.t);
+            if (!alreadyAdded && (asset.t.toUpperCase().includes(q) || asset.n.toUpperCase().includes(q))) {
+                results.push({
+                    ...asset,
+                    type: 'Акция',
+                    p: 0 // Цена будет загружена в openCompanyPage
+                });
+            }
+        });
+    });
+    
+    const input = document.getElementById('tickerSearchInput');
+    input.value = '';
+    input.blur();
+    
+    openCompanyPage(results[0] || null, query);
+}
         
         async function openCompanyPage(item, searchQuery = '') {
     const content = document.getElementById('company-content');
