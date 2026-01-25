@@ -4514,20 +4514,22 @@ textarea {
     font-family: 'Inter', sans-serif !important;
     font-size: 11px !important;
     color: var(--text-secondary) !important;
-    margin-bottom: 4px !important;
+    margin-top: 8px !important;
+    margin-bottom: 2px !important;
 }
 
 .forecast-item-sub {
     font-family: 'Inter', sans-serif !important;
     font-size: 10px !important;
     color: var(--text-secondary) !important;
-    margin-bottom: 8px !important;
+    opacity: 0.8 !important;
 }
 
 .forecast-item-value {
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 20px !important;
+    font-size: 24px !important;
     font-weight: 700 !important;
+    margin-bottom: 4px !important;
 }
 
 .forecast-item-value.bonds {
@@ -4939,10 +4941,12 @@ textarea {
         <div class="stm-val-big" id="summ-invested">0 ₽</div>
     </div>
     
-    <!-- Комиссия (справа вверху) -->
-    <div style="position: absolute; top: 20px; right: 20px; background: rgba(52, 152, 219, 0.1); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--accent-blue);">
-        Комиссия <span id="summ-fee">0.03%</span>
+    <!-- Комиссия под суммой -->
+<div style="text-align: center; margin-top: 12px; padding-bottom: 20px;">
+    <div style="display: inline-block; background: rgba(52, 152, 219, 0.1); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--accent-blue);">
+        Комиссия <span id="summ-fee">0.00%</span>
     </div>
+</div>
     
     <!-- Прогресс-бар -->
     <div class="stm-bar-container">
@@ -4968,17 +4972,17 @@ textarea {
         </div>
         
         <div class="forecast-grid">
-            <div class="forecast-item">
-                <div class="forecast-item-label">Купонный поток</div>
-                <div class="forecast-item-sub">(Облигации)</div>
-                <div class="forecast-item-value bonds" id="summ-bond-income">+0 ₽</div>
-            </div>
-            <div class="forecast-item">
-                <div class="forecast-item-label">Переоценка</div>
-                <div class="forecast-item-sub">(Акции)</div>
-                <div class="forecast-item-value stocks" id="summ-stock-growth">+0 ₽</div>
-            </div>
-        </div>
+    <div class="forecast-item">
+        <div class="forecast-item-value bonds" id="summ-bond-income">+0 ₽</div>
+        <div class="forecast-item-label">Купонный поток</div>
+        <div class="forecast-item-sub">(Облигации)</div>
+    </div>
+    <div class="forecast-item">
+        <div class="forecast-item-value stocks" id="summ-stock-growth">+0 ₽</div>
+        <div class="forecast-item-label">Переоценка</div>
+        <div class="forecast-item-sub">(Акции)</div>
+    </div>
+</div>
         
         <div class="forecast-total">
             <div class="forecast-total-label">Цель:</div>
@@ -7968,7 +7972,9 @@ if(document.getElementById('echelonContainer')) {
                 document.getElementById('bar-bond-fill').style.width = bondPct + '%';
                 document.getElementById('bar-stock-fill').style.width = stockPct + '%';
                 const activeFeeBtn = document.querySelector('.fee-btn.active');
-                document.getElementById('summ-fee').innerText = activeFeeBtn ? activeFeeBtn.innerText : '0.03%';
+                // Отображаем реальную выбранную комиссию
+                const feePercent = (brokerFee * 100).toFixed(2);
+                document.getElementById('summ-fee').innerText = feePercent + '%';
                 document.getElementById('summ-bond-income').innerText = '+' + Math.round(totalBondProjectedIncome).toLocaleString() + ' ₽';
                 document.getElementById('summ-stock-growth').innerText = '+' + Math.round(totalStockProjectedGrowth).toLocaleString() + ' ₽';
                 const projectedTotal = inputSum + totalBondProjectedIncome + totalStockProjectedGrowth - feeVal;
