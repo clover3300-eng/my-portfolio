@@ -3494,143 +3494,7 @@ body.dark-mode #screen-portfolio {
     margin: 0;
 }
 
-/* ===== MAIN BALANCE CARD ===== */
-.portfolio-main-card {
-    background: var(--claude-glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--claude-glass-border);
-    border-radius: 28px;
-    padding: 28px 24px;
-    margin-bottom: 20px;
-    box-shadow: var(--claude-glass-shadow);
-    position: relative;
-    overflow: hidden;
-}
 
-/* Акцентная линия сверху */
-.portfolio-main-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 24px;
-    right: 24px;
-    height: 3px;
-    background: linear-gradient(90deg, var(--claude-accent), #5E7BA3);
-    border-radius: 0 0 2px 2px;
-}
-
-.portfolio-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
-}
-
-.portfolio-card-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--claude-text-secondary);
-    margin-bottom: 8px;
-}
-
-.portfolio-card-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 36px;
-    font-weight: 600;
-    color: var(--claude-text-primary);
-    letter-spacing: -0.02em;
-    line-height: 1;
-}
-
-.portfolio-fee-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    background: rgba(217, 119, 87, 0.1);
-    border: 1px solid rgba(217, 119, 87, 0.2);
-    border-radius: 20px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--claude-accent);
-}
-
-.portfolio-fee-badge svg {
-    width: 14px;
-    height: 14px;
-    stroke: currentColor;
-}
-
-/* === Прогресс-бар распределения === */
-.portfolio-allocation-bar {
-    margin: 24px 0;
-}
-
-.allocation-bar-track {
-    display: flex;
-    height: 10px;
-    border-radius: 5px;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.05);
-}
-
-body.dark-mode .allocation-bar-track {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.allocation-bar-bonds {
-    background: linear-gradient(90deg, #5E7BA3, #7B9BBF);
-    transition: width 0.5s ease;
-    border-radius: 5px 0 0 5px;
-}
-
-.allocation-bar-stocks {
-    background: linear-gradient(90deg, #2E8B57, #3CB371);
-    transition: width 0.5s ease;
-    border-radius: 0 5px 5px 0;
-}
-
-.allocation-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 12px;
-}
-
-.allocation-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.allocation-label .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-.allocation-label.bonds .dot {
-    background: #5E7BA3;
-}
-
-.allocation-label.stocks .dot {
-    background: #2E8B57;
-}
-
-.allocation-label.bonds {
-    color: #5E7BA3;
-}
-
-.allocation-label.stocks {
-    color: #2E8B57;
-}
 
 /* === Forecast Block === */
 .portfolio-forecast {
@@ -4465,66 +4329,7 @@ textarea {
 
 
 
-        /* ========== PORTFOLIO MAIN CARD - FINAL OVERRIDE ========== */
-.portfolio-main-card {
-    background: rgba(255, 255, 255, 0.65) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
-    border-radius: 28px !important;
-    padding: 28px 24px !important;
-    margin-bottom: 20px !important;
-    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.04) !important;
-    position: relative !important;
-    overflow: hidden !important;
-}
-
-.portfolio-main-card::before {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 24px !important;
-    right: 24px !important;
-    height: 3px !important;
-    background: linear-gradient(90deg, #D97757, #5E7BA3) !important;
-    border-radius: 0 0 2px 2px !important;
-}
-
-.portfolio-card-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: flex-start !important;
-    margin-bottom: 20px !important;
-}
-
-.portfolio-card-label {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.1em !important;
-    color: #6b6b6b !important;
-    margin-bottom: 8px !important;
-}
-
-.portfolio-card-value {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 36px !important;
-    font-weight: 600 !important;
-    color: #1a1a1a !important;
-    letter-spacing: -0.02em !important;
-    line-height: 1 !important;
-}
-
-/* Прячем старые элементы */
-.stm-header,
-.stm-bar-container, 
-.stm-meta-row,
-.stm-fee-lozenge,
-.stm-pct-labels {
-    display: none !important;
-}
-
+        
         /* ===== СТАРЫЙ ДИЗАЙН КАРТОЧКИ ===== */
 .portfolio-main-card {
     background: var(--card-bg) !important;
@@ -4593,6 +4398,166 @@ textarea {
 
 .stm-pl-stock {
     color: #D97757 !important;
+}
+
+        /* ===== PORTFOLIO MAIN CARD - ORIGINAL DESIGN ===== */
+.portfolio-main-card {
+    background: var(--card-bg) !important;
+    border-radius: 28px !important;
+    padding: 0 !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 8px 25px var(--card-shadow) !important;
+    border: 1px solid var(--border-color) !important;
+    overflow: visible !important;
+    position: relative !important;
+}
+
+.stm-header {
+    padding: 30px 20px 15px !important;
+    text-align: center !important;
+    background: transparent !important;
+    display: block !important;
+}
+
+.stm-header-label {
+    font-size: 11px !important;
+    color: var(--text-secondary) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    margin-bottom: 12px !important;
+    display: block !important;
+}
+
+.stm-val-big {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 42px !important;
+    font-weight: 800 !important;
+    color: var(--text-main) !important;
+    line-height: 1 !important;
+    display: block !important;
+}
+
+.stm-bar-container {
+    display: flex !important;
+    height: 10px !important;
+    margin: 20px 20px 0 20px !important;
+    border-radius: 5px !important;
+    overflow: hidden !important;
+}
+
+.stm-bar-bonds {
+    background: linear-gradient(90deg, #5E7BA3, #7B9BBF) !important;
+    transition: width 0.5s ease !important;
+}
+
+.stm-bar-stocks {
+    background: linear-gradient(90deg, #E8956A, #D97757) !important;
+    transition: width 0.5s ease !important;
+}
+
+.stm-meta-row {
+    padding: 12px 20px 20px !important;
+    display: block !important;
+}
+
+.stm-pct-labels {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+}
+
+.stm-pl-bond {
+    color: #5E7BA3 !important;
+    display: block !important;
+}
+
+.stm-pl-stock {
+    color: #D97757 !important;
+    display: block !important;
+}
+
+.portfolio-forecast {
+    background: rgba(46, 139, 87, 0.08) !important;
+    border: 1px solid rgba(46, 139, 87, 0.15) !important;
+    border-radius: 20px !important;
+    padding: 20px !important;
+    margin: 0 20px 20px 20px !important;
+}
+
+.forecast-title {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.12em !important;
+    color: #2E8B57 !important;
+    margin-bottom: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.forecast-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.forecast-item {
+    text-align: center !important;
+}
+
+.forecast-item-label {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 11px !important;
+    color: var(--text-secondary) !important;
+    margin-bottom: 4px !important;
+}
+
+.forecast-item-sub {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 10px !important;
+    color: var(--text-secondary) !important;
+    margin-bottom: 8px !important;
+}
+
+.forecast-item-value {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+}
+
+.forecast-item-value.bonds {
+    color: #5E7BA3 !important;
+}
+
+.forecast-item-value.stocks {
+    color: #D97757 !important;
+}
+
+.forecast-total {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding-top: 16px !important;
+    border-top: 1px dashed rgba(46, 139, 87, 0.2) !important;
+}
+
+.forecast-total-label {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--text-main) !important;
+}
+
+.forecast-total-value {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #2E8B57 !important;
 }
         
     </style>
@@ -4972,11 +4937,11 @@ textarea {
     <div class="stm-header">
         <div class="stm-header-label">ТЕКУЩИЙ КАПИТАЛ</div>
         <div class="stm-val-big" id="summ-invested">0 ₽</div>
-        <div class="stm-header-icon">
-            <div style="background: rgba(52, 152, 219, 0.1); padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--accent-blue);">
-                Комиссия: <span id="summ-fee">0.03%</span>
-            </div>
-        </div>
+    </div>
+    
+    <!-- Комиссия (справа вверху) -->
+    <div style="position: absolute; top: 20px; right: 20px; background: rgba(52, 152, 219, 0.1); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--accent-blue);">
+        Комиссия <span id="summ-fee">0.03%</span>
     </div>
     
     <!-- Прогресс-бар -->
@@ -4985,36 +4950,40 @@ textarea {
         <div class="stm-bar-stocks" id="bar-stock-fill" style="width: 50%;"></div>
     </div>
     
-    <!-- Метаданные -->
+    <!-- Подписи под прогресс-баром -->
     <div class="stm-meta-row">
         <div class="stm-pct-labels">
-            <div class="stm-pl-bond">ОБЛИГАЦИИ <strong id="srl-bond-pct">50%</strong></div>
-            <div class="stm-pl-stock">АКЦИИ <strong id="srl-stock-pct">50%</strong></div>
+            <div class="stm-pl-bond">АКЦИИ <strong id="srl-stock-pct">50%</strong></div>
+            <div class="stm-pl-stock">ОБЛИГАЦИИ <strong id="srl-bond-pct">50%</strong></div>
         </div>
     </div>
     
     <!-- Блок прогноза -->
     <div class="portfolio-forecast">
         <div class="forecast-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
                 <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
             </svg>
             ПРОГНОЗ ЧЕРЕЗ 3 ГОДА
         </div>
+        
         <div class="forecast-grid">
             <div class="forecast-item">
-                <div class="forecast-item-label">Купонный поток<br>(Облигации)</div>
+                <div class="forecast-item-label">Купонный поток</div>
+                <div class="forecast-item-sub">(Облигации)</div>
                 <div class="forecast-item-value bonds" id="summ-bond-income">+0 ₽</div>
             </div>
             <div class="forecast-item">
-                <div class="forecast-item-label">Переоценка<br>(Акции)</div>
+                <div class="forecast-item-label">Переоценка</div>
+                <div class="forecast-item-sub">(Акции)</div>
                 <div class="forecast-item-value stocks" id="summ-stock-growth">+0 ₽</div>
             </div>
         </div>
+        
         <div class="forecast-total">
             <div class="forecast-total-label">Цель:</div>
             <div>
-                <span class="forecast-total-value" id="summ-total-3y">0 ₽</span>
+                <span class="forecast-total-value" id="summ-total-3y">~0 ₽</span>
             </div>
         </div>
     </div>
