@@ -4428,6 +4428,105 @@ body.dark-mode .action-btn.secondary {
     height: 20px;
     stroke: currentColor;
 }
+        /* =========================================
+   ГЛОБАЛЬНЫЙ СТИЛЬ ДЛЯ ЦИФР (JetBrains Mono)
+   ========================================= */
+
+/* 1. Поля ввода */
+input, 
+.calc-input,
+textarea {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* 2. Рыночные данные и дашборд (Интересное) */
+.mk-val, 
+.mk-dynamics,
+.market-tile-value,
+.market-tile-change,
+.rv-item b,
+.rate-row-value,
+.rate-item-glass b {
+    font-family: 'JetBrains Mono', monospace !important;
+    letter-spacing: -0.03em;
+}
+
+/* 3. Калькулятор и Стратегии */
+.strategy-percent-row,
+.custom-value-bonds,
+.custom-value-stocks,
+.custom-slider-label span, /* проценты в слайдере */
+.fee-item-rate,
+.fee-selected-text:not(.placeholder), /* выбранная комиссия */
+#sumInput,
+#monthlySumInput,
+.currency {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* 4. Портфель: Главная карточка и Прогноз */
+.portfolio-card-value,
+.portfolio-fee-badge,
+.forecast-item-value,
+.forecast-total-value,
+.portfolio-section-badge,
+#summ-invested,
+#summ-total-3y,
+#summ-bond-income,
+#summ-stock-growth {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* 5. Списки (Облигации, Акции, Купоны) */
+.list-item-yield,
+.list-item-qty,
+.list-item-sum,
+.details-row-value,
+.ofz-price,
+.ofz-nkd-badge,
+.ofz-yield-badge,
+.ofz-detail-val,
+.ub-yield,
+.ub-price,
+.echelon-sum,
+.echelon-percent-badge,
+.et-price,
+.et-detail-value,
+.et-target {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* 6. Таблицы (Купонный дождь, Выплаты) */
+.coupon-row b,
+.coupon-row div:nth-child(3), /* Колонка количества */
+.coupon-row div:nth-child(4), /* Колонка суммы */
+#couponTotalHeader,
+.echelon-number {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* 7. Страница Компании */
+.company-hero-price,
+.company-hero-change,
+.analytics-tile-value,
+.company-ticker-badge,
+.event-date-day {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* 8. Мелкие элементы и бейджи */
+.usage-label, /* Суммы над прогресс-барами */
+.stat-val,
+.badge-blue,
+.badge-green {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Корректировка размера для моноширинного шрифта, 
+   так как он визуально крупнее обычного */
+.mk-val, .portfolio-card-value {
+    font-weight: 500 !important; /* Чуть тоньше для крупных цифр */
+}
         
     </style>
 </head>
