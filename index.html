@@ -4524,6 +4524,76 @@ textarea {
 .stm-pct-labels {
     display: none !important;
 }
+
+        /* ===== СТАРЫЙ ДИЗАЙН КАРТОЧКИ ===== */
+.portfolio-main-card {
+    background: var(--card-bg) !important;
+    border-radius: 28px !important;
+    padding: 0 !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 8px 25px var(--card-shadow) !important;
+    border: 1px solid var(--border-color) !important;
+    overflow: hidden !important;
+}
+
+.stm-header {
+    padding: 30px 20px 20px !important;
+    text-align: center !important;
+    background: linear-gradient(135deg, var(--bg-color), rgba(255,255,255,0.5)) !important;
+}
+
+.stm-header-label {
+    font-size: 11px !important;
+    color: var(--text-secondary) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    margin-bottom: 12px !important;
+}
+
+.stm-val-big {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 42px !important;
+    font-weight: 800 !important;
+    color: var(--text-main) !important;
+    line-height: 1 !important;
+    margin-bottom: 15px !important;
+}
+
+.stm-bar-container {
+    display: flex !important;
+    height: 10px !important;
+    margin: 0 20px !important;
+}
+
+.stm-bar-bonds {
+    background: linear-gradient(90deg, #5E7BA3, #7B9BBF) !important;
+    transition: width 0.5s ease !important;
+}
+
+.stm-bar-stocks {
+    background: linear-gradient(90deg, #E8956A, #D97757) !important;
+    transition: width 0.5s ease !important;
+}
+
+.stm-meta-row {
+    padding: 15px 20px !important;
+}
+
+.stm-pct-labels {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+}
+
+.stm-pl-bond {
+    color: #5E7BA3 !important;
+}
+
+.stm-pl-stock {
+    color: #D97757 !important;
+}
         
     </style>
 </head>
@@ -4898,36 +4968,28 @@ textarea {
         
         <!-- ===== MAIN BALANCE CARD ===== -->
         <div class="portfolio-main-card" id="shareContainer">
-    <!-- Заголовок карточки -->
-    <div class="portfolio-card-header">
-        <div>
-            <div class="portfolio-card-label">Текущий капитал</div>
-            <div class="portfolio-card-value" id="summ-invested">0 ₽</div>
-        </div>
-        <div class="portfolio-fee-badge">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 6v6l4 2"/>
-            </svg>
-            <span>Комиссия: <span id="summ-fee">0.03%</span></span>
+    <!-- Заголовок -->
+    <div class="stm-header">
+        <div class="stm-header-label">ТЕКУЩИЙ КАПИТАЛ</div>
+        <div class="stm-val-big" id="summ-invested">0 ₽</div>
+        <div class="stm-header-icon">
+            <div style="background: rgba(52, 152, 219, 0.1); padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--accent-blue);">
+                Комиссия: <span id="summ-fee">0.03%</span>
+            </div>
         </div>
     </div>
     
-    <!-- Прогресс-бар распределения -->
-    <div class="portfolio-allocation-bar">
-        <div class="allocation-bar-track">
-            <div class="allocation-bar-bonds" id="bar-bond-fill" style="width: 50%;"></div>
-            <div class="allocation-bar-stocks" id="bar-stock-fill" style="width: 50%;"></div>
-        </div>
-        <div class="allocation-labels">
-            <div class="allocation-label bonds">
-                <span class="dot"></span>
-                <span>Облигации <strong id="srl-bond-pct">50%</strong></span>
-            </div>
-            <div class="allocation-label stocks">
-                <span class="dot"></span>
-                <span>Акции <strong id="srl-stock-pct">50%</strong></span>
-            </div>
+    <!-- Прогресс-бар -->
+    <div class="stm-bar-container">
+        <div class="stm-bar-bonds" id="bar-bond-fill" style="width: 50%;"></div>
+        <div class="stm-bar-stocks" id="bar-stock-fill" style="width: 50%;"></div>
+    </div>
+    
+    <!-- Метаданные -->
+    <div class="stm-meta-row">
+        <div class="stm-pct-labels">
+            <div class="stm-pl-bond">ОБЛИГАЦИИ <strong id="srl-bond-pct">50%</strong></div>
+            <div class="stm-pl-stock">АКЦИИ <strong id="srl-stock-pct">50%</strong></div>
         </div>
     </div>
     
@@ -4937,27 +4999,27 @@ textarea {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
             </svg>
-            Прогноз через 3 года
+            ПРОГНОЗ ЧЕРЕЗ 3 ГОДА
         </div>
         <div class="forecast-grid">
             <div class="forecast-item">
-                <div class="forecast-item-label">Купоны от облигаций</div>
+                <div class="forecast-item-label">Купонный поток<br>(Облигации)</div>
                 <div class="forecast-item-value bonds" id="summ-bond-income">+0 ₽</div>
             </div>
             <div class="forecast-item">
-                <div class="forecast-item-label">Рост акций</div>
+                <div class="forecast-item-label">Переоценка<br>(Акции)</div>
                 <div class="forecast-item-value stocks" id="summ-stock-growth">+0 ₽</div>
             </div>
         </div>
         <div class="forecast-total">
-            <div class="forecast-total-label">Итого через 3 года:</div>
+            <div class="forecast-total-label">Цель:</div>
             <div>
                 <span class="forecast-total-value" id="summ-total-3y">0 ₽</span>
             </div>
         </div>
     </div>
     
-    <!-- Скрытый блок для PDF (НЕ ТРОГАТЬ!) -->
+    <!-- Скрытый блок для PDF -->
     <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
         <h2 style="margin: 0; color: #D97757; font-size: 18px;">Madame Solomi'na Portfolio</h2>
         <div id="shareDate" style="font-size: 10px; color: #888;"></div>
