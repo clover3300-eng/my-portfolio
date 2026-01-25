@@ -7804,7 +7804,7 @@ if(document.getElementById('echelonContainer')) {
                 
                 const usageLabelText = document.getElementById('usageLabelText');
                 if(usageLabelText) usageLabelText.innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
-                document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString() + ' ₽';
+                document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
                 document.getElementById('srl-bond-pct').innerText = bondPct + '%';
                 document.getElementById('srl-stock-pct').innerText = stockPct + '%';
                 document.getElementById('bar-bond-fill').style.width = bondPct + '%';
@@ -7813,14 +7813,14 @@ if(document.getElementById('echelonContainer')) {
                 // Отображаем реальную выбранную комиссию
                 const feePercent = (brokerFee * 100).toFixed(2);
                 document.getElementById('summ-fee').innerText = feePercent + '%';
-                document.getElementById('summ-bond-income').innerText = '+' + Math.round(totalBondProjectedIncome).toLocaleString() + ' ₽';
-                document.getElementById('summ-stock-growth').innerText = '+' + Math.round(totalStockProjectedGrowth).toLocaleString() + ' ₽';
+                document.getElementById('summ-bond-income').innerText = '+' + Math.round(totalBondProjectedIncome).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
+                document.getElementById('summ-stock-growth').innerText = '+' + Math.round(totalStockProjectedGrowth).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
                 const projectedTotal = inputSum + totalBondProjectedIncome + totalStockProjectedGrowth - feeVal;
                 let percentageChange = (inputSum > 0) ? ((projectedTotal - inputSum) / inputSum) * 100 : 0;
                 const changeSign = percentageChange >= 0 ? '+' : '';
                 const changeColor = percentageChange >= 0 ? '#27ae60' : '#e74c3c';
                 const changeHtml = ` <span style="font-size: 14px; color: ${changeColor}; font-weight: 500;">(${changeSign}${percentageChange.toFixed(1)}%)</span>`;
-                document.getElementById('summ-total-3y').innerHTML = Math.round(projectedTotal).toLocaleString() + ' ₽' + changeHtml;
+                document.getElementById('summ-total-3y').innerHTML = Math.round(projectedTotal).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽' + changeHtml;
             }
             updateEchelonTable();
             renderOfzList();
