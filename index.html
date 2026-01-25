@@ -4455,6 +4455,20 @@ textarea {
             box-sizing: border-box;
             padding-bottom: 0 !important; /* Убираем нижний отступ, если был */
         }
+
+         /* --- МАГИЯ ЗДЕСЬ: ДВИГАЕМ ТОЛЬКО ВЕРХ --- */
+        body.home-mode .welcome-logo-block {
+            /* Поднимаем логотип вверх визуально */
+            /* -15vh означает "поднять на 15% высоты экрана" */
+            /* Кнопка при этом останется на месте, так как transform не толкает соседей */
+            transform: translateY(-15vh) !important; 
+        }
+
+        /* Кнопку оставляем как есть */
+        body.home-mode .welcome-cta-block {
+            margin: 0 !important; 
+            transform: none !important; /* Гарантируем, что кнопка не сдвинется */
+        }
         
         /* Когда мы на главной (home-mode), убираем фон, границы и тени у "дока" с кнопками */
         body.home-mode .nav-dock {
