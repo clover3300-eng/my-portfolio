@@ -2197,49 +2197,7 @@ input#sumInput.size-xsmall {
         
 
         
-        .stm-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-            margin-top: 10px; /* moved lower */
-        }
-        .stm-header-label { font-size: 11px; color: #95a5a6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stm-val-big { font-size: 26px; font-weight: 800; color: var(--text-main); line-height: 1; }
-        .stm-header-icon {
-            width: 44px; height: 44px;
-            border-radius: 14px;
-            background: var(--coupon-blue-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .stm-header-icon svg {
-            width: 24px; height: 24px;
-            stroke-width: 2;
-            color: var(--accent-blue);
-        }
-        
-        .stm-bar-container { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: #eee; width: 100%; }
-        .dark-mode .stm-bar-container { background: rgba(0,0,0,0.2); }
-        .stm-bar-bonds { background: var(--accent-blue); transition: width 0.3s; }
-        .stm-bar-stocks { background: var(--accent-green); transition: width 0.3s; }
-        
-        .stm-meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
-        .stm-fee-lozenge { 
-            font-size: 11px;
-            color: var(--text-secondary);
-            font-weight: 500;
-            background: var(--bg-color);
-            padding: 6px 12px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-        }
-        .stm-pct-labels { display: flex; flex-direction: column; gap: 5px; font-size: 10px; font-weight: 700; }
-        .stm-pl-bond { color: var(--accent-blue); }
-        .stm-pl-stock { color: var(--accent-green); }
-        
-        
+       
         
         .company-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
         .back-btn { width: 36px; height: 36px; border-radius: 12px; background: var(--card-bg); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; color: var(--text-main); }
@@ -3536,7 +3494,7 @@ body.dark-mode #screen-portfolio {
     margin: 0;
 }
 
-/* === Main Balance Card (Главная карточка баланса) === */
+/* ===== MAIN BALANCE CARD ===== */
 .portfolio-main-card {
     background: var(--claude-glass);
     backdrop-filter: blur(20px);
@@ -3674,7 +3632,7 @@ body.dark-mode .allocation-bar-track {
     color: #2E8B57;
 }
 
-/* === Forecast Block (Прогноз внутри карточки) === */
+/* === Forecast Block === */
 .portfolio-forecast {
     background: rgba(46, 139, 87, 0.08);
     border: 1px solid rgba(46, 139, 87, 0.15);
