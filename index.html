@@ -3496,95 +3496,6 @@ body.dark-mode #screen-portfolio {
 
 
 
-/* === Forecast Block === */
-.portfolio-forecast {
-    background: rgba(46, 139, 87, 0.08);
-    border: 1px solid rgba(46, 139, 87, 0.15);
-    border-radius: 20px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-.forecast-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: #2E8B57;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.forecast-title svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
-}
-
-.forecast-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-}
-
-.forecast-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.forecast-item-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    color: var(--claude-text-secondary);
-}
-
-.forecast-item-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--claude-text-primary);
-}
-
-.forecast-item-value.bonds {
-    color: #5E7BA3;
-}
-
-.forecast-item-value.stocks {
-    color: #2E8B57;
-}
-
-.forecast-total {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 16px;
-    border-top: 1px dashed rgba(46, 139, 87, 0.2);
-}
-
-.forecast-total-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--claude-text-primary);
-}
-
-.forecast-total-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 24px;
-    font-weight: 700;
-    color: #2E8B57;
-}
-
-.forecast-total-change {
-    font-size: 14px;
-    font-weight: 500;
-    margin-left: 8px;
-}
 
 /* === Section Headers (Заголовки разделов) === */
 .portfolio-section-header {
@@ -4329,77 +4240,6 @@ textarea {
 
 
 
-        
-        /* ===== СТАРЫЙ ДИЗАЙН КАРТОЧКИ ===== */
-.portfolio-main-card {
-    background: var(--card-bg) !important;
-    border-radius: 28px !important;
-    padding: 0 !important;
-    margin-bottom: 20px !important;
-    box-shadow: 0 8px 25px var(--card-shadow) !important;
-    border: 1px solid var(--border-color) !important;
-    overflow: hidden !important;
-}
-
-.stm-header {
-    padding: 30px 20px 20px !important;
-    text-align: center !important;
-    background: linear-gradient(135deg, var(--bg-color), rgba(255,255,255,0.5)) !important;
-}
-
-.stm-header-label {
-    font-size: 11px !important;
-    color: var(--text-secondary) !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1.5px !important;
-    margin-bottom: 12px !important;
-}
-
-.stm-val-big {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 42px !important;
-    font-weight: 800 !important;
-    color: var(--text-main) !important;
-    line-height: 1 !important;
-    margin-bottom: 15px !important;
-}
-
-.stm-bar-container {
-    display: flex !important;
-    height: 10px !important;
-    margin: 0 20px !important;
-}
-
-.stm-bar-bonds {
-    background: linear-gradient(90deg, #5E7BA3, #7B9BBF) !important;
-    transition: width 0.5s ease !important;
-}
-
-.stm-bar-stocks {
-    background: linear-gradient(90deg, #E8956A, #D97757) !important;
-    transition: width 0.5s ease !important;
-}
-
-.stm-meta-row {
-    padding: 15px 20px !important;
-}
-
-.stm-pct-labels {
-    display: flex !important;
-    justify-content: space-between !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-}
-
-.stm-pl-bond {
-    color: #5E7BA3 !important;
-}
-
-.stm-pl-stock {
-    color: #D97757 !important;
-}
-
         /* ===== PORTFOLIO MAIN CARD - ORIGINAL DESIGN ===== */
 .portfolio-main-card {
     background: var(--card-bg) !important;
@@ -4413,38 +4253,41 @@ textarea {
 }
 
 .stm-header {
-    padding: 30px 20px 15px !important;
+    padding: 24px 20px 10px !important;
     text-align: center !important;
     background: transparent !important;
     display: block !important;
 }
 
 .stm-header-label {
-    font-size: 11px !important;
+    font-size: 10px !important;
     color: var(--text-secondary) !important;
-    font-weight: 700 !important;
+    font-weight: 600 !important;
     text-transform: uppercase !important;
-    letter-spacing: 1.5px !important;
-    margin-bottom: 12px !important;
+    letter-spacing: 1.2px !important;
+    margin-bottom: 10px !important;
     display: block !important;
+    opacity: 0.7 !important;
 }
 
 .stm-val-big {
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 42px !important;
-    font-weight: 800 !important;
+    font-size: 36px !important;
+    font-weight: 700 !important;
     color: var(--text-main) !important;
     line-height: 1 !important;
     display: block !important;
+    letter-spacing: -0.02em !important;
 }
 
 .stm-bar-container {
     display: flex !important;
-    height: 10px !important;
-    margin: 20px 20px 0 20px !important;
-    border-radius: 5px !important;
+    height: 8px !important;
+    margin: 16px 24px 0 24px !important;
+    border-radius: 4px !important;
     overflow: hidden !important;
 }
+
 
 .stm-bar-bonds {
     background: linear-gradient(90deg, #5E7BA3, #7B9BBF) !important;
@@ -4457,15 +4300,18 @@ textarea {
 }
 
 .stm-meta-row {
-    padding: 12px 20px 20px !important;
+    padding: 10px 24px 16px !important;
     display: block !important;
 }
+
 
 .stm-pct-labels {
     display: flex !important;
     justify-content: space-between !important;
-    font-size: 11px !important;
+    font-size: 10px !important;
     font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
 }
 
 .stm-pl-bond {
@@ -4479,87 +4325,79 @@ textarea {
 }
 
 .portfolio-forecast {
-    background: rgba(46, 139, 87, 0.08) !important;
-    border: 1px solid rgba(46, 139, 87, 0.15) !important;
-    border-radius: 20px !important;
-    padding: 20px !important;
+    background: rgba(46, 139, 87, 0.06) !important;
+    border: 1px solid rgba(46, 139, 87, 0.12) !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
     margin: 0 20px 20px 20px !important;
 }
 
 .forecast-title {
     font-family: 'Inter', sans-serif !important;
-    font-size: 10px !important;
+    font-size: 9px !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.12em !important;
+    letter-spacing: 0.15em !important;
     color: #2E8B57 !important;
-    margin-bottom: 16px !important;
+    margin-bottom: 12px !important;
     display: flex !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 6px !important;
+    opacity: 0.8 !important;
 }
 
 .forecast-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 20px !important;
-    margin-bottom: 20px !important;
-}
-
-.forecast-item {
-    text-align: center !important;
-}
-
-.forecast-item-label {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 11px !important;
-    color: var(--text-secondary) !important;
-    margin-top: 8px !important;
-    margin-bottom: 2px !important;
-}
-
-.forecast-item-sub {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 10px !important;
-    color: var(--text-secondary) !important;
-    opacity: 0.8 !important;
+    gap: 16px !important;
+    margin-bottom: 14px !important;
 }
 
 .forecast-item-value {
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 24px !important;
-    font-weight: 700 !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
     margin-bottom: 4px !important;
+    letter-spacing: -0.01em !important;
 }
 
-.forecast-item-value.bonds {
-    color: #5E7BA3 !important;
+.forecast-item-label {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 10px !important;
+    color: var(--text-secondary) !important;
+    margin-top: 6px !important;
+    margin-bottom: 1px !important;
+    font-weight: 500 !important;
 }
 
-.forecast-item-value.stocks {
-    color: #D97757 !important;
+.forecast-item-sub {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 9px !important;
+    color: var(--text-secondary) !important;
+    opacity: 0.7 !important;
 }
 
 .forecast-total {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    padding-top: 16px !important;
+    padding-top: 12px !important;
     border-top: 1px dashed rgba(46, 139, 87, 0.2) !important;
 }
 
 .forecast-total-label {
     font-family: 'Inter', sans-serif !important;
-    font-size: 14px !important;
+    font-size: 13px !important;
     font-weight: 600 !important;
     color: var(--text-main) !important;
 }
 
 .forecast-total-value {
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 24px !important;
+    font-size: 22px !important;
     font-weight: 700 !important;
     color: #2E8B57 !important;
+    letter-spacing: -0.01em !important;
 }
         
     </style>
@@ -4942,7 +4780,7 @@ textarea {
     </div>
     
     <!-- Комиссия под суммой -->
-<div style="text-align: center; margin-top: 12px; padding-bottom: 20px;">
+<div style="text-align: center; margin-top: 8px; padding-bottom: 14px;">
     <div style="display: inline-block; background: rgba(52, 152, 219, 0.1); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; color: var(--accent-blue);">
         Комиссия <span id="summ-fee">0.00%</span>
     </div>
