@@ -60,6 +60,20 @@
             --claude-text-primary: #1a1a1a;
             --claude-text-secondary: #6b6b6b;
         }
+
+                /* ========== ОТКЛЮЧЕНИЕ ЭФФЕКТА РЕЗИНКИ ========== */
+        html {
+            overscroll-behavior: none; /* Главная команда отключения пружины */
+            height: 100%; /* Фиксируем высоту */
+            -webkit-overflow-scrolling: touch; /* Для плавности на айфонах */
+        }
+        
+        body {
+            overscroll-behavior: none; /* Дублируем для надежности */
+            min-height: 100%;
+        }
+        /* ================================================= */
+
     
 
         body.dark-mode {
