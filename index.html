@@ -4436,24 +4436,24 @@ textarea {
                 /* ========== НОВЫЕ СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (ВШИТОЕ МЕНЮ) ========== */
 
          body.home-mode {
-            /* Фиксация экрана */
             position: fixed;
             width: 100%;
             height: 100%;
             overflow: hidden !important;
-            
-            /* ВАЖНО: Убираем все отступы у body, чтобы контент не смещался вправо */
             padding: 0 !important; 
             margin: 0 !important;
+            background: transparent !important; /* На всякий случай убираем фон у body */
         }
 
-        /* Корректируем сам блок приветствия, так как убрали отступы у body */
+        /* Исправление белой полосы тут: min-height: 100vh */
         body.home-mode .welcome-screen {
-            margin: 0 !important; /* Убираем старый margin -16px */
+            margin: 0 !important;
             width: 100% !important;
+            min-height: 100vh !important; /* Растягиваем фон на ВЕСЬ экран */
             height: 100% !important;
             border-radius: 0 !important;
-            box-sizing: border-box; /* Чтобы padding внутри не ломал ширину */
+            box-sizing: border-box;
+            padding-bottom: 0 !important; /* Убираем нижний отступ, если был */
         }
         
         /* Когда мы на главной (home-mode), убираем фон, границы и тени у "дока" с кнопками */
