@@ -3534,9 +3534,11 @@ body.dark-mode #screen-portfolio {
     font-size: 20px;
 }
 
+/* 1. Скрываем иконку (щит) только для раздела Облигаций (Денежный поток) */
 .portfolio-section-icon.bonds {
-    background: rgba(94, 123, 163, 0.15);
+    display: none !important;
 }
+
 
 .portfolio-section-icon.stocks {
     background: rgba(46, 139, 87, 0.15);
@@ -4353,12 +4355,23 @@ textarea {
     margin-bottom: 14px !important;
 }
 
+/* Цифры внутри карточек (Купоны, Переоценка) */
 .forecast-item-value {
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 16px !important;
     font-weight: 600 !important;
     margin-bottom: 4px !important;
-    letter-spacing: -0.01em !important;
+    letter-spacing: -0.03em !important; /* Чуть сжимаем расстояние между буквами */
+    
+    /* ДИНАМИЧЕСКИЙ РАЗМЕР: */
+    /* Минимум 11px, в идеале 4% от ширины экрана, Максимум 17px */
+    font-size: clamp(11px, 4vw, 17px) !important;
+    
+    /* ЗАПРЕТ ПЕРЕНОСА СТРОК: */
+    white-space: nowrap !important; 
+    
+    /* Если цифра всё равно гигантская, она не вылезет за рамки, а обрежется (опционально) */
+    overflow: hidden; 
+    text-overflow: clip; 
 }
 
 .forecast-item-label {
@@ -4392,12 +4405,18 @@ textarea {
     color: var(--text-main) !important;
 }
 
+/* Итоговая цифра "Цель" */
 .forecast-total-value {
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 18px !important;
-    font-weight: 700 !important;
+    font-weight: 800 !important; /* Сделали чуть жирнее */
     color: #2E8B57 !important;
-    letter-spacing: -0.01em !important;
+    letter-spacing: -0.03em !important;
+    
+    /* ДИНАМИЧЕСКИЙ РАЗМЕР: */
+    /* Минимум 13px, в идеале 5% от ширины экрана, Максимум 20px */
+    font-size: clamp(13px, 5vw, 20px) !important;
+    
+    white-space: nowrap !important;
 }
         
     </style>
