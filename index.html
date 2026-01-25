@@ -4803,70 +4803,71 @@ body.dark-mode .action-btn.secondary {
         
         <!-- ===== MAIN BALANCE CARD ===== -->
         <div class="portfolio-main-card" id="shareContainer">
-            <div class="portfolio-card-header">
-                <div>
-                    <div class="portfolio-card-label">Общий капитал</div>
-                    <div class="portfolio-card-value" id="summ-invested">0 ₽</div>
-                </div>
-                <div class="portfolio-fee-badge">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6v6l4 2"/>
-                    </svg>
-                    <span>Комиссия: <span id="summ-fee">0.03%</span></span>
-                </div>
+    <!-- Заголовок карточки -->
+    <div class="portfolio-card-header">
+        <div>
+            <div class="portfolio-card-label">Текущий капитал</div>
+            <div class="portfolio-card-value" id="summ-invested">0 ₽</div>
+        </div>
+        <div class="portfolio-fee-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+            <span>Комиссия: <span id="summ-fee">0.03%</span></span>
+        </div>
+    </div>
+    
+    <!-- Прогресс-бар распределения -->
+    <div class="portfolio-allocation-bar">
+        <div class="allocation-bar-track">
+            <div class="allocation-bar-bonds" id="bar-bond-fill" style="width: 50%;"></div>
+            <div class="allocation-bar-stocks" id="bar-stock-fill" style="width: 50%;"></div>
+        </div>
+        <div class="allocation-labels">
+            <div class="allocation-label bonds">
+                <span class="dot"></span>
+                <span>Облигации <strong id="srl-bond-pct">50%</strong></span>
             </div>
-            
-            <!-- Прогресс-бар распределения -->
-            <div class="portfolio-allocation-bar">
-                <div class="allocation-bar-track">
-                    <div class="allocation-bar-bonds" id="bar-bond-fill" style="width: 50%;"></div>
-                    <div class="allocation-bar-stocks" id="bar-stock-fill" style="width: 50%;"></div>
-                </div>
-                <div class="allocation-labels">
-                    <div class="allocation-label bonds">
-                        <span class="dot"></span>
-                        <span>Облигации <strong id="srl-bond-pct">50%</strong></span>
-                    </div>
-                    <div class="allocation-label stocks">
-                        <span class="dot"></span>
-                        <span>Акции <strong id="srl-stock-pct">50%</strong></span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Forecast Block -->
-            <div class="portfolio-forecast">
-                <div class="forecast-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                    </svg>
-                    Прогноз через 3 года
-                </div>
-                <div class="forecast-grid">
-                    <div class="forecast-item">
-                        <div class="forecast-item-label">Купоны от облигаций</div>
-                        <div class="forecast-item-value bonds" id="summ-bond-income">+0 ₽</div>
-                    </div>
-                    <div class="forecast-item">
-                        <div class="forecast-item-label">Рост акций</div>
-                        <div class="forecast-item-value stocks" id="summ-stock-growth">+0 ₽</div>
-                    </div>
-                </div>
-                <div class="forecast-total">
-                    <div class="forecast-total-label">Итого через 3 года:</div>
-                    <div>
-                        <span class="forecast-total-value" id="summ-total-3y">0 ₽</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Скрытый блок для PDF -->
-            <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
-                <h2 style="margin: 0; color: #D97757; font-size: 18px;">Madame Solomi'na Portfolio</h2>
-                <div id="shareDate" style="font-size: 10px; color: #888;"></div>
+            <div class="allocation-label stocks">
+                <span class="dot"></span>
+                <span>Акции <strong id="srl-stock-pct">50%</strong></span>
             </div>
         </div>
+    </div>
+    
+    <!-- Блок прогноза -->
+    <div class="portfolio-forecast">
+        <div class="forecast-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+            Прогноз через 3 года
+        </div>
+        <div class="forecast-grid">
+            <div class="forecast-item">
+                <div class="forecast-item-label">Купоны от облигаций</div>
+                <div class="forecast-item-value bonds" id="summ-bond-income">+0 ₽</div>
+            </div>
+            <div class="forecast-item">
+                <div class="forecast-item-label">Рост акций</div>
+                <div class="forecast-item-value stocks" id="summ-stock-growth">+0 ₽</div>
+            </div>
+        </div>
+        <div class="forecast-total">
+            <div class="forecast-total-label">Итого через 3 года:</div>
+            <div>
+                <span class="forecast-total-value" id="summ-total-3y">0 ₽</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Скрытый блок для PDF (НЕ ТРОГАТЬ!) -->
+    <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
+        <h2 style="margin: 0; color: #D97757; font-size: 18px;">Madame Solomi'na Portfolio</h2>
+        <div id="shareDate" style="font-size: 10px; color: #888;"></div>
+    </div>
+</div>
         
         <!-- ===== СЕКЦИЯ ОБЛИГАЦИЙ ===== -->
         <div id="section-bonds">
