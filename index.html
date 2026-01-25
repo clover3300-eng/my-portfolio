@@ -4418,6 +4418,47 @@ textarea {
     
     white-space: nowrap !important;
 }
+
+                /* ========== НОВЫЕ СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (ВШИТОЕ МЕНЮ) ========== */
+        
+        /* Когда мы на главной (home-mode), убираем фон, границы и тени у "дока" с кнопками */
+        body.home-mode .nav-dock {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            gap: 25px; /* Немного увеличим расстояние между кнопками для красоты */
+        }
+
+        /* То же самое для кнопки поиска (Лупы) */
+        body.home-mode .nav-search-btn {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+        }
+
+        /* Скрываем кнопку "Домик" на главной странице */
+        body.home-mode #nav-home {
+            display: none !important;
+        }
+
+        /* Делаем иконки чуть более явными на фоне, если нужно (опционально) */
+        body.home-mode .nav-item, 
+        body.home-mode .nav-search-btn {
+            color: var(--text-secondary); /* Или любой цвет, который хорошо смотрится на твоем фоне */
+            opacity: 0.8;
+        }
+        
+        /* Активная иконка на главной пусть выделяется */
+        body.home-mode .nav-item.active {
+            background: transparent !important;
+            color: var(--text-main) !important;
+            transform: scale(1.1);
+        }
+        /* ========== КОНЕЦ НОВЫХ СТИЛЕЙ ========== */
+
         
     </style>
 </head>
@@ -5411,19 +5452,20 @@ function formatNewsDate(dateString) {
         
         // Swipe navigation removed
 
-        function checkFirstVisit() {
-    const visited = localStorage.getItem('user_visited');
-    if (visited) {
-        isFirstVisit = false;
-        document.getElementById('navWrapper').style.display = 'flex';
-        document.getElementById('stickyPanel').style.display = 'block';
-        showScreen('screen-app');
-    } else {
-        isFirstVisit = true;
-        document.getElementById('navWrapper').style.display = 'none';
-        document.getElementById('stickyPanel').style.display = 'none';
-    }
-}
+                function checkFirstVisit() {
+            const visited = localStorage.getItem('user_visited');
+            
+            if (visited) {
+                // Если пользователь уже был - идем в Терминал
+                isFirstVisit = false;
+                showScreen('screen-app');
+            } else {
+                // Если НОВИЧОК - показываем Главную (screen-home)
+                isFirstVisit = true;
+                showScreen('screen-home'); // Эта функция теперь сама включит меню и нужный стиль
+            }
+        }
+
 
         function startCalculation() {
     localStorage.setItem('user_visited', 'true');
@@ -5587,53 +5629,64 @@ function formatNewsDate(dateString) {
         setInterval(updateMarketData, 30000);
         //setInterval(updateMarketStatus, 60000); // Отключено
         
-        function showScreen(screenId) {
-    if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
-        lastNavScreen = screenId;
-        collapseSearch(false);
-    }
-    
-    currentScreen = screenId;
-    
-    // Показываем нужный экран
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const targetScreen = document.getElementById(screenId);
-    if(targetScreen) {
-        targetScreen.classList.add('active');
-    }
-    
-    // Обновляем навигацию
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    document.getElementById('nav-search').classList.remove('active');
-    
-    const navId = `nav-${screenId.split('-')[1]}`;
-    const navBtn = document.getElementById(navId);
-    if (navBtn) navBtn.classList.add('active');
-    
-    if(screenId === 'screen-interesting' || screenId === 'screen-company') {
-        document.getElementById('nav-search').classList.add('active');
-    }
-    
-    // Управление sticky панелями
-    const stickyPanel = document.getElementById('stickyPanel');
-    const portfolioActionPanel = document.getElementById('portfolioActionPanel');
-    
-    if (stickyPanel) {
-        stickyPanel.style.display = (screenId === 'screen-app') ? 'block' : 'none';
-    }
-    
-    if (portfolioActionPanel) {
-        // Показываем action panel только если портфель рассчитан
-        if (screenId === 'screen-portfolio' && isPortfolioCalculated) {
-            portfolioActionPanel.style.display = 'flex';
-        } else {
-            portfolioActionPanel.style.display = 'none';
+                function showScreen(screenId) {
+            // 1. Логика для меню: если это Главная (screen-home)
+            if (screenId === 'screen-home') {
+                document.body.classList.add('home-mode'); // Включаем "прозрачный" режим
+                document.getElementById('navWrapper').style.display = 'flex'; // Убеждаемся, что меню видно
+                document.getElementById('stickyPanel').style.display = 'none'; // Скрываем нижнюю панель (где кнопка "Сформировать")
+            } else {
+                document.body.classList.remove('home-mode'); // Выключаем "прозрачный" режим (возвращаем как было)
+                
+                // Управление видимостью stickyPanel как в оригинале
+                const stickyPanel = document.getElementById('stickyPanel');
+                if (stickyPanel) {
+                    stickyPanel.style.display = (screenId === 'screen-app') ? 'block' : 'none';
+                }
+            }
+
+            // Старая логика функции (оставляем как было)
+            if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
+                lastNavScreen = screenId;
+                collapseSearch(false);
+            }
+            
+            currentScreen = screenId;
+            
+            // Показываем нужный экран
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            const targetScreen = document.getElementById(screenId);
+            if(targetScreen) {
+                targetScreen.classList.add('active');
+            }
+            
+            // Обновляем навигацию
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById('nav-search').classList.remove('active');
+            
+            // Подсветка кнопок
+            const navId = `nav-${screenId.split('-')[1]}`;
+            const navBtn = document.getElementById(navId);
+            if (navBtn) navBtn.classList.add('active');
+            
+            if(screenId === 'screen-interesting' || screenId === 'screen-company') {
+                document.getElementById('nav-search').classList.add('active');
+            }
+            
+            // Action Panel логика
+            const portfolioActionPanel = document.getElementById('portfolioActionPanel');
+            if (portfolioActionPanel) {
+                if (screenId === 'screen-portfolio' && isPortfolioCalculated) {
+                    portfolioActionPanel.style.display = 'flex';
+                } else {
+                    portfolioActionPanel.style.display = 'none';
+                }
+            }
+            
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
         }
-    }
-    
-    window.scrollTo({top: 0, behavior: 'smooth'});
-    if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-}
+
 
         
         function expandSearch() {
