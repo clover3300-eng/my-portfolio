@@ -3499,7 +3499,956 @@ body.dark-mode #screen-interesting .results-glass-footer {
 
 /* ========== END: ИНТЕРЕСНОЕ GLASSMORPHISM ========== */
 
-        
+        /* ========================================================================
+   ПОРТФЕЛЬ - GLASSMORPHISM REDESIGN (Claude AI Style)
+   ======================================================================== */
+
+/* === Основной контейнер экрана Портфель === */
+#screen-portfolio {
+    position: relative;
+    background: linear-gradient(180deg, var(--claude-bg-base) 0%, #EDE9E6 100%);
+    min-height: 100vh;
+    margin: -16px;
+    padding: 20px 16px 140px 16px;
+}
+
+body.dark-mode #screen-portfolio {
+    background: linear-gradient(180deg, #0f172a 0%, #1a1a2e 100%);
+}
+
+/* Динамическое свечение фона */
+#screen-portfolio::before {
+    content: '';
+    position: fixed;
+    top: -30%;
+    left: -30%;
+    width: 160%;
+    height: 160%;
+    background: 
+        radial-gradient(circle at 25% 25%, rgba(217, 119, 87, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(94, 123, 163, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: portfolioGlow 10s ease-in-out infinite;
+}
+
+@keyframes portfolioGlow {
+    0%, 100% { opacity: 0.5; transform: scale(1) rotate(0deg); }
+    50% { opacity: 0.8; transform: scale(1.02) rotate(1deg); }
+}
+
+#screen-portfolio > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* === Заголовок экрана === */
+#screen-portfolio .header {
+    padding: 10px 0 25px;
+    text-align: left;
+}
+
+#screen-portfolio .header h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: var(--claude-text-primary);
+    margin: 0;
+}
+
+/* === Main Balance Card (Главная карточка баланса) === */
+.portfolio-main-card {
+    background: var(--claude-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--claude-glass-border);
+    border-radius: 28px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--claude-glass-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Акцентная линия сверху */
+.portfolio-main-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 24px;
+    right: 24px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--claude-accent), #5E7BA3);
+    border-radius: 0 0 2px 2px;
+}
+
+.portfolio-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.portfolio-card-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--claude-text-secondary);
+    margin-bottom: 8px;
+}
+
+.portfolio-card-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--claude-text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.portfolio-fee-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(217, 119, 87, 0.1);
+    border: 1px solid rgba(217, 119, 87, 0.2);
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--claude-accent);
+}
+
+.portfolio-fee-badge svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+}
+
+/* === Прогресс-бар распределения === */
+.portfolio-allocation-bar {
+    margin: 24px 0;
+}
+
+.allocation-bar-track {
+    display: flex;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .allocation-bar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.allocation-bar-bonds {
+    background: linear-gradient(90deg, #5E7BA3, #7B9BBF);
+    transition: width 0.5s ease;
+    border-radius: 5px 0 0 5px;
+}
+
+.allocation-bar-stocks {
+    background: linear-gradient(90deg, #2E8B57, #3CB371);
+    transition: width 0.5s ease;
+    border-radius: 0 5px 5px 0;
+}
+
+.allocation-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.allocation-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.allocation-label .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.allocation-label.bonds .dot {
+    background: #5E7BA3;
+}
+
+.allocation-label.stocks .dot {
+    background: #2E8B57;
+}
+
+.allocation-label.bonds {
+    color: #5E7BA3;
+}
+
+.allocation-label.stocks {
+    color: #2E8B57;
+}
+
+/* === Forecast Block (Прогноз внутри карточки) === */
+.portfolio-forecast {
+    background: rgba(46, 139, 87, 0.08);
+    border: 1px solid rgba(46, 139, 87, 0.15);
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.forecast-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #2E8B57;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.forecast-title svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+}
+
+.forecast-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.forecast-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.forecast-item-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--claude-text-secondary);
+}
+
+.forecast-item-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--claude-text-primary);
+}
+
+.forecast-item-value.bonds {
+    color: #5E7BA3;
+}
+
+.forecast-item-value.stocks {
+    color: #2E8B57;
+}
+
+.forecast-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(46, 139, 87, 0.2);
+}
+
+.forecast-total-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--claude-text-primary);
+}
+
+.forecast-total-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2E8B57;
+}
+
+.forecast-total-change {
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+/* === Section Headers (Заголовки разделов) === */
+.portfolio-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    margin: 24px 0 12px;
+    background: var(--claude-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--claude-glass-border);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.portfolio-section-header:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+.portfolio-section-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.portfolio-section-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.portfolio-section-icon.bonds {
+    background: rgba(94, 123, 163, 0.15);
+}
+
+.portfolio-section-icon.stocks {
+    background: rgba(46, 139, 87, 0.15);
+}
+
+.portfolio-section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--claude-text-primary);
+}
+
+.portfolio-section-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--claude-text-secondary);
+    margin-top: 2px;
+}
+
+.portfolio-section-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.portfolio-section-badge.bonds {
+    background: rgba(94, 123, 163, 0.12);
+    color: #5E7BA3;
+}
+
+.portfolio-section-badge.stocks {
+    background: rgba(46, 139, 87, 0.12);
+    color: #2E8B57;
+}
+
+/* === Accordion Lists (Интерактивные списки) === */
+.portfolio-list {
+    background: var(--claude-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--claude-glass-border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.portfolio-list-item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background 0.2s ease;
+}
+
+body.dark-mode .portfolio-list-item {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.portfolio-list-item:last-child {
+    border-bottom: none;
+}
+
+.portfolio-list-item:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .portfolio-list-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Свёрнутая строка */
+.list-item-summary {
+    display: grid;
+    grid-template-columns: 1fr 70px 60px 90px;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.list-item-ticker {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--claude-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.list-item-yield {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.list-item-yield.bonds {
+    background: rgba(94, 123, 163, 0.15);
+    color: #5E7BA3;
+}
+
+.list-item-yield.stocks {
+    background: rgba(46, 139, 87, 0.15);
+    color: #2E8B57;
+}
+
+.list-item-qty {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--claude-accent);
+    text-align: center;
+}
+
+.list-item-sum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--claude-text-primary);
+    text-align: right;
+}
+
+/* Развёрнутая детальная карточка */
+.list-item-details {
+    display: none;
+    background: rgba(0, 0, 0, 0.02);
+    padding: 0 20px 20px;
+    animation: slideDown 0.3s ease;
+}
+
+body.dark-mode .list-item-details {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.portfolio-list-item.expanded .list-item-details {
+    display: block;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.details-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}
+
+body.dark-mode .details-row {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.details-row-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--claude-text-secondary);
+}
+
+.details-row-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--claude-text-primary);
+}
+
+.details-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.details-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.details-btn.primary {
+    background: var(--claude-accent);
+    color: white;
+}
+
+.details-btn.secondary {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--claude-text-primary);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .details-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.details-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}
+
+.details-btn:active {
+    transform: scale(0.98);
+}
+
+/* === Echelon Headers (Заголовки эшелонов) === */
+.echelon-header-new {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    margin: 20px 0 8px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.5));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--claude-glass-border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+body.dark-mode .echelon-header-new {
+    background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(30,41,59,0.5));
+}
+
+.echelon-header-new:hover {
+    transform: translateY(-1px);
+}
+
+.echelon-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.echelon-number {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+}
+
+.echelon-number.e1 { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.echelon-number.e2 { background: linear-gradient(135deg, #3498db, #2980b9); }
+.echelon-number.e3 { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+.echelon-number.e4 { background: linear-gradient(135deg, #e67e22, #d35400); }
+
+.echelon-title-new {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--claude-text-primary);
+}
+
+.echelon-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.echelon-sum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--claude-text-secondary);
+}
+
+.echelon-percent-badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    background: rgba(46, 139, 87, 0.12);
+    color: #2E8B57;
+}
+
+.echelon-info-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--claude-text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Подсказка эшелона */
+.echelon-info-tooltip {
+    display: none;
+    background: var(--claude-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--claude-accent);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--claude-text-primary);
+    animation: fadeIn 0.3s ease;
+}
+
+.echelon-info-tooltip.show {
+    display: block;
+}
+
+/* Заголовки столбцов для эшелона */
+.echelon-columns-header {
+    display: grid;
+    grid-template-columns: 1fr 70px 60px 90px;
+    gap: 8px;
+    padding: 10px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--claude-text-secondary);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .echelon-columns-header {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.echelon-columns-header span:nth-child(2),
+.echelon-columns-header span:nth-child(3) {
+    text-align: center;
+}
+
+.echelon-columns-header span:last-child {
+    text-align: right;
+}
+
+/* === Action Panel (Sticky панель действий) === */
+.portfolio-action-panel {
+    position: fixed;
+    bottom: 90px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    background: var(--claude-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--claude-glass-border);
+    border-radius: 20px;
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1);
+    z-index: 800;
+}
+
+.action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, #2C364C, #3a4a66);
+    color: white;
+    box-shadow: 0 4px 15px rgba(44, 54, 76, 0.3);
+}
+
+.action-btn.secondary {
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--claude-text-primary);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .action-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.action-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+}
+
+.action-btn:active {
+    transform: scale(0.98);
+}
+
+/* === Coupon Rain Box (Купонный дождь) - обновлённый стиль === */
+.coupon-box-new {
+    background: var(--claude-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(94, 123, 163, 0.3);
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 16px 0;
+}
+
+.coupon-header-new {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    background: rgba(94, 123, 163, 0.08);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.coupon-header-new:hover {
+    background: rgba(94, 123, 163, 0.12);
+}
+
+.coupon-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.coupon-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #5E7BA3, #7B9BBF);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.coupon-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.coupon-title-new {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--claude-text-primary);
+}
+
+.coupon-subtitle-new {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--claude-text-secondary);
+}
+
+.coupon-arrow-new {
+    width: 24px;
+    height: 24px;
+    color: #5E7BA3;
+    transition: transform 0.3s ease;
+}
+
+.coupon-box-new.open .coupon-arrow-new {
+    transform: rotate(180deg);
+}
+
+.coupon-content-new {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0 20px;
+}
+
+.coupon-box-new.open .coupon-content-new {
+    max-height: 1000px;
+    padding: 0 20px 20px;
+}
+
+/* === Footer Disclaimer (обновлённый) === */
+.portfolio-disclaimer {
+    background: linear-gradient(135deg, rgba(46, 139, 87, 0.08), rgba(46, 139, 87, 0.03));
+    border: 1px solid rgba(46, 139, 87, 0.15);
+    border-left: 4px solid #2E8B57;
+    border-radius: 16px;
+    padding: 20px;
+    margin: 24px 0;
+}
+
+.disclaimer-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.disclaimer-header svg {
+    width: 20px;
+    height: 20px;
+    stroke: #2E8B57;
+}
+
+.disclaimer-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2E8B57;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.disclaimer-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--claude-text-primary);
+}
+
+/* === Empty State === */
+.portfolio-empty-new {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 24px;
+    background: var(--claude-glass);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin-bottom: 24px;
+    border: 1px solid var(--claude-glass-border);
+}
+
+.empty-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--claude-text-primary);
+    margin-bottom: 8px;
+}
+
+.empty-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--claude-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.empty-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #2C364C, #3a4a66);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(44, 54, 76, 0.3);
+    transition: all 0.2s ease;
+}
+
+.empty-btn:active {
+    transform: scale(0.98);
+}
+
+.empty-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+}
         
     </style>
 </head>
@@ -3853,141 +4802,227 @@ body.dark-mode #screen-interesting .results-glass-footer {
 </div> <!-- Закрываем screen-app -->
 
 <div id="screen-portfolio" class="screen">
-        <div class="header"><h1>Портфель</h1></div>
+    <!-- Заголовок -->
+    <div class="header">
+        <h1>Портфель</h1>
+    </div>
+    
+    <!-- Empty State (показывается если расчёт не производился) -->
+    <div id="portfolio-empty" class="portfolio-empty-new">
+        <div class="empty-icon">📂</div>
+        <div class="empty-title">Портфель пуст</div>
+        <div class="empty-text">Расчёт ещё не производился.<br>Перейдите в терминал и сформируйте портфель.</div>
+        <button class="empty-btn" onclick="showScreen('screen-app')">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            Перейти к расчёту
+        </button>
+    </div>
+
+    <!-- Контент портфеля (скрыт до расчёта) -->
+    <div id="portfolio-content" style="display:none;">
         
-        <div id="portfolio-empty" class="portfolio-empty" style="display: block;">
-            <div class="portfolio-empty-icon">📂</div>
-            <div>Расчет еще не производился.<br>Перейдите в терминал и сформируйте портфель.</div>
-            <button class="btn-action" style="margin-top:20px; border-style:dashed;" onclick="showScreen('screen-app')">Перейти к расчету</button>
-        </div>
-
-        <div id="portfolio-content" style="display:none;">
-            <div id="shareContainer">
-                <div class="summary-card">
-                    <div class="summary-top-modern">
-                        <div class="stm-header">
-                            <div class="stm-header-left">
-                                <div class="stm-header-label">Инвестиции</div>
-                                <div class="stm-val-big" id="summ-invested">0 ₽</div>
-                            </div>
-                            <div class="stm-header-icon">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <rect height="14" rx="2" ry="2" width="20" x="2" y="7"></rect>
-                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <div class="stm-bar-container">
-                            <div id="bar-bond-fill" class="stm-bar-bonds" style="width:50%"></div>
-                            <div id="bar-stock-fill" class="stm-bar-stocks" style="width:50%"></div>
-                        </div>
-
-                        <div class="stm-meta-row">
-                            <div class="stm-pct-labels">
-                                <span class="stm-pl-bond">Облигации <span id="srl-bond-pct">50%</span></span>
-                                <span class="stm-pl-stock">Акции <span id="srl-stock-pct">50%</span></span>
-                            </div>
-                            <div class="stm-fee-lozenge">Комиссия: <span id="summ-fee">0.03%</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="summary-prediction">
-                        <div class="pred-title">Сумма через 3 года (Прогноз):</div>
-                        <div class="pred-total" id="summ-total-3y">0 ₽</div>
-                        <div style="height:1px; background:rgba(0,0,0,0.05); margin:8px 0;"></div>
-                        <div class="pred-breakdown">
-                            <div class="pb-row">
-                                <span><span class="dot-bond">●</span> Денежный поток от Облигаций:</span>
-                                <b id="summ-bond-income">0 ₽</b>
-                            </div>
-                            <div class="pb-row">
-                                <span><span class="dot-stock">●</span> Переоценка Портфеля Акций:</span>
-                                <b id="summ-stock-growth">0 ₽</b>
-                            </div>
-                        </div>
-                    </div>
+        <!-- ===== MAIN BALANCE CARD ===== -->
+        <div class="portfolio-main-card" id="shareContainer">
+            <div class="portfolio-card-header">
+                <div>
+                    <div class="portfolio-card-label">Общий капитал</div>
+                    <div class="portfolio-card-value" id="summ-invested">0 ₽</div>
                 </div>
-
-                <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
-                    <h2 style="margin: 0; color: #3498db; font-size: 18px;">Моя Стратегия 50/50</h2>
-                    <div id="shareDate" style="font-size: 10px; color: #888;"></div>
-                </div>
-                
-                <div id="section-bonds">
-                    <div class="section-header-highlight hl-blue">1. Денежный Поток</div>
-                    <div class="section-desc-small">
-                        Ниже представлен к покупке список из 8 Облигаций Федерального займа с постоянным купоном, которые генерируют 16 выплат купонов в год.
-                    </div>
-                    
-                    <div class="allocation-info-connected" id="alloc-bonds">
-                        <div class="alloc-left">Выделить: &nbsp;<b id="valBonds">0</b>&nbsp;₽</div>
-                        <div class="alloc-right"><span class="bond-pct-text">50</span>% от капитала</div>
-                    </div>
-                    <div id="listBonds" class="asset-list"></div>
-                </div>
-
-                <div class="coupon-box" id="couponBox">
-                    <div class="coupon-header" id="rainSection" onclick="toggleCouponSection()">
-                        <div class="coupon-title-wrapper">
-                            <div class="coupon-icon-lg">🌦</div>
-                            <div class="coupon-text-col">
-                                <span class="coupon-main-text">Купонный Дождь</span>
-                                <span class="coupon-preview-mini">Информация о ближайших выплатах</span>
-                            </div>
-                        </div>
-                        <svg class="arrow-icon" id="couponArrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-                    </div>
-                    <div class="coupon-content" id="couponContent">
-                        <div class="tax-selector-ui" id="taxGroup">
-                            <button class="tax-ui-btn" onclick="setTax(0, this)">Без налога</button>
-                            <button class="tax-ui-btn active" onclick="setTax(0.13, this)">НДФЛ 13%</button>
-                            <button class="tax-ui-btn" onclick="setTax(0.15, this)">НДФЛ 15%</button>
-                        </div>
-                        <div class="coupon-table-head">
-                            <span>ДАТА</span> <span>НАЗВАНИЕ</span> <span style="text-align:center">КОЛ-ВО</span> <span style="text-align:right">СУММА</span>
-                        </div>
-                        <div id="couponList">Загрузка данных...</div>
-                        <div style="text-align:right; margin-top:10px; font-weight:bold; font-size:12px; padding-top:5px; border-top:1px dashed #eee;">
-                            Итого ближайшие: <span id="couponTotalHeader">0 ₽</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="section-transition" id="section-separator">
-                    <div class="st-line"></div>
-                    <div class="st-icon">∞</div>
-                    <div class="st-line rev"></div>
-                </div>
-
-                <div id="section-stocks">
-                    <div class="section-header-highlight hl-blue" id="header-stocks">2. Растущая часть</div>
-                    <div class="section-desc-small">
-                        Ниже представлены Акции Публичных Компаний распределенные на 4 эшелона по уровню риска и дивидендной политике.
-                    </div>
-                    <div class="allocation-info-connected" id="alloc-stocks">
-                        <div class="alloc-left">Выделить: &nbsp;<b id="valStocks">0</b>&nbsp;₽</div>
-                        <div class="alloc-right"><span class="stock-pct-text">50</span>% от капитала</div>
-                    </div>
-                    <div id="echelonContainer"></div>
-                </div>
-                
-                <div class="footer-disclaimer-important" id="footer-important">
-                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-weight:800; font-size:14px; color:var(--accent-green); text-transform:uppercase; letter-spacing:0.5px;">
-                        <svg style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                        Важно
-                    </div>
-                    В Растущей части 70% средств мы держим в первых двух Эшелонах, так как они обеспечивают баланс надежности и потенциальной доходности.
+                <div class="portfolio-fee-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    <span>Комиссия: <span id="summ-fee">0.03%</span></span>
                 </div>
             </div>
-
-           <button class="btn-action" id="btnShare" onclick="shareAsPDF()">
-                <svg style="width:16px;height:16px;vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-                Поделиться PDF (Портфель)
-            </button>
-           <div class="footer-disclaimer">Инвестиции связаны с риском. Наш гид — это пример распределения, а не гарантия прибыли.</div>
+            
+            <!-- Прогресс-бар распределения -->
+            <div class="portfolio-allocation-bar">
+                <div class="allocation-bar-track">
+                    <div class="allocation-bar-bonds" id="bar-bond-fill" style="width: 50%;"></div>
+                    <div class="allocation-bar-stocks" id="bar-stock-fill" style="width: 50%;"></div>
+                </div>
+                <div class="allocation-labels">
+                    <div class="allocation-label bonds">
+                        <span class="dot"></span>
+                        <span>Облигации <strong id="srl-bond-pct">50%</strong></span>
+                    </div>
+                    <div class="allocation-label stocks">
+                        <span class="dot"></span>
+                        <span>Акции <strong id="srl-stock-pct">50%</strong></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Forecast Block -->
+            <div class="portfolio-forecast">
+                <div class="forecast-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    Прогноз через 3 года
+                </div>
+                <div class="forecast-grid">
+                    <div class="forecast-item">
+                        <div class="forecast-item-label">Купоны от облигаций</div>
+                        <div class="forecast-item-value bonds" id="summ-bond-income">+0 ₽</div>
+                    </div>
+                    <div class="forecast-item">
+                        <div class="forecast-item-label">Рост акций</div>
+                        <div class="forecast-item-value stocks" id="summ-stock-growth">+0 ₽</div>
+                    </div>
+                </div>
+                <div class="forecast-total">
+                    <div class="forecast-total-label">Итого через 3 года:</div>
+                    <div>
+                        <span class="forecast-total-value" id="summ-total-3y">0 ₽</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Скрытый блок для PDF -->
+            <div style="text-align: center; padding: 10px; display: none;" id="shareBrand">
+                <h2 style="margin: 0; color: #D97757; font-size: 18px;">Madame Solomi'na Portfolio</h2>
+                <div id="shareDate" style="font-size: 10px; color: #888;"></div>
+            </div>
         </div>
+        
+        <!-- ===== СЕКЦИЯ ОБЛИГАЦИЙ ===== -->
+        <div id="section-bonds">
+            <!-- Заголовок секции -->
+            <div class="portfolio-section-header" onclick="this.nextElementSibling.classList.toggle('collapsed')">
+                <div class="portfolio-section-header-left">
+                    <div class="portfolio-section-icon bonds">🛡️</div>
+                    <div>
+                        <div class="portfolio-section-title">1. Денежный поток</div>
+                        <div class="portfolio-section-subtitle">ОФЗ с постоянным купоном</div>
+                    </div>
+                </div>
+                <div class="portfolio-section-badge bonds" id="badge-bonds-sum">0 ₽</div>
+            </div>
+            
+            <!-- Описание -->
+            <div style="font-size: 12px; color: var(--claude-text-secondary); padding: 0 4px 12px; line-height: 1.5;">
+                Список из 8 Облигаций Федерального займа, генерирующих 16 выплат купонов в год.
+            </div>
+            
+            <!-- Список облигаций -->
+            <div class="portfolio-list" id="listBonds">
+                <!-- Здесь будут сгенерированы облигации через JS -->
+            </div>
+        </div>
+        
+        <!-- ===== КУПОННЫЙ ДОЖДЬ ===== -->
+        <div class="coupon-box-new" id="couponBox">
+            <div class="coupon-header-new" onclick="this.parentElement.classList.toggle('open')">
+                <div class="coupon-header-left">
+                    <div class="coupon-icon">🌦️</div>
+                    <div class="coupon-title-block">
+                        <div class="coupon-title-new">Купонный дождь</div>
+                        <div class="coupon-subtitle-new">Ближайшие выплаты по купонам</div>
+                    </div>
+                </div>
+                <svg class="coupon-arrow-new" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </div>
+            <div class="coupon-content-new">
+                <!-- Переключатель налога -->
+                <div class="tax-selector-ui" id="taxGroup" style="margin: 16px 0;">
+                    <button class="tax-ui-btn" onclick="setTax(0, this)">Без налога</button>
+                    <button class="tax-ui-btn active" onclick="setTax(0.13, this)">НДФЛ 13%</button>
+                    <button class="tax-ui-btn" onclick="setTax(0.15, this)">НДФЛ 15%</button>
+                </div>
+                
+                <!-- Заголовки таблицы -->
+                <div class="coupon-table-head">
+                    <span>ДАТА</span>
+                    <span>НАЗВАНИЕ</span>
+                    <span style="text-align:center">КОЛ-ВО</span>
+                    <span style="text-align:right">СУММА</span>
+                </div>
+                
+                <!-- Список выплат -->
+                <div id="couponList">Загрузка данных...</div>
+                
+                <!-- Итого -->
+                <div style="text-align:right; margin-top:12px; font-weight:bold; font-size:13px; padding-top:10px; border-top:1px dashed rgba(0,0,0,0.1);">
+                    Итого ближайшие: <span id="couponTotalHeader" style="color: #5E7BA3;">0 ₽</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ===== РАЗДЕЛИТЕЛЬ ===== -->
+        <div class="section-transition" id="section-separator">
+            <div class="st-line"></div>
+            <div class="st-icon">∞</div>
+            <div class="st-line rev"></div>
+        </div>
+        
+        <!-- ===== СЕКЦИЯ АКЦИЙ ===== -->
+        <div id="section-stocks">
+            <!-- Заголовок секции -->
+            <div class="portfolio-section-header" id="header-stocks">
+                <div class="portfolio-section-header-left">
+                    <div class="portfolio-section-icon stocks">🚀</div>
+                    <div>
+                        <div class="portfolio-section-title">2. Растущая часть</div>
+                        <div class="portfolio-section-subtitle">Акции по 4 эшелонам риска</div>
+                    </div>
+                </div>
+                <div class="portfolio-section-badge stocks" id="badge-stocks-sum">0 ₽</div>
+            </div>
+            
+            <!-- Описание -->
+            <div style="font-size: 12px; color: var(--claude-text-secondary); padding: 0 4px 12px; line-height: 1.5;">
+                Акции публичных компаний, распределённые на 4 эшелона по уровню риска.
+            </div>
+            
+            <!-- Контейнер для эшелонов -->
+            <div id="echelonContainer">
+                <!-- Здесь будут сгенерированы эшелоны через JS -->
+            </div>
+        </div>
+        
+        <!-- ===== ВАЖНОЕ ПРИМЕЧАНИЕ ===== -->
+        <div class="portfolio-disclaimer" id="footer-important">
+            <div class="disclaimer-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <div class="disclaimer-title">Важно</div>
+            </div>
+            <div class="disclaimer-text">
+                В Растущей части 70% средств мы держим в первых двух Эшелонах, так как они обеспечивают баланс надёжности и потенциальной доходности.
+            </div>
+        </div>
+        
+        <!-- ===== ОТСТУП ДЛЯ ACTION PANEL ===== -->
+        <div style="height: 120px;"></div>
     </div>
+    
+    <!-- ===== ACTION PANEL (Sticky внизу) ===== -->
+    <div class="portfolio-action-panel" id="portfolioActionPanel" style="display: none;">
+        <button class="action-btn secondary" onclick="resetAndGoToTerminal()">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+            </svg>
+            Новый расчёт
+        </button>
+        <button class="action-btn primary" onclick="shareAsPDF()">
+            <svg viewBox="0 0 24 24">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <polyline points="16 6 12 2 8 6"/>
+                <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+            Поделиться
+        </button>
+    </div>
+</div>
 
 <div id="screen-assets" class="screen">
         <div class="header"><h1>Ребалансировка</h1></div>
@@ -4611,19 +5646,27 @@ function formatNewsDate(dateString) {
         document.getElementById('nav-search').classList.add('active');
     }
     
-    // NEW: Управление sticky панелью
+    // Управление sticky панелями
     const stickyPanel = document.getElementById('stickyPanel');
+    const portfolioActionPanel = document.getElementById('portfolioActionPanel');
+    
     if (stickyPanel) {
-        if (screenId === 'screen-app') {
-            stickyPanel.style.display = 'block';
+        stickyPanel.style.display = (screenId === 'screen-app') ? 'block' : 'none';
+    }
+    
+    if (portfolioActionPanel) {
+        // Показываем action panel только если портфель рассчитан
+        if (screenId === 'screen-portfolio' && isPortfolioCalculated) {
+            portfolioActionPanel.style.display = 'flex';
         } else {
-            stickyPanel.style.display = 'none';
+            portfolioActionPanel.style.display = 'none';
         }
     }
     
     window.scrollTo({top: 0, behavior: 'smooth'});
     if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
 }
+
         
         function expandSearch() {
             const backBtn = document.querySelector('#expandedNav .nav-back-island');
@@ -4670,8 +5713,14 @@ function formatNewsDate(dateString) {
         draw();
         savePortfolio();
         isPortfolioCalculated = true;
+        
+        // Показываем контент, скрываем empty state
         document.getElementById('portfolio-empty').style.display = 'none';
         document.getElementById('portfolio-content').style.display = 'block';
+        
+        // Показываем action panel
+        document.getElementById('portfolioActionPanel').style.display = 'flex';
+        
         showScreen('screen-portfolio');
     } catch(e) {
         console.error('Error calculating portfolio:', e);
@@ -6559,47 +7608,84 @@ function highlightKeywords(text) {
             let totalBondProjectedIncome = 0;
             let rainData = [];
             
-            let bHtml = '';
-            if (bonds.length > 0) {
-                const perBondBudget = bondBudget / bonds.length;
-                let bondCalculations = bonds.map(b => { const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; return { ...b, qty, fullCostPerUnit }; });
-                let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
-                if (bondCalculations.length > 0 && leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
-                    bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
-                }
-                bondCalculations.forEach(b => {
-                    actualSpentTotal += (b.qty * b.fullCostPerUnit); bondQuantities[b.t] = b.qty;
-                    const bondYieldVal = parseFloat(b.y.replace('%', '')) || 0;
-                    const investedInBond = b.qty * b.p;
-                    totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
-                    if(b.qty > 0 && bondCouponsMap[b.t]) {
-                         const info = bondCouponsMap[b.t];
-                         const netAmount = (info.value * b.qty) * (1 - currentTax);
-                         rainData.push({ date: info.date, name: b.n, qty: b.qty, amount: netAmount });
-                    }
-                    bHtml += `
-                    <div class="asset-item" onclick="toggleRow(this)">
-                        <span class="ticker" style="font-weight:700; font-size:11px;">${limitName(b.n)}</span>
-                        <span class="asset-name"><span class="asset-yield-badge">${b.y}</span></span>
-                        <span class="qty">${b.qty} шт.</span>
-                        <span class="price-total">${Math.round(b.qty * b.p).toLocaleString()} ₽</span>
-                        <div class="details">
-                            <div class="detail-row"><span>Полное Наименование:</span> <span>${b.n}</span></div>
-                            <div class="detail-row"><span>Код:</span> <span>${b.t}</span></div>
-                            <div class="detail-row"><span>Дата погашения:</span> <span>${b.matDate}</span></div>
-                            <div class="detail-row"><span>Цена:</span> <span>${b.p} ₽</span></div>
-                            <div class="detail-row"><span>НКД:</span> <span>${b.nkd.toFixed(2)} ₽</span></div>
-                            <div class="detail-row"><span>Простая Доходность к Погашению:</span> <span>${b.y.replace(' ₽','')}</span></div>
-                            <button class="btn-tiny-graph" onclick="openTradingView(event, '${b.t}')">
-                                <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-                                Открыть график
-                            </button>
-                        </div>
-                    </div>`;
-                });
-            }
-            if(document.getElementById('listBonds')) { document.getElementById('listBonds').innerHTML = bHtml;
-            document.getElementById('valBonds').innerText = Math.round(bondBudget).toLocaleString(); }
+            // === ГЕНЕРАЦИЯ СПИСКА ОБЛИГАЦИЙ ===
+let bHtml = '';
+if (bonds.length > 0) {
+    const perBondBudget = bondBudget / bonds.length;
+    let bondCalculations = bonds.map(b => { 
+        const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); 
+        let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; 
+        return { ...b, qty, fullCostPerUnit }; 
+    });
+    
+    let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
+    if (bondCalculations.length > 0 && leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
+        bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
+    }
+    
+    bondCalculations.forEach(b => {
+        actualSpentTotal += (b.qty * b.fullCostPerUnit); 
+        bondQuantities[b.t] = b.qty;
+        const bondYieldVal = parseFloat(b.y.replace('%', '')) || 0;
+        const investedInBond = b.qty * b.p;
+        totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
+        
+        if(b.qty > 0 && bondCouponsMap[b.t]) {
+            const info = bondCouponsMap[b.t];
+            const netAmount = (info.value * b.qty) * (1 - currentTax);
+            rainData.push({ date: info.date, name: b.n, qty: b.qty, amount: netAmount });
+        }
+        
+        // НОВЫЙ HTML для аккордеона
+        bHtml += `
+        <div class="portfolio-list-item" onclick="this.classList.toggle('expanded')">
+            <div class="list-item-summary">
+                <span class="list-item-ticker">${limitName(b.n)}</span>
+                <span class="list-item-yield bonds">${b.y}</span>
+                <span class="list-item-qty">${b.qty} шт.</span>
+                <span class="list-item-sum">${Math.round(b.qty * b.p).toLocaleString()} ₽</span>
+            </div>
+            <div class="list-item-details">
+                <div class="details-grid">
+                    <div class="details-row">
+                        <span class="details-row-label">ISIN/Код</span>
+                        <span class="details-row-value">${b.t}</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-row-label">Цена</span>
+                        <span class="details-row-value">${b.p} ₽</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-row-label">НКД</span>
+                        <span class="details-row-value">${b.nkd.toFixed(2)} ₽</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-row-label">Погашение</span>
+                        <span class="details-row-value">${b.matDate}</span>
+                    </div>
+                </div>
+                <div class="details-actions">
+                    <button class="details-btn primary" onclick="event.stopPropagation(); openTradingView(event, '${b.t}')">
+                        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                        График
+                    </button>
+                    <button class="details-btn secondary" onclick="event.stopPropagation(); copyTicker(event, '${b.t}')">
+                        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Копировать
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    });
+}
+
+if(document.getElementById('listBonds')) { 
+    document.getElementById('listBonds').innerHTML = bHtml;
+    
+    // Обновляем бейдж суммы облигаций
+    const badgeBonds = document.getElementById('badge-bonds-sum');
+    if(badgeBonds) badgeBonds.innerText = Math.round(bondBudget).toLocaleString() + ' ₽';
+}
             
             if(document.getElementById('couponList')) {
                 rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
@@ -6650,61 +7736,114 @@ function highlightKeywords(text) {
             });
             if(document.getElementById('ofz-list')) document.getElementById('ofz-list').innerHTML = ofzHtml;
 
-            let eHtml = '';
-            let totalStockProjectedGrowth = 0;
-            let echelonIndex = 0;
-            echelons.forEach(e => {
-                const echelonBudget = stockBudget * e.weight; const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
-                let stockCalculations = e.assets.map(a => { const fullCostPerUnit = a.p * (1 + brokerFee); let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0; return { ...a, qty, fullCostPerUnit }; });
-                let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
-                if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
-                    stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
-                }
-                const tipId = `echelon-tip-${echelonIndex}`;
-                const echelonClass = `echelon-${echelonIndex + 1}`;
-                eHtml += `
-                <div class="echelon-separator-modern ${echelonClass}">
-                    <div class="esm-left">
-                        <div class="esm-dot"></div>
-                        <span class="esm-title">${e.title}</span>
-                        <div class="esm-info-btn-light" onclick="toggleEchelonTip(event, '${tipId}')">
-                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                        </div>
+           // === ГЕНЕРАЦИЯ ЭШЕЛОНОВ АКЦИЙ ===
+let eHtml = '';
+let totalStockProjectedGrowth = 0;
+let echelonIndex = 0;
+
+echelons.forEach(e => {
+    const echelonBudget = stockBudget * e.weight; 
+    const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
+    
+    let stockCalculations = e.assets.map(a => { 
+        const fullCostPerUnit = a.p * (1 + brokerFee); 
+        let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0; 
+        return { ...a, qty, fullCostPerUnit }; 
+    });
+    
+    let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
+    if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
+        stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
+    }
+    
+    const tipId = `echelon-tip-new-${echelonIndex}`;
+    const echelonNum = echelonIndex + 1;
+    const echelonRoman = ['I', 'II', 'III', 'IV'][echelonIndex];
+    
+    // Заголовок эшелона
+    eHtml += `
+    <div class="echelon-header-new" onclick="toggleEchelonTip(event, '${tipId}')">
+        <div class="echelon-header-left">
+            <div class="echelon-number e${echelonNum}">${echelonRoman}</div>
+            <span class="echelon-title-new">${e.title}</span>
+        </div>
+        <div class="echelon-header-right">
+            <span class="echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
+            <span class="echelon-percent-badge">${Math.round(e.weight*100)}%</span>
+            <div class="echelon-info-icon">?</div>
+        </div>
+    </div>
+    
+    <div class="echelon-info-tooltip" id="${tipId}">${e.info}</div>
+    
+    <div class="portfolio-list">
+        <!-- Заголовки столбцов -->
+        <div class="echelon-columns-header">
+            <span>Тикер</span>
+            <span>Цель</span>
+            <span>Кол-во</span>
+            <span>Сумма</span>
+        </div>`;
+    
+    // Акции в эшелоне
+    stockCalculations.forEach(s => {
+        actualSpentTotal += (s.qty * s.fullCostPerUnit);
+        const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
+        if(targetPrice > s.p) totalStockProjectedGrowth += (s.qty * (targetPrice - s.p));
+        
+        eHtml += `
+        <div class="portfolio-list-item" onclick="this.classList.toggle('expanded')">
+            <div class="list-item-summary">
+                <span class="list-item-ticker">${s.t}</span>
+                <span class="list-item-yield stocks">${s.target.replace(' ₽','')}</span>
+                <span class="list-item-qty">${s.qty} шт.</span>
+                <span class="list-item-sum">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
+            </div>
+            <div class="list-item-details">
+                <div class="details-grid">
+                    <div class="details-row">
+                        <span class="details-row-label">Компания</span>
+                        <span class="details-row-value">${s.n}</span>
                     </div>
-                    <div class="esm-pct">
-                        <span class="esm-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
-                        <span class="esm-divider">|</span>
-                        <span class="esm-percent">${Math.round(e.weight*100)}%</span>
+                    <div class="details-row">
+                        <span class="details-row-label">Цена</span>
+                        <span class="details-row-value">${s.p} ₽</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-row-label">Цель</span>
+                        <span class="details-row-value">${s.target}</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-row-label">Прогноз</span>
+                        <span class="details-row-value">до 36 мес.</span>
                     </div>
                 </div>
-                <div class="echelon-tip" id="${tipId}">${e.info}</div>
-                <div class="asset-list">`;
-                stockCalculations.forEach(s => {
-                    actualSpentTotal += (s.qty * s.fullCostPerUnit);
-                    const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
-                    if(targetPrice > s.p) totalStockProjectedGrowth += (s.qty * (targetPrice - s.p));
-                    eHtml += `
-                    <div class="asset-item" onclick="toggleRow(this)">
-                        <span class="ticker">${s.t}</span>
-                        <span class="asset-name"><span class="asset-yield-badge blue">${s.target.replace(' ₽','')}</span></span>
-                        <span class="qty">${s.qty} шт.</span>
-                        <span class="price-total">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
-                        <div class="details">
-                            <div class="detail-row"><span>Компания:</span> <span>${s.n}</span></div>
-                            <div class="detail-row"><span>Тикер:</span> <span style="cursor:pointer; color:var(--accent-blue); font-weight:bold;" onclick="copyTicker(event, '${s.t}')">${s.t} ❐</span></div>
-                            <div class="detail-row"><span>Цена:</span> <span>${s.p} ₽</span></div>
-                            <div class="detail-row"><span>Цель:</span> <span>${s.target.replace(' ₽','')}</span></div>
-                            <div style="font-size:10px; color:#aaa; margin:5px 0 8px;">[ Прогноз на период до 36 мес. ]</div>
-                            <button class="btn-tiny-graph" onclick="openTradingView(event, '${s.t}')">
-                                <svg style="width:12px;height:12px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-                                Открыть график
-                            </button>
-                        </div>
-                    </div>`;
-                });
-                eHtml += `</div>`;
-                echelonIndex++;
-            });
+                <div class="details-actions">
+                    <button class="details-btn primary" onclick="event.stopPropagation(); openTradingView(event, '${s.t}')">
+                        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                        График
+                    </button>
+                    <button class="details-btn secondary" onclick="event.stopPropagation(); copyTicker(event, '${s.t}')">
+                        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Копировать
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    });
+    
+    eHtml += `</div>`; // Закрываем portfolio-list
+    echelonIndex++;
+});
+
+// Обновляем DOM
+if(document.getElementById('echelonContainer')) {
+    document.getElementById('echelonContainer').innerHTML = eHtml;
+    
+    // Обновляем бейдж суммы акций
+    const badgeStocks = document.getElementById('badge-stocks-sum');
+    if(badgeStocks) badgeStocks.innerText = Math.round(stockBudget).toLocaleString() + ' ₽';
+}
             if(document.getElementById('echelonContainer')) {
                 document.getElementById('echelonContainer').innerHTML = eHtml;
                 
@@ -6765,6 +7904,59 @@ function highlightKeywords(text) {
                 btn.innerHTML = originalText; btn.disabled = false;
             } finally { brand.style.display = 'none'; }
         }
+    function resetAndGoToTerminal() {
+    // Сбрасываем поле ввода суммы
+    const sumInput = document.getElementById('sumInput');
+    if (sumInput) {
+        sumInput.value = '';
+    }
+    
+    // Скрываем символ рубля
+    const currencySymbol = document.getElementById('currencySymbol');
+    if (currencySymbol) {
+        currencySymbol.style.display = 'none';
+    }
+    
+    // Сбрасываем стратегию на Гармонию 50/50
+    document.getElementById('ratioSlider').value = 50;
+    
+    // Убираем selected со всех карточек
+    document.querySelectorAll('.strategy-card').forEach(c => c.classList.remove('selected'));
+    
+    // Выбираем Гармонию
+    const harmonyCard = document.querySelector('.strategy-card[data-bonds="50"]');
+    if (harmonyCard) {
+        harmonyCard.classList.add('selected');
+    }
+    
+    // Сбрасываем кастомную стратегию
+    resetCustomCardDisplay();
+    
+    // Скрываем скрытые карточки стратегий
+    const hiddenCards = document.getElementById('strategyCardsHidden');
+    const trigger = document.getElementById('strategyExpandTrigger');
+    if (hiddenCards) hiddenCards.classList.remove('show');
+    if (trigger) {
+        trigger.classList.remove('open');
+        const textEl = trigger.querySelector('.strategy-expand-text');
+        if (textEl) textEl.textContent = 'Другие стратегии';
+    }
+    
+    // Скрываем контент портфеля
+    document.getElementById('portfolio-content').style.display = 'none';
+    document.getElementById('portfolio-empty').style.display = 'flex';
+    document.getElementById('portfolioActionPanel').style.display = 'none';
+    
+    isPortfolioCalculated = false;
+    
+    // Переходим на экран терминала
+    showScreen('screen-app');
+    
+    // Haptic feedback
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    }
+}
 
     // Регистрация Service Worker для PWA
         if ('serviceWorker' in navigator && location.protocol === 'https:') {
