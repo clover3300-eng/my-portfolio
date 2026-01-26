@@ -4009,37 +4009,39 @@ body.dark-mode .echelon-columns-header {
 
 /* === Action Panel (Sticky панель действий) === */
 .portfolio-action-panel {
-    position: fixed;
-    bottom: 90px;
-    left: 16px;
-    right: 16px;
-    display: flex;
-    gap: 12px;
-    padding: 16px;
-    background: var(--claude-glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--claude-glass-border);
-    border-radius: 20px;
-    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1);
-    z-index: 800;
-}
+            position: fixed;
+            bottom: 90px;
+            left: 16px;
+            right: 16px;
+            display: flex;
+            justify-content: center; /* Выравниваем кнопки по центру */
+            gap: 12px;
+            padding: 12px; /* Уменьшили паддинг самой панели */
+            background: var(--claude-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--claude-glass-border);
+            border-radius: 20px;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1);
+            z-index: 800;
+        }
 
-.action-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 16px;
-    border: none;
-    border-radius: 14px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+        .action-btn {
+            flex: 0 1 150px; /* Фиксированная ширина вместо растягивания */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 12px; /* Сделали кнопку тоньше (было 16px) */
+            border: none;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
 
 .action-btn.primary {
     background: linear-gradient(135deg, #2C364C, #3a4a66);
@@ -5072,6 +5074,14 @@ textarea {
             <div style="font-size: 12px; color: var(--claude-text-secondary); padding: 0 4px 12px; line-height: 1.5;">
                 Список из 8 Облигаций Федерального займа, генерирующих 16 выплат купонов в год.
             </div>
+
+            <!-- НОВОЕ: ЗАГОЛОВКИ СТОЛБЦОВ -->
+            <div class="echelon-columns-header">
+                <span>Название</span>
+                <span>Доходность</span>
+                <span>Кол-во</span>
+                <span>Сумма</span>
+            </div>
             
             <!-- Список облигаций -->
             <div class="portfolio-list" id="listBonds">
@@ -5599,12 +5609,13 @@ function formatNewsDate(dateString) {
         };
     
 
-        let echelons = [
-            { title: 'I Эшелон', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
-            { title: 'II Эшелон', weight: 0.40, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ, НО ВЫПЛАТЫ РАЗНЯТСЯ' },
-            { title: 'III Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
-            { title: 'IV Эшелон', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
+                let echelons = [
+            { title: 'Надежные', weight: 0.30, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ И СТАРАЮТСЯ ИХ ПОВЫШАТЬ' },
+            { title: 'Стабильные', weight: 0.40, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ ПЛАТЯТ ДИВИДЕНДЫ, НО ВЫПЛАТЫ РАЗНЯТСЯ' },
+            { title: 'Рисковые', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ МОГУТ ПЛАТИТЬ, НО НЕ ПЛАТЯТ' },
+            { title: 'Венчурные', weight: 0.15, assets: [], info: 'КОМПАНИИ, КОТОРЫЕ НЕ ПЛАТЯТ ДИВИДЕНДОВ' }
         ];
+
         let echelonTableData = [[], [], [], []];
         
         // Swipe navigation removed
@@ -7959,7 +7970,7 @@ if(document.getElementById('listBonds')) {
                     <div class="echelon-header-right">
                         <span class="echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
                         <span class="echelon-percent-badge">${Math.round(e.weight*100)}%</span>
-                        <div class="echelon-info-icon">?</div>
+                        
                     </div>
                 </div>
                 
