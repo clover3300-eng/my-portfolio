@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -538,13 +539,9 @@
     background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 16px 20px 40px 20px;
-    z-index: 999;
+    padding: 16px 20px 100px 20px;
+    z-index: 800;
     border-top: 1px solid rgba(255, 255, 255, 0.5);
-    /* Эти две строки убирают "дрожание" при анимации */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    transition: opacity 0.2s ease; /* Убрал transition для transform/bottom */
 }
         /* ========== NEW: Скрытие элементов при фокусе на вводе ========== */
 body.input-focused .nav-wrapper {
@@ -6523,7 +6520,10 @@ function toggleCustomStrategyNew(cardElement) {
         document.getElementById('customRatioSlider').value = currentVal;
         updateCustomSliderDisplay(currentVal);
         
-      
+        // Скроллим к настройкам
+        setTimeout(() => {
+            customBlock.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }, 100);
     }
 }
 
