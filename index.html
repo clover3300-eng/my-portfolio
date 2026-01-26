@@ -6332,41 +6332,9 @@ document.addEventListener('click', function(event) {
             } 
         }
 
-    // NEW: Форматирование суммы с разделителями
+    
 // NEW: Форматирование суммы с разделителями и адаптивным размером
-function formatSumInput(input) {
-    // Убираем все нецифровые символы
-    let value = input.value.replace(/\D/g, '');
-    
-    // Убираем ведущие нули
-    value = value.replace(/^0+/, '') || '0';
-    
-    // Сохраняем числовое значение для расчётов
-    const numericValue = parseInt(value) || 0;
-    
-    console.log('formatSumInput - value:', value, 'numeric:', numericValue);
-    
-    // Форматируем с разделителями (точки)
-    const formatted = numericValue.toLocaleString('ru-RU').replace(/\s/g, '.');
-    
-    // Показываем/скрываем значок рубля
-    const currencySymbol = document.getElementById('currencySymbol');
-    if (currencySymbol) {
-        currencySymbol.style.display = (numericValue > 0) ? 'inline' : 'none';
-    }
-    
-    // Обновляем отображение
-    input.value = formatted;
-    
-    // СНАЧАЛА адаптивный размер шрифта
-    adjustSumInputSize(input);
-    
-    // ПОТОМ ширина (чтобы учесть новый размер шрифта)
-    adjustInputWidth(input);
-    
-    // Вызываем перерасчёт
-    draw();
-}
+
 
     function adjustInputWidth(input) {
     // Создаем временный span для измерения ширины текста
