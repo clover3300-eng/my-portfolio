@@ -5032,6 +5032,19 @@ textarea {
 /* Скрытие старых элементов, если они где-то остались */
 .strategy-cards-container, .strategy-expand-trigger { display: none !important; }
 
+        /* Отключаем скачки прокрутки при раскрытии блоков */
+.strategy-section, 
+.strategy-perspective-wrapper,
+.calc-box-white-section {
+    overflow-anchor: none !important;
+}
+
+/* Фикс для Safari/iOS, чтобы прокрутка была плавной */
+.waterfall-container {
+    will-change: grid-template-rows;
+    transform: translateZ(0);
+}
+
 
 
 
@@ -6509,23 +6522,24 @@ function updateMainCardUI(bondPercent, title, subtitle) {
 
 // Логика для кастомной стратегии (адаптированная)
 function toggleCustomStrategyNew(cardElement) {
-    // Раскрываем блок настроек (он у тебя уже есть в HTML ниже, мы его просто показываем)
     const customBlock = document.getElementById('customStrategyExpanded');
     const isExpanded = customBlock.classList.contains('show');
     
+    // 1. Просто переключаем класс
     if (isExpanded) {
         customBlock.classList.remove('show');
     } else {
         customBlock.classList.add('show');
         
-        // Синхронизируем слайдер
+        // Синхронизируем значение слайдера
         const currentVal = parseInt(document.getElementById('ratioSlider').value);
         document.getElementById('customRatioSlider').value = currentVal;
         updateCustomSliderDisplay(currentVal);
-        
-      
     }
+    
+    // 2. ВАЖНО: Больше ничего не делаем. Никаких scrollIntoView или focus().
 }
+
 
 // Переопределяем функцию сохранения кастомной стратегии, чтобы она обновляла новую UI
 const originalSaveCustom = saveCustomStrategy; // Сохраняем ссылку если нужно
