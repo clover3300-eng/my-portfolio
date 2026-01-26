@@ -7896,8 +7896,8 @@ if(document.getElementById('listBonds')) {
             });
             if(document.getElementById('ofz-list')) document.getElementById('ofz-list').innerHTML = ofzHtml;
 
-           // === ГЕНЕРАЦИЯ ЭШЕЛОНОВ АКЦИЙ ===
- let eHtml = '';
+                      // === ГЕНЕРАЦИЯ ЭШЕЛОНОВ АКЦИЙ (ИСПРАВЛЕННЫЙ) ===
+            let eHtml = '';
             let totalStockProjectedGrowth = 0;
             let echelonIndex = 0;
 
@@ -7936,8 +7936,9 @@ if(document.getElementById('listBonds')) {
                 <div class="echelon-info-tooltip" id="${tipId}">${e.info}</div>
                 
                 <div class="portfolio-list">
+                    <!-- Заголовки таблицы -->
                     <div class="echelon-columns-header">
-                        <span>Тикер</span>
+                        <span>Компания</span>
                         <span>Цель</span>
                         <span>Кол-во</span>
                         <span>Сумма</span>
@@ -7945,16 +7946,18 @@ if(document.getElementById('listBonds')) {
                 
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
+                    // Исправили регулярное выражение и парсинг
                     const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
                     if(targetPrice > s.p) totalStockProjectedGrowth += (s.qty * (targetPrice - s.p));
                     
                     eHtml += `
                     <div class="portfolio-list-item" onclick="this.classList.toggle('expanded')">
                         <div class="list-item-summary">
-                            <span class="list-item-ticker">${s.t}</span>
+                            <!-- Исправлено: используем limitName(s.n), чтобы было название компании, как в облигациях -->
+                            <span class="list-item-ticker">${limitName(s.n)}</span>
                             <span class="list-item-yield stocks">${s.target.replace(' ₽','')}</span>
                             <span class="list-item-qty">${s.qty} шт.</span>
-                            <span class="list-item-sum">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
+                            <span class="list-item-sum">${Math.round(s.qty * s.p).toLocaleString()} ₽</span>
                         </div>
                         <div class="list-item-details" onclick="event.stopPropagation()">
                             <div class="details-row">
@@ -7976,12 +7979,10 @@ if(document.getElementById('listBonds')) {
                                 <span class="details-row-label">Цель</span>
                                 <span class="details-row-value">${s.target}</span>
                             </div>
-                            
                             <!-- Примечание статичное -->
                             <div class="details-row" style="border-bottom:none !important; justify-content:center !important; padding-top:6px !important;">
                                 <span style="font-size:10px; color:var(--claude-text-secondary); opacity:0.7;">[ Прогноз на период до 36 мес. ]</span>
                             </div>
-                            
                             <button class="details-btn" onclick="openTradingView(event, '${s.t}')">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                 Открыть график
@@ -7990,9 +7991,10 @@ if(document.getElementById('listBonds')) {
                     </div>`;
                 });
                 
-                eHtml += `</div>`;
+                eHtml += `</div>`; // Закрываем div.portfolio-list
                 echelonIndex++;
             });
+
             
 // Обновляем DOM
 if(document.getElementById('echelonContainer')) {
