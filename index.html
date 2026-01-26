@@ -4767,6 +4767,49 @@ textarea {
         body.dark-mode .currency-placeholder { color: #475569 !important; }
         /* ===================================================== */
 
+                /* ========== ФИКС КУРСОРА И АНИМАЦИИ ========== */
+        
+        /* 1. Сама анимация (должна быть обязательно) */
+        @keyframes shimmerBlink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* 2. Стиль курсора */
+        .custom-cursor {
+            width: 3px !important;
+            height: 42px !important;
+            border-radius: 2px !important;
+            
+            /* Градиент */
+            background: linear-gradient(to bottom, #FFD700, #0ea5e9, #b5985a) !important;
+            background-size: 100% 200% !important;
+            
+            /* Отступы: 0 сверху, 4px справа, 0 снизу, 2px слева */
+            margin: 0 4px 0 2px !important; 
+            
+            /* Принудительная анимация */
+            animation: shimmerBlink 1s infinite !important;
+            
+            /* Важно: flex-shrink, чтобы его не сжимало */
+            flex-shrink: 0 !important;
+            
+            /* Изначально скрыт, JS его включит */
+            display: none; 
+        }
+        
+        /* 3. Центровка плейсхолдера */
+        input#sumInput::placeholder {
+            text-align: center !important;
+            color: #bdc3c7 !important;
+        }
+        
+        /* 4. Центровка текста при вводе (прижимаем к курсору) */
+        input#sumInput:not(:placeholder-shown) {
+            text-align: right !important;
+        }
+
 
 
 
@@ -4815,16 +4858,9 @@ textarea {
         <div class="input-container">
 
             
-                                  <div class="input-wrapper" onclick="document.getElementById('sumInput').focus()">
-                <input type="text" id="sumInput" 
-                   placeholder="0.00" 
-                   oninput="formatSumInput(this)" 
-                   onfocus="onSumInputFocus(this)" 
-                   onblur="onSumInputBlur(this)"
-                   onclick="event.stopPropagation(); this.select()" 
-                   onkeyup="if(event.keyCode===13) this.blur()" 
-                   inputmode="numeric" 
-                   enterkeyhint="done">
+                                              <!-- ВЕСЬ БЛОК В ОДНУ СТРОКУ, ЧТОБЫ УБРАТЬ ОТСТУПЫ -->
+            <div class="input-wrapper" onclick="document.getElementById('sumInput').focus()" style="display: flex; justify-content: center; align-items: center; width: 100%;"><input type="text" id="sumInput" placeholder="0.00" oninput="formatSumInput(this)" onfocus="onSumInputFocus(this)" onblur="onSumInputBlur(this)" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" enterkeyhint="done"><div id="customCursor" class="custom-cursor"></div><span class="currency" id="currencySymbol">₽</span><span class="currency-placeholder" id="currencyPlaceholder">₽</span></div>
+
                 
                 <!-- Кастомный курсор -->
                 <div id="customCursor" class="custom-cursor"></div>
@@ -6405,24 +6441,20 @@ function getSumInputValue() {
 }
 
 // NEW: Скрытие меню при фокусе на вводе
-        function onSumInputFocus(input) {
-            console.log('Focus triggered'); // Проверка в консоли
+                function onSumInputFocus(input) {
             document.body.classList.add('input-focused');
             
-            // Явно ищем курсор и включаем его
             const cursor = document.getElementById('customCursor');
             if(cursor) {
-                cursor.style.display = 'block';
-                // Перезапуск анимации (иногда помогает на мобильных)
-                cursor.style.animation = 'none';
-                cursor.offsetHeight; /* trigger reflow */
-                cursor.style.animation = 'shimmerBlink 1.2s infinite';
+                // ПРИНУДИТЕЛЬНО ВКЛЮЧАЕМ КУРСОР
+                cursor.style.setProperty('display', 'block', 'important');
             }
             
             if (input.value === "0") {
                 input.value = "";
             }
         }
+
 
 
 // NEW: Показ меню при потере фокуса
