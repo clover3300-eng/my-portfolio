@@ -4667,9 +4667,11 @@ textarea {
 
     <div class="calc-box" id="calcSection">
         <!-- Ввод суммы -->
-        <div class="input-container" onclick="event.stopPropagation(); document.getElementById('sumInput').focus()">
+        <div class="input-container">
+
             
-            <div class="input-wrapper">
+            <div class="input-wrapper" onclick="document.getElementById('sumInput').focus()">
+
     <input type="text" id="sumInput" 
        placeholder="Введите сумму..." 
        oninput="formatSumInput(this)" 
