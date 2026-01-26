@@ -5834,18 +5834,11 @@ function formatNewsDate(dateString) {
         // Swipe navigation removed
 
                 function checkFirstVisit() {
-            const visited = localStorage.getItem('user_visited');
-            
-            if (visited) {
-                // Если пользователь уже был - идем в Терминал
-                isFirstVisit = false;
-                showScreen('screen-app');
-            } else {
-                // Если НОВИЧОК - показываем Главную (screen-home)
-                isFirstVisit = true;
-                showScreen('screen-home'); // Эта функция теперь сама включит меню и нужный стиль
-            }
-        }
+    // Мы убрали проверку localStorage
+    // Теперь всегда считаем, что нужно показать приветствие
+    isFirstVisit = true;
+    showScreen('screen-home'); 
+}
 
 
         function startCalculation() {
