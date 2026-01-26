@@ -4674,6 +4674,47 @@ textarea {
         
         /* ====================================================================== */
 
+                /* ========== УЛУЧШЕННОЕ ПОЛЕ ВВОДА ========== */
+        
+        /* 1. Настройка самого поля */
+        input#sumInput {
+            caret-color: transparent !important; /* Скрываем стандартную палку */
+            color: var(--text-main) !important;
+        }
+
+        /* 2. Стиль для "0.00" (Плейсхолдер) */
+        input#sumInput::placeholder {
+            color: #bdc3c7 !important; /* Светло-серый */
+            font-family: 'JetBrains Mono', monospace !important;
+            opacity: 1 !important;
+        }
+
+        /* 3. Анимация мигания */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 4. Кастомный вертикальный курсор */
+        .custom-cursor {
+            width: 2px;
+            height: 42px; /* Высота под размер шрифта */
+            background-color: var(--accent-blue); /* Синий цвет */
+            display: none; /* По умолчанию скрыт */
+            margin-left: 2px; /* Чуть отодвигаем от цифры */
+            margin-right: 4px;
+            animation: blink 1s step-end infinite; /* Мигание */
+        }
+
+        /* Исправляем выравнивание в обертке */
+        .input-wrapper {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            position: relative;
+        }
+
+
         
     </style>
 </head>
@@ -4718,19 +4759,24 @@ textarea {
         <div class="input-container">
 
             
-            <div class="input-wrapper" onclick="document.getElementById('sumInput').focus()">
+                       <div class="input-wrapper" onclick="document.getElementById('sumInput').focus()">
+                <input type="text" id="sumInput" 
+                   placeholder="0.00" 
+                   oninput="formatSumInput(this)" 
+                   onfocus="onSumInputFocus(this)" 
+                   onblur="onSumInputBlur(this)"
+                   onclick="event.stopPropagation(); this.select()" 
+                   onkeyup="if(event.keyCode===13) this.blur()" 
+                   inputmode="numeric" 
+                   enterkeyhint="done">
+                
+                <!-- Кастомный курсор -->
+                <div id="customCursor" class="custom-cursor"></div>
+                
+                <!-- Символ валюты -->
+                <span class="currency" id="currencySymbol" style="display: none;">₽</span>
+            </div>
 
-    <input type="text" id="sumInput" 
-       placeholder="Введите сумму..." 
-       oninput="formatSumInput(this)" 
-       onfocus="onSumInputFocus(this)" 
-       onblur="onSumInputBlur(this)"
-       onclick="event.stopPropagation(); this.select()" 
-       onkeyup="if(event.keyCode===13) this.blur()" 
-       inputmode="numeric" 
-       enterkeyhint="done">
-    <span class="currency" id="currencySymbol" style="display: none;">₽</span>
-</div>
         
        
        <!-- Комиссия брокера - одна рамка -->
@@ -6332,23 +6378,65 @@ function getSumInputValue() {
 
 // NEW: Скрытие меню при фокусе на вводе
 function onSumInputFocus(input) {
-    document.body.classList.add('input-focused');
-    // Если в поле сейчас 0 или оно пустое, при нажатии оно станет абсолютно чистым
-    // и пользователь увидит placeholder (если поле пустое)
-    if (input.value === "0") {
-        input.value = "";
-    }
-}
+            document.body.classList.add('input-focused');
+            
+            // Показываем кастомный курсор
+            const cursor = document.getElementById('customCursor');
+            if(cursor) cursor.style.display = 'block';
+            
+            // Если в поле пусто или 0, очищаем его, чтобы не мешало вводить
+            if (input.value === "0") {
+                input.value = "";
+            }
+        }
 
 // NEW: Показ меню при потере фокуса
 function onSumInputBlur(input) {
-    document.body.classList.remove('input-focused');
-    // Если пользователь ничего не ввел и ушел из поля, 
-    // мы оставляем его пустым, чтобы была видна заглушка.
-    if (input.value === "") {
-        input.value = ""; 
-    }
-}
+            document.body.classList.remove('input-focused');
+            
+            // Скрываем кастомный курсор
+            const cursor = document.getElementById('customCursor');
+            if(cursor) cursor.style.display = 'none';
+            
+            // Если поле пустое, очищаем value, чтобы вернулся placeholder "0.00"
+            if (input.value === "") {
+                input.value = ""; 
+                // Скрываем рубль, если вернулись к пустоте
+                const currency = document.getElementById('currencySymbol');
+                if(currency) currency.style.display = 'none';
+            }
+        }
+    function formatSumInput(input) {
+            // Убираем все нецифровые символы
+            let value = input.value.replace(/\D/g, '');
+            
+            // Убираем ведущие нули
+            value = value.replace(/^0+/, '') || '';
+            
+            // Сохраняем числовое значение
+            const numericValue = parseInt(value) || 0;
+            
+            // Управление символом рубля
+            const currencySymbol = document.getElementById('currencySymbol');
+            if (currencySymbol) {
+                // Показываем рубль только если есть реальные цифры
+                currencySymbol.style.display = (value.length > 0) ? 'inline' : 'none';
+            }
+            
+            if (value.length > 0) {
+                // Форматируем с точками (1.000.000)
+                input.value = numericValue.toLocaleString('ru-RU').replace(/\s/g, '.');
+            } else {
+                input.value = ""; // Если стерли всё, возвращаем пустоту (появится placeholder)
+            }
+            
+            // Адаптация размера и ширины
+            adjustSumInputSize(input);
+            adjustInputWidth(input);
+            
+            // Пересчет
+            draw();
+        }
 
 // NEW: Сброс соотношения на 50/50
 function resetRatioTo50() {
