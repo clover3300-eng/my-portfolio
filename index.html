@@ -4826,6 +4826,207 @@ textarea {
         input#sumInput:not(:placeholder-shown) {
             text-align: right !important;
         }
+/* =========================================
+   GHOST SLIDER & WATERFALL STYLES (NEW)
+   ========================================= */
+
+/* 1. Контейнер с перспективой для 3D эффекта */
+.strategy-perspective-wrapper {
+    perspective: 1000px;
+    margin-top: 15px;
+    position: relative;
+    z-index: 10;
+}
+
+/* 2. Основная (выбранная) карточка */
+.main-selected-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    position: relative;
+    z-index: 20;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+    cursor: default;
+}
+
+/* Эффект нажатия на главную карточку */
+.main-selected-card:active {
+    transform: scale(0.98);
+}
+
+.dark-mode .main-selected-card {
+    background: #1e293b;
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* 3. Контейнер для скрытых карточек (Waterfall) */
+.waterfall-container {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    margin-top: 0; /* Прижато к верхней карте */
+    position: relative;
+}
+
+.waterfall-container.show {
+    grid-template-rows: 1fr;
+    margin-top: 15px; /* Отступ когда раскрыто */
+}
+
+.waterfall-inner {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Стили скрытых карточек */
+.strategy-option-card {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95) rotateX(-5deg);
+    filter: blur(8px);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 14px 18px;
+    border: 1px solid rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.dark-mode .strategy-option-card {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Активное состояние опции в списке */
+.strategy-option-card.selected-in-list {
+    background: #fff;
+    border-color: var(--accent-blue);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+.dark-mode .strategy-option-card.selected-in-list {
+    background: #2d3748;
+}
+
+/* Анимация появления (Waterfall delay) */
+.waterfall-container.show .strategy-option-card {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0);
+    filter: blur(0);
+}
+
+/* Задержки для каждой карточки */
+.waterfall-container.show .strategy-option-card:nth-child(1) { transition-delay: 0.05s; }
+.waterfall-container.show .strategy-option-card:nth-child(2) { transition-delay: 0.1s; }
+.waterfall-container.show .strategy-option-card:nth-child(3) { transition-delay: 0.15s; }
+.waterfall-container.show .strategy-option-card:nth-child(4) { transition-delay: 0.2s; }
+.waterfall-container.show .strategy-option-card:nth-child(5) { transition-delay: 0.25s; }
+
+/* 4. GHOST SLIDER (Триггер) */
+.ghost-trigger-wrapper {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 10px;
+    transition: opacity 0.3s;
+}
+
+.ghost-trigger-wrapper:active {
+    opacity: 0.6;
+}
+
+/* Линия с шиммером */
+.ghost-line {
+    width: 40px;
+    height: 3px;
+    background: #E2E8F0;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.dark-mode .ghost-line { background: #334155; }
+
+/* Анимация блика */
+.ghost-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    transform: translateX(-100%);
+    animation: ghostShimmer 2.5s infinite;
+}
+
+@keyframes ghostShimmer {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
+}
+
+.ghost-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px; /* Увеличенный трекинг */
+    color: #94A3B8;
+    margin-bottom: 4px;
+    transition: color 0.3s;
+}
+
+.ghost-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.ghost-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #CBD5E1;
+    transition: all 0.3s;
+}
+
+/* Состояние "Открыто" для триггера */
+.ghost-trigger-wrapper.open .ghost-text {
+    color: var(--accent-blue);
+}
+.ghost-trigger-wrapper.open .ghost-dot {
+    background: var(--accent-blue);
+    transform: scale(1.2);
+}
+
+/* Внутренности карточек (тексты и бары) */
+.card-left-part { display: flex; align-items: center; gap: 14px; }
+.card-indicator { width: 4px; height: 32px; border-radius: 2px; flex-shrink: 0; }
+.card-titles { display: flex; flex-direction: column; }
+.card-main-title { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; color: var(--text-main); }
+.card-sub-title { font-family: 'Inter', sans-serif; font-size: 11px; color: #8A9AB0; margin-top: 2px; }
+.card-right-part { text-align: right; }
+.card-pct-bonds { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--bonds-color); }
+.card-pct-stocks { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--stocks-color); }
+
+/* Скрытие старых элементов, если они где-то остались */
+.strategy-cards-container, .strategy-expand-trigger { display: none !important; }
 
 
 
@@ -4975,139 +5176,100 @@ textarea {
 <div class="strategy-section" style="margin-top: 8px;">
     <span class="fee-label">Инвестиционная стратегия</span>
     
-   <!-- Карточки стратегий -->
-<div class="strategy-cards-container">
-    
-    <!-- Гармония 50/50 - ВСЕГДА ВИДНА -->
-    <div class="strategy-card selected" onclick="event.stopPropagation(); selectStrategy(50, this)" data-bonds="50">
-        <div class="strategy-card-left">
-            <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 50%, #94A8B8 50%, #94A8B8 100%);"></div>
-            <div class="strategy-card-info">
-                <div class="strategy-card-title">Гармония</div>
-                <div class="strategy-card-subtitle">Классический баланс</div>
+    <!-- 3D Wrapper -->
+    <div class="strategy-perspective-wrapper">
+        
+        <!-- 1. ВСЕГДА ВИДИМАЯ КАРТОЧКА (ВЫБРАННАЯ) -->
+        <div class="main-selected-card" id="mainSelectedCard" onclick="toggleStrategies()">
+            <div class="card-left-part">
+                <!-- Цветной индикатор -->
+                <div class="card-indicator" id="mainCardIndicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 50%, #94A8B8 50%, #94A8B8 100%);"></div>
+                <div class="card-titles">
+                    <div class="card-main-title" id="mainCardTitle">Гармония</div>
+                    <div class="card-sub-title" id="mainCardSubtitle">Классический баланс</div>
+                </div>
+            </div>
+            <div class="card-right-part">
+                <div class="card-pct-bonds" id="mainCardBonds">Обл. 50%</div>
+                <div class="card-pct-stocks" id="mainCardStocks">Акц. 50%</div>
             </div>
         </div>
-        <div class="strategy-card-right">
-            <div class="strategy-divider"></div>
-            <div class="strategy-percent-col">
-                <div class="strategy-percent-row strategy-percent-bonds">Обл. 50%</div>
-                <div class="strategy-percent-row strategy-percent-stocks">Акц. 50%</div>
+
+        <!-- 2. WATERFALL КОНТЕЙНЕР СО СКРЫТЫМИ ВАРИАНТАМИ -->
+        <div class="waterfall-container" id="waterfallContainer">
+            <div class="waterfall-inner">
+                
+                <!-- Опция 50/50 -->
+                <div class="strategy-option-card" onclick="selectStrategy(50, this, 'Гармония', 'Классический баланс')">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 50%, #94A8B8 50%, #94A8B8 100%);"></div>
+                        <div class="card-titles"><div class="card-main-title">Гармония</div></div>
+                    </div>
+                    <div class="card-right-part"><div class="card-pct-bonds">50%</div></div>
+                </div>
+
+                <!-- Опция 80/20 -->
+                <div class="strategy-option-card" onclick="selectStrategy(80, this, 'Депозит', 'Защита капитала')">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 80%, #94A8B8 80%, #94A8B8 100%);"></div>
+                        <div class="card-titles"><div class="card-main-title">Депозит</div></div>
+                    </div>
+                    <div class="card-right-part"><div class="card-pct-bonds">80%</div></div>
+                </div>
+
+                <!-- Опция 60/40 -->
+                <div class="strategy-option-card" onclick="selectStrategy(60, this, 'Баланс', 'Умеренный риск')">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 60%, #94A8B8 60%, #94A8B8 100%);"></div>
+                        <div class="card-titles"><div class="card-main-title">Баланс</div></div>
+                    </div>
+                    <div class="card-right-part"><div class="card-pct-bonds">60%</div></div>
+                </div>
+
+                <!-- Опция 40/60 -->
+                <div class="strategy-option-card" onclick="selectStrategy(40, this, 'Умеренная', 'Баланс роста')">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 40%, #94A8B8 40%, #94A8B8 100%);"></div>
+                        <div class="card-titles"><div class="card-main-title">Умеренная</div></div>
+                    </div>
+                    <div class="card-right-part"><div class="card-pct-bonds">40%</div></div>
+                </div>
+
+                <!-- Опция 20/80 -->
+                <div class="strategy-option-card" onclick="selectStrategy(20, this, 'Агрессивная', 'Макс. рост')">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 20%, #94A8B8 20%, #94A8B8 100%);"></div>
+                        <div class="card-titles"><div class="card-main-title">Агрессивная</div></div>
+                    </div>
+                    <div class="card-right-part"><div class="card-pct-bonds">20%</div></div>
+                </div>
+
+                <!-- Опция Настроить свою -->
+                <div class="strategy-option-card" id="customOptionCard" onclick="toggleCustomStrategyNew(this)">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: #ccc;"></div>
+                        <div class="card-titles"><div class="card-main-title">Настроить свою</div></div>
+                    </div>
+                    <div class="card-right-part">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B7C99" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
-    
-    <!-- Кнопка раскрытия других стратегий -->
-    <div class="strategy-expand-trigger" id="strategyExpandTrigger" onclick="event.stopPropagation(); toggleStrategyCards()">
-        <span class="strategy-expand-text">Другие стратегии</span>
-        <svg class="strategy-expand-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
+
+    <!-- 3. GHOST SLIDER TRIGGER -->
+    <div class="ghost-trigger-wrapper" id="ghostTrigger" onclick="toggleStrategies()">
+        <div class="ghost-line"></div>
+        <div class="ghost-text" id="ghostText">ОТКРЫТЬ СТРАТЕГИИ</div>
+        <div class="ghost-dots">
+            <div class="ghost-dot"></div>
+            <div class="ghost-dot"></div>
+            <div class="ghost-dot"></div>
+        </div>
     </div>
-    
-    <!-- Скрытые карточки - раскрываются по клику -->
-    <div class="strategy-cards-hidden" id="strategyCardsHidden">
-        
-        <!-- Депозит 80/20 -->
-        <div class="strategy-card" onclick="event.stopPropagation(); selectStrategy(80, this)" data-bonds="80">
-            <div class="strategy-card-left">
-                <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 80%, #94A8B8 80%, #94A8B8 100%);"></div>
-                <div class="strategy-card-info">
-                    <div class="strategy-card-title">Депозит</div>
-                    <div class="strategy-card-subtitle">Защита капитала</div>
-                </div>
-            </div>
-            <div class="strategy-card-right">
-                <div class="strategy-divider"></div>
-                <div class="strategy-percent-col">
-                    <div class="strategy-percent-row strategy-percent-bonds">Обл. 80%</div>
-                    <div class="strategy-percent-row strategy-percent-stocks">Акц. 20%</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Баланс 60/40 -->
-        <div class="strategy-card" onclick="event.stopPropagation(); selectStrategy(60, this)" data-bonds="60">
-            <div class="strategy-card-left">
-                <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 60%, #94A8B8 60%, #94A8B8 100%);"></div>
-                <div class="strategy-card-info">
-                    <div class="strategy-card-title">Баланс</div>
-                    <div class="strategy-card-subtitle">Умеренный риск</div>
-                </div>
-            </div>
-            <div class="strategy-card-right">
-                <div class="strategy-divider"></div>
-                <div class="strategy-percent-col">
-                    <div class="strategy-percent-row strategy-percent-bonds">Обл. 60%</div>
-                    <div class="strategy-percent-row strategy-percent-stocks">Акц. 40%</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Умеренная 40/60 -->
-        <div class="strategy-card" onclick="event.stopPropagation(); selectStrategy(40, this)" data-bonds="40">
-            <div class="strategy-card-left">
-                <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 40%, #94A8B8 40%, #94A8B8 100%);"></div>
-                <div class="strategy-card-info">
-                    <div class="strategy-card-title">Умеренная</div>
-                    <div class="strategy-card-subtitle">Баланс роста</div>
-                </div>
-            </div>
-            <div class="strategy-card-right">
-                <div class="strategy-divider"></div>
-                <div class="strategy-percent-col">
-                    <div class="strategy-percent-row strategy-percent-bonds">Обл. 40%</div>
-                    <div class="strategy-percent-row strategy-percent-stocks">Акц. 60%</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Агрессивная 20/80 -->
-        <div class="strategy-card" onclick="event.stopPropagation(); selectStrategy(20, this)" data-bonds="20">
-            <div class="strategy-card-left">
-                <div class="strategy-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 20%, #94A8B8 20%, #94A8B8 100%);"></div>
-                <div class="strategy-card-info">
-                    <div class="strategy-card-title">Агрессивная</div>
-                    <div class="strategy-card-subtitle">Макс. рост</div>
-                </div>
-            </div>
-            <div class="strategy-card-right">
-                <div class="strategy-divider"></div>
-                <div class="strategy-percent-col">
-                    <div class="strategy-percent-row strategy-percent-bonds">Обл. 20%</div>
-                    <div class="strategy-percent-row strategy-percent-stocks">Акц. 80%</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Настроить свою -->
-        <div class="strategy-card strategy-card-custom" id="customStrategyCard" onclick="event.stopPropagation(); toggleCustomStrategy(this)" data-bonds="custom">
-            <div class="strategy-card-left">
-                <div class="strategy-indicator" id="customIndicator"></div>
-                <div class="strategy-custom-icon" id="customIcon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
-                    </svg>
-                </div>
-                <div class="strategy-card-info">
-                    <div class="strategy-card-title">Настроить свою</div>
-                    <div class="strategy-card-subtitle" id="customSubtitle">Выберите своё соотношение</div>
-                </div>
-            </div>
-            <div class="strategy-card-right">
-                <div class="strategy-divider"></div>
-                <div class="strategy-percent-col">
-                    <div class="strategy-percent-row strategy-percent-bonds" id="customCardBonds">Обл. 50%</div>
-                    <div class="strategy-percent-row strategy-percent-stocks" id="customCardStocks">Акц. 50%</div>
-                </div>
-                <svg class="strategy-custom-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B7C99" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </div>
-        </div>
-        
-    </div>
-</div>
+
 
 <!-- Развернутый блок настройки -->
 <div class="custom-strategy-expanded" id="customStrategyExpanded">
@@ -6241,25 +6403,118 @@ function savePortfolio() {
 }
 // ========== НОВАЯ ФУНКЦИЯ - КОНЕЦ ==========
 
-       function loadSettings() {
-    // Загрузка настроек отключена
-    // Всегда используем значения по умолчанию
+       /* ========== NEW LOGIC FOR GHOST SLIDER ========== */
+
+// Функция переключения состояния (Открыть/Закрыть)
+function toggleStrategies() {
+    const container = document.getElementById('waterfallContainer');
+    const trigger = document.getElementById('ghostTrigger');
+    const text = document.getElementById('ghostText');
+    const customBlock = document.getElementById('customStrategyExpanded');
     
-    // Устанавливаем Гармонию 50/50 по умолчанию
-    document.getElementById('ratioSlider').value = 50;
+    // Переключаем классы
+    const isOpen = container.classList.toggle('show');
+    trigger.classList.toggle('open');
     
-    // Небольшая задержка для корректной инициализации
-    setTimeout(() => {
-        // Убираем selected со всех карточек
-        document.querySelectorAll('.strategy-card').forEach(c => c.classList.remove('selected'));
-        
-        // Добавляем selected только к Гармонии
-        const harmonyCard = document.querySelector('.strategy-card[data-bonds="50"]');
-        if (harmonyCard) {
-            harmonyCard.classList.add('selected');
-        }
-    }, 100);
+    // Меняем текст и вибрацию
+    if(isOpen) {
+        text.innerText = "ЗАКРЫТЬ";
+        if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    } else {
+        text.innerText = "ОТКРЫТЬ СТРАТЕГИИ";
+        // Если закрываем список, закрываем и кастомную настройку, если она открыта
+        if(customBlock) customBlock.classList.remove('show');
+    }
 }
+
+// Функция выбора стратегии (обновляет главную карточку)
+function selectStrategy(bondPercent, optionCard, title, subtitle) {
+    // 1. Обновляем данные
+    document.getElementById('ratioSlider').value = bondPercent;
+    
+    // 2. Визуально обновляем ГЛАВНУЮ карточку
+    updateMainCardUI(bondPercent, title, subtitle);
+    
+    // 3. Подсветка в списке (опционально)
+    document.querySelectorAll('.strategy-option-card').forEach(c => c.classList.remove('selected-in-list'));
+    if(optionCard) optionCard.classList.add('selected-in-list');
+    
+    // 4. Сбрасываем кастомные сохранения, если выбрана стандартная
+    if(title !== 'Индивидуальная') {
+        savedCustomBonds = null;
+        document.getElementById('customStrategyExpanded').classList.remove('show');
+    }
+
+    // 5. Закрываем список (эффект сворачивания)
+    // Небольшая задержка, чтобы пользователь увидел клик
+    setTimeout(() => {
+        toggleStrategies(); 
+    }, 150);
+
+    // 6. Пересчитываем портфель
+    draw();
+}
+
+// Обновление UI главной карточки
+function updateMainCardUI(bondPercent, title, subtitle) {
+    const stockPercent = 100 - bondPercent;
+    
+    // Тексты
+    document.getElementById('mainCardTitle').innerText = title;
+    document.getElementById('mainCardSubtitle').innerText = subtitle;
+    document.getElementById('mainCardBonds').innerText = `Обл. ${bondPercent}%`;
+    document.getElementById('mainCardStocks').innerText = `Акц. ${stockPercent}%`;
+    
+    // Градиент индикатора
+    const indicator = document.getElementById('mainCardIndicator');
+    indicator.style.background = `linear-gradient(180deg, #5B7C99 0%, #5B7C99 ${bondPercent}%, #94A8B8 ${bondPercent}%, #94A8B8 100%)`;
+}
+
+// Логика для кастомной стратегии (адаптированная)
+function toggleCustomStrategyNew(cardElement) {
+    // Раскрываем блок настроек (он у тебя уже есть в HTML ниже, мы его просто показываем)
+    const customBlock = document.getElementById('customStrategyExpanded');
+    const isExpanded = customBlock.classList.contains('show');
+    
+    if (isExpanded) {
+        customBlock.classList.remove('show');
+    } else {
+        customBlock.classList.add('show');
+        
+        // Синхронизируем слайдер
+        const currentVal = parseInt(document.getElementById('ratioSlider').value);
+        document.getElementById('customRatioSlider').value = currentVal;
+        updateCustomSliderDisplay(currentVal);
+        
+        // Скроллим к настройкам
+        setTimeout(() => {
+            customBlock.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }, 100);
+    }
+}
+
+// Переопределяем функцию сохранения кастомной стратегии, чтобы она обновляла новую UI
+const originalSaveCustom = saveCustomStrategy; // Сохраняем ссылку если нужно
+saveCustomStrategy = function() {
+    const bondPct = parseInt(document.getElementById('customRatioSlider').value);
+    const stockPct = 100 - bondPct;
+    
+    savedCustomBonds = bondPct;
+    savedCustomStocks = stockPct;
+    
+    document.getElementById('ratioSlider').value = bondPct;
+    
+    // ОБНОВЛЯЕМ ГЛАВНУЮ КАРТОЧКУ
+    updateMainCardUI(bondPct, 'Индивидуальная', 'Ваша настройка');
+    
+    // Закрываем панель и список
+    document.getElementById('customStrategyExpanded').classList.remove('show');
+    toggleStrategies(); // Закрываем водопад
+    
+    draw();
+    if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+}
+
         
 
         // NEW: Dropdown для тарифа комиссии
@@ -6524,51 +6779,6 @@ function resetRatioTo50() {
 // NEW: Выбор стратегии по карточке
 // NEW: Выбор стратегии по карточке
 // NEW: Выбор стратегии по карточке
-function selectStrategy(bondPercent, cardElement) {
-    // Предотвращаем скролл и закрытие клавиатуры
-    event?.preventDefault();
-    
-    // Закрываем кастомный блок если открыт
-    const expandedBlock = document.getElementById('customStrategyExpanded');
-    if (expandedBlock) {
-        expandedBlock.classList.remove('show');
-    }
-    
-    // Сбрасываем кастомную карточку
-    resetCustomCardDisplay();
-    
-    // Обновляем скрытый ползунок
-    document.getElementById('ratioSlider').value = bondPercent;
-    
-    // Убираем выделение со всех карточек (включая скрытые)
-    document.querySelectorAll('.strategy-card').forEach(card => {
-        card.classList.remove('selected');
-    });
-    
-    // Выделяем выбранную карточку
-    if (cardElement) {
-        cardElement.classList.add('selected');
-    }
-    
-    // Если выбрана НЕ Гармония - раскрываем скрытые карточки
-    if (bondPercent !== 50) {
-        const trigger = document.getElementById('strategyExpandTrigger');
-        const hiddenCards = document.getElementById('strategyCardsHidden');
-        if (!hiddenCards.classList.contains('show')) {
-            trigger.classList.add('open');
-            hiddenCards.classList.add('show');
-            trigger.querySelector('.strategy-expand-text').textContent = 'Скрыть стратегии';
-        }
-    }
-    
-    // Перерисовываем
-    draw();
-    
-    // Haptic feedback
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-    }
-}
 
 
 // NEW: Обновление выделения карточки при изменении ползунка
@@ -6597,47 +6807,7 @@ function updateStrategyCardSelection(bondPercent) {
         }
     });
 }
-    // NEW: Переключение кастомной стратегии
-function toggleCustomStrategy(cardElement) {
-    // Предотвращаем скролл
-    event?.preventDefault();
     
-    const expandedBlock = document.getElementById('customStrategyExpanded');
-    const isExpanded = expandedBlock.classList.contains('show');
-    
-    // ========== НОВЫЕ СТРОКИ ==========
-    // Убираем фокус с поля ввода
-    const sumInput = document.getElementById('sumInput');
-    if (sumInput && document.activeElement === sumInput) {
-        sumInput.blur();
-    }
-    // ========== КОНЕЦ НОВЫХ СТРОК ==========
-    
-    // Снимаем выделение со всех карточек
-    document.querySelectorAll('.strategy-card').forEach(card => {
-        card.classList.remove('selected');
-    });
-    
-    if (isExpanded) {
-        expandedBlock.classList.remove('show');
-        // Если есть сохранённые значения, оставляем карточку в сохранённом состоянии
-        if (savedCustomBonds !== null) {
-            cardElement.classList.add('selected');
-        }
-    } else {
-        expandedBlock.classList.add('show');
-        cardElement.classList.add('selected');
-        
-        // Синхронизируем значение с основным слайдером
-        const currentValue = savedCustomBonds !== null ? savedCustomBonds : parseInt(document.getElementById('ratioSlider').value);
-        document.getElementById('customRatioSlider').value = currentValue;
-        updateCustomSliderDisplay(currentValue);
-    }
-    
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-    }
-}
 
 // NEW: Обновление кастомного слайдера
 function updateCustomSlider(value) {
@@ -6763,26 +6933,7 @@ function adjustCustomRatio(delta) {
     }
 }
 
-    // NEW: Раскрытие/скрытие дополнительных стратегий
-function toggleStrategyCards() {
-    const trigger = document.getElementById('strategyExpandTrigger');
-    const hiddenCards = document.getElementById('strategyCardsHidden');
     
-    trigger.classList.toggle('open');
-    hiddenCards.classList.toggle('show');
-    
-    // Меняем текст
-    const textEl = trigger.querySelector('.strategy-expand-text');
-    if (hiddenCards.classList.contains('show')) {
-        textEl.textContent = 'Скрыть стратегии';
-    } else {
-        textEl.textContent = 'Другие стратегии';
-    }
-    
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-    }
-}
 
 // NEW: Сброс кастомной стратегии на 50/50
 function resetCustomTo50() {
