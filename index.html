@@ -7982,7 +7982,7 @@ if(document.getElementById('listBonds')) {
                     eHtml += `
                     <div class="portfolio-list-item" onclick="this.classList.toggle('expanded')">
                         <div class="list-item-summary">
-                            <span class="list-item-ticker">${limitName(s.n)}</span>
+                            <span class="list-item-ticker">${s.t}</span>
                             <span class="list-item-yield stocks">${s.target.replace(' ₽','')}</span>
                             <span class="list-item-qty">${s.qty} шт.</span>
                             <span class="list-item-sum">${Math.round(s.qty * s.p).toLocaleString()} ₽</span>
