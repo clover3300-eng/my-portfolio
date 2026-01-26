@@ -4721,7 +4721,7 @@ textarea {
             color: #bdc3c7 !important;
             font-family: 'JetBrains Mono', monospace !important;
             opacity: 1 !important;
-            text-align: center !important; /* Было right, стало center */
+            text-align: right !important; /* БЫЛО center, СТАЛО right */
         }
                 /* Когда начинаем вводить (плейсхолдер исчез) - жмем вправо к курсору */
         input#sumInput:not(:placeholder-shown) {
@@ -4860,16 +4860,7 @@ textarea {
             
                                               <!-- ВЕСЬ БЛОК В ОДНУ СТРОКУ, ЧТОБЫ УБРАТЬ ОТСТУПЫ -->
             <div class="input-wrapper" onclick="document.getElementById('sumInput').focus()" style="display: flex; justify-content: center; align-items: center; width: 100%;"><input type="text" id="sumInput" placeholder="0.00" oninput="formatSumInput(this)" onfocus="onSumInputFocus(this)" onblur="onSumInputBlur(this)" onclick="event.stopPropagation(); this.select()" onkeyup="if(event.keyCode===13) this.blur()" inputmode="numeric" enterkeyhint="done"><div id="customCursor" class="custom-cursor"></div><span class="currency" id="currencySymbol">₽</span><span class="currency-placeholder" id="currencyPlaceholder">₽</span></div>
-
-                
-                <!-- Кастомный курсор -->
-                <div id="customCursor" class="custom-cursor"></div>
-                
-                <!-- Золотой рубль (когда есть цифры) -->
-                <span class="currency" id="currencySymbol">₽</span>
-                
-                <!-- Серый рубль (для плейсхолдера) -->
-                <span class="currency-placeholder" id="currencyPlaceholder">₽</span>
+            
             </div>
 
 
@@ -6473,7 +6464,7 @@ function getSumInputValue() {
                 if(currencyGold) currencyGold.style.display = 'none';
                 if(currencyGray) currencyGray.style.display = 'block';
                 
-                input.style.width = '115px'; // Возвращаем ширину плейсхолдера
+                input.style.width = '55px'; // Возвращаем ширину плейсхолдера
             }
         }
 
@@ -6505,7 +6496,7 @@ function getSumInputValue() {
                 if(currencyGray) currencyGray.style.display = 'block';
                 
                 // Фиксируем ширину для "0.00", чтобы стояло ровно
-                input.style.width = '90px'; 
+                input.style.width = '55px'; 
             }
             
             adjustSumInputSize(input);
