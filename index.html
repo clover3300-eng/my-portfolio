@@ -5046,11 +5046,6 @@ textarea {
 }
 
 
-/* === KILL SCROLL JUMPS === */
-html, body, #screen-app, .calc-box, .calc-box-white-section, .strategy-section {
-    overflow-anchor: none !important; 
-    scroll-behavior: auto !important; /* Отключаем плавную прокрутку на момент клика */
-}
 
 
 
@@ -5315,7 +5310,7 @@ html, body, #screen-app, .calc-box, .calc-box-white-section, .strategy-section {
 
 
     <!-- 3. GHOST SLIDER TRIGGER -->
-    <div class="ghost-trigger-wrapper" id="ghostTrigger" onclick="toggleStrategies(event)">
+    <div class="ghost-trigger-wrapper" id="ghostTrigger" onclick="toggleStrategies()">
         <div class="ghost-line"></div>
         <div class="ghost-text" id="ghostText">ОТКРЫТЬ СТРАТЕГИИ</div>
         <div class="ghost-dots">
@@ -6461,16 +6456,7 @@ function savePortfolio() {
        /* ========== NEW LOGIC FOR GHOST SLIDER ========== */
 
 // Функция переключения состояния (Открыть/Закрыть)
-ffunction toggleStrategies(event) {
-    // 1. Если событие передано, глушим стандартное поведение
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-
-    // 2. ЗАПОМИНАЕМ ТЕКУЩУЮ ПОЗИЦИЮ СКРОЛЛА
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-
+function toggleStrategies() {
     const container = document.getElementById('waterfallContainer');
     const trigger = document.getElementById('ghostTrigger');
     const text = document.getElementById('ghostText');
@@ -6480,28 +6466,16 @@ ffunction toggleStrategies(event) {
     const isOpen = container.classList.toggle('show');
     trigger.classList.toggle('open');
     
-    // Меняем текст
+    // Меняем текст и вибрацию
     if(isOpen) {
         text.innerText = "ЗАКРЫТЬ";
         if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     } else {
         text.innerText = "ОТКРЫТЬ СТРАТЕГИИ";
+        // Если закрываем список, закрываем и кастомную настройку, если она открыта
         if(customBlock) customBlock.classList.remove('show');
     }
-
-    // 3. ПРИНУДИТЕЛЬНО ВОЗВРАЩАЕМ ЭКРАН НА МЕСТО (Блокируем скачок)
-    // Делаем это сразу и через мгновение, чтобы победить отрисовку браузера
-    window.scrollTo(0, scrollY);
-    
-    requestAnimationFrame(() => {
-        window.scrollTo(0, scrollY);
-    });
-    
-    setTimeout(() => {
-        window.scrollTo(0, scrollY);
-    }, 10);
 }
-
 
 // Функция выбора стратегии (обновляет главную карточку)
 function selectStrategy(bondPercent, optionCard, title, subtitle) {
