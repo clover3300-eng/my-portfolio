@@ -4716,12 +4716,18 @@ textarea {
         }
 
         /* Плейсхолдер - выравниваем по центру */
+        
         input#sumInput::placeholder {
             color: #bdc3c7 !important;
             font-family: 'JetBrains Mono', monospace !important;
             opacity: 1 !important;
-            text-align: right !important; /* Прижимаем к курсору */
+            text-align: center !important; /* Было right, стало center */
         }
+                /* Когда начинаем вводить (плейсхолдер исчез) - жмем вправо к курсору */
+        input#sumInput:not(:placeholder-shown) {
+            text-align: right !important;
+        }
+
 
         /* КУРСОР */
         .custom-cursor {
@@ -6399,18 +6405,25 @@ function getSumInputValue() {
 }
 
 // NEW: Скрытие меню при фокусе на вводе
-function onSumInputFocus(input) {
+        function onSumInputFocus(input) {
+            console.log('Focus triggered'); // Проверка в консоли
             document.body.classList.add('input-focused');
             
-            // Показываем кастомный курсор
+            // Явно ищем курсор и включаем его
             const cursor = document.getElementById('customCursor');
-            if(cursor) cursor.style.display = 'block';
+            if(cursor) {
+                cursor.style.display = 'block';
+                // Перезапуск анимации (иногда помогает на мобильных)
+                cursor.style.animation = 'none';
+                cursor.offsetHeight; /* trigger reflow */
+                cursor.style.animation = 'shimmerBlink 1.2s infinite';
+            }
             
-            // Если в поле пусто или 0, очищаем его, чтобы не мешало вводить
             if (input.value === "0") {
                 input.value = "";
             }
         }
+
 
 // NEW: Показ меню при потере фокуса
                 function onSumInputBlur(input) {
@@ -6460,7 +6473,7 @@ function onSumInputFocus(input) {
                 if(currencyGray) currencyGray.style.display = 'block';
                 
                 // Фиксируем ширину для "0.00", чтобы стояло ровно
-                input.style.width = '115px'; 
+                input.style.width = '90px'; 
             }
             
             adjustSumInputSize(input);
