@@ -4736,13 +4736,16 @@ textarea {
         /* КУРСОР */
         .custom-cursor {
             width: 3px !important;
-            height: 42px;
-            border-radius: 2px;
-            background: linear-gradient(to bottom, #FFD700, #0ea5e9, #b5985a);
-            background-size: 100% 200%;
-            margin: 0 4px 0 2px; /* Отступы: слева от цифр, справа от рубля */
-            animation: shimmerBlink 1.2s infinite;
-            display: none; /* Скрыт пока нет фокуса */
+            height: 42px !important;
+            border-radius: 2px !important;
+            background: linear-gradient(to bottom, #FFD700, #0ea5e9, #b5985a) !important;
+            background-size: 100% 200% !important;
+            margin: 0 4px 0 2px !important; 
+            
+            /* КУРСОР ТЕПЕРЬ ВИДЕН ВСЕГДА */
+            display: block !important; 
+            animation: shimmerBlink 1s infinite !important;
+            flex-shrink: 0 !important;
         }
 
         /* ЗОЛОТОЙ РУБЛЬ (Показываем, когда есть текст) */
@@ -6440,12 +6443,6 @@ function getSumInputValue() {
                 function onSumInputFocus(input) {
             document.body.classList.add('input-focused');
             
-            const cursor = document.getElementById('customCursor');
-            if(cursor) {
-                // ПРИНУДИТЕЛЬНО ВКЛЮЧАЕМ КУРСОР
-                cursor.style.setProperty('display', 'block', 'important');
-            }
-            
             if (input.value === "0") {
                 input.value = "";
             }
@@ -6456,10 +6453,6 @@ function getSumInputValue() {
 // NEW: Показ меню при потере фокуса
                 function onSumInputBlur(input) {
             document.body.classList.remove('input-focused');
-            
-            // Скрываем курсор
-            const cursor = document.getElementById('customCursor');
-            if(cursor) cursor.style.display = 'none';
             
             // Если пусто, возвращаем серый рубль
             if (input.value === "") {
