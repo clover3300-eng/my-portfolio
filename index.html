@@ -5083,13 +5083,21 @@ textarea {
                 Список из 8 Облигаций Федерального займа, генерирующих 16 выплат купонов в год.
             </div>
 
-            <!-- НОВОЕ: ЗАГОЛОВКИ СТОЛБЦОВ -->
-            <div class="echelon-columns-header">
-                <span>Название</span>
-                <span>Доходность</span>
-                <span>Кол-во</span>
-                <span>Сумма</span>
+             <!-- ОБЕРНУЛИ В .portfolio-list ЧТОБЫ БЫЛА БЕЛАЯ РАМКА И ФОН -->
+            <div class="portfolio-list" style="margin-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: none;">
+                <div class="echelon-columns-header" style="border-bottom: none;">
+                    <span>Название</span>
+                    <span>Доходность</span>
+                    <span>Кол-во</span>
+                    <span>Сумма</span>
+                </div>
             </div>
+            
+            <!-- У списка убираем верхние скругления, чтобы он слился с заголовком -->
+            <div class="portfolio-list" id="listBonds" style="border-top-left-radius: 0; border-top-right-radius: 0; border-top: 1px solid rgba(0,0,0,0.05);">
+                <!-- JS генерирует список здесь -->
+                 </div>
+        </div>
             
             <!-- Список облигаций -->
             <div class="portfolio-list" id="listBonds">
@@ -5155,7 +5163,8 @@ textarea {
                         <div class="portfolio-section-subtitle">Акции по 4 эшелонам риска</div>
                     </div>
                 </div>
-                <div class="portfolio-section-badge stocks" id="badge-stocks-sum">0 ₽</div>
+               <div class="portfolio-section-badge stocks" id="badge-stocks-sum" style="display: flex !important; min-width: 60px; justify-content: center;">0 ₽</div>
+
             </div>
             
             <!-- Описание -->
@@ -7983,7 +7992,17 @@ if(document.getElementById('listBonds')) {
                     <div class="echelon-header-left">
                         <div class="echelon-number e${echelonNum}">${echelonLabel}</div>
                         <!-- ПЛАШКА С НАЗВАНИЕМ -->
-                        <span class="echelon-title-new" style="background: ${c.bg}; color: ${c.txt}; padding: 4px 10px; border-radius: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800;">
+                        <span class="echelon-title-new" style="
+                            background: ${c.bg}; 
+                            color: ${c.txt}; 
+                            padding: 4px 10px; 
+                            border-radius: 8px; 
+                            font-family: 'Inter', sans-serif !important; 
+                            font-size: 10px; 
+                            font-weight: 800; 
+                            text-transform: uppercase; 
+                            letter-spacing: 0.5px;
+                        ">
                             ${e.title}
                         </span>
                     </div>
@@ -8059,10 +8078,11 @@ if(document.getElementById('listBonds')) {
                 
                 // 1. Обновляем бейдж суммы акций (ИСПРАВЛЕНО)
                 const badgeStocks = document.getElementById('badge-stocks-sum');
-                if(badgeStocks) {
-                    badgeStocks.innerText = Math.round(stockBudget).toLocaleString() + ' ₽';
-                    badgeStocks.style.display = 'inline-flex'; // Принудительно показываем
-                }
+                const badgeStocks = document.getElementById('badge-stocks-sum');
+            if(badgeStocks) {
+               badgeStocks.innerText = Math.round(stockBudget).toLocaleString() + ' ₽';
+               badgeStocks.style.display = 'flex'; // Принудительно
+              }
 
                 // 2. Обновляем все остальные цифры
                 const valStocks = document.getElementById('valStocks');
