@@ -4734,6 +4734,7 @@ textarea {
 
 
         /* КУРСОР */
+                /* 1. По умолчанию курсор скрыт */
         .custom-cursor {
             width: 3px !important;
             height: 42px !important;
@@ -4741,12 +4742,21 @@ textarea {
             background: linear-gradient(to bottom, #FFD700, #0ea5e9, #b5985a) !important;
             background-size: 100% 200% !important;
             margin: 0 4px 0 2px !important; 
-            
-            /* КУРСОР ТЕПЕРЬ ВИДЕН ВСЕГДА */
-            display: block !important; 
+            display: none; /* Скрыт */
             animation: shimmerBlink 1s infinite !important;
             flex-shrink: 0 !important;
         }
+
+        /* 2. Показываем курсор, если в поле ПУСТО (виден плейсхолдер) */
+        input#sumInput:placeholder-shown + #customCursor {
+            display: block !important;
+        }
+
+        /* 3. Показываем курсор, если поле В ФОКУСЕ (вы нажали на него) */
+        input#sumInput:focus + #customCursor {
+            display: block !important;
+        }
+
 
         /* ЗОЛОТОЙ РУБЛЬ (Показываем, когда есть текст) */
         .currency { 
@@ -6451,10 +6461,9 @@ function getSumInputValue() {
 
 
 // NEW: Показ меню при потере фокуса
-                function onSumInputBlur(input) {
+                        function onSumInputBlur(input) {
             document.body.classList.remove('input-focused');
             
-            // Если пусто, возвращаем серый рубль
             if (input.value === "") {
                 const currencyGold = document.getElementById('currencySymbol');
                 const currencyGray = document.getElementById('currencyPlaceholder');
@@ -6462,9 +6471,10 @@ function getSumInputValue() {
                 if(currencyGold) currencyGold.style.display = 'none';
                 if(currencyGray) currencyGray.style.display = 'block';
                 
-                input.style.width = '150px'; // Возвращаем ширину плейсхолдера
+                input.style.width = '150px'; // Ширина для ВВЕДИТЕ СУММУ
             }
         }
+
 
 
             function formatSumInput(input) {
