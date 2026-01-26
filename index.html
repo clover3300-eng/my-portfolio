@@ -3689,12 +3689,15 @@ body.dark-mode .portfolio-list-item:hover {
 }
 /* Развёрнутая детальная карточка */
 .list-item-details {
-    display: none;
-    background: rgba(0, 0, 0, 0.02);
-    padding: 0 20px 20px;
-    animation: slideDown 0.3s ease;
-}
-
+            grid-column: 1 / -1; /* Занимает всю ширину */
+            display: none;
+            padding: 12px !important; /* Отступ 12px */
+            border-top: 1px solid rgba(0,0,0,0.05) !important; /* Линия сверху */
+            font-size: 11px !important;
+            line-height: 1.8 !important;
+            animation: slideDown 0.3s ease;
+            cursor: default; /* Чтобы клик по деталям не сворачивал их случайно */
+        }
 body.dark-mode .list-item-details {
     background: rgba(255, 255, 255, 0.03);
 }
@@ -3715,51 +3718,65 @@ body.dark-mode .list-item-details {
     margin-bottom: 16px;
 }
 
-.details-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 10px;
-}
+ /* Строка данных */
+        .details-row {
+            display: flex !important;
+            justify-content: space-between !important;
+            padding: 2px 0 !important; /* Вертикальный отступ */
+            border-bottom: 1px dashed rgba(0,0,0,0.05) !important; /* Пунктир снизу */
+            background: transparent !important; /* Убираем фон */
+            border-radius: 0 !important;
+        }
 
 body.dark-mode .details-row {
     background: rgba(255, 255, 255, 0.05);
 }
 
-.details-row-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    color: var(--claude-text-secondary);
-}
+/* Левая часть (Метка) */
+        .details-row-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400 !important; /* Обычное начертание */
+            color: var(--claude-text-secondary);
+        }
 
-.details-row-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--claude-text-primary);
-}
+/* Правая часть (Значение) */
+        .details-row-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600 !important; /* Semi-Bold */
+            color: var(--claude-text-primary);
+            text-align: right;
+        }
 
 .details-actions {
     display: flex;
     gap: 10px;
 }
 
-.details-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+/* Кнопка действия */
+        .details-btn {
+            width: 100% !important;
+            margin-top: 8px !important;
+            padding: 6px 12px !important;
+            border-radius: 6px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 4px !important;
+            font-size: 10px !important;
+            font-weight: 700 !important; /* Bold */
+            border: none !important;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            
+            /* Цвета берем из переменных, не меняем жестко */
+            background: var(--claude-accent) !important; 
+            color: white !important;
+        }
+        
+        .details-btn:active {
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
 
 .details-btn.primary {
     background: var(--claude-accent);
@@ -3785,9 +3802,7 @@ body.dark-mode .details-btn.secondary {
     stroke-width: 2;
 }
 
-.details-btn:active {
-    transform: scale(0.98);
-}
+
 
 /* === Echelon Headers (Заголовки эшелонов) === */
 .echelon-header-new {
@@ -7747,48 +7762,59 @@ function highlightKeywords(text) {
             let totalBondProjectedIncome = 0;
             let rainData = [];
             
-            // === ГЕНЕРАЦИЯ СПИСКА ОБЛИГАЦИЙ ===
-let bHtml = '';
-if (bonds.length > 0) {
-    const perBondBudget = bondBudget / bonds.length;
-    let bondCalculations = bonds.map(b => { 
-        const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); 
-        let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; 
-        return { ...b, qty, fullCostPerUnit }; 
-    });
-    
-    let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
-    if (bondCalculations.length > 0 && leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
-        bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
-    }
-    
-    bondCalculations.forEach(b => {
-        actualSpentTotal += (b.qty * b.fullCostPerUnit); 
-        bondQuantities[b.t] = b.qty;
-        const bondYieldVal = parseFloat(b.y.replace('%', '')) || 0;
-        const investedInBond = b.qty * b.p;
-        totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
+           // === ГЕНЕРАЦИЯ СПИСКА ОБЛИГАЦИЙ (ОБНОВЛЕННЫЕ ДЕТАЛИ) ===
+    let bHtml = '';
+    if (bonds.length > 0) {
+        const perBondBudget = bondBudget / bonds.length;
+        let bondCalculations = bonds.map(b => { 
+            const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); 
+            let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; 
+            return { ...b, qty, fullCostPerUnit }; 
+        });
         
-        if(b.qty > 0 && bondCouponsMap[b.t]) {
-            const info = bondCouponsMap[b.t];
-            const netAmount = (info.value * b.qty) * (1 - currentTax);
-            rainData.push({ date: info.date, name: b.n, qty: b.qty, amount: netAmount });
+        let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
+        if (bondCalculations.length > 0 && leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
+            bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
         }
         
-        // НОВЫЙ HTML для аккордеона
-        bHtml += `
-        <div class="portfolio-list-item" onclick="this.classList.toggle('expanded')">
-            <div class="list-item-summary">
-                <span class="list-item-ticker">${limitName(b.n)}</span>
-                <span class="list-item-yield bonds">${b.y}</span>
-                <span class="list-item-qty">${b.qty} шт.</span>
-                <span class="list-item-sum">${Math.round(b.qty * b.p).toLocaleString()} ₽</span>
-            </div>
-            <div class="list-item-details">
-                <div class="details-grid">
+        bondCalculations.forEach(b => {
+            actualSpentTotal += (b.qty * b.fullCostPerUnit); 
+            bondQuantities[b.t] = b.qty;
+            const bondYieldVal = parseFloat(b.y.replace('%', '')) || 0;
+            const investedInBond = b.qty * b.p;
+            totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
+            
+            if(b.qty > 0 && bondCouponsMap[b.t]) {
+                const info = bondCouponsMap[b.t];
+                const netAmount = (info.value * b.qty) * (1 - currentTax);
+                rainData.push({ date: info.date, name: b.n, qty: b.qty, amount: netAmount });
+            }
+            
+            // Данные для деталей
+            const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
+            // Расчет простой доходности: (Купон * Частота) / Цена * 100
+            const calculatedCY = (b.p > 0 && details.couponValue && details.freq) ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) : '0.00';
+            
+            bHtml += `
+            <div class="portfolio-list-item" onclick="this.classList.toggle('expanded')">
+                <div class="list-item-summary">
+                    <span class="list-item-ticker">${limitName(b.n)}</span>
+                    <span class="list-item-yield bonds">${b.y}</span>
+                    <span class="list-item-qty">${b.qty} шт.</span>
+                    <span class="list-item-sum">${Math.round(b.qty * b.p).toLocaleString()} ₽</span>
+                </div>
+                <div class="list-item-details" onclick="event.stopPropagation()">
                     <div class="details-row">
-                        <span class="details-row-label">ISIN/Код</span>
+                        <span class="details-row-label">Полное Наименование</span>
+                        <span class="details-row-value">${b.n}</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-row-label">Код</span>
                         <span class="details-row-value">${b.t}</span>
+                    </div>
+                    <div class="details-row">
+                        <span class="details-row-label">Дата погашения</span>
+                        <span class="details-row-value">${details.matDate}</span>
                     </div>
                     <div class="details-row">
                         <span class="details-row-label">Цена</span>
@@ -7799,24 +7825,19 @@ if (bonds.length > 0) {
                         <span class="details-row-value">${b.nkd.toFixed(2)} ₽</span>
                     </div>
                     <div class="details-row">
-                        <span class="details-row-label">Погашение</span>
-                        <span class="details-row-value">${b.matDate}</span>
+                        <span class="details-row-label">Простая Доходность</span>
+                        <span class="details-row-value">${calculatedCY}%</span>
                     </div>
-                </div>
-                <div class="details-actions">
-                    <button class="details-btn primary" onclick="event.stopPropagation(); openTradingView(event, '${b.t}')">
-                        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-                        График
-                    </button>
-                    <button class="details-btn secondary" onclick="event.stopPropagation(); copyTicker(event, '${b.t}')">
-                        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        Копировать
+                    
+                    <button class="details-btn" onclick="openTradingView(event, '${b.t}')">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        Открыть график
                     </button>
                 </div>
-            </div>
-        </div>`;
-    });
-}
+            </div>`;
+        });
+    }
+
 
 if(document.getElementById('listBonds')) { 
     document.getElementById('listBonds').innerHTML = bHtml;
@@ -7876,105 +7897,103 @@ if(document.getElementById('listBonds')) {
             if(document.getElementById('ofz-list')) document.getElementById('ofz-list').innerHTML = ofzHtml;
 
            // === ГЕНЕРАЦИЯ ЭШЕЛОНОВ АКЦИЙ ===
-let eHtml = '';
-let totalStockProjectedGrowth = 0;
-let echelonIndex = 0;
+ let eHtml = '';
+            let totalStockProjectedGrowth = 0;
+            let echelonIndex = 0;
 
-echelons.forEach(e => {
-    const echelonBudget = stockBudget * e.weight; 
-    const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
-    
-    let stockCalculations = e.assets.map(a => { 
-        const fullCostPerUnit = a.p * (1 + brokerFee); 
-        let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0; 
-        return { ...a, qty, fullCostPerUnit }; 
-    });
-    
-    let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
-    if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
-        stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
-    }
-    
-    const tipId = `echelon-tip-new-${echelonIndex}`;
-    const echelonNum = echelonIndex + 1;
-    const echelonRoman = ['I', 'II', 'III', 'IV'][echelonIndex];
-    
-    // Заголовок эшелона
-    eHtml += `
-    <div class="echelon-header-new" onclick="toggleEchelonTip(event, '${tipId}')">
-        <div class="echelon-header-left">
-            <div class="echelon-number e${echelonNum}">${echelonRoman}</div>
-            <span class="echelon-title-new">${e.title}</span>
-        </div>
-        <div class="echelon-header-right">
-            <span class="echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
-            <span class="echelon-percent-badge">${Math.round(e.weight*100)}%</span>
-            <div class="echelon-info-icon">?</div>
-        </div>
-    </div>
-    
-    <div class="echelon-info-tooltip" id="${tipId}">${e.info}</div>
-    
-    <div class="portfolio-list">
-        <!-- Заголовки столбцов -->
-        <div class="echelon-columns-header">
-            <span>Тикер</span>
-            <span>Цель</span>
-            <span>Кол-во</span>
-            <span>Сумма</span>
-        </div>`;
-    
-    // Акции в эшелоне
-    stockCalculations.forEach(s => {
-        actualSpentTotal += (s.qty * s.fullCostPerUnit);
-        const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
-        if(targetPrice > s.p) totalStockProjectedGrowth += (s.qty * (targetPrice - s.p));
-        
-        eHtml += `
-        <div class="portfolio-list-item" onclick="this.classList.toggle('expanded')">
-            <div class="list-item-summary">
-                <span class="list-item-ticker">${s.t}</span>
-                <span class="list-item-yield stocks">${s.target.replace(' ₽','')}</span>
-                <span class="list-item-qty">${s.qty} шт.</span>
-                <span class="list-item-sum">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
-            </div>
-            <div class="list-item-details">
-                <div class="details-grid">
-                    <div class="details-row">
-                        <span class="details-row-label">Компания</span>
-                        <span class="details-row-value">${s.n}</span>
+            echelons.forEach(e => {
+                const echelonBudget = stockBudget * e.weight; 
+                const perAssetBudget = e.assets.length > 0 ? echelonBudget / e.assets.length : 0;
+                
+                let stockCalculations = e.assets.map(a => { 
+                    const fullCostPerUnit = a.p * (1 + brokerFee); 
+                    let qty = fullCostPerUnit > 0 ? Math.floor(perAssetBudget / fullCostPerUnit) : 0; 
+                    return { ...a, qty, fullCostPerUnit }; 
+                });
+                
+                let currentEchelonSpent = stockCalculations.reduce((acc, s) => acc + (s.qty * s.fullCostPerUnit), 0);
+                if (stockCalculations.length > 0 && (echelonBudget - currentEchelonSpent) >= stockCalculations[0].fullCostPerUnit) {
+                    stockCalculations[0].qty += Math.floor((echelonBudget - currentEchelonSpent) / stockCalculations[0].fullCostPerUnit);
+                }
+                
+                const tipId = `echelon-tip-new-${echelonIndex}`;
+                const echelonNum = echelonIndex + 1;
+                const echelonLabel = ['I', 'II', 'III', 'IV'][echelonIndex];
+                
+                eHtml += `
+                <div class="echelon-header-new" onclick="toggleEchelonTip(event, '${tipId}')">
+                    <div class="echelon-header-left">
+                        <div class="echelon-number e${echelonNum}">${echelonLabel}</div>
+                        <span class="echelon-title-new">${e.title}</span>
                     </div>
-                    <div class="details-row">
-                        <span class="details-row-label">Цена</span>
-                        <span class="details-row-value">${s.p} ₽</span>
-                    </div>
-                    <div class="details-row">
-                        <span class="details-row-label">Цель</span>
-                        <span class="details-row-value">${s.target}</span>
-                    </div>
-                    <div class="details-row">
-                        <span class="details-row-label">Прогноз</span>
-                        <span class="details-row-value">до 36 мес.</span>
+                    <div class="echelon-header-right">
+                        <span class="echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
+                        <span class="echelon-percent-badge">${Math.round(e.weight*100)}%</span>
+                        <div class="echelon-info-icon">?</div>
                     </div>
                 </div>
-                <div class="details-actions">
-                    <button class="details-btn primary" onclick="event.stopPropagation(); openTradingView(event, '${s.t}')">
-                        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-                        График
-                    </button>
-                    <button class="details-btn secondary" onclick="event.stopPropagation(); copyTicker(event, '${s.t}')">
-                        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        Копировать
-                    </button>
-                </div>
-            </div>
-        </div>`;
-    });
-    
-    eHtml += `</div>`; // Закрываем portfolio-list
-    echelonIndex++;
-});
-
+                
+                <div class="echelon-info-tooltip" id="${tipId}">${e.info}</div>
+                
+                <div class="portfolio-list">
+                    <div class="echelon-columns-header">
+                        <span>Тикер</span>
+                        <span>Цель</span>
+                        <span>Кол-во</span>
+                        <span>Сумма</span>
+                    </div>`;
+                
+                stockCalculations.forEach(s => {
+                    actualSpentTotal += (s.qty * s.fullCostPerUnit);
+                    const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
+                    if(targetPrice > s.p) totalStockProjectedGrowth += (s.qty * (targetPrice - s.p));
+                    
+                    eHtml += `
+                    <div class="portfolio-list-item" onclick="this.classList.toggle('expanded')">
+                        <div class="list-item-summary">
+                            <span class="list-item-ticker">${s.t}</span>
+                            <span class="list-item-yield stocks">${s.target.replace(' ₽','')}</span>
+                            <span class="list-item-qty">${s.qty} шт.</span>
+                            <span class="list-item-sum">${Math.round(s.qty*s.p).toLocaleString()} ₽</span>
+                        </div>
+                        <div class="list-item-details" onclick="event.stopPropagation()">
+                            <div class="details-row">
+                                <span class="details-row-label">Компания</span>
+                                <span class="details-row-value">${s.n}</span>
+                            </div>
+                            <div class="details-row">
+                                <span class="details-row-label">Тикер</span>
+                                <span class="details-row-value" style="display:flex; align-items:center; gap:4px; cursor:pointer;" onclick="copyTicker(event, '${s.t}')">
+                                    ${s.t} 
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                </span>
+                            </div>
+                            <div class="details-row">
+                                <span class="details-row-label">Цена</span>
+                                <span class="details-row-value">${s.p} ₽</span>
+                            </div>
+                            <div class="details-row">
+                                <span class="details-row-label">Цель</span>
+                                <span class="details-row-value">${s.target}</span>
+                            </div>
+                            
+                            <!-- Примечание статичное -->
+                            <div class="details-row" style="border-bottom:none !important; justify-content:center !important; padding-top:6px !important;">
+                                <span style="font-size:10px; color:var(--claude-text-secondary); opacity:0.7;">[ Прогноз на период до 36 мес. ]</span>
+                            </div>
+                            
+                            <button class="details-btn" onclick="openTradingView(event, '${s.t}')">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                Открыть график
+                            </button>
+                        </div>
+                    </div>`;
+                });
+                
+                eHtml += `</div>`;
+                echelonIndex++;
+            });
+            
 // Обновляем DOM
 if(document.getElementById('echelonContainer')) {
     document.getElementById('echelonContainer').innerHTML = eHtml;
