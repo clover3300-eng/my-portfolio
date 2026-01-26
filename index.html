@@ -3627,33 +3627,38 @@ body.dark-mode .portfolio-list-item:hover {
 /* Свёрнутая строка */
 .list-item-summary {
     display: grid;
-    grid-template-columns: 1fr 70px 60px 90px;
+    /* Grid-шаблон по промту: 85px, гибкая, 75px, 80px */
+    grid-template-columns: 85px 1fr 75px 80px;
     align-items: center;
-    gap: 8px;
-    padding: 16px 20px;
+    gap: 0; /* Убираем gap, так как ширину задаем колонками */
+    padding: 12px; /* Отступы по промту */
     cursor: pointer;
     user-select: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .list-item-ticker {
     font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 11px; /* По промту */
+    font-weight: 700; /* Bold */
     color: var(--claude-text-primary);
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; /* Троеточие */
+    text-align: left;
 }
 
 .list-item-yield {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 5px 10px;
-    border-radius: 8px;
+    padding: 4px 8px; /* Внутренние отступы */
+    border-radius: 8px; /* Скругление */
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px; /* По промту */
+    font-weight: 800; /* Extra Bold */
+    justify-self: center; /* Центрирование внутри grid-ячейки */
+    width: fit-content;
 }
 
 .list-item-yield.bonds {
@@ -3668,20 +3673,20 @@ body.dark-mode .portfolio-list-item:hover {
 
 .list-item-qty {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700; /* Bold */
     color: var(--claude-accent);
-    text-align: center;
+    text-align: right;
+    padding-right: 8px; /* Отступ справа */
 }
 
 .list-item-sum {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 500; /* Medium */
     color: var(--claude-text-primary);
     text-align: right;
 }
-
 /* Развёрнутая детальная карточка */
 .list-item-details {
     display: none;
@@ -3931,9 +3936,10 @@ body.dark-mode .echelon-header-new {
 /* Заголовки столбцов для эшелона */
 .echelon-columns-header {
     display: grid;
-    grid-template-columns: 1fr 70px 60px 90px;
-    gap: 8px;
-    padding: 10px 20px;
+    /* Сетка должна совпадать со строками: 85px 1fr 75px 80px */
+    grid-template-columns: 85px 1fr 75px 80px;
+    gap: 0;
+    padding: 10px 12px; /* Паддинг как у строк */
     font-family: 'Inter', sans-serif;
     font-size: 9px;
     font-weight: 700;
@@ -3942,6 +3948,12 @@ body.dark-mode .echelon-header-new {
     color: var(--claude-text-secondary);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
+
+/* Выравнивание заголовков */
+.echelon-columns-header span:nth-child(1) { text-align: left; }
+.echelon-columns-header span:nth-child(2) { text-align: center; }
+.echelon-columns-header span:nth-child(3) { text-align: right; padding-right: 8px; }
+.echelon-columns-header span:nth-child(4) { text-align: right; }
 
 body.dark-mode .echelon-columns-header {
     border-bottom-color: rgba(255, 255, 255, 0.08);
