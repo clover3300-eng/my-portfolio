@@ -4674,45 +4674,109 @@ textarea {
         
         /* ====================================================================== */
 
-                /* ========== УЛУЧШЕННОЕ ПОЛЕ ВВОДА ========== */
+                       /* ========== УЛУЧШЕННОЕ ПОЛЕ ВВОДА (GOLD EDITION) ========== */
         
-        /* 1. Настройка самого поля */
-        input#sumInput {
-            caret-color: transparent !important; /* Скрываем стандартную палку */
-            color: var(--text-main) !important;
-        }
-
-        /* 2. Стиль для "0.00" (Плейсхолдер) */
-        input#sumInput::placeholder {
-            color: #bdc3c7 !important; /* Светло-серый */
-            font-family: 'JetBrains Mono', monospace !important;
-            opacity: 1 !important;
-        }
-
-        /* 3. Анимация мигания */
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* 4. Кастомный вертикальный курсор */
-        .custom-cursor {
-            width: 2px;
-            height: 42px; /* Высота под размер шрифта */
-            background-color: var(--accent-blue); /* Синий цвет */
-            display: none; /* По умолчанию скрыт */
-            margin-left: 2px; /* Чуть отодвигаем от цифры */
-            margin-right: 4px;
-            animation: blink 1s step-end infinite; /* Мигание */
-        }
-
-        /* Исправляем выравнивание в обертке */
+        /* 1. Центрирование обертки и линия */
         .input-wrapper {
-            display: inline-flex !important;
+            display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             position: relative;
+            width: fit-content !important;
+            margin: 20px auto 10px auto !important; /* Центрируем блок на странице */
         }
+
+        /* Линия подчеркивания */
+        .input-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: rgba(44, 54, 76, 0.1) !important;
+            transition: all 0.3s ease;
+        }
+
+        /* 2. Настройка поля ввода */
+        input#sumInput {
+            caret-color: transparent !important; /* Скрываем стандартный курсор */
+            color: var(--text-main) !important;
+            text-align: right !important; /* Цифры прижимаем к курсору справа */
+            padding-right: 2px !important; /* Отступ от курсора */
+        }
+
+        /* 3. Стиль для "0.00" (Плейсхолдер) */
+        input#sumInput::placeholder {
+            color: #bdc3c7 !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            opacity: 1 !important;
+            text-align: center !important; /* Плейсхолдер стоит по центру */
+        }
+
+        /* Если поле пустое (виден плейсхолдер), выравниваем инпут по центру */
+        input#sumInput:placeholder-shown {
+            text-align: center !important;
+        }
+
+        /* 4. Анимация сияния и мигания */
+        @keyframes shimmerBlink {
+            0% { 
+                background-position: 0% 0%; 
+                opacity: 1; 
+            }
+            50% { 
+                background-position: 0% 100%; /* Двигаем градиент вниз */
+                opacity: 0; 
+            }
+            100% { 
+                background-position: 0% 0%; 
+                opacity: 1; 
+            }
+        }
+
+        /* 5. Сияющий разноцветный курсор */
+        .custom-cursor {
+            width: 3px !important; /* Жирнее, как просил */
+            height: 42px;
+            border-radius: 2px;
+            
+            /* Градиент: Золото -> Небо -> Темное золото */
+            background: linear-gradient(to bottom, #FFD700, #0ea5e9, #b5985a);
+            background-size: 100% 200%; /* Увеличиваем фон для анимации движения */
+            
+            display: none;
+            margin-left: 2px;
+            margin-right: 4px;
+            
+            /* Применяем анимацию */
+            animation: shimmerBlink 1.2s infinite;
+        }
+
+        /* 6. Золотой символ валюты */
+        .currency { 
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 42px; 
+            
+            /* Насыщенное матовое золото */
+            color: #b5985a !important;
+            
+            /* Мягкое свечение */
+            text-shadow: 0 0 10px rgba(181, 152, 90, 0.3);
+            
+            font-weight: 500;
+            opacity: 1 !important;
+            margin-left: 4px;
+            padding-bottom: 2px; /* Выравнивание с цифрами */
+        }
+        
+        /* Темная тема: чуть светлее золото, чтобы читалось */
+        body.dark-mode .currency {
+            color: #d4af37 !important;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+        }
+        /* ======================================================== */
+
 
 
         
