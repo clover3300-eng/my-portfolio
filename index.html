@@ -5195,7 +5195,7 @@ textarea {
             </div>
         </div>
 
-        <!-- 2. WATERFALL КОНТЕЙНЕР СО СКРЫТЫМИ ВАРИАНТАМИ -->
+                <!-- 2. WATERFALL КОНТЕЙНЕР (ОБНОВЛЕННЫЙ: ПОЛНАЯ ИНФОРМАЦИЯ) -->
         <div class="waterfall-container" id="waterfallContainer">
             <div class="waterfall-inner">
                 
@@ -5203,61 +5203,94 @@ textarea {
                 <div class="strategy-option-card" onclick="selectStrategy(50, this, 'Гармония', 'Классический баланс')">
                     <div class="card-left-part">
                         <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 50%, #94A8B8 50%, #94A8B8 100%);"></div>
-                        <div class="card-titles"><div class="card-main-title">Гармония</div></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Гармония</div>
+                            <div class="card-sub-title">Классический баланс</div>
+                        </div>
                     </div>
-                    <div class="card-right-part"><div class="card-pct-bonds">50%</div></div>
+                    <div class="card-right-part">
+                        <div class="card-pct-bonds">Обл. 50%</div>
+                        <div class="card-pct-stocks">Акц. 50%</div>
+                    </div>
                 </div>
 
                 <!-- Опция 80/20 -->
                 <div class="strategy-option-card" onclick="selectStrategy(80, this, 'Депозит', 'Защита капитала')">
                     <div class="card-left-part">
                         <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 80%, #94A8B8 80%, #94A8B8 100%);"></div>
-                        <div class="card-titles"><div class="card-main-title">Депозит</div></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Депозит</div>
+                            <div class="card-sub-title">Защита капитала</div>
+                        </div>
                     </div>
-                    <div class="card-right-part"><div class="card-pct-bonds">80%</div></div>
+                    <div class="card-right-part">
+                        <div class="card-pct-bonds">Обл. 80%</div>
+                        <div class="card-pct-stocks">Акц. 20%</div>
+                    </div>
                 </div>
 
                 <!-- Опция 60/40 -->
                 <div class="strategy-option-card" onclick="selectStrategy(60, this, 'Баланс', 'Умеренный риск')">
                     <div class="card-left-part">
                         <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 60%, #94A8B8 60%, #94A8B8 100%);"></div>
-                        <div class="card-titles"><div class="card-main-title">Баланс</div></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Баланс</div>
+                            <div class="card-sub-title">Умеренный риск</div>
+                        </div>
                     </div>
-                    <div class="card-right-part"><div class="card-pct-bonds">60%</div></div>
+                    <div class="card-right-part">
+                        <div class="card-pct-bonds">Обл. 60%</div>
+                        <div class="card-pct-stocks">Акц. 40%</div>
+                    </div>
                 </div>
 
                 <!-- Опция 40/60 -->
                 <div class="strategy-option-card" onclick="selectStrategy(40, this, 'Умеренная', 'Баланс роста')">
                     <div class="card-left-part">
                         <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 40%, #94A8B8 40%, #94A8B8 100%);"></div>
-                        <div class="card-titles"><div class="card-main-title">Умеренная</div></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Умеренная</div>
+                            <div class="card-sub-title">Баланс роста</div>
+                        </div>
                     </div>
-                    <div class="card-right-part"><div class="card-pct-bonds">40%</div></div>
+                    <div class="card-right-part">
+                        <div class="card-pct-bonds">Обл. 40%</div>
+                        <div class="card-pct-stocks">Акц. 60%</div>
+                    </div>
                 </div>
 
                 <!-- Опция 20/80 -->
                 <div class="strategy-option-card" onclick="selectStrategy(20, this, 'Агрессивная', 'Макс. рост')">
                     <div class="card-left-part">
                         <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 20%, #94A8B8 20%, #94A8B8 100%);"></div>
-                        <div class="card-titles"><div class="card-main-title">Агрессивная</div></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Агрессивная</div>
+                            <div class="card-sub-title">Макс. рост</div>
+                        </div>
                     </div>
-                    <div class="card-right-part"><div class="card-pct-bonds">20%</div></div>
+                    <div class="card-right-part">
+                        <div class="card-pct-bonds">Обл. 20%</div>
+                        <div class="card-pct-stocks">Акц. 80%</div>
+                    </div>
                 </div>
 
                 <!-- Опция Настроить свою -->
                 <div class="strategy-option-card" id="customOptionCard" onclick="toggleCustomStrategyNew(this)">
                     <div class="card-left-part">
                         <div class="card-indicator" style="background: #ccc;"></div>
-                        <div class="card-titles"><div class="card-main-title">Настроить свою</div></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Настроить свою</div>
+                            <div class="card-sub-title">Выберите пропорцию</div>
+                        </div>
                     </div>
                     <div class="card-right-part">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B7C99" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B7C99" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                     </div>
                 </div>
 
             </div>
         </div>
-    </div>
+
 
     <!-- 3. GHOST SLIDER TRIGGER -->
     <div class="ghost-trigger-wrapper" id="ghostTrigger" onclick="toggleStrategies()">
