@@ -142,6 +142,19 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+          /* Фон как на главной странице */
+        #screen-app {
+            background: linear-gradient(90deg, #F5F1EE 0%, #F9FAFC 100%);
+            margin: -16px; /* Растягиваем на весь экран */
+            padding: 16px; /* Возвращаем отступы контенту */
+            min-height: 100vh;
+        }
+        
+        /* Фон для темной темы */
+        body.dark-mode #screen-app {
+            background: linear-gradient(90deg, #1a2234 0%, #0f172a 100%);
+        }
+
         /* ========== NEW: Welcome Screen Styles ========== */
 .welcome-screen {
     min-height: calc(100vh - 32px);
@@ -304,11 +317,11 @@
 
         /* ========== NEW: Terminal Header V2 для 2й вкладки ========== */
 .terminal-header-v2 {
-    background: linear-gradient(90deg, #F1F6FB 0%, #F9FAFC 100%);
-    padding: 30px 20px 15px; /* Уменьшили нижний отступ */
-    margin: -16px -16px 10px -16px; /* Уменьшили нижний margin */
-    text-align: left;
-}
+            background: transparent; /* Прозрачный фон */
+            padding: 40px 10px 10px 10px; /* Отступ сверху побольше */
+            margin: 0; /* Убираем старые margin -16px */
+            text-align: left;
+        }
 
 .terminal-title-main {
     font-family: 'Inter', sans-serif;
@@ -696,14 +709,27 @@ input#sumInput.size-xsmall {
 
         /* ========== NEW: Dropdown для тарифа комиссии ========== */
         /* Белая карточка начинается с тарифа */
-.calc-box-white-section {
-    background: var(--card-bg);
-    padding: 20px 24px 24px 24px; /* верх меньше, чем остальные стороны */
-    border-radius: 24px;
-    box-shadow: 0 15px 35px var(--card-shadow);
-    border: 1px solid var(--border-color);
-    margin-top: 25px;
-}
+         .calc-box-white-section {
+            /* Эффект стекла */
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            
+            padding: 20px 24px 24px 24px;
+            border-radius: 24px;
+            
+            /* Более мягкая тень и светлая обводка */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            
+            margin-top: 25px;
+        }
+
+        /* Стекло для темной темы */
+        body.dark-mode .calc-box-white-section {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
 .fee-selector {
     margin-bottom: 20px;
 }
