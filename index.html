@@ -4008,15 +4008,22 @@ body.dark-mode .echelon-columns-header {
 }
 
 /* === Action Panel (Sticky панель действий) === */
-.portfolio-action-panel {
+        .portfolio-action-panel {
             position: fixed;
             bottom: 90px;
-            left: 16px;
-            right: 16px;
+            
+            /* ЖЕСТКОЕ ЦЕНТРИРОВАНИЕ */
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 92% !important; /* Ширина 92% от экрана */
+            max-width: 400px !important; /* Но не шире 400px */
+            right: auto !important; /* Сбрасываем right */
+            
             display: flex;
-            justify-content: center; /* Выравниваем кнопки по центру */
+            justify-content: center;
             gap: 12px;
-            padding: 12px; /* Уменьшили паддинг самой панели */
+            padding: 12px;
+            
             background: var(--claude-glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -4025,6 +4032,7 @@ body.dark-mode .echelon-columns-header {
             box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.1);
             z-index: 800;
         }
+
 
         .action-btn {
             flex: 0 1 150px; /* Фиксированная ширина вместо растягивания */
@@ -7937,7 +7945,7 @@ if(document.getElementById('listBonds')) {
             });
             if(document.getElementById('ofz-list')) document.getElementById('ofz-list').innerHTML = ofzHtml;
 
-                     // === ГЕНЕРАЦИЯ ЭШЕЛОНОВ АКЦИЙ (С ПОДСВЕТКОЙ ТИКЕРА) ===
+                                // === ГЕНЕРАЦИЯ ЭШЕЛОНОВ АКЦИЙ (ФИНАЛЬНЫЙ ВАРИАНТ) ===
             let eHtml = '';
             let totalStockProjectedGrowth = 0;
             let echelonIndex = 0;
@@ -7960,17 +7968,28 @@ if(document.getElementById('listBonds')) {
                 const tipId = `echelon-tip-new-${echelonIndex}`;
                 const echelonNum = echelonIndex + 1;
                 const echelonLabel = ['I', 'II', 'III', 'IV'][echelonIndex];
+
+                // Цвета для плашек (Зеленый, Синий, Желтый, Оранжевый)
+                const colors = [
+                    { bg: 'rgba(46, 204, 113, 0.15)', txt: '#27ae60' },
+                    { bg: 'rgba(52, 152, 219, 0.15)', txt: '#2980b9' },
+                    { bg: 'rgba(241, 196, 15, 0.15)', txt: '#f39c12' },
+                    { bg: 'rgba(231, 76, 60, 0.15)', txt: '#d35400' }
+                ];
+                const c = colors[echelonIndex];
                 
                 eHtml += `
                 <div class="echelon-header-new" onclick="toggleEchelonTip(event, '${tipId}')">
                     <div class="echelon-header-left">
                         <div class="echelon-number e${echelonNum}">${echelonLabel}</div>
-                        <span class="echelon-title-new">${e.title}</span>
+                        <!-- ПЛАШКА С НАЗВАНИЕМ -->
+                        <span class="echelon-title-new" style="background: ${c.bg}; color: ${c.txt}; padding: 4px 10px; border-radius: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800;">
+                            ${e.title}
+                        </span>
                     </div>
                     <div class="echelon-header-right">
                         <span class="echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
                         <span class="echelon-percent-badge">${Math.round(e.weight*100)}%</span>
-                        
                     </div>
                 </div>
                 
@@ -8003,8 +8022,6 @@ if(document.getElementById('listBonds')) {
                                 <span class="details-row-label">Компания</span>
                                 <span class="details-row-value">${s.n}</span>
                             </div>
-                            
-                            <!-- ОБНОВЛЕНО: Тикер с подсветкой и иконкой -->
                             <div class="details-row">
                                 <span class="details-row-label">Тикер</span>
                                 <span class="details-row-value detail-ticker-highlight" onclick="copyTicker(event, '${s.t}')">
@@ -8012,7 +8029,6 @@ if(document.getElementById('listBonds')) {
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                                 </span>
                             </div>
-                            
                             <div class="details-row">
                                 <span class="details-row-label">Цена</span>
                                 <span class="details-row-value">${s.p} ₽</span>
@@ -8021,11 +8037,10 @@ if(document.getElementById('listBonds')) {
                                 <span class="details-row-label">Цель</span>
                                 <span class="details-row-value">${s.target}</span>
                             </div>
-                            
+                            <!-- Примечание статичное -->
                             <div class="details-row" style="border-bottom:none !important; justify-content:center !important; padding-top:6px !important;">
                                 <span style="font-size:10px; color:var(--claude-text-secondary); opacity:0.7;">[ Прогноз на период до 36 мес. ]</span>
                             </div>
-                            
                             <button class="details-btn" onclick="openTradingView(event, '${s.t}')">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                 Открыть график
@@ -8034,22 +8049,22 @@ if(document.getElementById('listBonds')) {
                     </div>`;
                 });
                 
-                eHtml += `</div>`;
+                eHtml += `</div>`; // Закрываем div.portfolio-list
                 echelonIndex++;
             });
 
-            
-// Обновляем DOM
-if(document.getElementById('echelonContainer')) {
-    document.getElementById('echelonContainer').innerHTML = eHtml;
-    
-    // Обновляем бейдж суммы акций
-    const badgeStocks = document.getElementById('badge-stocks-sum');
-    if(badgeStocks) badgeStocks.innerText = Math.round(stockBudget).toLocaleString() + ' ₽';
-}
+            // === ОБНОВЛЕНИЕ ИНТЕРФЕЙСА (ОДИН РАЗ, БЕЗ ДУБЛЕЙ) ===
             if(document.getElementById('echelonContainer')) {
                 document.getElementById('echelonContainer').innerHTML = eHtml;
                 
+                // 1. Обновляем бейдж суммы акций (ИСПРАВЛЕНО)
+                const badgeStocks = document.getElementById('badge-stocks-sum');
+                if(badgeStocks) {
+                    badgeStocks.innerText = Math.round(stockBudget).toLocaleString() + ' ₽';
+                    badgeStocks.style.display = 'inline-flex'; // Принудительно показываем
+                }
+
+                // 2. Обновляем все остальные цифры
                 const valStocks = document.getElementById('valStocks');
                 if(valStocks) valStocks.innerText = Math.round(stockBudget).toLocaleString();
                 
@@ -8058,27 +8073,32 @@ if(document.getElementById('echelonContainer')) {
                 
                 const usageLabelText = document.getElementById('usageLabelText');
                 if(usageLabelText) usageLabelText.innerText = Math.round(actualSpentTotal).toLocaleString() + ' ₽';
+                
                 document.getElementById('summ-invested').innerText = Math.round(inputSum).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
                 document.getElementById('srl-bond-pct').innerText = bondPct + '%';
                 document.getElementById('srl-stock-pct').innerText = stockPct + '%';
                 document.getElementById('bar-bond-fill').style.width = bondPct + '%';
                 document.getElementById('bar-stock-fill').style.width = stockPct + '%';
-                const activeFeeBtn = document.querySelector('.fee-btn.active');
-                // Отображаем реальную выбранную комиссию
+                
                 const feePercent = (brokerFee * 100).toFixed(2);
                 document.getElementById('summ-fee').innerText = feePercent + '%';
+                
                 document.getElementById('summ-bond-income').innerText = '+' + Math.round(totalBondProjectedIncome).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
                 document.getElementById('summ-stock-growth').innerText = '+' + Math.round(totalStockProjectedGrowth).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
+                
                 const projectedTotal = inputSum + totalBondProjectedIncome + totalStockProjectedGrowth - feeVal;
                 let percentageChange = (inputSum > 0) ? ((projectedTotal - inputSum) / inputSum) * 100 : 0;
                 const changeSign = percentageChange >= 0 ? '+' : '';
                 const changeColor = percentageChange >= 0 ? '#27ae60' : '#e74c3c';
                 const changeHtml = ` <span style="font-size: 14px; color: ${changeColor}; font-weight: 500;">(${changeSign}${percentageChange.toFixed(1)}%)</span>`;
+                
                 document.getElementById('summ-total-3y').innerHTML = Math.round(projectedTotal).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽' + changeHtml;
             }
+            
             updateEchelonTable();
             renderOfzList();
-        }
+        } // Закрытие функции draw
+
 
         async function shareAsPDF() {
             const btn = document.getElementById('btnShare');
