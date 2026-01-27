@@ -6475,6 +6475,8 @@ function selectStrategy(bondPercent, optionCard, title, subtitle) {
 
     // 5. Запускаем draw (он теперь сам вызовет updateStrategyCardSelection внутри себя)
     draw();
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Обновление UI главной карточки
