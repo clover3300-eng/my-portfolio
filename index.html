@@ -6444,18 +6444,25 @@ function toggleStrategies() {
     const trigger = document.getElementById('ghostTrigger');
     const text = document.getElementById('ghostText');
     const customBlock = document.getElementById('customStrategyExpanded');
-    
-    // Переключаем классы
+
     const isOpen = container.classList.toggle('show');
     trigger.classList.toggle('open');
-    
-    // Меняем текст и вибрацию
+
     if(isOpen) {
         text.innerText = "ЗАКРЫТЬ";
-        if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        // ПОКАЗЫВАЕМ только те карточки, которые НЕ выбраны сейчас
+        document.querySelectorAll('.strategy-option-card').forEach(card => {
+            if (!card.classList.contains('hidden-selected')) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        if (window.Telegram?.WebApp?.HapticFeedback) 
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     } else {
         text.innerText = "ОТКРЫТЬ СТРАТЕГИИ";
-        // Если закрываем список, закрываем и кастомную настройку, если она открыта
         if(customBlock) customBlock.classList.remove('show');
     }
 }
