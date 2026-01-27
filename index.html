@@ -8124,14 +8124,27 @@ function highlightKeywords(text) {
     return result;
 }
 
-        function draw() {
-            console.log('draw() called');
+      function draw() {
+    console.log('draw() called');
     
+    // 1. Сначала получаем процент и обновляем список карточек (ДО проверки суммы)
+    const slider = document.getElementById('ratioSlider');
+    const bondPct = parseInt(slider.value);
+    
+    // Вызываем функцию скрытия/показа дубликатов
+    updateStrategyCardSelection(bondPct);
+
+    // 2. Теперь проверяем сумму
     const inputSum = getSumInputValue();
-    
-    // Если сумма = 0 (поле пустое), не сохраняем и не рисуем
+
+    // Если сумма = 0, дальше не считаем математику, но карточки мы УЖЕ обновили выше
     if (inputSum === 0) {
-        console.log('Sum is zero, skipping draw');
+        // Обновим только тексты процентов, чтобы интерфейс реагировал
+        const stockPct = 100 - bondPct;
+        if(document.getElementById('labelBondsPct')) {
+             document.getElementById('labelBondsPct').innerText = bondPct;
+             document.getElementById('labelStocksPct').innerText = stockPct;
+        }
         return;
     }
     
