@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -4845,7 +4846,7 @@ textarea {
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    border: 1.5px solid var(--accent-blue);
     position: relative;
     z-index: 20;
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
@@ -4859,7 +4860,7 @@ textarea {
 
 .dark-mode .main-selected-card {
     background: #1e293b;
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-blue);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -6817,26 +6818,25 @@ function updateStrategyCardSelection(bondPercent) {
     cards.forEach(card => {
         const cardBonds = card.getAttribute('data-bonds');
         const isCustom = (cardBonds === 'custom');
-        const cardBondValue = parseInt(cardBonds);
 
         if (isCustom) {
-            // Вариант "Настроить свою" ВСЕГДА виден в списке
+            // Карточка "Настроить свою" всегда видна (display: flex)
             card.style.display = 'flex';
             
-            // Подсвечиваем его, если сейчас выбраны кастомные настройки
+            // Подсвечиваем её, если сейчас активен кастомный режим
             if (savedCustomBonds !== null && savedCustomBonds === bondPercent) {
                 card.classList.add('selected');
             } else {
                 card.classList.remove('selected');
             }
         } else {
-            // Обычная карточка (например, 60/40)
-            if (cardBondValue === bondPercent) {
-                // Если проценты совпадают с выбранными — ПРЯЧЕМ карточку из списка
+            // Для обычных карточек (Гармония, Депозит и т.д.)
+            if (parseInt(cardBonds) === bondPercent) {
+                // Если карточка выбрана — СКРЫВАЕМ её из списка (display: none)
                 card.style.display = 'none';
                 card.classList.add('selected');
             } else {
-                // Все остальные карточки — ПОКАЗЫВАЕМ
+                // Если не выбрана — ПОКАЗЫВАЕМ
                 card.style.display = 'flex';
                 card.classList.remove('selected');
             }
