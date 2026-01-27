@@ -6494,24 +6494,20 @@ function updateMainCardUI(bondPercent, title, subtitle) {
 
 // Логика для кастомной стратегии (адаптированная)
 function toggleCustomStrategyNew(cardElement) {
-    // Раскрываем блок настроек (он у тебя уже есть в HTML ниже, мы его просто показываем)
-    const customBlock = document.getElementById('customStrategyExpanded');
-    const isExpanded = customBlock.classList.contains('show');
+    const expanded = document.getElementById('customStrategyExpanded');
+    const isOpening = !expanded.classList.contains('show');
     
-    if (isExpanded) {
-        customBlock.classList.remove('show');
+    if (isOpening) {
+        expanded.classList.add('show');
+        // Плавный скролл к настройкам, чтобы пользователю было удобно
+        expanded.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-        customBlock.classList.add('show');
+        // ЭТОТ БЛОК СРАБОТАЕТ, КОГДА НАЖИМАЕШЬ "ГОТОВО" ИЛИ ЗАКРЫВАЕШЬ
+        expanded.classList.remove('show');
         
-        // Синхронизируем слайдер
-        const currentVal = parseInt(document.getElementById('ratioSlider').value);
-        document.getElementById('customRatioSlider').value = currentVal;
-        updateCustomSliderDisplay(currentVal);
-        
-        // Скроллим к настройкам
-        setTimeout(() => {
-            customBlock.scrollIntoView({behavior: 'smooth', block: 'center'});
-        }, 100);
+        // --- ВОТ ЭТА СТРОЧКА ИСПРАВИТ ПРОБЛЕМУ ---
+        // Она возвращает экран на самый верх к вводу суммы
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
 
