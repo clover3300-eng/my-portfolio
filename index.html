@@ -4830,6 +4830,39 @@ body.dark-mode .fee-dropdown-item.selected .fee-item-check {
 }
 body.dark-mode .fee-dropdown-item.selected .fee-item-check svg { stroke: #0F172A; }
 
+        /* =================================================================
+   FIX FOR FULLSCREEN MODE (ОТСТУПЫ СВЕРХУ)
+   ================================================================= */
+
+/* 1. Заголовки экранов: Портфель, Ребалансировка, Интересное */
+.header {
+    /* calc(X + Y) складывает наши пиксели и системный отступ телефона */
+    padding-top: calc(45px + env(safe-area-inset-top)) !important; 
+    padding-bottom: 20px !important;
+}
+
+/* 2. Заголовок Терминала (где калькулятор) */
+.terminal-header-v2 {
+    /* Делаем побольше, чтобы не прилипало к статус-бару */
+    padding-top: calc(55px + env(safe-area-inset-top)) !important;
+}
+
+/* 3. Экран компании (стрелка назад и тикер) */
+.company-top-bar {
+    /* Отступ для кнопок навигации внутри компании */
+    padding-top: calc(20px + env(safe-area-inset-top)) !important;
+    padding-bottom: 10px !important;
+}
+
+/* 4. На всякий случай: если на Android safe-area не сработает,
+   эти стили гарантируют минимальный отступ */
+@supports not (padding-top: env(safe-area-inset-top)) {
+    .header { padding-top: 50px !important; }
+    .terminal-header-v2 { padding-top: 60px !important; }
+    .company-top-bar { padding-top: 30px !important; }
+}
+ /* ================================================================== */
+
 
 
         
