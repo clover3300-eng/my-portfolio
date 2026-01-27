@@ -4891,33 +4891,7 @@ body.dark-mode .fee-dropdown-item.selected .fee-item-check svg { stroke: #0F172A
     margin-top: 5px !important;
 }
 
-  /* === ПРИНУДИТЕЛЬНАЯ ПРОЗРАЧНОСТЬ МЕНЮ (СИЛА ID) === */
-
-/* Обращаемся по ID для максимального приоритета */
-#standardNav, 
-#nav-search {
-    /* 1. Фон: 0.35 — это очень прозрачно (35% заливки) */
-    background: rgba(255, 255, 255, 0.35) !important;
-    
-    /* 2. Размытие: Эффект матового стекла */
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    
-    /* 3. Рамка: Тонкая и полупрозрачная */
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    
-    /* 4. Тень */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Настройки для ТЕМНОЙ ТЕМЫ */
-body.dark-mode #standardNav, 
-body.dark-mode #nav-search {
-    /* Темное прозрачное стекло */
-    background: rgba(15, 23, 42, 0.45) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-}
+ 
 
 
 
