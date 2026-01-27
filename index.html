@@ -135,52 +135,14 @@
         }
         .toast.show { opacity: 1; visibility: visible; }
 
-        /* =================================================================
-   DECK OF CARDS NAVIGATION (STACK EFFECT)
-   ================================================================= */
+        .screen { display: none; animation: fadeIn 0.4s ease; }
+        .screen.active { display: block; }
 
-/* Базовый экран */
-.screen {
-    /* Важно: экраны должны уметь лежать друг над другом */
-    position: absolute !important; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    min-height: 100vh;
-    
-    /* Скрыты по умолчанию */
-    display: none;
-    background: var(--bg-color); /* Чтобы не просвечивали */
-    
-    /* Оптимизация */
-    will-change: transform, opacity, filter;
-    transform-origin: center;
-    
-    /* Отключаем стандартную анимацию, чтобы управлял JS */
-    animation: none !important; 
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-/* Активный экран (Верхняя карта) */
-.screen.active {
-    display: block;
-    z-index: 100; /* Наверху */
-}
-
-/* Предыдущий экран (Нижняя карта - добавляется JS-ом) */
-.screen.previous-card {
-    display: block !important;
-    z-index: 90; /* Снизу */
-    pointer-events: none; /* Нельзя нажать пока он внизу */
-    
-    /* Начальное состояние "в глубине" */
-    transform: scale(0.92);
-    filter: brightness(0.6); /* Сильно затемнен */
-    border-radius: 32px; /* Скруглен */
-    overflow: hidden;
-}
-
- /* =============================== */
-        
          /* Фон с цветным свечением для эффекта стекла */
         #screen-app {
             background: linear-gradient(90deg, #F5F1EE 0%, #F9FAFC 100%);
@@ -5163,7 +5125,7 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
 /* ==================================================================== */
 
         /* =================================================================
-   THE GOLDEN WATERMARK (REVOLUTIONARY BACKGROUND)
+   LUXURY BRAND PAPER BACKGROUND
    ================================================================= */
 
 .luxury-depth-layer {
@@ -5172,90 +5134,91 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: -1; /* На заднем плане */
     
-    /* 1. Глубокий фон цвета "Графит" */
-    background-color: #1a1f2c;
-    
-    /* 2. Шум (Зернистость дорогой бумаги) */
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    /* Глубокий, дорогой цвет фона */
+    background: radial-gradient(circle at 50% 50%, #2C364C 0%, #111827 100%);
     
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: hidden; /* Обрезаем лишнее */
 }
 
+/* Контейнер для текста (его мы будем двигать параллаксом) */
 .luxury-pattern-container {
     display: flex;
     flex-direction: column;
-    gap: 50px;
-    width: 150%;
-    transform: rotate(-10deg) scale(1.2);
-    /* Переменная для управления светом через JS */
-    --light-pos: -100%; 
+    gap: 40px; /* Расстояние между строками */
+    
+    /* Слегка наклоняем весь паттерн для динамики */
+    transform: rotate(-10deg) scale(1.2); 
+    
+    width: 150%; /* Шире экрана, чтобы не было дырок при повороте */
+    opacity: 0.6; /* Общая прозрачность текстуры */
 }
 
-/* Строка с "золотым" текстом */
-.foil-line {
+/* Сама строка текста */
+.pattern-line {
     font-family: 'Inter', sans-serif;
-    font-weight: 900; /* Жирнее - богаче */
-    font-size: 13px; /* Чуть крупнее */
+    font-weight: 800;
+    font-size: 11px; /* Мелкий, аккуратный шрифт */
     text-transform: uppercase;
-    letter-spacing: 6px; /* Очень широкая разрядка */
-    white-space: nowrap;
+    letter-spacing: 4px; /* Широкая разрядка - признак люкса */
     
-    /* === МАГИЯ ЗОЛОТА === */
-    /* Градиент: Темный -> Золотой Блик -> Темный */
-    background: linear-gradient(
-        110deg, 
-        rgba(255, 255, 255, 0.02) 0%, 
-        rgba(255, 255, 255, 0.02) calc(var(--light-pos) - 20%), 
-        #b5985a calc(var(--light-pos)), 
-        rgba(255, 255, 255, 0.02) calc(var(--light-pos) + 20%), 
-        rgba(255, 255, 255, 0.02) 100%
-    );
+    /* Цвет "вдавленной" бумаги */
+    color: rgba(255, 255, 255, 0.04); 
     
-    /* Обрезаем фон по буквам */
-    -webkit-background-clip: text;
-    background-clip: text;
-    
-    /* Делаем сам текст прозрачным, чтобы виден был градиент */
-    color: transparent; 
-    
-    /* Легкая тень "вдавливания" */
-    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
-    
-    transition: margin 0.3s ease;
+    white-space: nowrap; /* Текст не переносится */
+    user-select: none;
 }
 
-/* Хаотичный сдвиг (Паттерн) */
-.foil-line:nth-child(5n+1) { margin-left: -50px; }
-.foil-line:nth-child(5n+2) { margin-left: -200px; }
-.foil-line:nth-child(5n+3) { margin-left: 50px; }
-.foil-line:nth-child(5n+4) { margin-left: -100px; }
-.foil-line:nth-child(5n+5) { margin-left: -300px; }
 
-/* Светлая тема */
+/* =================================================================
+   ХАОТИЧНЫЙ ПАТТЕРН (ЦИКЛ ИЗ 5 СТРОК)
+   ================================================================= */
+
+/* Строка 1: Чуть левее */
+.pattern-line:nth-child(5n+1) {
+    margin-left: -40px;
+    opacity: 0.5; /* Чуть ярче */
+}
+
+/* Строка 2: Сильно влево */
+.pattern-line:nth-child(5n+2) {
+    margin-left: -250px;
+    opacity: 0.3; /* Тусклее (глубже) */
+}
+
+/* Строка 3: Сдвиг вправо */
+.pattern-line:nth-child(5n+3) {
+    margin-left: 80px;
+    opacity: 0.4;
+}
+
+/* Строка 4: Средний сдвиг влево */
+.pattern-line:nth-child(5n+4) {
+    margin-left: -120px;
+    opacity: 0.6; /* Самая яркая */
+}
+
+/* Строка 5: Очень далеко влево */
+.pattern-line:nth-child(5n+5) {
+    margin-left: -300px;
+    opacity: 0.25; /* Еле заметная */
+}
+
+
+/* Адаптация для Светлой темы */
 body:not(.dark-mode) .luxury-depth-layer {
-    background-color: #F8FAFC;
+    /* Светлая дорогая бумага */
+    background: #F1F5F9;
 }
-body:not(.dark-mode) .foil-line {
-    /* Для светлой темы: Серый -> Золото -> Серый */
-    background: linear-gradient(
-        110deg, 
-        rgba(44, 54, 76, 0.05) 0%, 
-        rgba(44, 54, 76, 0.05) calc(var(--light-pos) - 20%), 
-        #b5985a calc(var(--light-pos)), 
-        rgba(44, 54, 76, 0.05) calc(var(--light-pos) + 20%), 
-        rgba(44, 54, 76, 0.05) 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 1px 0px #FFFFFF; /* Эффект тиснения на светлом */
+body:not(.dark-mode) .pattern-line {
+    /* Текст чуть темнее фона (эффект тиснения) */
+    color: rgba(44, 54, 76, 0.06);
+    font-weight: 900;
 }
-
 
 
 /* ==================================================================== */
@@ -5359,73 +5322,6 @@ body.dark-mode .screen::after {
     /* Позиция управляется через JS, но здесь база */
 }
   /* ==================================================================== */
-
-        /* ОПТИМИЗАЦИЯ ДЛЯ ПЛАВНОСТИ */
-.screen {
-    /* Подсказываем браузеру, что будет меняться */
-    will-change: transform, border-radius, box-shadow;
-    /* Убираем мерцание задней части при 3D повороте */
-    backface-visibility: hidden; 
-    -webkit-backface-visibility: hidden;
-}
-  /* ==================================================================== */
-
-        /* =================================================================
-   FIX FOR DECK LAYOUT (МАСШТАБ И ОТСТУПЫ)
-   ================================================================= */
-
-/* 1. Сбрасываем отступы у BODY (они больше не нужны) */
-body {
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important; /* Скролл теперь внутри карточек */
-    background: #000; /* Цвет фона под карточками (в щелях) */
-}
-
-/* 2. Настраиваем ЭКРАНЫ (Карточки) */
-.screen {
-    /* Сбрасываем старые negative margins */
-    margin: 0 !important; 
-    
-    /* Внутренние отступы контента */
-    padding: 16px !important; 
-    padding-bottom: 120px !important; /* Место для меню снизу */
-    
-    /* Правильный расчет ширины */
-    box-sizing: border-box !important;
-    
-    /* Скролл ВНУТРИ карточки */
-    overflow-y: auto !important; 
-    -webkit-overflow-scrolling: touch;
-    
-    /* Фикс для фона (чтобы он был на всю карточку) */
-    background-attachment: scroll !important;
-}
-
-/* 3. Фикс для конкретных экранов (убираем их старые спец-настройки) */
-#screen-app, 
-#screen-interesting, 
-#screen-portfolio, 
-#screen-assets,
-#screen-company {
-    margin: 0 !important;
-    width: 100% !important;
-    min-height: 100% !important;
-    height: 100% !important;
-    border-radius: 0; /* Скругление только при свайпе */
-}
-
-/* 4. Возвращаем отступы сверху для контента (из-за челки) */
-.header, 
-.terminal-header-v2, 
-.company-top-bar {
-    /* Добавляем к безопасному отступу еще 10px воздуха */
-    padding-top: calc(env(safe-area-inset-top) + 10px) !important;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-}
-
-        
 
         
     </style>
@@ -6291,8 +6187,27 @@ body {
     </div>
 </div>
 
-  
-
+   <!-- LUXURY PATTERN BACKGROUND (BRAND PAPER) -->
+<div class="luxury-depth-layer">
+    <div class="luxury-pattern-container">
+        <!-- Повторяющиеся строки для создания текстуры -->
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+    </div>
+</div>
 
 
 
@@ -9185,279 +9100,178 @@ function initNotificationSwipe() {
 
 initNotificationSwipe();
 
-  /* =================================================================
-   ULTIMATE "DECK OF CARDS" SWIPE ENGINE
-   Active moves Right + Rotate | Previous Scales Up + Brightens
+   /* =================================================================
+   HEAVY 3D SWIPE + SCROLL LOCK + PARALLAX
+   ================================================================= */
+
+/* =================================================================
+   ULTIMATE SWIPE: HEAVY PHYSICS + 3D + SHEEN + PARALLAX
    ================================================================= */
 
 function initSwipeBack() {
     let startX = 0;
     let startY = 0;
-    let currentX = 0;
-    
     let isDragging = false;
-    let isAxisLocked = false;
-    let animationFrameId = null;
+    let isAxisLocked = false; 
     
-    // Элементы декора (Стрелку оставляем, она красивая)
     const container = document.getElementById('swipeBackIndicator');
     const lens = container.querySelector('.ls-lens');
     const arrow = container.querySelector('.ls-arrow');
+    const depthText = document.querySelector('.luxury-pattern-container');
+    const triggerZone = 35; 
     
-    const triggerZone = 35;
-
-    // Логика: какой экран предыдущий?
-    function getBackTargetId() {
+    function getBackTarget() {
         if (currentScreen === 'screen-home') return null;
         if (currentScreen === 'screen-company') return 'screen-interesting';
         if (currentScreen === 'screen-app') return 'screen-home';
         return 'screen-app'; 
     }
 
-    // Функция отрисовки кадра
-    function updateSwipe() {
-        if (!isDragging) return;
-
-        const deltaX = currentX - startX;
-        
-        const activeScreen = document.querySelector('.screen.active');
-        // Находим экран, который лежит "под низом" (мы ему добавили класс previous-card в touchstart)
-        const prevScreen = document.querySelector('.screen.previous-card');
-        
-        if (!activeScreen) return;
-
-        // 1. Физика сдвига (Верхняя карта)
-        let visualShift = deltaX; // 1 к 1 для естественности или 0.8 для веса
-        if (visualShift < 0) visualShift = 0; // Нельзя влево
-
-        // Прогресс свайпа (от 0 до 1), где 1 = ширина экрана (примерно)
-        const screenWidth = window.innerWidth;
-        const progress = Math.min(visualShift / screenWidth, 1);
-
-        // 2. Трансформация ВЕРХНЕЙ карты (Активной)
-        // Она просто уезжает вправо с легким поворотом
-        const rotateY = -progress * 5; // Легкий наклон
-        activeScreen.style.transform = `translate3d(${visualShift}px, 0, 0) perspective(1000px) rotateY(${rotateY}deg)`;
-
-        // 3. Трансформация НИЖНЕЙ карты (Предыдущей)
-        if (prevScreen) {
-            // Scale: 0.92 -> 1.0 (Приближается)
-            const scale = 0.92 + (0.08 * progress);
-            
-            // Brightness: 0.6 -> 1.0 (Светлеет)
-            // Мы меняем filter через style
-            // ПРИМЕЧАНИЕ: filter может быть тяжелым для старых телефонов, но выглядит круто
-            const brightness = 0.6 + (0.4 * progress);
-            prevScreen.style.filter = `brightness(${brightness})`;
-            prevScreen.style.transform = `scale(${scale})`;
-        }
-
-        // 4. Линза со стрелкой (Визуал)
-        const lensProgress = Math.min(visualShift / 100, 1);
-        lens.style.transform = `translate3d(${-100 + (lensProgress * 100)}%, 0, 0)`;
-        lens.style.opacity = lensProgress;
-        arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
-
-        // 5. Вибрация
-        if (visualShift > 100 && !container.dataset.vibrated) {
-            if (window.Telegram?.WebApp?.HapticFeedback) {
-                window.Telegram.WebApp.HapticFeedback.selectionChanged();
-            }
-            container.dataset.vibrated = "true";
-            arrow.style.strokeWidth = "3";
-        } else if (visualShift < 100) {
-            container.dataset.vibrated = "";
-            arrow.style.strokeWidth = "2";
-        }
-    }
-
-    // --- 1. TOUCH START ---
+    // 1. TOUCH START
     document.addEventListener('touchstart', (e) => {
-        const targetId = getBackTargetId();
-        if (!targetId) return;
+        isDragging = false;
+        isAxisLocked = false;
+        if (!getBackTarget()) return;
 
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         
-        isDragging = false;
-        isAxisLocked = false;
-        
         if (startX <= triggerZone) {
             isDragging = true;
-            
-            // 1. Подготовка АКТИВНОГО экрана
-            const activeScreen = document.querySelector('.screen.active');
-            if(activeScreen) {
-                activeScreen.style.setProperty('transition', 'none', 'important');
-                activeScreen.classList.add('swiping'); // Для стеклянного края
-            }
-            
-            // 2. Подготовка ПРЕДЫДУЩЕГО экрана (Кладем его вниз)
-            const prevScreen = document.getElementById(targetId);
-            if (prevScreen) {
-                prevScreen.classList.add('previous-card'); // CSS делает его display: block и z-index: 90
-                prevScreen.style.transition = 'none'; // Убираем анимацию
-                // Начальная позиция
-                prevScreen.style.transform = 'scale(0.92)';
-                prevScreen.style.filter = 'brightness(0.6)';
-            }
-            
-            if(lens) lens.style.transition = 'none';
         }
     }, { passive: false });
 
-    // --- 2. TOUCH MOVE ---
+    // 2. TOUCH MOVE
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
 
-        currentX = e.touches[0].clientX;
-        const deltaX = currentX - startX;
-        const deltaY = Math.abs(e.touches[0].clientY - startY);
+        const x = e.touches[0].clientX;
+        const y = e.touches[0].clientY;
+        const deltaX = x - startX;
+        const deltaY = Math.abs(y - startY);
 
         if (!isAxisLocked) {
             if (deltaY > Math.abs(deltaX)) {
                 isDragging = false;
-                resetDeck(); // Сброс, если потянули вниз
                 return; 
             } else if (Math.abs(deltaX) > 5) {
                 isAxisLocked = true;
             }
         }
 
-        if (isAxisLocked) {
-            if (e.cancelable) e.preventDefault();
-            if (deltaX > 0) {
-                if (!animationFrameId) {
-                    animationFrameId = requestAnimationFrame(() => {
-                        updateSwipe();
-                        animationFrameId = null;
-                    });
+        if (isAxisLocked && e.cancelable) e.preventDefault();
+
+        const activeScreen = document.querySelector('.screen.active');
+        
+        if (activeScreen && deltaX > 0 && isAxisLocked) {
+            activeScreen.style.transition = 'none';
+            lens.style.transition = 'none';
+            if(depthText) depthText.style.transition = 'none';
+
+            // --- ФИЗИКА ---
+            let visualShift = deltaX * 0.4; // Коэф. тяжести
+            if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
+            visualShift = Math.min(visualShift, 130);
+
+            // --- 3D ПОВОРОТ + МАСШТАБИРОВАНИЕ (НОВОЕ) ---
+            const rotateY = Math.min(visualShift / 15, 8); 
+            // Уменьшаем экран до 96% по мере оттягивания
+            const scale = 1 - (visualShift / 130) * 0.04; 
+            
+            activeScreen.style.transform = `translateX(${visualShift}px) perspective(800px) rotateY(-${rotateY}deg) scale(${scale})`;
+            
+            // --- УПРАВЛЕНИЕ БЛИКОМ (НОВОЕ) ---
+            // Сдвигаем градиент блика. 0px сдвига = блик слева. 
+            // Чем больше тянем, тем дальше блик уходит вправо по экрану.
+            const sheenPos = -50 + (visualShift / 130) * 50; // от -50% до 0%
+            activeScreen.style.setProperty('--sheen-pos', `${sheenPos}%`); 
+            // Примечание: Чтобы это работало идеально, мы используем inline переменную или прямой доступ к style,
+            // но т.к. псевдо-элементы недоступны напрямую из JS, мы просто оставим CSS animation на opacity,
+            // а позицию оставим статичной или добавим логику ниже, если нужно супер-качество.
+            // *Для упрощения оставим статический красивый блик или сделаем так:*
+            // (Простой вариант без сложной JS-магии для псевдо-элемента: он просто появляется)
+
+            // --- ПАРАЛЛАКС ФОНА ---
+            if(depthText) {
+                depthText.style.transform = `rotate(-10deg) scale(1.2) translateX(${visualShift * 0.5}px)`;
+            }
+
+            // --- ЛИНЗА ---
+            const lensProgress = Math.min(visualShift / 70, 1);
+            lens.style.transform = `translateX(${-100 + (lensProgress * 100)}%)`;
+            lens.style.opacity = lensProgress;
+            arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
+
+            // --- ВИБРАЦИЯ ---
+            if (visualShift > 90 && !container.dataset.vibrated) {
+                if (window.Telegram?.WebApp?.HapticFeedback) {
+                    window.Telegram.WebApp.HapticFeedback.selectionChanged();
                 }
+                container.dataset.vibrated = "true";
+                arrow.style.strokeWidth = "3"; 
+            } else if (visualShift < 90) {
+                container.dataset.vibrated = "";
+                arrow.style.strokeWidth = "2";
             }
         }
     }, { passive: false });
 
-    // --- 3. TOUCH END ---
+    // 3. TOUCH END
     document.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
+        if (!isDragging || !isAxisLocked) return;
+        
         isDragging = false;
-        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        isAxisLocked = false;
 
         const activeScreen = document.querySelector('.screen.active');
-        const prevScreen = document.querySelector('.screen.previous-card');
-        const targetId = getBackTargetId();
-        
-        const deltaX = e.changedTouches[0].clientX - startX;
-        const threshold = window.innerWidth * 0.35; // 35% экрана надо протащить
+        const endX = e.changedTouches[0].clientX;
+        const deltaX = endX - startX;
+        const threshold = 120; 
 
-        if (activeScreen && prevScreen) {
-            // Включаем плавность
-            const transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease';
-            activeScreen.style.transition = transition;
-            prevScreen.style.transition = transition;
+        if (activeScreen) {
+            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
             lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            if(depthText) depthText.style.transition = 'transform 0.5s ease';
             
             if (deltaX > threshold) {
-                // === УСПЕХ: ПЕРЕХОД ===
+                // === УСПЕХ ===
+                const targetId = getBackTarget();
+                // Вылет с поворотом и уменьшением
+                activeScreen.style.transform = `translateX(100%) perspective(800px) rotateY(-15deg) scale(0.9)`;
                 
-                // 1. Верхняя улетает вправо
-                activeScreen.style.transform = `translate3d(100%, 0, 0)`;
-                
-                // 2. Нижняя всплывает на 100%
-                prevScreen.style.transform = `scale(1)`;
-                prevScreen.style.filter = `brightness(1)`;
-                
-                // 3. Линза прячется
                 lens.style.transform = `translateX(-100%)`;
                 lens.style.opacity = '0';
 
-                // 4. Финализация через 300мс
                 setTimeout(() => {
-                    // Убираем классы свайпа
-                    activeScreen.classList.remove('swiping', 'active');
-                    activeScreen.style.transform = '';
-                    activeScreen.style.display = ''; // Скрыть старый
-                    
-                    // Делаем нижний экран новым активным
-                    prevScreen.classList.remove('previous-card');
-                    prevScreen.classList.add('active');
-                    prevScreen.style.transform = '';
-                    prevScreen.style.filter = '';
-                    
-                    // Обновляем состояние приложения (навигация)
-                    currentScreen = targetId;
-                    updateNavigationState(targetId); // Вспомогательная, см ниже
+                    resetScreenStyles(activeScreen);
+                    if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
+                    showScreen(targetId);
                     
                     if (window.Telegram?.WebApp?.HapticFeedback) {
                         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
                     }
-                }, 300);
+                }, 250);
                 
             } else {
-                // === ОТМЕНА: ВОЗВРАТ ===
-                activeScreen.style.transform = 'translate3d(0, 0, 0)';
-                
-                // Нижняя уходит обратно в темноту
-                prevScreen.style.transform = 'scale(0.92)';
-                prevScreen.style.filter = 'brightness(0.6)';
-                
-                lens.style.transform = `translateX(-100%)`;
+                // === ОТМЕНА ===
+                activeScreen.style.transform = 'translateX(0) perspective(800px) rotateY(0deg) scale(1)';
+                lens.style.transform = 'translateX(-100%)';
                 lens.style.opacity = '0';
-                
-                setTimeout(() => {
-                    resetDeck();
-                }, 300);
+                if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
             }
-        } else {
-            resetDeck();
         }
-        
         container.dataset.vibrated = "";
     });
 
-    function resetDeck() {
-        const activeScreen = document.querySelector('.screen.active');
-        const prevScreen = document.querySelector('.screen.previous-card');
-        
-        if (activeScreen) {
-            activeScreen.classList.remove('swiping');
-            activeScreen.style.transform = '';
-            activeScreen.style.transition = '';
-        }
-        if (prevScreen) {
-            prevScreen.classList.remove('previous-card');
-            prevScreen.style.transform = '';
-            prevScreen.style.filter = '';
-            prevScreen.style.display = ''; // Скрыть
-        }
-    }
-    
-    // Вспомогательная функция для обновления кнопок меню при свайпе
-    function updateNavigationState(screenId) {
-        // Подсветка кнопок
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        const navId = `nav-${screenId.split('-')[1]}`;
-        const navBtn = document.getElementById(navId);
-        if (navBtn) navBtn.classList.add('active');
-        
-        // Логика меню (скрыть/показать)
-        if (screenId === 'screen-home') {
-            document.body.classList.add('home-mode');
-            document.getElementById('navWrapper').style.display = 'flex';
-            const sticky = document.getElementById('stickyPanel');
-            if(sticky) sticky.style.display = 'none';
-        } else {
-            document.body.classList.remove('home-mode');
-        }
-        
-        // Если вернулись из компании в список
-        if (screenId === 'screen-interesting') {
-            document.getElementById('screen-company').classList.remove('company-screen-active');
-        }
+    function resetScreenStyles(screen) {
+        screen.style.transform = '';
+        screen.style.transition = '';
+        screen.classList.remove('swiping');
     }
 }
 
 initSwipeBack();
+
 
 
 
