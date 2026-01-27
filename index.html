@@ -5124,6 +5124,53 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
         
 /* ==================================================================== */
 
+        /* =================================================================
+   THE VOID (BACKGROUND DEPTH LAYER)
+   ================================================================= */
+
+.luxury-depth-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Лежит в самом низу */
+    
+    /* Материал: Глубокий Графит */
+    background: radial-gradient(circle at 10% 50%, #2C364C 0%, #1a2234 100%);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Огромная надпись на фоне */
+.depth-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 120px;
+    color: rgba(255, 255, 255, 0.03); /* Почти невидима */
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    
+    /* Поворачиваем для стиля */
+    transform: rotate(-90deg);
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Светлая тема адаптация (делаем фон светлым, но глубоким) */
+body:not(.dark-mode) .luxury-depth-layer {
+    background: radial-gradient(circle at 10% 50%, #E2E8F0 0%, #CBD5E1 100%);
+}
+body:not(.dark-mode) .depth-text {
+    color: rgba(44, 54, 76, 0.05); /* Темный текст на светлом */
+}
+
+/* ==================================================================== */
+
         
     </style>
 </head>
@@ -5986,6 +6033,11 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
             <path d="M15 19l-7-7 7-7" stroke-linecap="square" stroke-linejoin="miter"/>
         </svg>
     </div>
+</div>
+
+    <!-- THE VOID (ГЛУБИНА ПОД ЭКРАНОМ) -->
+<div class="luxury-depth-layer">
+    <div class="depth-text">Solomi'na</div>
 </div>
 
 
@@ -8878,20 +8930,23 @@ function initNotificationSwipe() {
 
 initNotificationSwipe();
 
-    /* =================================================================
-   HEAVY 3D SWIPE PHYSICS (REVOLUTIONARY UX)
+   /* =================================================================
+   HEAVY 3D SWIPE + SCROLL LOCK + PARALLAX
    ================================================================= */
 
 function initSwipeBack() {
     let startX = 0;
     let startY = 0;
     let isDragging = false;
+    let isAxisLocked = false; // Флаг: мы уже решили, куда тянем?
     
-    // Элементы
     const container = document.getElementById('swipeBackIndicator');
     const lens = container.querySelector('.ls-lens');
     const arrow = container.querySelector('.ls-arrow');
-    const triggerZone = 30; // Узкая зона слева для старта (чтобы не мешать другим жестам)
+    // Находим наш новый фон для параллакса
+    const depthText = document.querySelector('.depth-text');
+    
+    const triggerZone = 35; // Зона старта (px)
     
     function getBackTarget() {
         if (currentScreen === 'screen-home') return null;
@@ -8902,28 +8957,22 @@ function initSwipeBack() {
 
     // 1. TOUCH START
     document.addEventListener('touchstart', (e) => {
+        // Сбрасываем флаги
+        isDragging = false;
+        isAxisLocked = false;
+        
         if (!getBackTarget()) return;
 
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         
-        // Начало только от самого края
+        // Начинаем слушать, только если палец у левого края
         if (startX <= triggerZone) {
             isDragging = true;
-            
-            const activeScreen = document.querySelector('.screen.active');
-            if (activeScreen) {
-                // Убираем плавность CSS, чтобы управлять руками
-                activeScreen.style.transition = 'none';
-                activeScreen.classList.add('swiping');
-            }
-            
-            // Сбрасываем стили линзы
-            lens.style.transition = 'none';
         }
-    }, { passive: true });
+    }, { passive: false }); // Важно для iOS
 
-    // 2. TOUCH MOVE (HEAVY PHYSICS)
+    // 2. TOUCH MOVE
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
 
@@ -8932,134 +8981,127 @@ function initSwipeBack() {
         const deltaX = x - startX;
         const deltaY = Math.abs(y - startY);
 
-        // Блокируем, если свайп вертикальный
-        if (deltaY > deltaX && deltaX < 10) {
-            isDragging = false;
-            resetSwipe();
-            return;
+        // --- ЛОГИКА БЛОКИРОВКИ ---
+        // Если мы еще не решили, это свайп или скролл...
+        if (!isAxisLocked) {
+            if (deltaY > Math.abs(deltaX)) {
+                // Это вертикальный скролл -> отменяем наш свайп
+                isDragging = false;
+                return; 
+            } else if (Math.abs(deltaX) > 5) {
+                // Это горизонтальный свайп -> БЛОКИРУЕМ СКРОЛЛ СТРАНИЦЫ
+                isAxisLocked = true;
+            }
         }
 
-        const activeScreen = document.querySelector('.screen.active');
-        if (activeScreen && deltaX > 0) {
-            // === ФИЗИКА ТЯЖЕСТИ ===
-            // Коэффициент 0.35 делает свайп "тугим"
-            let visualShift = deltaX * 0.35;
-            
-            // ОГРАНИЧИТЕЛЬ: Максимум 100px сдвига визуально
-            // Используем логарифмическое торможение, если тянем дальше
-            if (visualShift > 100) {
-                visualShift = 100 + (visualShift - 100) * 0.2;
-            }
-            // Жесткий потолок в 120px
-            visualShift = Math.min(visualShift, 120);
+        // Если ось заблокирована (мы тянем вбок) -> ЗАПРЕЩАЕМ СТАНДАРТНОЕ ПОВЕДЕНИЕ
+        if (isAxisLocked) {
+            if (e.cancelable) e.preventDefault();
+        }
 
-            // === 3D ЭФФЕКТ ===
-            // Поворачиваем экран немного от себя (макс -5 градусов)
-            const rotateY = Math.min(visualShift / 20, 5); 
+        // --- ВИЗУАЛЬНАЯ ЧАСТЬ ---
+        const activeScreen = document.querySelector('.screen.active');
+        
+        if (activeScreen && deltaX > 0 && isAxisLocked) {
+            // Отключаем плавность CSS для мгновенного отклика
+            activeScreen.style.transition = 'none';
+            lens.style.transition = 'none';
+            if(depthText) depthText.style.transition = 'none';
+
+            // 1. Тяжелая физика (коэф. 0.4) + Лимит
+            let visualShift = deltaX * 0.4;
+            // Логарифмическое торможение после 100px
+            if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
+            visualShift = Math.min(visualShift, 130); // Жесткий предел
+
+            // 2. 3D Поворот экрана
+            const rotateY = Math.min(visualShift / 15, 8); 
+            activeScreen.style.transform = `translateX(${visualShift}px) perspective(800px) rotateY(-${rotateY}deg)`;
             
-            // Применяем трансформации
-            activeScreen.style.transform = `translateX(${visualShift}px) perspective(1000px) rotateY(-${rotateY}deg)`;
-            
-            // === АНИМАЦИЯ ЛИНЗЫ ===
-            // Линза выезжает на первые 60px движения пальца
-            const lensProgress = Math.min(visualShift / 60, 1);
-            
-            // Она выезжает слева (-100% -> 0%)
+            // 3. Параллакс фона (Текст на фоне чуть сдвигается, создавая объем)
+            if(depthText) {
+                depthText.style.transform = `rotate(-90deg) translateY(${visualShift * 0.2}px)`;
+            }
+
+            // 4. Линза со стрелкой
+            const lensProgress = Math.min(visualShift / 70, 1);
             lens.style.transform = `translateX(${-100 + (lensProgress * 100)}%)`;
             lens.style.opacity = lensProgress;
-            
-            // Стрелка внутри чуть увеличивается
-            arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`; // до 1.2
-            
-            // Вибрация-щелчок при достижении порога срабатывания (80px)
-            if (visualShift > 80 && !container.dataset.vibrated) {
+            arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
+
+            // 5. Вибрация (Haptic)
+            if (visualShift > 90 && !container.dataset.vibrated) {
                 if (window.Telegram?.WebApp?.HapticFeedback) {
                     window.Telegram.WebApp.HapticFeedback.selectionChanged();
                 }
                 container.dataset.vibrated = "true";
-                // Подсветка стрелки при активации
-                arrow.style.strokeWidth = "3";
-            } else if (visualShift < 80) {
+                arrow.style.strokeWidth = "3"; // Жирнее стрелка
+            } else if (visualShift < 90) {
                 container.dataset.vibrated = "";
                 arrow.style.strokeWidth = "2";
             }
         }
-    }, { passive: false });
+    }, { passive: false }); // passive: false ОБЯЗАТЕЛЬНО для preventDefault
 
     // 3. TOUCH END
     document.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
+        if (!isDragging || !isAxisLocked) return;
+        
         isDragging = false;
+        isAxisLocked = false;
 
         const activeScreen = document.querySelector('.screen.active');
         const endX = e.changedTouches[0].clientX;
         const deltaX = endX - startX;
-
-        // Порог срабатывания: нужно протащить палец минимум на 100px (реальных)
-        // С учетом "тяжести" 0.35 это где-то 35px визуального сдвига
-        // Но для надежности требуем явного намерения
+        
+        // Порог срабатывания (нужно протащить 120px реального пальца)
         const threshold = 120; 
 
         if (activeScreen) {
-            // Возвращаем CSS анимацию для плавного завершения
-            activeScreen.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            // Возвращаем плавность CSS
+            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
             lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            if(depthText) depthText.style.transition = 'transform 0.5s ease';
             
             if (deltaX > threshold) {
-                // === УСПЕХ: УХОДИМ ===
+                // === УСПЕХ ===
                 const targetId = getBackTarget();
                 
-                // 1. Досдвигаем экран вправо и делаем прозрачным (эффект ухода)
-                activeScreen.style.transform = `translateX(100%) perspective(1000px) rotateY(-10deg)`;
+                // Эффект "вылета" экрана
+                activeScreen.style.transform = `translateX(100%) perspective(800px) rotateY(-15deg)`;
                 
-                // 2. Скрываем линзу
+                // Прячем линзу
                 lens.style.transform = `translateX(-100%)`;
                 lens.style.opacity = '0';
 
-                // 3. Переход
                 setTimeout(() => {
                     resetScreenStyles(activeScreen);
+                    if(depthText) depthText.style.transform = 'rotate(-90deg)'; // Сброс фона
                     showScreen(targetId);
                     
                     if (window.Telegram?.WebApp?.HapticFeedback) {
                         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
                     }
-                }, 250); // Ждем чуть меньше, чтобы было динамичнее
+                }, 250);
                 
             } else {
-                // === ОТМЕНА: ВОЗВРАТ ===
-                resetSwipe();
+                // === ОТМЕНА (ПРУЖИНА) ===
+                activeScreen.style.transform = 'translateX(0) perspective(800px) rotateY(0deg)';
+                lens.style.transform = 'translateX(-100%)';
+                lens.style.opacity = '0';
+                if(depthText) depthText.style.transform = 'rotate(-90deg)';
             }
         }
-        
         container.dataset.vibrated = "";
     });
 
-    function resetSwipe() {
-        const activeScreen = document.querySelector('.screen.active');
-        const lens = container.querySelector('.ls-lens');
-        
-        if (activeScreen) {
-            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)'; // Медленный возврат
-            activeScreen.style.transform = 'translateX(0) perspective(1000px) rotateY(0deg)';
-            activeScreen.classList.remove('swiping');
-        }
-        
-        if (lens) {
-            lens.style.transform = 'translateX(-100%)';
-            lens.style.opacity = '0';
-        }
-    }
-    
     function resetScreenStyles(screen) {
         screen.style.transform = '';
         screen.style.transition = '';
-        screen.classList.remove('swiping');
     }
 }
 
 initSwipeBack();
-
 
 
 
