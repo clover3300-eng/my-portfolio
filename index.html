@@ -610,85 +610,113 @@ h1 {
     margin-bottom: 10px; 
 }
 
-/* =================================================================
-   PERFECT CENTER INPUT (Сумма + Рубль по центру)
-   ================================================================= */
+.input-container { flex: 1; }
 
-/* 1. Внешний контейнер (центрирует всю группу на экране) */
-.input-container {
-    display: flex !important;
-    justify-content: center !important;
-    width: 100% !important;
+.input-label { 
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; 
+    color: #8A9AB0; 
+    font-weight: 700; 
+    margin-bottom: 12px; 
+    display: block; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
 }
 
-/* 2. Обертка (Группирует цифры и рубль) */
-.input-wrapper {
-    display: inline-flex !important; /* Важно: ширина по контенту */
-    align-items: center !important;
-    justify-content: center !important;
-    position: relative !important;
-    
-    /* Убираем фиксированную ширину и линии */
-    width: auto !important; 
-    max-width: 90% !important;
-    border-bottom: 1px solid rgba(44, 54, 76, 0.15) !important;
-    padding-bottom: 10px !important;
-    margin: 20px auto !important; /* Центровка */
+.input-wrapper { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    gap: 0; /* ИЗМЕНЕНО: убираем gap */
+    padding: 10px 0 20px 0;
+    position: relative;
 }
 
-/* 3. Поле ввода (Подстраивается под текст) */
-input#sumInput {
-    /* Текст жмется вправо к рублю */
-    text-align: right !important; 
-    
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    
-    /* Шрифт */
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 42px !important;
-    font-weight: 500 !important;
-    color: #2C364C !important;
-    
-    /* Минимальная ширина (для 1 цифры) */
-    min-width: 30px !important;
-    /* Ширина управляется JS */
-    width: 150px; 
+.input-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: fit-content;
+    min-width: 200px;
+    max-width: 90%;
+    height: 1px;
+    background: rgba(44, 54, 76, 0.2);
+    transition: all 0.3s ease;
 }
 
-/* 4. Золотой рубль */
-.currency {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 42px !important;
-    font-weight: 500 !important;
-    
-    /* Цвет золота */
-    color: #b5985a !important; 
-    text-shadow: 0 0 15px rgba(181, 152, 90, 0.2);
-    
-    margin-left: 8px !important; /* Отступ от цифр */
-    line-height: 1 !important;
-    display: none; /* Скрыт пока пусто */
+.input-wrapper:focus-within::after {
+    width: 80%;
+    background: rgba(44, 54, 76, 0.4);
 }
 
-/* 5. Плейсхолдер (когда пусто) */
-input#sumInput::placeholder {
-    text-align: center !important; /* Плейсхолдер по центру поля */
-    color: #CBD5E1 !important;
-    font-family: 'Inter', sans-serif !important;
-    font-size: 18px !important;
-    font-weight: 600;
-    letter-spacing: 1px;
+input#sumInput { 
+    border: none; 
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 42px; 
+    font-weight: 500; 
+    width: 200px; /* Начальная ширина */
+    max-width: 85%;
+    outline: none; 
+    color: #2C364C;
+    background: transparent; 
+    margin: 0; 
+    padding: 0;
+    line-height: 1.2;
+    text-align: center;
+    transition: width 0.2s ease, font-size 0.15s ease; /* ДОБАВЛЕНО: анимация ширины */
+    letter-spacing: -0.02em;
+}
+/* Убираем стрелочки для числового поля */
+input#sumInput::-webkit-outer-spin-button,
+input#sumInput::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-/* Темная тема */
-body.dark-mode input#sumInput { color: #F1F5F9 !important; }
-body.dark-mode .input-wrapper { border-bottom-color: rgba(255,255,255,0.1) !important; }
-body.dark-mode .currency { color: #d4af37 !important; }
-/* -------------------- */
+input#sumInput[type=number] {
+    -moz-appearance: textfield;
+}
+
+input#sumInput.size-large {
+    font-size: 42px;
+}
+
+input#sumInput.size-medium {
+    font-size: 32px;
+}
+
+input#sumInput.size-small {
+    font-size: 24px;
+}
+
+input#sumInput.size-xsmall {
+    font-size: 20px;
+}
+
+.currency { 
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 42px; 
+    color: #94A3B8; 
+    font-weight: 400;
+    opacity: 0.6;
+    margin-left: 4px; /* Небольшой отступ */
+    flex-shrink: 0;
+}
+
+.dark-mode input#sumInput {
+    color: #f1f5f9;
+}
+
+.dark-mode .currency {
+    color: #475569;
+}
+
+.dark-mode .input-wrapper {
+    border-bottom-color: #334155;
+}
 
         .usage-bar-container { margin-bottom: 20px; }
         .usage-label { font-size: 10px; color: #8e8e93; display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: bold; }
@@ -7033,41 +7061,27 @@ document.addEventListener('click', function(event) {
 // NEW: Форматирование суммы с разделителями и адаптивным размером
 
 
-    // Функция точной подгонки ширины поля под текст
-function adjustInputWidth(input) {
-    // 1. Создаем невидимый элемент для замера
+    function adjustInputWidth(input) {
+    // Создаем временный span для измерения ширины текста
     const span = document.createElement('span');
-    
-    // 2. Копируем стили шрифта точь-в-точь
-    const style = window.getComputedStyle(input);
-    span.style.fontFamily = style.fontFamily;
-    span.style.fontSize = style.fontSize;
-    span.style.fontWeight = style.fontWeight;
-    span.style.letterSpacing = style.letterSpacing;
+    const computedStyle = window.getComputedStyle(input);
+    span.style.font = computedStyle.font;
+    span.style.fontSize = computedStyle.fontSize; // Берём ТЕКУЩИЙ размер шрифта (с учётом классов)
+    span.style.fontWeight = computedStyle.fontWeight;
+    span.style.letterSpacing = computedStyle.letterSpacing;
+    span.style.fontFamily = computedStyle.fontFamily;
     span.style.visibility = 'hidden';
     span.style.position = 'absolute';
-    span.style.whiteSpace = 'pre'; // Сохраняем пробелы
-    
-    // 3. Замеряем текст (или плейсхолдер, если пусто)
-    // Добавляем 2px для курсора
+    span.style.whiteSpace = 'nowrap';
     span.textContent = input.value || input.placeholder;
     
     document.body.appendChild(span);
-    const textWidth = span.getBoundingClientRect().width;
+    const width = span.offsetWidth;
     document.body.removeChild(span);
     
-    // 4. Применяем ширину
-    if (input.value.length > 0) {
-        // Если есть цифры: ширина = тексту + маленький запас
-        input.style.width = (textWidth + 2) + 'px';
-        input.style.textAlign = 'right'; // Жмем к рублю
-    } else {
-        // Если пусто (плейсхолдер): ширина фиксированная или по плейсхолдеру
-        input.style.width = (textWidth + 10) + 'px';
-        input.style.textAlign = 'center'; // Плейсхолдер по центру
-    }
+    // Устанавливаем ширину с небольшим запасом (10px вместо 20px)
+    input.style.width = Math.max(200, Math.min(width + 10, window.innerWidth * 0.85)) + 'px';
 }
-
     
 
 // NEW: Адаптивный размер шрифта в зависимости от длины
@@ -7138,35 +7152,38 @@ function getSumInputValue() {
 
 
             function formatSumInput(input) {
-    // Очистка от мусора
-    let value = input.value.replace(/\D/g, '');
-    value = value.replace(/^0+/, '') || '';
-    
-    const currency = document.getElementById('currencySymbol');
-    
-    if (value.length > 0) {
-        // ЕСТЬ ВВОД
-        const numericValue = parseInt(value);
-        input.value = numericValue.toLocaleString('ru-RU').replace(/\s/g, '.');
-        
-        // Показываем золотой рубль
-        if (currency) currency.style.display = 'block';
-        
-    } else {
-        // ПУСТО
-        input.value = "";
-        
-        // Скрываем рубль
-        if (currency) currency.style.display = 'none';
-    }
-    
-    // Подгоняем размер шрифта и ширину
-    adjustSumInputSize(input);
-    adjustInputWidth(input); // <--- ВАЖНО: вызываем подгонку
-    
-    draw();
-}
-
+            let value = input.value.replace(/\D/g, '');
+            value = value.replace(/^0+/, '') || '';
+            const numericValue = parseInt(value) || 0;
+            
+            const currencyGold = document.getElementById('currencySymbol');
+            const currencyGray = document.getElementById('currencyPlaceholder');
+            
+            if (value.length > 0) {
+                // ЕСТЬ ВВОД
+                input.value = numericValue.toLocaleString('ru-RU').replace(/\s/g, '.');
+                
+                // Включаем золото, ВЫРУБАЕМ серый
+                if(currencyGold) currencyGold.style.display = 'block';
+                if(currencyGray) currencyGray.style.display = 'none';
+                
+                // Растягиваем инпут под контент
+                adjustInputWidth(input);
+            } else {
+                // ПУСТО (Плейсхолдер)
+                input.value = "";
+                
+                // Включаем серый, ВЫРУБАЕМ золото
+                if(currencyGold) currencyGold.style.display = 'none';
+                if(currencyGray) currencyGray.style.display = 'block';
+                
+                // Фиксируем ширину для "0.00", чтобы стояло ровно
+                input.style.width = '150px'; 
+            }
+            
+            adjustSumInputSize(input);
+            draw();
+        }
 
 
 // NEW: Сброс соотношения на 50/50
