@@ -5173,14 +5173,41 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
     user-select: none;
 }
 
-/* Эффект "Вразнобой" (Шахматный порядок) */
-/* Сдвигаем четные строки влево, нечетные вправо */
-.pattern-line:nth-child(odd) {
-    margin-left: -100px;
+
+/* =================================================================
+   ХАОТИЧНЫЙ ПАТТЕРН (ЦИКЛ ИЗ 5 СТРОК)
+   ================================================================= */
+
+/* Строка 1: Чуть левее */
+.pattern-line:nth-child(5n+1) {
+    margin-left: -40px;
+    opacity: 0.5; /* Чуть ярче */
 }
-.pattern-line:nth-child(even) {
-    margin-left: 50px;
+
+/* Строка 2: Сильно влево */
+.pattern-line:nth-child(5n+2) {
+    margin-left: -250px;
+    opacity: 0.3; /* Тусклее (глубже) */
 }
+
+/* Строка 3: Сдвиг вправо */
+.pattern-line:nth-child(5n+3) {
+    margin-left: 80px;
+    opacity: 0.4;
+}
+
+/* Строка 4: Средний сдвиг влево */
+.pattern-line:nth-child(5n+4) {
+    margin-left: -120px;
+    opacity: 0.6; /* Самая яркая */
+}
+
+/* Строка 5: Очень далеко влево */
+.pattern-line:nth-child(5n+5) {
+    margin-left: -300px;
+    opacity: 0.25; /* Еле заметная */
+}
+
 
 /* Адаптация для Светлой темы */
 body:not(.dark-mode) .luxury-depth-layer {
