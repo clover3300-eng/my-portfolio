@@ -542,7 +542,7 @@
     margin-top: 10px;
 }
         /* ========== NEW: Скрытие элементов при фокусе на вводе ========== */
-body.input-focused 
+body.input-focused .nav-wrapper {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -1922,17 +1922,9 @@ input#sumInput.size-xsmall {
         .footer-disclaimer { text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px; }
 
         .nav-wrapper {
-            position: fixed;
-            bottom: 25px;
-            left: 0;
-            width: 100%;
-            
-            display: flex !important;
-            justify-content: center;
-            gap: 10px;
-            padding: 0 15px;
-            box-sizing: border-box;
-            z-index: 900;
+    position: fixed; bottom: 25px; left: 0; width: 100%; 
+    display: flex !important; justify-content: center; gap: 10px;
+    padding: 0 15px; box-sizing: border-box; z-index: 900;
 }
         .nav-dock {
             background: var(--nav-bg); backdrop-filter: blur(25px) saturate(180%);
@@ -5207,88 +5199,93 @@ textarea {
             <div class="waterfall-inner">
                 
                 <!-- Опция 50/50 -->
-                <div class="strategy-option-card" data-bonds="50" onclick="selectStrategy(50, this, 'Гармония', 'Классический баланс')">
-    <div class="card-left-part">
-        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 50%, #94A8B8 50%, #94A8B8 100%);"></div>
-        <div class="card-titles">
-            <div class="card-main-title">Гармония</div>
-            <div class="card-sub-title">Классический баланс</div>
-        </div>
-    </div>
-    <div class="card-right-part">
-        <div class="card-pct-bonds">Обл. 50%</div>
-        <div class="card-pct-stocks">Акц. 50%</div>
-    </div>
-</div>
+                <div class="strategy-option-card" onclick="selectStrategy(50, this, 'Гармония', 'Классический баланс')">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 50%, #94A8B8 50%, #94A8B8 100%);"></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Гармония</div>
+                            <div class="card-sub-title">Классический баланс</div>
+                        </div>
+                    </div>
+                    <div class="card-right-part">
+                        <div class="card-pct-bonds">Обл. 50%</div>
+                        <div class="card-pct-stocks">Акц. 50%</div>
+                    </div>
+                </div>
 
-<div class="strategy-option-card" data-bonds="80" onclick="selectStrategy(80, this, 'Депозит', 'Защита капитала')">
-    <div class="card-left-part">
-        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 80%, #94A8B8 80%, #94A8B8 100%);"></div>
-        <div class="card-titles">
-            <div class="card-main-title">Депозит</div>
-            <div class="card-sub-title">Защита капитала</div>
-        </div>
-    </div>
-    <div class="card-right-part">
-        <div class="card-pct-bonds">Обл. 80%</div>
-        <div class="card-pct-stocks">Акц. 20%</div>
-    </div>
-</div>
+                <!-- Опция 80/20 -->
+                <div class="strategy-option-card" onclick="selectStrategy(80, this, 'Депозит', 'Защита капитала')">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 80%, #94A8B8 80%, #94A8B8 100%);"></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Депозит</div>
+                            <div class="card-sub-title">Защита капитала</div>
+                        </div>
+                    </div>
+                    <div class="card-right-part">
+                        <div class="card-pct-bonds">Обл. 80%</div>
+                        <div class="card-pct-stocks">Акц. 20%</div>
+                    </div>
+                </div>
 
-<div class="strategy-option-card" data-bonds="60" onclick="selectStrategy(60, this, 'Баланс', 'Умеренный риск')">
-    <div class="card-left-part">
-        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 60%, #94A8B8 60%, #94A8B8 100%);"></div>
-        <div class="card-titles">
-            <div class="card-main-title">Баланс</div>
-            <div class="card-sub-title">Умеренный риск</div>
-        </div>
-    </div>
-    <div class="card-right-part">
-        <div class="card-pct-bonds">Обл. 60%</div>
-        <div class="card-pct-stocks">Акц. 40%</div>
-    </div>
-</div>
+                <!-- Опция 60/40 -->
+                <div class="strategy-option-card" onclick="selectStrategy(60, this, 'Баланс', 'Умеренный риск')">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 60%, #94A8B8 60%, #94A8B8 100%);"></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Баланс</div>
+                            <div class="card-sub-title">Умеренный риск</div>
+                        </div>
+                    </div>
+                    <div class="card-right-part">
+                        <div class="card-pct-bonds">Обл. 60%</div>
+                        <div class="card-pct-stocks">Акц. 40%</div>
+                    </div>
+                </div>
 
-<div class="strategy-option-card" data-bonds="40" onclick="selectStrategy(40, this, 'Умеренная', 'Баланс роста')">
-    <div class="card-left-part">
-        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 40%, #94A8B8 40%, #94A8B8 100%);"></div>
-        <div class="card-titles">
-            <div class="card-main-title">Умеренная</div>
-            <div class="card-sub-title">Баланс роста</div>
-        </div>
-    </div>
-    <div class="card-right-part">
-        <div class="card-pct-bonds">Обл. 40%</div>
-        <div class="card-pct-stocks">Акц. 60%</div>
-    </div>
-</div>
+                <!-- Опция 40/60 -->
+                <div class="strategy-option-card" onclick="selectStrategy(40, this, 'Умеренная', 'Баланс роста')">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 40%, #94A8B8 40%, #94A8B8 100%);"></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Умеренная</div>
+                            <div class="card-sub-title">Баланс роста</div>
+                        </div>
+                    </div>
+                    <div class="card-right-part">
+                        <div class="card-pct-bonds">Обл. 40%</div>
+                        <div class="card-pct-stocks">Акц. 60%</div>
+                    </div>
+                </div>
 
-<div class="strategy-option-card" data-bonds="20" onclick="selectStrategy(20, this, 'Агрессивная', 'Макс. рост')">
-    <div class="card-left-part">
-        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 20%, #94A8B8 20%, #94A8B8 100%);"></div>
-        <div class="card-titles">
-            <div class="card-main-title">Агрессивная</div>
-            <div class="card-sub-title">Макс. рост</div>
-        </div>
-    </div>
-    <div class="card-right-part">
-        <div class="card-pct-bonds">Обл. 20%</div>
-        <div class="card-pct-stocks">Акц. 80%</div>
-    </div>
-</div>
+                <!-- Опция 20/80 -->
+                <div class="strategy-option-card" onclick="selectStrategy(20, this, 'Агрессивная', 'Макс. рост')">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 20%, #94A8B8 20%, #94A8B8 100%);"></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Агрессивная</div>
+                            <div class="card-sub-title">Макс. рост</div>
+                        </div>
+                    </div>
+                    <div class="card-right-part">
+                        <div class="card-pct-bonds">Обл. 20%</div>
+                        <div class="card-pct-stocks">Акц. 80%</div>
+                    </div>
+                </div>
 
-<div class="strategy-option-card" id="customOptionCard" data-bonds="custom" onclick="toggleCustomStrategyNew(this)">
-    <div class="card-left-part">
-        <div class="card-indicator" style="background: #ccc;"></div>
-        <div class="card-titles">
-            <div class="card-main-title">Настроить свою</div>
-            <div class="card-sub-title">Выберите пропорцию</div>
-        </div>
-    </div>
-    <div class="card-right-part">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B7C99" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    </div>
-</div>
+                <!-- Опция Настроить свою -->
+                <div class="strategy-option-card" id="customOptionCard" onclick="toggleCustomStrategyNew(this)">
+                    <div class="card-left-part">
+                        <div class="card-indicator" style="background: #ccc;"></div>
+                        <div class="card-titles">
+                            <div class="card-main-title">Настроить свою</div>
+                            <div class="card-sub-title">Выберите пропорцию</div>
+                        </div>
+                    </div>
+                    <div class="card-right-part">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B7C99" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </div>
+                </div>
 
             </div>
         </div>
@@ -6462,24 +6459,29 @@ function toggleStrategies() {
 
 // Функция выбора стратегии (обновляет главную карточку)
 function selectStrategy(bondPercent, optionCard, title, subtitle) {
-    // 1. Обновляем данные слайдера
+    // 1. Обновляем данные
     document.getElementById('ratioSlider').value = bondPercent;
     
-    // 2. Визуально обновляем ГЛАВНУЮ карточку (тексты, цвета)
+    // 2. Визуально обновляем ГЛАВНУЮ карточку
     updateMainCardUI(bondPercent, title, subtitle);
-
-    // 3. Сбрасываем кастомный режим, если выбрана стандартная стратегия
+    
+    // 3. Подсветка в списке (опционально)
+    document.querySelectorAll('.strategy-option-card').forEach(c => c.classList.remove('selected-in-list'));
+    if(optionCard) optionCard.classList.add('selected-in-list');
+    
+    // 4. Сбрасываем кастомные сохранения, если выбрана стандартная
     if(title !== 'Индивидуальная') {
         savedCustomBonds = null;
         document.getElementById('customStrategyExpanded').classList.remove('show');
     }
 
-    // 4. Закрываем список с небольшой задержкой (для красоты)
+    // 5. Закрываем список (эффект сворачивания)
+    // Небольшая задержка, чтобы пользователь увидел клик
     setTimeout(() => {
         toggleStrategies(); 
     }, 150);
 
-    // 5. Запускаем draw (он теперь сам вызовет updateStrategyCardSelection внутри себя)
+    // 6. Пересчитываем портфель
     draw();
 }
 
@@ -6805,48 +6807,37 @@ function resetRatioTo50() {
 
     
 // NEW: Выбор стратегии по карточке
+// NEW: Выбор стратегии по карточке
+// NEW: Выбор стратегии по карточке
+
 
 // NEW: Обновление выделения карточки при изменении ползунка
 function updateStrategyCardSelection(bondPercent) {
     const cards = document.querySelectorAll('.strategy-option-card');
     
-    // Проверяем, находимся ли мы в режиме "Индивидуальная стратегия"
-    // (переменная savedCustomBonds у тебя уже есть в коде)
-    const isCustomMode = (savedCustomBonds !== null);
-
     cards.forEach(card => {
-        // Получаем значение из атрибута, который мы добавили в Шаге 1
-        const cardBondsAttr = card.getAttribute('data-bonds');
+        const cardBonds = card.getAttribute('data-bonds');
+        const isCustom = (cardBonds === 'custom');
 
-        // --- ЛОГИКА 1: Карточка "Настроить свою" ---
-        if (cardBondsAttr === 'custom') {
-            // Она ВСЕГДА видна в списке, чтобы можно было перенастроить
+        if (isCustom) {
+            // Карточка "Настроить свою" всегда видна (display: flex)
             card.style.display = 'flex';
             
-            // Если мы в кастомном режиме — подсвечиваем её (добавляем класс selected)
-            if (isCustomMode) {
+            // Подсвечиваем её, если сейчас активен кастомный режим
+            if (savedCustomBonds !== null && savedCustomBonds === bondPercent) {
                 card.classList.add('selected');
             } else {
                 card.classList.remove('selected');
             }
-            return; // Переходим к следующей карточке
-        }
-
-        // --- ЛОГИКА 2: Обычные карточки (Гармония, Депозит...) ---
-        
-        if (isCustomMode) {
-            // Если выбрана "Индивидуальная" (она наверху), то в списке должны быть ВИДНЫ
-            // абсолютно все стандартные стратегии, чтобы можно было к ним вернуться.
-            card.style.display = 'flex';
-            card.classList.remove('selected');
         } else {
-            // Если выбрана стандартная стратегия (она наверху)
-            // Мы должны скрыть ТУ, которая сейчас выбрана (совпадает по процентам)
-            if (parseInt(cardBondsAttr) === bondPercent) {
-                card.style.display = 'none'; // Прячем, так как она уже наверху
+            // Для обычных карточек (Гармония, Депозит и т.д.)
+            if (parseInt(cardBonds) === bondPercent) {
+                // Если карточка выбрана — СКРЫВАЕМ её из списка (display: none)
+                card.style.display = 'none';
                 card.classList.add('selected');
             } else {
-                card.style.display = 'flex'; // Остальные показываем
+                // Если не выбрана — ПОКАЗЫВАЕМ
+                card.style.display = 'flex';
                 card.classList.remove('selected');
             }
         }
@@ -8133,27 +8124,14 @@ function highlightKeywords(text) {
     return result;
 }
 
-       function draw() {
-    console.log('draw() called');
+        function draw() {
+            console.log('draw() called');
     
-    // 1. Сначала получаем процент и обновляем список карточек (ДО проверки суммы)
-    const slider = document.getElementById('ratioSlider');
-    const bondPct = parseInt(slider.value);
-    
-    // Вызываем функцию скрытия/показа дубликатов
-    updateStrategyCardSelection(bondPct);
-
-    // 2. Теперь проверяем сумму
     const inputSum = getSumInputValue();
-
-    // Если сумма = 0, дальше не считаем математику, но карточки мы УЖЕ обновили выше
+    
+    // Если сумма = 0 (поле пустое), не сохраняем и не рисуем
     if (inputSum === 0) {
-        // Обновим только тексты процентов, чтобы интерфейс реагировал
-        const stockPct = 100 - bondPct;
-        if(document.getElementById('labelBondsPct')) {
-             document.getElementById('labelBondsPct').innerText = bondPct;
-             document.getElementById('labelStocksPct').innerText = stockPct;
-        }
+        console.log('Sum is zero, skipping draw');
         return;
     }
     
