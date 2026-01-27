@@ -6537,9 +6537,17 @@ saveCustomStrategy = function() {
     toggleStrategies(); // Закрываем водопад
     
     draw();
-    if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // === ДОБАВЬТЕ ЭТОТ БЛОК ДЛЯ ПРОКРУТКИ ВВЕРХ ===
+    setTimeout(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, 100); // Небольшая задержка, чтобы интерфейс успел свернуться
 }
 
         
