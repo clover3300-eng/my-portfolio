@@ -4931,6 +4931,86 @@ body.dark-mode .header h1 {
     padding-top: calc(100px + env(safe-area-inset-top)) !important;
 }
  
+/* =================================================================
+   LUXURY NOTIFICATION PILL (REVOLUTIONARY DESIGN)
+   ================================================================= */
+
+.luxury-notify-pill {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    /* Скрыто за верхней границей экрана */
+    transform: translate(-50%, -150%);
+    
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 24px 10px 10px; /* Слева меньше отступ из-за иконки */
+    
+    /* Материал: Глубокий матовый графит */
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    
+    /* Границы и форма */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px; /* Идеальная капсула */
+    
+    /* Тень: Глубокая и мягкая */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    
+    z-index: 20000; /* Поверх всего */
+    
+    /* Физическая анимация (Пружина) */
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Состояние ПОКАЗАНО */
+.luxury-notify-pill.show {
+    /* Спускаем вниз, учитывая челку айфона */
+    transform: translate(-50%, calc(env(safe-area-inset-top) + 20px));
+}
+
+/* Иконка в кружке */
+.notify-icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #F87171; /* Элегантный красный */
+    flex-shrink: 0;
+}
+
+/* Текстовый блок */
+.notify-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+}
+
+.notify-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94A3B8; /* Серый субитог */
+}
+
+.notify-message {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #FFFFFF; /* Белый текст */
+    white-space: nowrap;
+}
+
+/* Адаптация для Светлой темы (делаем капсулу контрастной) */
+/* В светлой теме капсула остается темной для "премиум" акцента */
 
 
 
@@ -6164,25 +6244,64 @@ function formatNewsDate(dateString) {
             }
         }
 
-        function calculateAndShowPortfolio() {
+        // Функция показа уведомления
+function showLuxuryNotification() {
+    const notify = document.getElementById('luxuryNotification');
+    
+    // 1. Показываем (добавляем класс)
+    notify.classList.add('show');
+    
+    // 2. Haptic Feedback (Вибрация ошибки)
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+    }
+    
+    // 3. Прячем через 3.5 секунды
+    setTimeout(() => {
+        notify.classList.remove('show');
+    }, 3500);
+}
+
+// Основная функция расчета
+function calculateAndShowPortfolio() {
+    // 1. Получаем сумму
+    const sum = getSumInputValue();
+
+    // 2. ПРОВЕРКА: Если меньше 10 000 руб
+    if (sum < 10000) {
+        // Показываем революционное уведомление
+        showLuxuryNotification();
+        
+        // Прокручиваем к полю ввода, чтобы пользователь понял, где ошибка
+        const inputBlock = document.querySelector('.input-wrapper');
+        if (inputBlock) {
+            inputBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Фокус на поле ввода (опционально, можно убрать если раздражает клавиатура)
+            // document.getElementById('sumInput').focus(); 
+        }
+        
+        return; // ОСТАНАВЛИВАЕМ ВСЁ, никуда не переходим
+    }
+
+    // 3. Если всё ок (>= 10 000) -> Считаем и переходим
     try {
         draw();
         savePortfolio();
         isPortfolioCalculated = true;
         
-        // Показываем контент, скрываем empty state
         document.getElementById('portfolio-empty').style.display = 'none';
         document.getElementById('portfolio-content').style.display = 'block';
         
-        // Показываем action panel
-        document.getElementById('portfolioActionPanel').style.display = 'flex';
+        const actionPanel = document.getElementById('portfolioActionPanel');
+        if(actionPanel) actionPanel.style.display = 'flex';
         
         showScreen('screen-portfolio');
     } catch(e) {
         console.error('Error calculating portfolio:', e);
-        alert('Ошибка при формировании портфеля. Проверьте введённые данные.');
     }
 }
+
 
         function toggleAccordion(id) {
             const el = document.getElementById(id);
@@ -8553,6 +8672,20 @@ if(document.getElementById('listBonds')) {
         }, 100);
  
         
+<!-- REVOLUTIONARY NOTIFICATION PILL -->
+<div id="luxuryNotification" class="luxury-notify-pill">
+    <div class="notify-icon-circle">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            <circle cx="12" cy="12" r="10"></circle>
+        </svg>
+    </div>
+    <div class="notify-content">
+        <span class="notify-title">Минимальный капитал</span>
+        <span class="notify-message">Введите сумму от 10 000 ₽</span>
+    </div>
+</div>
 
        
         
