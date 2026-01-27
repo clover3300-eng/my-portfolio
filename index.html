@@ -5370,6 +5370,61 @@ body.dark-mode .screen::after {
 }
   /* ==================================================================== */
 
+        /* =================================================================
+   FIX FOR DECK LAYOUT (МАСШТАБ И ОТСТУПЫ)
+   ================================================================= */
+
+/* 1. Сбрасываем отступы у BODY (они больше не нужны) */
+body {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important; /* Скролл теперь внутри карточек */
+    background: #000; /* Цвет фона под карточками (в щелях) */
+}
+
+/* 2. Настраиваем ЭКРАНЫ (Карточки) */
+.screen {
+    /* Сбрасываем старые negative margins */
+    margin: 0 !important; 
+    
+    /* Внутренние отступы контента */
+    padding: 16px !important; 
+    padding-bottom: 120px !important; /* Место для меню снизу */
+    
+    /* Правильный расчет ширины */
+    box-sizing: border-box !important;
+    
+    /* Скролл ВНУТРИ карточки */
+    overflow-y: auto !important; 
+    -webkit-overflow-scrolling: touch;
+    
+    /* Фикс для фона (чтобы он был на всю карточку) */
+    background-attachment: scroll !important;
+}
+
+/* 3. Фикс для конкретных экранов (убираем их старые спец-настройки) */
+#screen-app, 
+#screen-interesting, 
+#screen-portfolio, 
+#screen-assets,
+#screen-company {
+    margin: 0 !important;
+    width: 100% !important;
+    min-height: 100% !important;
+    height: 100% !important;
+    border-radius: 0; /* Скругление только при свайпе */
+}
+
+/* 4. Возвращаем отступы сверху для контента (из-за челки) */
+.header, 
+.terminal-header-v2, 
+.company-top-bar {
+    /* Добавляем к безопасному отступу еще 10px воздуха */
+    padding-top: calc(env(safe-area-inset-top) + 10px) !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
         
 
         
