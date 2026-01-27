@@ -8731,7 +8731,63 @@ if(document.getElementById('listBonds')) {
             }
         }, 100);
  
+        /* =================================================================
+   SWIPE TO DISMISS NOTIFICATION (ЖЕСТ СМАХИВАНИЯ)
+   ================================================================= */
+function initNotificationSwipe() {
+    const notify = document.getElementById('luxuryNotification');
+    if (!notify) return;
+
+    let startY = 0;
+    let diffY = 0;
+
+    // 1. Начало касания
+    notify.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        diffY = 0;
+        // Отключаем плавность, чтобы блок "прилип" к пальцу
+        notify.style.transition = 'none';
+    }, { passive: true });
+
+    // 2. Движение пальца
+    notify.addEventListener('touchmove', (e) => {
+        const currentY = e.touches[0].clientY;
+        diffY = currentY - startY;
+
+        // Разрешаем двигать ТОЛЬКО вверх (отрицательное значение)
+        if (diffY < 0) {
+            // Сохраняем позицию с учетом челки и добавляем сдвиг пальца
+            // 60px - это тот отступ, который мы задали в CSS
+            notify.style.transform = `translate(-50%, calc(env(safe-area-inset-top) + 60px + ${diffY}px))`;
+        }
+    }, { passive: false }); // false, чтобы при желании блокировать скролл (здесь не обязательно)
+
+    // 3. Конец касания
+    notify.addEventListener('touchend', () => {
+        // Возвращаем плавную анимацию для красивого отлета или возврата
+        notify.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
         
+        // Очищаем инлайн-стиль, чтобы CSS снова управлял позицией
+        notify.style.transform = ''; 
+
+        // Если смахнули вверх более чем на 20 пикселей - скрываем
+        if (diffY < -20) {
+            notify.classList.remove('show');
+            // Легкая вибрация подтверждения
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.selectionChanged();
+            }
+        }
+        
+        // Сброс переменных
+        startY = 0;
+        diffY = 0;
+    });
+}
+
+// Запускаем слушатель жестов сразу
+initNotificationSwipe();
+
 
 
        
