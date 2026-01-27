@@ -6450,15 +6450,16 @@ function toggleStrategies() {
 
     if(isOpen) {
         text.innerText = "ЗАКРЫТЬ";
-        // ПОКАЗЫВАЕМ только те карточки, которые НЕ выбраны сейчас
+        
+        // Проверяем каждую карточку перед показом
         document.querySelectorAll('.strategy-option-card').forEach(card => {
-            if (!card.classList.contains('hidden-selected')) {
-                card.style.display = 'flex';
-            } else {
+            if (card.classList.contains('hide-this-card')) {
                 card.style.display = 'none';
+            } else {
+                card.style.display = 'flex';
             }
         });
-        
+
         if (window.Telegram?.WebApp?.HapticFeedback) 
             window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     } else {
@@ -6497,17 +6498,26 @@ function selectStrategy(bondPercent, optionCard, title, subtitle) {
 
 // Обновление UI главной карточки
 function updateMainCardUI(bondPercent, title, subtitle) {
-    const stockPercent = 100 - bondPercent;
-    
-    // Тексты
     document.getElementById('mainCardTitle').innerText = title;
     document.getElementById('mainCardSubtitle').innerText = subtitle;
-    document.getElementById('mainCardBonds').innerText = `Обл. ${bondPercent}%`;
-    document.getElementById('mainCardStocks').innerText = `Акц. ${stockPercent}%`;
     
-    // Градиент индикатора
-    const indicator = document.getElementById('mainCardIndicator');
-    indicator.style.background = `linear-gradient(180deg, #5B7C99 0%, #5B7C99 ${bondPercent}%, #94A8B8 ${bondPercent}%, #94A8B8 100%)`;
+    const stocksPercent = 100 - bondPercent;
+    document.getElementById('mainStocksPercent').innerText = stocksPercent + '%';
+    document.getElementById('mainBondsPercent').innerText = bondPercent + '%';
+    
+    // ЛОГИКА СКРЫТИЯ ДУБЛИКАТОВ
+    const allCards = document.querySelectorAll('.strategy-option-card');
+    allCards.forEach(card => {
+        const cardBonds = card.getAttribute('data-bonds');
+        
+        // Если это обычная карточка (не "custom") и её проценты совпадают с текущими
+        if (cardBonds !== 'custom' && parseInt(cardBonds) === bondPercent) {
+            card.classList.add('hide-this-card');
+        } else {
+            // Все остальные (включая "Настроить свою") показываем
+            card.classList.remove('hide-this-card');
+        }
+    });
 }
 
 // Логика для кастомной стратегии (адаптированная)
