@@ -118,7 +118,7 @@
             color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
             -webkit-tap-highlight-color: transparent;
-            padding-bottom: 120px;
+            padding-bottom: 40px;
             transition: background 0.3s, color 0.3s;
             overflow-x: hidden;
             overscroll-behavior-y: none;
@@ -529,18 +529,16 @@
     animation: none; 
 }
 
-/* Sticky панель для кнопки на 2й вкладке */
+/* Обновленная панель кнопки: теперь она идет просто после списка, без фиксации */
 .bottom-sticky-panel {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 16px 20px 100px 20px;
+    position: relative; /* Убираем fixed */
+    background: transparent; /* Убираем белый фон */
+    backdrop-filter: none; /* Убираем размытие */
+    -webkit-backdrop-filter: none;
+    padding: 20px 0; /* Оставляем только небольшие отступы сверху и снизу */
     z-index: 800;
-    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-top: none; /* Убираем рамку сверху */
+    margin-top: 10px;
 }
         /* ========== NEW: Скрытие элементов при фокусе на вводе ========== */
 body.input-focused .nav-wrapper {
@@ -6814,25 +6812,32 @@ function resetRatioTo50() {
 
 // NEW: Обновление выделения карточки при изменении ползунка
 function updateStrategyCardSelection(bondPercent) {
-    console.log('updateStrategyCardSelection called:', bondPercent, 'savedCustomBonds:', savedCustomBonds);
-    const presetValues = [80, 60, 50, 40, 20];
-    const isPreset = presetValues.includes(bondPercent);
+    const cards = document.querySelectorAll('.strategy-option-card');
     
-    document.querySelectorAll('.strategy-card').forEach(card => {
+    cards.forEach(card => {
         const cardBonds = card.getAttribute('data-bonds');
-        
-        if (cardBonds === 'custom') {
-            // Кастомная карточка - выделяем ТОЛЬКО если есть сохранённые значения
+        const isCustom = (cardBonds === 'custom');
+        const cardBondValue = parseInt(cardBonds);
+
+        if (isCustom) {
+            // Вариант "Настроить свою" ВСЕГДА виден в списке
+            card.style.display = 'flex';
+            
+            // Подсвечиваем его, если сейчас выбраны кастомные настройки
             if (savedCustomBonds !== null && savedCustomBonds === bondPercent) {
                 card.classList.add('selected');
             } else {
                 card.classList.remove('selected');
             }
         } else {
-            // Обычные карточки (включая Гармонию 50/50)
-            if (parseInt(cardBonds) === bondPercent) {
+            // Обычная карточка (например, 60/40)
+            if (cardBondValue === bondPercent) {
+                // Если проценты совпадают с выбранными — ПРЯЧЕМ карточку из списка
+                card.style.display = 'none';
                 card.classList.add('selected');
             } else {
+                // Все остальные карточки — ПОКАЗЫВАЕМ
+                card.style.display = 'flex';
                 card.classList.remove('selected');
             }
         }
