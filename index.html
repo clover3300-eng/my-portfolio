@@ -4797,6 +4797,60 @@ textarea {
 .fee-dropdown-item:hover { background: #f5f5f5 !important; }
 
 
+/* === СТИЛИ ДЛЯ ЧЕКБОКСОВ (КРУЖОЧКИ) === */
+
+/* 1. Базовый вид (Не выбрано) - Пустой круг */
+.fee-item-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    
+    /* Серая рамка, прозрачный фон */
+    border: 1.5px solid #CBD5E1; 
+    background: transparent;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+/* 2. Иконка галочки внутри (Скрыта по умолчанию) */
+.fee-item-check svg {
+    width: 14px;
+    height: 14px;
+    stroke: white; /* Белая галочка */
+    stroke-width: 3;
+    
+    opacity: 0; /* Невидима */
+    transform: scale(0.5); /* Уменьшена */
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 3. Состояние: ВЫБРАНО (.selected) */
+.fee-dropdown-item.selected .fee-item-check {
+    background: #2C364C; /* Темный фон (Графит) */
+    border-color: #2C364C; /* Цвет рамки меняется на цвет фона */
+}
+
+.fee-dropdown-item.selected .fee-item-check svg {
+    opacity: 1; /* Появляется */
+    transform: scale(1); /* Вырастает до нормального размера */
+}
+
+/* 4. Адаптация для темной темы */
+body.dark-mode .fee-item-check {
+    border-color: #475569;
+}
+
+body.dark-mode .fee-dropdown-item.selected .fee-item-check {
+    background: #38BDF8; /* Голубой акцент */
+    border-color: #38BDF8;
+}
+
+body.dark-mode .fee-dropdown-item.selected .fee-item-check svg {
+    stroke: #0F172A; /* Черная галочка на голубом фоне */
+}
 
 
 
@@ -6348,41 +6402,41 @@ function toggleFeeDropdown() {
 
 
 function selectFee(value, rateText, nameText) {
-    // Закрываем клавиатуру если открыта
+    function selectFee(value, rateText, nameText) {
+    // 1. Убираем фокус с клавиатуры (на всякий случай)
     const sumInput = document.getElementById('sumInput');
-    if (sumInput && document.activeElement === sumInput) {
-        sumInput.blur();
-    }
+    if (sumInput) sumInput.blur();
     
     brokerFee = value;
-    isFeeSelected = true;
     
-    // Обновляем текст в триггере
+    // 2. Обновляем текст в кнопке "Выбрать"
     const selectedText = document.getElementById('feeSelectedText');
-    selectedText.textContent = rateText;
-    selectedText.classList.remove('placeholder');
+    if (selectedText) {
+        selectedText.textContent = rateText;
+        selectedText.classList.remove('placeholder');
+        selectedText.style.color = 'var(--text-main)'; // Делаем текст темным
+        selectedText.style.fontWeight = '700';
+    }
     
-    // Обновляем активный класс wrapper
-    const wrapper = document.querySelector('.fee-unified-wrapper');
-    wrapper?.classList.add('active');
-    
-    // Обновляем выбранный элемент в списке
+    // 3. ЛОГИКА ГАЛОЧЕК:
+    // Сначала убираем класс selected у ВСЕХ пунктов
     document.querySelectorAll('.fee-dropdown-item').forEach(item => {
         item.classList.remove('selected');
     });
-    event.currentTarget.classList.add('selected');
     
-    // Закрываем dropdown
+    // Добавляем класс selected ТОМУ, НА КОГО НАЖАЛИ
+    // event.currentTarget ссылается на элемент, на котором висит onclick
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('selected');
+    }
+    
+    // 4. Закрываем меню
     toggleFeeDropdown();
     
-    // Перерисовываем
+    // 5. Пересчитываем
     draw();
-    
-    // Haptic feedback
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-    }
 }
+
 
 // Закрытие dropdown при клике вне его
 document.addEventListener('click', function(event) {
