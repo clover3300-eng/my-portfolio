@@ -6520,6 +6520,7 @@ function toggleCustomStrategyNew(cardElement) {
 
 // Переопределяем функцию сохранения кастомной стратегии, чтобы она обновляла новую UI
 const originalSaveCustom = saveCustomStrategy; // Сохраняем ссылку если нужно
+// Переопределяем функцию сохранения кастомной стратегии
 saveCustomStrategy = function() {
     const bondPct = parseInt(document.getElementById('customRatioSlider').value);
     const stockPct = 100 - bondPct;
@@ -6532,22 +6533,31 @@ saveCustomStrategy = function() {
     // ОБНОВЛЯЕМ ГЛАВНУЮ КАРТОЧКУ
     updateMainCardUI(bondPct, 'Индивидуальная', 'Ваша настройка');
     
-    // Закрываем панель и список
+    // Закрываем панель настройки
     document.getElementById('customStrategyExpanded').classList.remove('show');
-    toggleStrategies(); // Закрываем водопад
+    
+    // Закрываем общий список стратегий (водопад)
+    toggleStrategies(); 
     
     draw();
+    
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
     }
 
-    // === ДОБАВЬТЕ ЭТОТ БЛОК ДЛЯ ПРОКРУТКИ ВВЕРХ ===
+    // === ИСПРАВЛЕННАЯ ПРОКРУТКА ===
+    // Используем небольшую задержку и scrollIntoView к полю ввода
     setTimeout(() => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }, 100); // Небольшая задержка, чтобы интерфейс успел свернуться
+        const inputBlock = document.querySelector('.input-wrapper');
+        if (inputBlock) {
+            inputBlock.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' // Центрируем поле ввода на экране
+            });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, 200); // 200мс — оптимально, чтобы анимация закрытия уже началась
 }
 
         
