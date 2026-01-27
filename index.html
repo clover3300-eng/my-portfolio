@@ -6462,29 +6462,24 @@ function toggleStrategies() {
 
 // Функция выбора стратегии (обновляет главную карточку)
 function selectStrategy(bondPercent, optionCard, title, subtitle) {
-    // 1. Обновляем данные
+    // 1. Обновляем данные слайдера
     document.getElementById('ratioSlider').value = bondPercent;
     
-    // 2. Визуально обновляем ГЛАВНУЮ карточку
+    // 2. Визуально обновляем ГЛАВНУЮ карточку (тексты, цвета)
     updateMainCardUI(bondPercent, title, subtitle);
-    
-    // 3. Подсветка в списке (опционально)
-    document.querySelectorAll('.strategy-option-card').forEach(c => c.classList.remove('selected-in-list'));
-    if(optionCard) optionCard.classList.add('selected-in-list');
-    
-    // 4. Сбрасываем кастомные сохранения, если выбрана стандартная
+
+    // 3. Сбрасываем кастомный режим, если выбрана стандартная стратегия
     if(title !== 'Индивидуальная') {
         savedCustomBonds = null;
         document.getElementById('customStrategyExpanded').classList.remove('show');
     }
 
-    // 5. Закрываем список (эффект сворачивания)
-    // Небольшая задержка, чтобы пользователь увидел клик
+    // 4. Закрываем список с небольшой задержкой (для красоты)
     setTimeout(() => {
         toggleStrategies(); 
     }, 150);
 
-    // 6. Пересчитываем портфель
+    // 5. Запускаем draw (он теперь сам вызовет updateStrategyCardSelection внутри себя)
     draw();
 }
 
@@ -8138,18 +8133,29 @@ function highlightKeywords(text) {
     return result;
 }
 
-        function draw() {
-    // --- НАЧАЛО ИСПРАВЛЕНИЯ ---
+       function draw() {
+    console.log('draw() called');
+    
+    // 1. Сначала получаем процент и обновляем список карточек (ДО проверки суммы)
     const slider = document.getElementById('ratioSlider');
-    if (!slider) return;
     const bondPct = parseInt(slider.value);
     
-    // Обновляем видимость карточек СРАЗУ, не дожидаясь ввода денег
+    // Вызываем функцию скрытия/показа дубликатов
     updateStrategyCardSelection(bondPct);
-    
+
+    // 2. Теперь проверяем сумму
     const inputSum = getSumInputValue();
-    if (inputSum === 0) return;
-    // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
+
+    // Если сумма = 0, дальше не считаем математику, но карточки мы УЖЕ обновили выше
+    if (inputSum === 0) {
+        // Обновим только тексты процентов, чтобы интерфейс реагировал
+        const stockPct = 100 - bondPct;
+        if(document.getElementById('labelBondsPct')) {
+             document.getElementById('labelBondsPct').innerText = bondPct;
+             document.getElementById('labelStocksPct').innerText = stockPct;
+        }
+        return;
+    }
     
     console.log('Drawing with sum:', inputSum);
     
