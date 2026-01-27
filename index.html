@@ -2298,7 +2298,7 @@ input#sumInput::placeholder {
 }
 
 /* Секция описания */
-.company-description-section {
+.company-deion-section {
     margin-bottom: 24px;
 }
 
@@ -2321,14 +2321,14 @@ input#sumInput::placeholder {
     stroke: var(--accent-blue);
 }
 
-.company-description-text {
+.company-deion-text {
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     line-height: 1.7;
     color: var(--text-main);
 }
 
-.company-description-text .highlight {
+.company-deion-text .highlight {
     background: linear-gradient(120deg, rgba(52, 152, 219, 0.2) 0%, rgba(52, 152, 219, 0.1) 100%);
     padding: 2px 6px;
     border-radius: 4px;
@@ -2460,7 +2460,7 @@ input#sumInput::placeholder {
     margin-bottom: 4px;
 }
 
-.event-description {
+.event-deion {
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     color: var(--text-secondary);
@@ -5854,6 +5854,21 @@ body.dark-mode .header h1 {
         </div>
     </div>
 
+    <!-- REVOLUTIONARY NOTIFICATION PILL -->
+<div id="luxuryNotification" class="luxury-notify-pill">
+    <div class="notify-icon-circle">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            <circle cx="12" cy="12" r="10"></circle>
+        </svg>
+    </div>
+    <div class="notify-content">
+        <span class="notify-title">Минимальный капитал</span>
+        <span class="notify-message">Введите сумму от 10 000 ₽</span>
+    </div>
+</div>
+
 <script>
     // Очистка старых настроек при загрузке
         localStorage.removeItem('invest_settings');
@@ -8672,20 +8687,7 @@ if(document.getElementById('listBonds')) {
         }, 100);
  
         
-<!-- REVOLUTIONARY NOTIFICATION PILL -->
-<div id="luxuryNotification" class="luxury-notify-pill">
-    <div class="notify-icon-circle">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            <circle cx="12" cy="12" r="10"></circle>
-        </svg>
-    </div>
-    <div class="notify-content">
-        <span class="notify-title">Минимальный капитал</span>
-        <span class="notify-message">Введите сумму от 10 000 ₽</span>
-    </div>
-</div>
+
 
        
         
