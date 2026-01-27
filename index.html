@@ -542,7 +542,7 @@
     margin-top: 10px;
 }
         /* ========== NEW: Скрытие элементов при фокусе на вводе ========== */
-body.input-focused .nav-wrapper {
+body.input-focused 
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -1922,9 +1922,24 @@ input#sumInput.size-xsmall {
         .footer-disclaimer { text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px; }
 
         .nav-wrapper {
-    position: fixed; bottom: 25px; left: 0; width: 100%; 
-    display: flex !important; justify-content: center; gap: 10px;
-    padding: 0 15px; box-sizing: border-box; z-index: 900;
+            position: fixed;
+            bottom: 25px;
+            left: 0;
+            width: 100%;
+            /* Убираем сплошной белый фон */
+    background: rgba(255, 255, 255, 0.7) !important; 
+    /* Добавляем эффект размытия (как у бокса стратегии) */
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    /* Убираем или делаем очень бледной верхнюю границу */
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+            
+            display: flex !important;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 15px;
+            box-sizing: border-box;
+            z-index: 900;
 }
         .nav-dock {
             background: var(--nav-bg); backdrop-filter: blur(25px) saturate(180%);
