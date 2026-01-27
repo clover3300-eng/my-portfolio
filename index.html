@@ -8731,8 +8731,8 @@ if(document.getElementById('listBonds')) {
             }
         }, 100);
  
-        /* =================================================================
-   SWIPE TO DISMISS NOTIFICATION (ЖЕСТ СМАХИВАНИЯ)
+      /* =================================================================
+   SWIPE TO DISMISS (С БЛОКИРОВКОЙ СКРОЛЛА СТРАНИЦЫ)
    ================================================================= */
 function initNotificationSwipe() {
     const notify = document.getElementById('luxuryNotification');
@@ -8745,47 +8745,48 @@ function initNotificationSwipe() {
     notify.addEventListener('touchstart', (e) => {
         startY = e.touches[0].clientY;
         diffY = 0;
-        // Отключаем плавность, чтобы блок "прилип" к пальцу
+        // Отключаем плавность для мгновенного отклика
         notify.style.transition = 'none';
-    }, { passive: true });
+    }, { passive: false }); // Важно: passive: false
 
     // 2. Движение пальца
     notify.addEventListener('touchmove', (e) => {
+        // === ГЛАВНОЕ ИЗМЕНЕНИЕ ===
+        // Запрещаем странице прокручиваться, пока тянем уведомление
+        if (e.cancelable) e.preventDefault(); 
+        
         const currentY = e.touches[0].clientY;
         diffY = currentY - startY;
 
-        // Разрешаем двигать ТОЛЬКО вверх (отрицательное значение)
+        // Разрешаем двигать ТОЛЬКО вверх
         if (diffY < 0) {
-            // Сохраняем позицию с учетом челки и добавляем сдвиг пальца
-            // 60px - это тот отступ, который мы задали в CSS
+            // 60px - это ваш отступ сверху (из CSS)
             notify.style.transform = `translate(-50%, calc(env(safe-area-inset-top) + 60px + ${diffY}px))`;
         }
-    }, { passive: false }); // false, чтобы при желании блокировать скролл (здесь не обязательно)
+    }, { passive: false }); // Важно: passive: false разрешает preventDefault
 
     // 3. Конец касания
     notify.addEventListener('touchend', () => {
-        // Возвращаем плавную анимацию для красивого отлета или возврата
+        // Возвращаем плавную анимацию
         notify.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
         
-        // Очищаем инлайн-стиль, чтобы CSS снова управлял позицией
+        // Сбрасываем инлайн-стиль (возвращаем управление CSS)
         notify.style.transform = ''; 
 
-        // Если смахнули вверх более чем на 20 пикселей - скрываем
-        if (diffY < -20) {
+        // Если смахнули вверх более чем на 10 пикселей - скрываем
+        if (diffY < -10) {
             notify.classList.remove('show');
-            // Легкая вибрация подтверждения
+            // Легкая вибрация
             if (window.Telegram?.WebApp?.HapticFeedback) {
                 window.Telegram.WebApp.HapticFeedback.selectionChanged();
             }
         }
         
-        // Сброс переменных
         startY = 0;
         diffY = 0;
     });
 }
 
-// Запускаем слушатель жестов сразу
 initNotificationSwipe();
 
 
