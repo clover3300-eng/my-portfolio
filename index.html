@@ -4788,89 +4788,55 @@ textarea {
 
         
        
-       <!-- Комиссия брокера - одна рамка -->
-<div class="fee-selector-unified" style="margin-top: 30px; margin-bottom: 30px;">
+      <!-- Комиссия брокера (Quiet Luxury Style) -->
+<div class="fee-selector-unified">
     <div class="fee-unified-wrapper">
         <span class="fee-unified-label">Комиссия Вашего Брокера</span>
         
-        <div class="fee-unified-dropdown">
-            <div class="fee-unified-trigger" id="feeDropdownTrigger" onclick="event.stopPropagation(); toggleFeeDropdown()">
-                <span class="fee-selected-text placeholder" id="feeSelectedText">Выбрать</span>
-                <svg class="fee-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </div>
+        <!-- Важно: id="feeDropdownTrigger" и onclick -->
+        <div class="fee-unified-trigger" id="feeDropdownTrigger" onclick="event.stopPropagation(); toggleFeeDropdown()">
+            <span class="fee-selected-text placeholder" id="feeSelectedText">Выбрать</span>
+            <svg class="fee-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
         </div>
     </div>
     
-    <!-- Dropdown menu вне wrapper -->
+    <!-- Выпадающее меню (id="feeDropdownMenu") -->
     <div class="fee-dropdown-menu" id="feeDropdownMenu">
+        <!-- Пункты меню с правильными onclick -->
         <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0001, '0.01%', '')">
-            <div class="fee-item-left">
-                <span class="fee-item-rate">0.01%</span>
-            </div>
-            <div class="fee-item-check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
+            <span class="fee-item-rate">0.01%</span>
+            <div class="fee-item-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
         </div>
         
         <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0003, '0.03%', '')">
-            <div class="fee-item-left">
-                <span class="fee-item-rate">0.03%</span>
-            </div>
-            <div class="fee-item-check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
+            <span class="fee-item-rate">0.03%</span>
+            <div class="fee-item-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
         </div>
         
         <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0005, '0.05%', '')">
-            <div class="fee-item-left">
-                <span class="fee-item-rate">0.05%</span>
-            </div>
-            <div class="fee-item-check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
+            <span class="fee-item-rate">0.05%</span>
+            <div class="fee-item-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
         </div>
         
         <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.001, '0.1%', '')">
-            <div class="fee-item-left">
-                <span class="fee-item-rate">0.1%</span>
-            </div>
-            <div class="fee-item-check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
+            <span class="fee-item-rate">0.1%</span>
+            <div class="fee-item-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
         </div>
         
         <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.003, '0.3%', '')">
-            <div class="fee-item-left">
-                <span class="fee-item-rate">0.3%</span>
-            </div>
-            <div class="fee-item-check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
+            <span class="fee-item-rate">0.3%</span>
+            <div class="fee-item-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
         </div>
-        
+
         <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.005, '0.5%', '')">
-            <div class="fee-item-left">
-                <span class="fee-item-rate">0.5%</span>
-            </div>
-            <div class="fee-item-check">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
+            <span class="fee-item-rate">0.5%</span>
+            <div class="fee-item-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
         </div>
     </div>
+</div>
+
 </div>
 
         <!-- Белая карточка начинается здесь -->
@@ -6596,16 +6562,27 @@ function updateCustomSlider(value) {
 }
 
 // NEW: Обновление отображения кастомного слайдера
+// Функция обновления отображения (безопасная версия)
 function updateCustomSliderDisplay(bondPct) {
     const stockPct = 100 - bondPct;
-    document.getElementById('customBondsPct').textContent = bondPct;
-    document.getElementById('customStocksPct').textContent = stockPct;
-    document.getElementById('customBondsDisplay').textContent = bondPct;
-    document.getElementById('customStocksDisplay').textContent = stockPct;
+    
+    // Обновляем большие цифры (они есть в новом дизайне)
+    const bondDisplay = document.getElementById('customBondsDisplay');
+    const stockDisplay = document.getElementById('customStocksDisplay');
+    
+    if (bondDisplay) bondDisplay.textContent = bondPct;
+    if (stockDisplay) stockDisplay.textContent = stockPct;
+    
+    // Пытаемся обновить старые подписи (если они вдруг остались), но не ломаем код, если их нет
+    const oldBondLabel = document.getElementById('customBondsPct');
+    const oldStockLabel = document.getElementById('customStocksPct');
+    if (oldBondLabel) oldBondLabel.textContent = bondPct;
+    if (oldStockLabel) oldStockLabel.textContent = stockPct;
     
     // Обновляем индикатор точек
     updateDotsIndicator(bondPct);
 }
+
 
     // NEW: Обновление индикатора точек
 function updateDotsIndicator(bondPct) {
@@ -6701,15 +6678,19 @@ function resetCustomCardDisplay() {
 // NEW: Кнопки +/- для кастомной стратегии
 function adjustCustomRatio(delta) {
     const slider = document.getElementById('customRatioSlider');
+    if (!slider) return;
+    
     let newValue = parseInt(slider.value) + delta;
     newValue = Math.max(0, Math.min(100, newValue));
+    
     slider.value = newValue;
-    updateCustomSlider(newValue);
+    updateCustomSliderDisplay(newValue); // Вызываем нашу новую безопасную функцию
     
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
 }
+
 
     
 
