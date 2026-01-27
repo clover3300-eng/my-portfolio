@@ -4863,6 +4863,19 @@ body.dark-mode .fee-dropdown-item.selected .fee-item-check svg { stroke: #0F172A
 }
  /* ================================================================== */
 
+        /* Подтягиваем нижнюю панель выше */
+.bottom-sticky-panel {
+    margin-top: 0 !important;   /* Убираем внешний отступ сверху */
+    padding-top: 0 !important;  /* Убираем внутренний отступ сверху */
+    padding-bottom: 30px !important; /* Немного отступа снизу для красоты */
+}
+
+/* Если нужно подтянуть текст подсказки ближе к кнопке */
+.sticky-hint {
+    margin-top: 8px !important; /* Было 10px, делаем чуть меньше */
+}
+
+
 
 
         
@@ -5157,7 +5170,7 @@ body.dark-mode .fee-dropdown-item.selected .fee-item-check svg { stroke: #0F172A
          </div> <!-- Закрываем calc-box-white-section -->
 
     <!-- Отступ для sticky кнопки -->
-    <div style="height: 140px;"></div>
+    <div style="height: 20px;"></div>
 
     <!-- Sticky Bottom Panel -->
     <div class="bottom-sticky-panel" id="stickyPanel">
