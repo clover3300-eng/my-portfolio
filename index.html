@@ -5125,7 +5125,7 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
 /* ==================================================================== */
 
         /* =================================================================
-   THE VOID (BACKGROUND DEPTH LAYER)
+   LUXURY BRAND PAPER BACKGROUND
    ================================================================= */
 
 .luxury-depth-layer {
@@ -5134,40 +5134,65 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Лежит в самом низу */
+    z-index: -1; /* На заднем плане */
     
-    /* Материал: Глубокий Графит */
-    background: radial-gradient(circle at 10% 50%, #2C364C 0%, #1a2234 100%);
+    /* Глубокий, дорогой цвет фона */
+    background: radial-gradient(circle at 50% 50%, #2C364C 0%, #111827 100%);
     
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: hidden; /* Обрезаем лишнее */
 }
 
-/* Огромная надпись на фоне */
-.depth-text {
-    font-family: 'Inter', sans-serif;
-    font-weight: 900;
-    font-size: 120px;
-    color: rgba(255, 255, 255, 0.03); /* Почти невидима */
-    text-transform: uppercase;
-    letter-spacing: 10px;
+/* Контейнер для текста (его мы будем двигать параллаксом) */
+.luxury-pattern-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Расстояние между строками */
     
-    /* Поворачиваем для стиля */
-    transform: rotate(-90deg);
-    white-space: nowrap;
-    user-select: none;
-    pointer-events: none;
+    /* Слегка наклоняем весь паттерн для динамики */
+    transform: rotate(-10deg) scale(1.2); 
+    
+    width: 150%; /* Шире экрана, чтобы не было дырок при повороте */
+    opacity: 0.6; /* Общая прозрачность текстуры */
 }
 
-/* Светлая тема адаптация (делаем фон светлым, но глубоким) */
+/* Сама строка текста */
+.pattern-line {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 11px; /* Мелкий, аккуратный шрифт */
+    text-transform: uppercase;
+    letter-spacing: 4px; /* Широкая разрядка - признак люкса */
+    
+    /* Цвет "вдавленной" бумаги */
+    color: rgba(255, 255, 255, 0.04); 
+    
+    white-space: nowrap; /* Текст не переносится */
+    user-select: none;
+}
+
+/* Эффект "Вразнобой" (Шахматный порядок) */
+/* Сдвигаем четные строки влево, нечетные вправо */
+.pattern-line:nth-child(odd) {
+    margin-left: -100px;
+}
+.pattern-line:nth-child(even) {
+    margin-left: 50px;
+}
+
+/* Адаптация для Светлой темы */
 body:not(.dark-mode) .luxury-depth-layer {
-    background: radial-gradient(circle at 10% 50%, #E2E8F0 0%, #CBD5E1 100%);
+    /* Светлая дорогая бумага */
+    background: #F1F5F9;
 }
-body:not(.dark-mode) .depth-text {
-    color: rgba(44, 54, 76, 0.05); /* Темный текст на светлом */
+body:not(.dark-mode) .pattern-line {
+    /* Текст чуть темнее фона (эффект тиснения) */
+    color: rgba(44, 54, 76, 0.06);
+    font-weight: 900;
 }
+
 
 /* ==================================================================== */
 
@@ -6035,10 +6060,28 @@ body:not(.dark-mode) .depth-text {
     </div>
 </div>
 
-    <!-- THE VOID (ГЛУБИНА ПОД ЭКРАНОМ) -->
+   <!-- LUXURY PATTERN BACKGROUND (BRAND PAPER) -->
 <div class="luxury-depth-layer">
-    <div class="depth-text">Solomi'na</div>
+    <div class="luxury-pattern-container">
+        <!-- Повторяющиеся строки для создания текстуры -->
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+    </div>
 </div>
+
 
 
 
@@ -8934,19 +8977,24 @@ initNotificationSwipe();
    HEAVY 3D SWIPE + SCROLL LOCK + PARALLAX
    ================================================================= */
 
+/* =================================================================
+   HEAVY 3D SWIPE + SCROLL LOCK + PARALLAX (UPDATED FOR PATTERN)
+   ================================================================= */
+
 function initSwipeBack() {
     let startX = 0;
     let startY = 0;
     let isDragging = false;
-    let isAxisLocked = false; // Флаг: мы уже решили, куда тянем?
+    let isAxisLocked = false; 
     
     const container = document.getElementById('swipeBackIndicator');
     const lens = container.querySelector('.ls-lens');
     const arrow = container.querySelector('.ls-arrow');
-    // Находим наш новый фон для параллакса
-    const depthText = document.querySelector('.depth-text');
     
-    const triggerZone = 35; // Зона старта (px)
+    // ИЩЕМ НОВЫЙ КОНТЕЙНЕР ФОНА
+    const depthText = document.querySelector('.luxury-pattern-container');
+    
+    const triggerZone = 35; 
     
     function getBackTarget() {
         if (currentScreen === 'screen-home') return null;
@@ -8957,20 +9005,17 @@ function initSwipeBack() {
 
     // 1. TOUCH START
     document.addEventListener('touchstart', (e) => {
-        // Сбрасываем флаги
         isDragging = false;
         isAxisLocked = false;
-        
         if (!getBackTarget()) return;
 
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         
-        // Начинаем слушать, только если палец у левого края
         if (startX <= triggerZone) {
             isDragging = true;
         }
-    }, { passive: false }); // Важно для iOS
+    }, { passive: false });
 
     // 2. TOUCH MOVE
     document.addEventListener('touchmove', (e) => {
@@ -8981,67 +9026,54 @@ function initSwipeBack() {
         const deltaX = x - startX;
         const deltaY = Math.abs(y - startY);
 
-        // --- ЛОГИКА БЛОКИРОВКИ ---
-        // Если мы еще не решили, это свайп или скролл...
         if (!isAxisLocked) {
             if (deltaY > Math.abs(deltaX)) {
-                // Это вертикальный скролл -> отменяем наш свайп
                 isDragging = false;
                 return; 
             } else if (Math.abs(deltaX) > 5) {
-                // Это горизонтальный свайп -> БЛОКИРУЕМ СКРОЛЛ СТРАНИЦЫ
                 isAxisLocked = true;
             }
         }
 
-        // Если ось заблокирована (мы тянем вбок) -> ЗАПРЕЩАЕМ СТАНДАРТНОЕ ПОВЕДЕНИЕ
-        if (isAxisLocked) {
-            if (e.cancelable) e.preventDefault();
-        }
+        if (isAxisLocked && e.cancelable) e.preventDefault();
 
-        // --- ВИЗУАЛЬНАЯ ЧАСТЬ ---
         const activeScreen = document.querySelector('.screen.active');
         
         if (activeScreen && deltaX > 0 && isAxisLocked) {
-            // Отключаем плавность CSS для мгновенного отклика
             activeScreen.style.transition = 'none';
             lens.style.transition = 'none';
             if(depthText) depthText.style.transition = 'none';
 
-            // 1. Тяжелая физика (коэф. 0.4) + Лимит
             let visualShift = deltaX * 0.4;
-            // Логарифмическое торможение после 100px
             if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
-            visualShift = Math.min(visualShift, 130); // Жесткий предел
+            visualShift = Math.min(visualShift, 130);
 
-            // 2. 3D Поворот экрана
             const rotateY = Math.min(visualShift / 15, 8); 
             activeScreen.style.transform = `translateX(${visualShift}px) perspective(800px) rotateY(-${rotateY}deg)`;
             
-            // 3. Параллакс фона (Текст на фоне чуть сдвигается, создавая объем)
+            // --- ОБНОВЛЕННЫЙ ПАРАЛЛАКС ФОНА ---
             if(depthText) {
-                depthText.style.transform = `rotate(-90deg) translateY(${visualShift * 0.2}px)`;
+                // Сохраняем поворот -10deg и масштаб 1.2, добавляем смещение
+                depthText.style.transform = `rotate(-10deg) scale(1.2) translateX(${visualShift * 0.5}px)`;
             }
 
-            // 4. Линза со стрелкой
             const lensProgress = Math.min(visualShift / 70, 1);
             lens.style.transform = `translateX(${-100 + (lensProgress * 100)}%)`;
             lens.style.opacity = lensProgress;
             arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
 
-            // 5. Вибрация (Haptic)
             if (visualShift > 90 && !container.dataset.vibrated) {
                 if (window.Telegram?.WebApp?.HapticFeedback) {
                     window.Telegram.WebApp.HapticFeedback.selectionChanged();
                 }
                 container.dataset.vibrated = "true";
-                arrow.style.strokeWidth = "3"; // Жирнее стрелка
+                arrow.style.strokeWidth = "3"; 
             } else if (visualShift < 90) {
                 container.dataset.vibrated = "";
                 arrow.style.strokeWidth = "2";
             }
         }
-    }, { passive: false }); // passive: false ОБЯЗАТЕЛЬНО для preventDefault
+    }, { passive: false });
 
     // 3. TOUCH END
     document.addEventListener('touchend', (e) => {
@@ -9053,12 +9085,9 @@ function initSwipeBack() {
         const activeScreen = document.querySelector('.screen.active');
         const endX = e.changedTouches[0].clientX;
         const deltaX = endX - startX;
-        
-        // Порог срабатывания (нужно протащить 120px реального пальца)
         const threshold = 120; 
 
         if (activeScreen) {
-            // Возвращаем плавность CSS
             activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
             lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
             if(depthText) depthText.style.transition = 'transform 0.5s ease';
@@ -9066,17 +9095,17 @@ function initSwipeBack() {
             if (deltaX > threshold) {
                 // === УСПЕХ ===
                 const targetId = getBackTarget();
-                
-                // Эффект "вылета" экрана
                 activeScreen.style.transform = `translateX(100%) perspective(800px) rotateY(-15deg)`;
                 
-                // Прячем линзу
                 lens.style.transform = `translateX(-100%)`;
                 lens.style.opacity = '0';
 
                 setTimeout(() => {
                     resetScreenStyles(activeScreen);
-                    if(depthText) depthText.style.transform = 'rotate(-90deg)'; // Сброс фона
+                    
+                    // --- СБРОС ФОНА (Успех) ---
+                    if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
+                    
                     showScreen(targetId);
                     
                     if (window.Telegram?.WebApp?.HapticFeedback) {
@@ -9085,11 +9114,13 @@ function initSwipeBack() {
                 }, 250);
                 
             } else {
-                // === ОТМЕНА (ПРУЖИНА) ===
+                // === ОТМЕНА ===
                 activeScreen.style.transform = 'translateX(0) perspective(800px) rotateY(0deg)';
                 lens.style.transform = 'translateX(-100%)';
                 lens.style.opacity = '0';
-                if(depthText) depthText.style.transform = 'rotate(-90deg)';
+                
+                // --- СБРОС ФОНА (Отмена) ---
+                if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
             }
         }
         container.dataset.vibrated = "";
