@@ -823,23 +823,40 @@ input#sumInput.size-xsmall {
     color: #2C364C;
 }
 
-/* Выпадающее меню тоже делаем в стиле стекла */
+/* Исправленные стили для меню */
 .fee-selector-unified .fee-dropdown-menu {
     position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    width: 220px;
+    top: 100%; /* Прижимаем к нижнему краю */
+    left: 0;
+    width: 100%; /* Растягиваем на всю ширину родителя */
+    margin-top: 8px; /* Небольшой отступ сверху */
     
-    background: rgba(255, 255, 255, 0.85); /* Полупрозрачный фон */
+    background: rgba(255, 255, 255, 0.95); /* Менее прозрачный для читаемости */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 18px;
     padding: 6px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-    display: none;
-    z-index: 100;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    
+    /* Скрыто по умолчанию */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    z-index: 1000; /* Очень высокий Z-index */
+    pointer-events: none; /* Чтобы не мешало кликам, когда скрыто */
+}
+
+/* Класс для показа меню */
+.fee-selector-unified .fee-dropdown-menu.show {
+    display: block; /* Важно для JS */
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto; /* Включаем клики */
 }
 
 .fee-dropdown-item {
@@ -6257,26 +6274,31 @@ saveCustomStrategy = function() {
 let isFeeSelected = false;
 
 function toggleFeeDropdown() {
-    // Закрываем клавиатуру если открыта
+    // 1. Убираем фокус с клавиатуры
     const sumInput = document.getElementById('sumInput');
-    if (sumInput && document.activeElement === sumInput) {
-        sumInput.blur();
-    }
+    if (sumInput) sumInput.blur();
     
     const trigger = document.getElementById('feeDropdownTrigger');
     const menu = document.getElementById('feeDropdownMenu');
-    const wrapper = document.querySelector('.fee-unified-wrapper');
     
-    trigger.classList.toggle('open');
+    if (!trigger || !menu) return; // Защита от ошибок
+    
+    // Переключаем классы
+    const isOpen = trigger.classList.toggle('open');
     menu.classList.toggle('show');
     
-    // Добавляем класс active к wrapper
-    if (menu.classList.contains('show')) {
-        wrapper?.classList.add('active');
-    } else {
-        wrapper?.classList.remove('active');
+    // Поворачиваем стрелку
+    const arrow = trigger.querySelector('.fee-dropdown-arrow');
+    if (arrow) {
+        arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
 }
+
 
 function selectFee(value, rateText, nameText) {
     // Закрываем клавиатуру если открыта
