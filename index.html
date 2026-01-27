@@ -5199,7 +5199,8 @@ textarea {
             <div class="waterfall-inner">
                 
                 <!-- Опция 50/50 -->
-                <div class="strategy-option-card" data-bonds="50" onclick="selectStrategy(50, this, 'Гармония', 'Классический баланс')">
+                <div class="waterfall-inner">
+    <div class="strategy-option-card" data-bonds="50" onclick="selectStrategy(50, this, 'Гармония', 'Классический баланс')">
         <div class="card-left-part">
             <div class="card-indicator" style="background: linear-gradient(180deg, #5B7C99 0%, #5B7C99 50%, #94A8B8 50%, #94A8B8 100%);"></div>
             <div class="card-titles">
@@ -5281,7 +5282,6 @@ textarea {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B7C99" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
         </div>
     </div>
-
 </div>
 
             </div>
@@ -6806,36 +6806,32 @@ function resetRatioTo50() {
 // NEW: Обновление выделения карточки при изменении ползунка
 function updateStrategyCardSelection(bondPercent) {
     const cards = document.querySelectorAll('.strategy-option-card');
-    const isCustomMode = (savedCustomBonds !== null); // Проверка: мы в режиме "Своя"?
+    // Проверяем, включен ли режим "Своя стратегия" (через наличие сохраненных данных)
+    const isCustomMode = (savedCustomBonds !== null);
 
     cards.forEach(card => {
         const cardBondsAttr = card.getAttribute('data-bonds');
-        if (!cardBondsAttr) return; // Защита, если забыл добавить атрибуты в HTML
+        if (!cardBondsAttr) return;
 
         // ЛОГИКА ДЛЯ "НАСТРОИТЬ СВОЮ"
         if (cardBondsAttr === 'custom') {
-            card.style.display = 'flex'; // Всегда показываем в списке
-            // Если активен кастомный режим — подсвечиваем
-            if (isCustomMode) {
-                card.classList.add('selected');
-            } else {
-                card.classList.remove('selected');
-            }
-            return; 
+            card.style.display = 'flex'; // Всегда видна
+            if (isCustomMode) card.classList.add('selected');
+            else card.classList.remove('selected');
+            return;
         }
 
-        // ЛОГИКА ДЛЯ ОБЫЧНЫХ КАРТОЧЕК
+        // ЛОГИКА ДЛЯ СТАНДАРТНЫХ КАРТОЧЕК
         if (isCustomMode) {
-            // Если наверху висит "Индивидуальная", в списке показываем ВСЕ обычные
+            // Если выбрана "Своя", показываем все остальные стандартные
             card.style.display = 'flex';
             card.classList.remove('selected');
         } else {
-            // Если выбрана обычная стратегия
+            // Если выбрана стандартная - скрываем ту, что совпадает по процентам
             if (parseInt(cardBondsAttr) === bondPercent) {
-                card.style.display = 'none'; // Скрываем дубликат, который сейчас наверху
-                card.classList.add('selected'); // (На всякий случай помечаем)
+                card.style.display = 'none'; // Убираем из списка (уже наверху)
             } else {
-                card.style.display = 'flex'; // Остальные показываем
+                card.style.display = 'flex';
                 card.classList.remove('selected');
             }
         }
@@ -8125,21 +8121,19 @@ function highlightKeywords(text) {
       function draw() {
     console.log('draw() called');
     
-    // 1. Сначала получаем данные из слайдера
+    // 1. Получаем текущее значение слайдера
     const slider = document.getElementById('ratioSlider');
-    if (!slider) return; // Защита: если слайдера нет на странице, выходим
-    
+    if (!slider) return;
     const bondPct = parseInt(slider.value);
     const stockPct = 100 - bondPct;
     
-    // 2. СРАЗУ обновляем список карточек (скрываем выбранную)
-    // Теперь это сработает, даже если сумма 0
+    // 2. СРАЗУ обновляем видимость карточек в списке (скрываем дубликаты)
     updateStrategyCardSelection(bondPct);
 
-    // 3. Проверяем сумму
+    // 3. Получаем введенную сумму
     const inputSum = getSumInputValue();
 
-    // Если сумма = 0, обновляем только цифры процентов в круге и выходим
+    // 4. Если сумма 0, обновляем только проценты в центре и выходим
     if (inputSum === 0) {
         if(document.getElementById('labelBondsPct')) {
              document.getElementById('labelBondsPct').innerText = bondPct;
@@ -8148,30 +8142,17 @@ function highlightKeywords(text) {
         return;
     }
     
+    // Дальше идет твоя логика расчетов...
     console.log('Drawing with sum:', inputSum);
-    
-   
-            
-            const stockPct = 100 - bondPct;
 
-            // Обновляем выделение карточек стратегий
-            updateStrategyCardSelection(bondPct);
-            
-            // Check Presets (for visual matching, but class removal handled by setPresetRatio)
-            // Just ensure consistent visual state if slider dragged manually
-            const presets = document.querySelectorAll('.preset-btn-modern');
-            presets.forEach(p => {
-                 const presets = document.querySelectorAll('.preset-btn-modern');
+    // Обновляем визуальное выделение кнопок-пресетов под кругом
+    const presets = document.querySelectorAll('.preset-btn-modern');
     presets.forEach(p => {
-         // Проверяем, совпадает ли процент кнопки с текущим
          const match = p.getAttribute('onclick').match(/\d+/);
-         if (match) {
+         if(match) {
              const pct = parseInt(match[0]);
-             if(pct !== bondPct) {
-                 p.classList.remove('selected-preset');
-             } else {
-                 p.classList.add('selected-preset');
-             }
+             if(pct !== bondPct) p.classList.remove('selected-preset');
+             else p.classList.add('selected-preset');
          }
     });
 
