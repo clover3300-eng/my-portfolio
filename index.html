@@ -6499,15 +6499,20 @@ function toggleCustomStrategyNew(cardElement) {
     
     if (isOpening) {
         expanded.classList.add('show');
-        // Плавный скролл к настройкам, чтобы пользователю было удобно
+        // Плавно скроллим к настройкам, чтобы их было видно
         expanded.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-        // ЭТОТ БЛОК СРАБОТАЕТ, КОГДА НАЖИМАЕШЬ "ГОТОВО" ИЛИ ЗАКРЫВАЕШЬ
+        // ЭТОТ БЛОК СРАБОТАЕТ ПРИ НАЖАТИИ "ГОТОВО"
         expanded.classList.remove('show');
         
-        // --- ВОТ ЭТА СТРОЧКА ИСПРАВИТ ПРОБЛЕМУ ---
-        // Она возвращает экран на самый верх к вводу суммы
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // ВОЗВРАЩАЕМ ЭКРАН В САМЫЙ ВЕРХ (к вводу суммы)
+        // Используем setTimeout, чтобы скролл начался после того, как блок начнет скрываться
+        setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }, 50);
     }
 }
 
