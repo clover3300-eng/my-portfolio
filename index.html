@@ -5939,13 +5939,11 @@ textarea {
         
         const SHEET_ID = '1SFV5dBIsvfX5HKbXBuXHFVvBfw1p1MPPx2uK209ajLM';
         const GID = '1213653337'; 
-        const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSl8uP-rbiQbK57e9L5xxu8dHKzN05jNsJukOMclUn0wuaT2UNsnX-PIAaCctInmwDOzffdPuah4bER/pub?gid=${GID}&single=true&output=csv`;
-       
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
 
            // Лист с описаниями компаний
         const GID_DESCRIPTIONS = '88183976';
-        const CSV_DESCRIPTIONS_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vSl8uP-rbiQbK57e9L5xxu8dHKzN05jNsJukOMclUn0wuaT2UNsnX-PIAaCctInmwDOzffdPuah4bER/pub?gid=${GID_DESCRIPTIONS}&single=true&output=csv`;
-        
+        const CSV_DESCRIPTIONS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID_DESCRIPTIONS}`;
           // URL вашего Google Apps Script (ЗАМЕНИТЕ НА СВОЙ!)
         const NEWS_API_URL = 'https://script.google.com/macros/s/AKfycbxDEhAz8Cd9wB3Q6ln_UY_0mxPp0bqRXv0HKFVdsMUt3S0vAejpmITCWkzRdDgWqfmB/exec';
 
