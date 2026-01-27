@@ -5322,6 +5322,16 @@ body.dark-mode .screen::after {
 }
   /* ==================================================================== */
 
+        /* ОПТИМИЗАЦИЯ ДЛЯ ПЛАВНОСТИ */
+.screen {
+    /* Подсказываем браузеру, что будет меняться */
+    will-change: transform, border-radius, box-shadow;
+    /* Убираем мерцание задней части при 3D повороте */
+    backface-visibility: hidden; 
+    -webkit-backface-visibility: hidden;
+}
+  /* ==================================================================== */
+
         
 
         
@@ -9100,203 +9110,216 @@ function initNotificationSwipe() {
 
 initNotificationSwipe();
 
-   /* =================================================================
-   HEAVY 3D SWIPE + SCROLL LOCK + PARALLAX
-   ================================================================= */
-
-/* =================================================================
-   ULTIMATE LUXURY SWIPE ENGINE
-   Physics + 3D + Gold Light + Parallax + Haptics
+  /* =================================================================
+   ULTIMATE SWIPE ENGINE V2 (NO JITTER / ANTI-SHAKE)
+   Uses requestAnimationFrame for buttery smooth 60/120 FPS
    ================================================================= */
 
 function initSwipeBack() {
+    // Переменные состояния
     let startX = 0;
     let startY = 0;
-    let isDragging = false;
-    let isAxisLocked = false; 
+    let currentX = 0; // Текущая позиция пальца
     
-    // Элементы интерфейса
+    let isDragging = false;
+    let isAxisLocked = false;
+    
+    // Переменная для анимационного кадра
+    let animationFrameId = null;
+    
+    // Элементы
     const container = document.getElementById('swipeBackIndicator');
     const lens = container.querySelector('.ls-lens');
     const arrow = container.querySelector('.ls-arrow');
-    
-    // Фон с паттерном (для эффекта золота и параллакса)
     const foilPattern = document.querySelector('.luxury-pattern-container');
     
-    const triggerZone = 35; // Зона срабатывания слева (px)
-    
-    // Логика навигации: откуда и куда
+    const triggerZone = 35;
+
     function getBackTarget() {
-        if (currentScreen === 'screen-home') return null; // Со стартовой нельзя уйти
+        if (currentScreen === 'screen-home') return null;
         if (currentScreen === 'screen-company') return 'screen-interesting';
         if (currentScreen === 'screen-app') return 'screen-home';
-        // Со всех остальных возвращаемся в Терминал
         return 'screen-app'; 
     }
 
-    // --- 1. НАЧАЛО КАСАНИЯ (TOUCH START) ---
-    document.addEventListener('touchstart', (e) => {
-        isDragging = false;
-        isAxisLocked = false;
+    // --- ФУНКЦИЯ ОТРИСОВКИ (ВЫЗЫВАЕТСЯ БРАУЗЕРОМ) ---
+    function updateSwipe() {
+        if (!isDragging) return; // Если уже отпустили - не рисуем
+
+        const deltaX = currentX - startX;
         
-        // Если некуда возвращаться — не запускаем
+        // Находим активный экран
+        const activeScreen = document.querySelector('.screen.active');
+        if (!activeScreen) return;
+
+        // === МАТЕМАТИКА И ФИЗИКА ===
+        // Коэффициент тяжести 0.4
+        let visualShift = deltaX * 0.4;
+        
+        // Логарифмическое торможение
+        if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
+        visualShift = Math.min(visualShift, 130);
+
+        // 3D Поворот и Масштаб
+        const rotateY = Math.min(visualShift / 15, 8); 
+        const scale = 1 - (visualShift / 130) * 0.04;
+        
+        // --- ПРИМЕНЯЕМ СТИЛИ (Один раз за кадр) ---
+        
+        // 1. Экран (используем translate3d для GPU ускорения)
+        activeScreen.style.transform = `translate3d(${visualShift}px, 0, 0) perspective(800px) rotateY(-${rotateY}deg) scale(${scale})`;
+        
+        // 2. Фон (Паттерн)
+        if(foilPattern) {
+            foilPattern.style.transform = `rotate(-10deg) scale(1.2) translate3d(${visualShift * 0.5}px, 0, 0)`;
+            const lightPercent = -20 + (visualShift / 130) * 80;
+            foilPattern.style.setProperty('--light-pos', `${lightPercent}%`);
+        }
+
+        // 3. Линза
+        const lensProgress = Math.min(visualShift / 70, 1);
+        lens.style.transform = `translate3d(${-100 + (lensProgress * 100)}%, 0, 0)`;
+        lens.style.opacity = lensProgress;
+        arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
+
+        // 4. Вибрация
+        if (visualShift > 90 && !container.dataset.vibrated) {
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.selectionChanged();
+            }
+            container.dataset.vibrated = "true";
+            arrow.style.strokeWidth = "3";
+        } else if (visualShift < 90) {
+            container.dataset.vibrated = "";
+            arrow.style.strokeWidth = "2";
+        }
+    }
+
+    // --- 1. TOUCH START ---
+    document.addEventListener('touchstart', (e) => {
         if (!getBackTarget()) return;
 
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         
-        // Свайп работает только от левого края
+        isDragging = false;
+        isAxisLocked = false;
+        
         if (startX <= triggerZone) {
             isDragging = true;
+            
+            // Подготовка экрана
+            const activeScreen = document.querySelector('.screen.active');
+            if(activeScreen) {
+                // ВАЖНО: Принудительно отключаем transition через setProperty priority
+                activeScreen.style.setProperty('transition', 'none', 'important');
+                activeScreen.classList.add('swiping');
+            }
+            
+            // Подготовка элементов декора
+            if(lens) lens.style.transition = 'none';
+            if(foilPattern) foilPattern.style.transition = 'none';
         }
-    }, { passive: false }); // Важно для блокировки скролла
+    }, { passive: false });
 
-    // --- 2. ДВИЖЕНИЕ (TOUCH MOVE) ---
+    // --- 2. TOUCH MOVE ---
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
 
         const x = e.touches[0].clientX;
         const y = e.touches[0].clientY;
+        
+        // Обновляем текущую координату для функции отрисовки
+        currentX = x;
+
         const deltaX = x - startX;
         const deltaY = Math.abs(y - startY);
 
-        // Определяем намерение пользователя (Скролл или Свайп?)
+        // Логика блокировки осей
         if (!isAxisLocked) {
             if (deltaY > Math.abs(deltaX)) {
-                // Вертикальный скролл — отменяем наш свайп
                 isDragging = false;
+                if(animationFrameId) cancelAnimationFrame(animationFrameId);
                 return; 
             } else if (Math.abs(deltaX) > 5) {
-                // Горизонтальный свайп — блокируем ось
                 isAxisLocked = true;
             }
         }
 
-        // Если это свайп — запрещаем странице скроллиться
-        if (isAxisLocked && e.cancelable) e.preventDefault();
-
-        const activeScreen = document.querySelector('.screen.active');
-        
-        // --- ВИЗУАЛЬНАЯ МАГИЯ ---
-        if (activeScreen && deltaX > 0 && isAxisLocked) {
-            // Отключаем CSS-анимации для мгновенного отклика на палец
-            activeScreen.style.transition = 'none';
-            lens.style.transition = 'none';
-            if(foilPattern) foilPattern.style.transition = 'none';
+        if (isAxisLocked) {
+            if (e.cancelable) e.preventDefault(); // Блокируем скролл
             
-            // Включаем эффект стеклянного края (CSS класс)
-            activeScreen.classList.add('swiping');
-
-            // 1. ФИЗИКА ТЯЖЕСТИ
-            // Коэффициент 0.4 — экран двигается медленнее пальца (вес)
-            let visualShift = deltaX * 0.4;
-            
-            // Логарифмическое торможение (чтобы нельзя было утянуть бесконечно далеко)
-            if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
-            visualShift = Math.min(visualShift, 130); // Жесткий предел сдвига
-
-            // 2. 3D ПОВОРОТ И МАСШТАБ
-            // Экран поворачивается и чуть уменьшается (Breath effect)
-            const rotateY = Math.min(visualShift / 15, 8); 
-            const scale = 1 - (visualShift / 130) * 0.04; // до 0.96
-            
-            activeScreen.style.transform = `translateX(${visualShift}px) perspective(800px) rotateY(-${rotateY}deg) scale(${scale})`;
-            
-            // 3. ЗОЛОТОЙ БЛИК И ПАРАЛЛАКС ФОНА
-            if(foilPattern) {
-                // Параллакс: Фон двигается в 2 раза медленнее экрана
-                // rotate(-10deg) и scale(1.2) — это базовые стили из CSS, их нужно сохранить
-                foilPattern.style.transform = `rotate(-10deg) scale(1.2) translateX(${visualShift * 0.5}px)`;
-                
-                // Свет: Вычисляем позицию луча
-                // -20% (слева) -> 60% (справа)
-                const lightPercent = -20 + (visualShift / 130) * 80;
-                foilPattern.style.setProperty('--light-pos', `${lightPercent}%`);
-            }
-
-            // 4. ИНДИКАТОР-ЛИНЗА
-            // Выезжает на первые 70px движения
-            const lensProgress = Math.min(visualShift / 70, 1);
-            lens.style.transform = `translateX(${-100 + (lensProgress * 100)}%)`;
-            lens.style.opacity = lensProgress;
-            arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
-
-            // 5. ТАКТИЛЬНАЯ ВИБРАЦИЯ (HAPTICS)
-            // Щелчок, когда мы прошли порог срабатывания (90px)
-            if (visualShift > 90 && !container.dataset.vibrated) {
-                if (window.Telegram?.WebApp?.HapticFeedback) {
-                    window.Telegram.WebApp.HapticFeedback.selectionChanged();
+            if (deltaX > 0) {
+                // Запрашиваем кадр анимации (если он еще не запрошен)
+                if (!animationFrameId) {
+                    animationFrameId = requestAnimationFrame(() => {
+                        updateSwipe();
+                        animationFrameId = null; // Сбрасываем ID после выполнения
+                    });
                 }
-                container.dataset.vibrated = "true";
-                arrow.style.strokeWidth = "3"; // Жирнее стрелка
-            } else if (visualShift < 90) {
-                container.dataset.vibrated = "";
-                arrow.style.strokeWidth = "2";
             }
         }
     }, { passive: false });
 
-    // --- 3. КОНЕЦ КАСАНИЯ (TOUCH END) ---
+    // --- 3. TOUCH END ---
     document.addEventListener('touchend', (e) => {
-        if (!isDragging || !isAxisLocked) return;
-        
+        if (!isDragging) return;
         isDragging = false;
-        isAxisLocked = false;
+        
+        // Отменяем запланированную отрисовку, если она есть
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
 
         const activeScreen = document.querySelector('.screen.active');
         const endX = e.changedTouches[0].clientX;
         const deltaX = endX - startX;
-        
-        // Порог срабатывания (реальные пиксели пальца)
         const threshold = 120; 
 
         if (activeScreen) {
-            // Возвращаем плавность CSS (Пружина)
-            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.3s ease';
-            lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            // Возвращаем плавность CSS
+            activeScreen.style.transition = ''; // Удаляем инлайн none
+            // Форсируем перерисовку стилей (reflow), чтобы transition сработал
+            void activeScreen.offsetWidth; 
+            
+            // Задаем transition явно
+            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.3s ease, box-shadow 0.3s ease';
+            
+            // Восстанавливаем плавность для декора
+            if(lens) lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
             if(foilPattern) foilPattern.style.transition = 'transform 0.5s ease';
             
             if (deltaX > threshold) {
-                // === ВАРИАНТ А: УСПЕХ (ПЕРЕХОД) ===
+                // === УСПЕХ ===
                 const targetId = getBackTarget();
+                activeScreen.style.transform = `translate3d(100%, 0, 0) perspective(800px) rotateY(-15deg) scale(0.9)`;
                 
-                // Экран улетает вправо с поворотом
-                activeScreen.style.transform = `translateX(100%) perspective(800px) rotateY(-15deg) scale(0.9)`;
-                
-                // Линза прячется
                 lens.style.transform = `translateX(-100%)`;
                 lens.style.opacity = '0';
 
-                // Ждем завершения анимации и переключаем экран
                 setTimeout(() => {
                     resetScreenStyles(activeScreen);
-                    
-                    // Сбрасываем фон
                     if(foilPattern) {
                         foilPattern.style.transform = 'rotate(-10deg) scale(1.2)';
                         foilPattern.style.setProperty('--light-pos', '-100%');
                     }
-                    
                     showScreen(targetId);
                     
-                    // Вибрация успеха
                     if (window.Telegram?.WebApp?.HapticFeedback) {
                         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
                     }
                 }, 250);
                 
             } else {
-                // === ВАРИАНТ Б: ОТМЕНА (ВОЗВРАТ) ===
-                // Экран пружинит на место
-                activeScreen.style.transform = 'translateX(0) perspective(800px) rotateY(0deg) scale(1)';
+                // === ОТМЕНА ===
+                activeScreen.style.transform = 'translate3d(0, 0, 0) perspective(800px) rotateY(0deg) scale(1)';
                 
-                // Убираем стеклянный край чуть позже, чтобы не моргало
                 setTimeout(() => activeScreen.classList.remove('swiping'), 300);
                 
                 lens.style.transform = `translateX(-100%)`;
                 lens.style.opacity = '0';
                 
-                // Сбрасываем фон
                 if(foilPattern) {
                     foilPattern.style.transform = 'rotate(-10deg) scale(1.2)';
                     foilPattern.style.setProperty('--light-pos', '-100%');
@@ -9307,7 +9330,6 @@ function initSwipeBack() {
         container.dataset.vibrated = "";
     });
 
-    // Функция очистки стилей экрана
     function resetScreenStyles(screen) {
         screen.style.transform = '';
         screen.style.transition = '';
@@ -9315,9 +9337,7 @@ function initSwipeBack() {
     }
 }
 
-// Запуск
 initSwipeBack();
-
 
 
 
