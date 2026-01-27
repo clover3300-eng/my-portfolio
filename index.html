@@ -6815,37 +6815,26 @@ function resetRatioTo50() {
 
 
 // NEW: Обновление выделения карточки при изменении ползунка
-function updateStrategyCardSelection(bondPercent) {
-    const cards = document.querySelectorAll('.strategy-option-card');
+function toggleStrategyAccordion() {
+    const options = document.getElementById('strategyOptions');
+    const arrow = document.querySelector('.strategy-arrow');
+    const isExpanded = options.classList.contains('expanded');
     
-    cards.forEach(card => {
-        const cardBonds = card.getAttribute('data-bonds');
-        const isCustom = (cardBonds === 'custom');
-        const currentBondValue = parseInt(cardBonds);
-
-        if (isCustom) {
-            // "Настроить свою" всегда показываем
-            card.classList.remove('is-hidden');
-            
-            // Подсвечиваем, если активна индивидуальная стратегия
-            if (savedCustomBonds !== null && savedCustomBonds === bondPercent) {
-                card.classList.add('selected');
-            } else {
-                card.classList.remove('selected');
+    if (isExpanded) {
+        options.classList.remove('expanded');
+        arrow.style.transform = 'rotate(0deg)';
+        // Скрываем все карточки при закрытии
+        document.querySelectorAll('.strategy-option-card').forEach(c => c.style.display = 'none');
+    } else {
+        options.classList.add('expanded');
+        arrow.style.transform = 'rotate(180deg)';
+        // Показываем карточки, НО только те, которые не являются выбранными прямо сейчас
+        document.querySelectorAll('.strategy-option-card').forEach(c => {
+            if (!c.classList.contains('hidden-selected')) {
+                c.style.display = 'flex';
             }
-        } else {
-            // Для обычных стратегий (50/50, 70/30 и т.д.)
-            if (currentBondValue === bondPercent) {
-                // Если проценты совпадают с выбранными — ПРЯЧЕМ из списка
-                card.classList.add('is-hidden');
-                card.classList.add('selected');
-            } else {
-                // Иначе — ПОКАЗЫВАЕМ
-                card.classList.remove('is-hidden');
-                card.classList.remove('selected');
-            }
-        }
-    });
+        });
+    }
 }
     
 
