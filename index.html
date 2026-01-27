@@ -6522,6 +6522,7 @@ function toggleCustomStrategyNew(cardElement) {
 // Переопределяем функцию сохранения кастомной стратегии, чтобы она обновляла новую UI
 const originalSaveCustom = saveCustomStrategy; // Сохраняем ссылку если нужно
 // Переопределяем функцию сохранения кастомной стратегии
+// Переопределяем функцию сохранения кастомной стратегии
 saveCustomStrategy = function() {
     const bondPct = parseInt(document.getElementById('customRatioSlider').value);
     const stockPct = 100 - bondPct;
@@ -6531,34 +6532,39 @@ saveCustomStrategy = function() {
     
     document.getElementById('ratioSlider').value = bondPct;
     
-    // ОБНОВЛЯЕМ ГЛАВНУЮ КАРТОЧКУ
+    // 1. ОБНОВЛЯЕМ ГЛАВНУЮ КАРТОЧКУ
     updateMainCardUI(bondPct, 'Индивидуальная', 'Ваша настройка');
     
-    // Закрываем панель настройки
+    // 2. ЗАПУСКАЕМ СВОРАЧИВАНИЕ ВНУТРЕННЕГО БЛОКА
     document.getElementById('customStrategyExpanded').classList.remove('show');
     
-    // Закрываем общий список стратегий (водопад)
-    toggleStrategies(); 
+    // 3. ПРОКРУЧИВАЕМ К НАЧАЛУ ЭКРАНА (практически сразу)
+    setTimeout(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, 50);
+
+    // 4. ЗАКРЫВАЕМ ВЕСЬ СПИСОК (с задержкой для плавности)
+    // Ждем 350мс, чтобы внутренний блок успел визуально "схлопнуться"
+    setTimeout(() => {
+        const container = document.getElementById('waterfallContainer');
+        const trigger = document.getElementById('ghostTrigger');
+        
+        // Если список еще открыт - закрываем его
+        if (container.classList.contains('show')) {
+            container.classList.remove('show');
+            trigger.classList.remove('open');
+            document.getElementById('ghostText').innerText = "ОТКРЫТЬ СТРАТЕГИИ";
+        }
+    }, 350); 
     
     draw();
     
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
     }
-
-    // === ИСПРАВЛЕННАЯ ПРОКРУТКА ===
-    // Используем небольшую задержку и scrollIntoView к полю ввода
-    setTimeout(() => {
-        const inputBlock = document.querySelector('.input-wrapper');
-        if (inputBlock) {
-            inputBlock.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' // Центрируем поле ввода на экране
-            });
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }, 200); // 200мс — оптимально, чтобы анимация закрытия уже началась
 }
 
         
