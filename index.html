@@ -755,65 +755,63 @@ input#sumInput.size-xsmall {
     margin-bottom: 20px;
 }
         /* ========== Fee Selector Inline ========== */
-/* ========== Unified Fee Selector (одна рамка) ========== */
- QUIET LUXURY & GLASSMORPHISM UPDATE
+/* =================================================================
+   FEE SELECTOR - QUIET LUXURY DESIGN (CLEAN)
    ================================================================= */
 
-/* --- 1. Стеклянный бокс комиссии --- */
+/* 1. Основной контейнер (Слой выше стратегий) */
 .fee-selector-unified {
     position: relative;
     margin-top: 20px;
     margin-bottom: 25px;
-    z-index: 9999; /* Чтобы выпадающий список был выше других элементов */
+    z-index: 200; /* Достаточно, чтобы быть выше карт */
 }
 
+/* 2. Стеклянная подложка кнопки */
 .fee-unified-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
-    padding: 16px 20px;
+    padding: 14px 20px;
     
-    /* Эффект стекла (как у стратегий) */
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    /* Эффект дорогого стекла */
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease;
 }
 
-.fee-unified-wrapper:hover {
-    background: rgba(255, 255, 255, 0.5);
-    border-color: rgba(255, 255, 255, 0.7);
-    transform: translateY(-1px);
+.fee-unified-wrapper:active {
+    transform: scale(0.995);
 }
 
 .fee-unified-label {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
-    color: #5d6d7e; /* Более благородный серый */
+    color: #64748B; /* Спокойный серый */
     font-weight: 500;
-    letter-spacing: 0.02em;
 }
 
+/* 3. Триггер (сама кнопка "Выбрать") */
 .fee-unified-trigger {
     display: flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
     padding: 8px 14px;
-    /* Легкая подложка для триггера */
-    background: rgba(255, 255, 255, 0.4); 
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.04);
     border-radius: 12px;
     transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
 }
 
 .fee-unified-trigger:hover {
-    background: #FFFFFF;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
 }
 
 .fee-selected-text {
@@ -822,6 +820,12 @@ input#sumInput.size-xsmall {
     font-weight: 600;
     color: #2C364C;
 }
+
+.fee-dropdown-arrow {
+    color: #94A3B8;
+    transition: transform 0.3s ease;
+}
+
 
 /* Исправленные стили для меню */
 .fee-selector-unified .fee-dropdown-menu {
@@ -859,29 +863,7 @@ input#sumInput.size-xsmall {
     pointer-events: auto; /* Включаем клики */
 }
 
-.fee-dropdown-item {
-    padding: 12px 16px;
-    border-radius: 12px;
-    margin-bottom: 2px;
-    border-bottom: none; /* Убираем линии */
-    transition: all 0.2s;
-}
 
-.fee-dropdown-item:hover {
-    background: rgba(44, 54, 76, 0.05);
-}
-
-.fee-dropdown-item.selected {
-    background: #2C364C; /* Темный графит для выбранного */
-}
-
-.fee-dropdown-item.selected .fee-item-rate {
-    color: #FFFFFF;
-}
-
-.fee-dropdown-item.selected .fee-item-check svg {
-    stroke: #FFFFFF;
-}
 
 
 /* ========== END: Dropdown для тарифа комиссии ========== */
@@ -4787,32 +4769,118 @@ textarea {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Элементы списка */
-.fee-dropdown-item {
-    display: flex !important;
-    justify-content: space-between !important;
-    padding: 12px 16px !important;
-    cursor: pointer !important;
+        /* 3. Триггер (сама кнопка "Выбрать") */
+.fee-unified-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 14px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
 }
-.fee-dropdown-item:hover { background: #f5f5f5 !important; }
+
+.fee-unified-trigger:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
+}
+
+.fee-selected-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2C364C;
+}
+
+.fee-dropdown-arrow {
+    color: #94A3B8;
+    transition: transform 0.3s ease;
+}
+
+        /* 4. Выпадающее меню (Парящее) */
+.fee-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 100%;
+    
+    /* Материал */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 24px;
+    padding: 8px;
+    
+    /* Тень левитации */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 5px 15px rgba(0,0,0,0.02);
+    
+    /* Скрыто */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.98);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    z-index: 1000;
+}
+        
+/* Состояние: Открыто */
+.fee-dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+}
+/* Элементы списка */
+/* 5. Пункты меню */
+.fee-dropdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    margin-bottom: 2px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.fee-dropdown-item:hover {
+    background: rgba(44, 54, 76, 0.04);
+}
+
+/* Выбранный пункт - Белая плашка */
+.fee-dropdown-item.selected {
+    background: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+.fee-item-rate {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2C364C;
+}
 
 
 /* === СТИЛИ ДЛЯ ЧЕКБОКСОВ (КРУЖОЧКИ) === */
 
-/* 1. Базовый вид (Не выбрано) - Пустой круг */
+/* Базовый: Пустой круг */
 .fee-item-check {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     
-    /* Серая рамка, прозрачный фон */
-    border: 1.5px solid #CBD5E1; 
+    /* Тонкая серая линия */
+    border: 1.5px solid #CBD5E1;
     background: transparent;
     
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* 2. Иконка галочки внутри (Скрыта по умолчанию) */
@@ -4827,10 +4895,12 @@ textarea {
     transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* 3. Состояние: ВЫБРАНО (.selected) */
+/* Выбрано: Залитый круг */
 .fee-dropdown-item.selected .fee-item-check {
-    background: #2C364C; /* Темный фон (Графит) */
-    border-color: #2C364C; /* Цвет рамки меняется на цвет фона */
+    background: #2C364C; /* Графит */
+    border-color: #2C364C;
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(44, 54, 76, 0.2);
 }
 
 .fee-dropdown-item.selected .fee-item-check svg {
@@ -4838,20 +4908,32 @@ textarea {
     transform: scale(1); /* Вырастает до нормального размера */
 }
 
-/* 4. Адаптация для темной темы */
-body.dark-mode .fee-item-check {
-    border-color: #475569;
+/* 7. Темная тема */
+body.dark-mode .fee-unified-wrapper {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
 }
-
+body.dark-mode .fee-unified-trigger {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+body.dark-mode .fee-selected-text { color: #F1F5F9; }
+body.dark-mode .fee-dropdown-menu {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+body.dark-mode .fee-dropdown-item:hover { background: rgba(255, 255, 255, 0.05); }
+body.dark-mode .fee-dropdown-item.selected {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+}
+body.dark-mode .fee-item-rate { color: #F1F5F9; }
+body.dark-mode .fee-item-check { border-color: #475569; }
 body.dark-mode .fee-dropdown-item.selected .fee-item-check {
-    background: #38BDF8; /* Голубой акцент */
+    background: #38BDF8;
     border-color: #38BDF8;
 }
-
-body.dark-mode .fee-dropdown-item.selected .fee-item-check svg {
-    stroke: #0F172A; /* Черная галочка на голубом фоне */
-}
-
+body.dark-mode .fee-dropdown-item.selected .fee-item-check svg { stroke: #0F172A; }
 
 
 
