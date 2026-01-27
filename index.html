@@ -118,7 +118,7 @@
             color: var(--text-main);
             margin: 0; padding: 16px; line-height: 1.4;
             -webkit-tap-highlight-color: transparent;
-            padding-bottom: 40px;
+            padding-bottom: 120px;
             transition: background 0.3s, color 0.3s;
             overflow-x: hidden;
             overscroll-behavior-y: none;
@@ -529,16 +529,18 @@
     animation: none; 
 }
 
-/* Обновленная панель кнопки: теперь она идет просто после списка, без фиксации */
+/* Sticky панель для кнопки на 2й вкладке */
 .bottom-sticky-panel {
-    position: relative; /* Убираем fixed */
-    background: transparent; /* Убираем белый фон */
-    backdrop-filter: none; /* Убираем размытие */
-    -webkit-backdrop-filter: none;
-    padding: 20px 0; /* Оставляем только небольшие отступы сверху и снизу */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 16px 20px 100px 20px;
     z-index: 800;
-    border-top: none; /* Убираем рамку сверху */
-    margin-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
 }
         /* ========== NEW: Скрытие элементов при фокусе на вводе ========== */
 body.input-focused .nav-wrapper {
@@ -4845,7 +4847,7 @@ textarea {
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    border: 1.5px solid var(--accent-blue);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     position: relative;
     z-index: 20;
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
@@ -4859,7 +4861,7 @@ textarea {
 
 .dark-mode .main-selected-card {
     background: #1e293b;
-    border-color: var(--accent-blue);
+    border-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -6812,31 +6814,25 @@ function resetRatioTo50() {
 
 // NEW: Обновление выделения карточки при изменении ползунка
 function updateStrategyCardSelection(bondPercent) {
-    const cards = document.querySelectorAll('.strategy-option-card');
+    console.log('updateStrategyCardSelection called:', bondPercent, 'savedCustomBonds:', savedCustomBonds);
+    const presetValues = [80, 60, 50, 40, 20];
+    const isPreset = presetValues.includes(bondPercent);
     
-    cards.forEach(card => {
+    document.querySelectorAll('.strategy-card').forEach(card => {
         const cardBonds = card.getAttribute('data-bonds');
-        const isCustom = (cardBonds === 'custom');
-
-        if (isCustom) {
-            // Карточка "Настроить свою" всегда видна (display: flex)
-            card.style.display = 'flex';
-            
-            // Подсвечиваем её, если сейчас активен кастомный режим
+        
+        if (cardBonds === 'custom') {
+            // Кастомная карточка - выделяем ТОЛЬКО если есть сохранённые значения
             if (savedCustomBonds !== null && savedCustomBonds === bondPercent) {
                 card.classList.add('selected');
             } else {
                 card.classList.remove('selected');
             }
         } else {
-            // Для обычных карточек (Гармония, Депозит и т.д.)
+            // Обычные карточки (включая Гармонию 50/50)
             if (parseInt(cardBonds) === bondPercent) {
-                // Если карточка выбрана — СКРЫВАЕМ её из списка (display: none)
-                card.style.display = 'none';
                 card.classList.add('selected');
             } else {
-                // Если не выбрана — ПОКАЗЫВАЕМ
-                card.style.display = 'flex';
                 card.classList.remove('selected');
             }
         }
