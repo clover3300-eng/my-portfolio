@@ -5026,10 +5026,6 @@ textarea {
 /* Скрытие старых элементов, если они где-то остались */
 .strategy-cards-container, .strategy-expand-trigger { display: none !important; }
 
-        /* Класс для скрытия выбранной карточки в списке */
-.strategy-option-card.is-hidden {
-    display: none !important;
-}
 
 
 
@@ -6444,26 +6440,18 @@ function toggleStrategies() {
     const trigger = document.getElementById('ghostTrigger');
     const text = document.getElementById('ghostText');
     const customBlock = document.getElementById('customStrategyExpanded');
-
+    
+    // Переключаем классы
     const isOpen = container.classList.toggle('show');
     trigger.classList.toggle('open');
-
+    
+    // Меняем текст и вибрацию
     if(isOpen) {
         text.innerText = "ЗАКРЫТЬ";
-        
-        // Проверяем каждую карточку перед показом
-        document.querySelectorAll('.strategy-option-card').forEach(card => {
-            if (card.classList.contains('hide-this-card')) {
-                card.style.display = 'none';
-            } else {
-                card.style.display = 'flex';
-            }
-        });
-
-        if (window.Telegram?.WebApp?.HapticFeedback) 
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     } else {
         text.innerText = "ОТКРЫТЬ СТРАТЕГИИ";
+        // Если закрываем список, закрываем и кастомную настройку, если она открыта
         if(customBlock) customBlock.classList.remove('show');
     }
 }
@@ -6498,26 +6486,17 @@ function selectStrategy(bondPercent, optionCard, title, subtitle) {
 
 // Обновление UI главной карточки
 function updateMainCardUI(bondPercent, title, subtitle) {
+    const stockPercent = 100 - bondPercent;
+    
+    // Тексты
     document.getElementById('mainCardTitle').innerText = title;
     document.getElementById('mainCardSubtitle').innerText = subtitle;
+    document.getElementById('mainCardBonds').innerText = `Обл. ${bondPercent}%`;
+    document.getElementById('mainCardStocks').innerText = `Акц. ${stockPercent}%`;
     
-    const stocksPercent = 100 - bondPercent;
-    document.getElementById('mainStocksPercent').innerText = stocksPercent + '%';
-    document.getElementById('mainBondsPercent').innerText = bondPercent + '%';
-    
-    // ЛОГИКА СКРЫТИЯ ДУБЛИКАТОВ
-    const allCards = document.querySelectorAll('.strategy-option-card');
-    allCards.forEach(card => {
-        const cardBonds = card.getAttribute('data-bonds');
-        
-        // Если это обычная карточка (не "custom") и её проценты совпадают с текущими
-        if (cardBonds !== 'custom' && parseInt(cardBonds) === bondPercent) {
-            card.classList.add('hide-this-card');
-        } else {
-            // Все остальные (включая "Настроить свою") показываем
-            card.classList.remove('hide-this-card');
-        }
-    });
+    // Градиент индикатора
+    const indicator = document.getElementById('mainCardIndicator');
+    indicator.style.background = `linear-gradient(180deg, #5B7C99 0%, #5B7C99 ${bondPercent}%, #94A8B8 ${bondPercent}%, #94A8B8 100%)`;
 }
 
 // Логика для кастомной стратегии (адаптированная)
@@ -6832,26 +6811,36 @@ function resetRatioTo50() {
 
 
 // NEW: Обновление выделения карточки при изменении ползунка
-function toggleStrategyAccordion() {
-    const options = document.getElementById('strategyOptions');
-    const arrow = document.querySelector('.strategy-arrow');
-    const isExpanded = options.classList.contains('expanded');
+function updateStrategyCardSelection(bondPercent) {
+    const cards = document.querySelectorAll('.strategy-option-card');
     
-    if (isExpanded) {
-        options.classList.remove('expanded');
-        arrow.style.transform = 'rotate(0deg)';
-        // Скрываем все карточки при закрытии
-        document.querySelectorAll('.strategy-option-card').forEach(c => c.style.display = 'none');
-    } else {
-        options.classList.add('expanded');
-        arrow.style.transform = 'rotate(180deg)';
-        // Показываем карточки, НО только те, которые не являются выбранными прямо сейчас
-        document.querySelectorAll('.strategy-option-card').forEach(c => {
-            if (!c.classList.contains('hidden-selected')) {
-                c.style.display = 'flex';
+    cards.forEach(card => {
+        const cardBonds = card.getAttribute('data-bonds');
+        const isCustom = (cardBonds === 'custom');
+
+        if (isCustom) {
+            // Карточка "Настроить свою" всегда видна (display: flex)
+            card.style.display = 'flex';
+            
+            // Подсвечиваем её, если сейчас активен кастомный режим
+            if (savedCustomBonds !== null && savedCustomBonds === bondPercent) {
+                card.classList.add('selected');
+            } else {
+                card.classList.remove('selected');
             }
-        });
-    }
+        } else {
+            // Для обычных карточек (Гармония, Депозит и т.д.)
+            if (parseInt(cardBonds) === bondPercent) {
+                // Если карточка выбрана — СКРЫВАЕМ её из списка (display: none)
+                card.style.display = 'none';
+                card.classList.add('selected');
+            } else {
+                // Если не выбрана — ПОКАЗЫВАЕМ
+                card.style.display = 'flex';
+                card.classList.remove('selected');
+            }
+        }
+    });
 }
     
 
