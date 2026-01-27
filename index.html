@@ -4891,34 +4891,32 @@ body.dark-mode .fee-dropdown-item.selected .fee-item-check svg { stroke: #0F172A
     margin-top: 5px !important;
 }
 
-        /* =================================================================
-   ПРОЗРАЧНОЕ МЕНЮ (GLASS NAVIGATION)
-   ================================================================= */
+  /* === ПРИНУДИТЕЛЬНАЯ ПРОЗРАЧНОСТЬ МЕНЮ (СИЛА ID) === */
 
-/* Стили для Дока (меню) и Кнопки поиска (лупы) */
-.nav-dock, 
-.nav-search-btn {
-    /* 1. Делаем фон полупрозрачным (0.6 = 60% видимости, 40% прозрачности) */
-    background: rgba(255, 255, 255, 0.6) !important;
+/* Обращаемся по ID для максимального приоритета */
+#standardNav, 
+#nav-search {
+    /* 1. Фон: 0.35 — это очень прозрачно (35% заливки) */
+    background: rgba(255, 255, 255, 0.35) !important;
     
-    /* 2. Сильное размытие фона под элементом (эффект матового стекла) */
-    backdrop-filter: blur(25px) !important;
-    -webkit-backdrop-filter: blur(25px) !important;
+    /* 2. Размытие: Эффект матового стекла */
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
     
-    /* 3. Тонкая светлая рамка для выделения границ */
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    /* 3. Рамка: Тонкая и полупрозрачная */
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
     
-    /* 4. Мягкая тень, чтобы меню парило */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05) !important;
+    /* 4. Тень */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Настройка для ТЕМНОЙ ТЕМЫ (чтобы там тоже было прозрачно, но темно) */
-body.dark-mode .nav-dock, 
-body.dark-mode .nav-search-btn {
-    /* Темное полупрозрачное стекло */
-    background: rgba(30, 41, 59, 0.6) !important;
+/* Настройки для ТЕМНОЙ ТЕМЫ */
+body.dark-mode #standardNav, 
+body.dark-mode #nav-search {
+    /* Темное прозрачное стекло */
+    background: rgba(15, 23, 42, 0.45) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
 }
 
 
