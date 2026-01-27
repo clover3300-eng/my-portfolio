@@ -756,8 +756,15 @@ input#sumInput.size-xsmall {
 }
         /* ========== Fee Selector Inline ========== */
 /* ========== Unified Fee Selector (одна рамка) ========== */
+ QUIET LUXURY & GLASSMORPHISM UPDATE
+   ================================================================= */
+
+/* --- 1. Стеклянный бокс комиссии --- */
 .fee-selector-unified {
     position: relative;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    z-index: 50; /* Чтобы выпадающий список был выше других элементов */
 }
 
 .fee-unified-wrapper {
@@ -765,34 +772,30 @@ input#sumInput.size-xsmall {
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    padding: 14px 18px;
-    background: var(--card-bg);
-    border: 1px solid #E8EDF2;
-    border-radius: 14px;
-    transition: all 0.2s ease;
+    padding: 16px 20px;
+    
+    /* Эффект стекла (как у стратегий) */
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .fee-unified-wrapper:hover {
-    border-color: #CBD5E1;
-}
-
-.fee-unified-wrapper.active {
-    border-color: #2C364C;
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.7);
+    transform: translateY(-1px);
 }
 
 .fee-unified-label {
     font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    color: #A0AEC0;           /* ИЗМЕНЕНО: цвет как у placeholder */
-    font-weight: 400;         /* ИЗМЕНЕНО: обычный вес */
-    white-space: nowrap;
-    flex: 1;
-}
-
-.fee-unified-dropdown {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 13px;
+    color: #5d6d7e; /* Более благородный серый */
+    font-weight: 500;
+    letter-spacing: 0.02em;
 }
 
 .fee-unified-trigger {
@@ -800,301 +803,70 @@ input#sumInput.size-xsmall {
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    padding: 6px 12px;
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 8px;
+    padding: 8px 14px;
+    /* Легкая подложка для триггера */
+    background: rgba(255, 255, 255, 0.4); 
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
     transition: all 0.2s ease;
 }
 
 .fee-unified-trigger:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-.fee-unified-trigger .fee-selected-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
+.fee-selected-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
     font-weight: 600;
-    color: var(--text-main);
-    min-width: 50px;
-    text-align: right;
+    color: #2C364C;
 }
 
-.fee-unified-trigger .fee-selected-text.placeholder {
-    color: #A0AEC0;
-    font-weight: 500;
-    font-size: 12px;
-}
-
-.fee-unified-trigger .fee-dropdown-arrow {
-    width: 16px;
-    height: 16px;
-    color: #8A9AB0;
-    transition: transform 0.3s ease;
-    flex-shrink: 0;
-}
-
-.fee-unified-trigger.open .fee-dropdown-arrow {
-    transform: rotate(180deg);
-}
-
-/* Dropdown menu позиционируется относительно контейнера */
+/* Выпадающее меню тоже делаем в стиле стекла */
 .fee-selector-unified .fee-dropdown-menu {
     position: absolute;
-    top: calc(100% + 4px);
+    top: calc(100% + 8px);
     right: 0;
-    left: auto;
-    width: 200px;
-    background: var(--card-bg);
-    border: 1px solid #E8EDF2;
-    border-radius: 14px;
-    overflow: hidden;
-    z-index: 100;
+    width: 220px;
+    
+    background: rgba(255, 255, 255, 0.85); /* Полупрозрачный фон */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 18px;
+    padding: 6px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
     display: none;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.fee-selector-unified .fee-dropdown-menu.show {
-    display: block;
-    animation: dropdownSlide 0.2s ease;
-}
-
-/* Dark mode */
-.dark-mode .fee-unified-wrapper {
-    border-color: #334155;
-}
-
-.dark-mode .fee-unified-wrapper:hover {
-    border-color: #475569;
-}
-
-.dark-mode .fee-unified-wrapper.active {
-    border-color: var(--accent-blue);
-}
-
-.dark-mode .fee-unified-trigger {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.dark-mode .fee-unified-trigger:hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-/* Компактный размер триггера */
-.fee-dropdown-trigger {
-    width: 100%;
-    padding: 12px 16px;
-    background: var(--card-bg);
-    border: 1px solid #E8EDF2;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-}
-
-/* Компактный текст */
-.fee-selected-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-main);
-}
-
-.fee-selected-text.placeholder {
-    color: #A0AEC0;
-    font-weight: 500;
-    font-size: 12px;
-}
-
-.fee-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    color: #8A9AB0;
-    font-weight: 700;
-    margin-bottom: 10px;
-    display: block;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
-
-.fee-dropdown-container {
-    position: relative;
-    width: 100%;
-}
-
-.fee-dropdown-trigger {
-    width: 100%;
-    padding: 12px 16px; /* ИЗМЕНЕНО: было 16px 20px */
-    background: var(--card-bg);
-    border: 1px solid #E8EDF2;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-}
-
-.fee-dropdown-trigger:hover {
-    border-color: #CBD5E1;
-}
-
-.fee-dropdown-trigger.active {
-    border-color: #2C364C;
-}
-
-.fee-dropdown-trigger.open {
-    border-radius: 14px 14px 0 0;
-    border-bottom-color: transparent;
-}
-
-.fee-selected-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px; /* ИЗМЕНЕНО: было 15px */
-    font-weight: 600;
-    color: var(--text-main);
-}
-
-.fee-selected-text.placeholder {
-    color: #A0AEC0;
-    font-weight: 500; /* ИЗМЕНЕНО: было 400 */
-    font-size: 12px; /* ДОБАВЛЕНО */
-}
-
-.fee-dropdown-arrow {
-    width: 20px;
-    height: 20px;
-    color: #8A9AB0;
-    transition: transform 0.3s ease;
-}
-
-.fee-dropdown-trigger.open .fee-dropdown-arrow {
-    transform: rotate(180deg);
-}
-
-.fee-dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--card-bg);
-    border: 1px solid #E8EDF2;
-    border-top: none;
-    border-radius: 0 0 14px 14px;
-    overflow: hidden;
     z-index: 100;
-    display: none;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.fee-dropdown-menu.show {
-    display: block;
-    animation: dropdownSlide 0.2s ease;
-}
-
-@keyframes dropdownSlide {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .fee-dropdown-item {
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: background 0.15s ease;
-    border-bottom: 1px solid #F1F5F9;
-}
-
-.fee-dropdown-item:last-child {
-    border-bottom: none;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-bottom: 2px;
+    border-bottom: none; /* Убираем линии */
+    transition: all 0.2s;
 }
 
 .fee-dropdown-item:hover {
-    background: #F8FAFC;
-}
-
-.fee-dropdown-item.selected {
     background: rgba(44, 54, 76, 0.05);
 }
 
-.fee-item-left {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+.fee-dropdown-item.selected {
+    background: #2C364C; /* Темный графит для выбранного */
 }
 
-.fee-item-rate {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text-main);
+.fee-dropdown-item.selected .fee-item-rate {
+    color: #FFFFFF;
 }
 
-.fee-item-name {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    color: #8A9AB0;
+.fee-dropdown-item.selected .fee-item-check svg {
+    stroke: #FFFFFF;
 }
 
-.fee-item-check {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #2C364C;
-    color: white;
-    display: none;
-    align-items: center;
-    justify-content: center;
-}
 
-.fee-dropdown-item.selected .fee-item-check {
-    display: flex;
-}
-
-/* Dark mode для dropdown */
-.dark-mode .fee-dropdown-trigger {
-    border-color: #334155;
-}
-
-.dark-mode .fee-dropdown-trigger:hover {
-    border-color: #475569;
-}
-
-.dark-mode .fee-dropdown-trigger.active {
-    border-color: var(--accent-blue);
-}
-
-.dark-mode .fee-dropdown-menu {
-    border-color: #334155;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-}
-
-.dark-mode .fee-dropdown-item {
-    border-bottom-color: #334155;
-}
-
-.dark-mode .fee-dropdown-item:hover {
-    background: #1e293b;
-}
-
-.dark-mode .fee-dropdown-item.selected {
-    background: rgba(56, 189, 248, 0.1);
-}
-
-.dark-mode .fee-item-check {
-    background: var(--accent-blue);
-}
 /* ========== END: Dropdown для тарифа комиссии ========== */
 
 
@@ -1308,187 +1080,162 @@ input#sumInput.size-xsmall {
 }
 
 /* Развернутый блок настройки */
+/* --- 2. LUXURY Custom Strategy Box --- */
+
 .custom-strategy-expanded {
     display: grid;
     grid-template-rows: 0fr;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    margin-top: 5px;
+    /* Полностью прозрачный фон контейнера, стекло внутри */
+    background: transparent;
+    border: none;
+    margin-top: 10px;
     overflow: hidden;
-    transition: grid-template-rows 0.4s ease, padding 0.4s ease, margin 0.4s ease;
-    padding: 0 20px;
+    transition: grid-template-rows 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    padding: 0;
 }
 
 .custom-strategy-expanded.show {
     grid-template-rows: 1fr;
-    padding: 20px;
-    box-shadow: 0 4px 12px var(--card-shadow);
 }
 
 .custom-strategy-inner {
     overflow: hidden;
+    /* Карточка настроек в стиле "Тихая роскошь" */
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
 }
 
-/* Центральный дисплей с процентами */
+/* Дисплей значений - Минимализм */
 .custom-value-display {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    font-family: 'Inter', sans-serif;
-    min-width: 140px;
-    text-align: center;
-    background: var(--bg-color);
-    padding: 8px 16px;
-    border-radius: 12px;
+    gap: 15px;
+    padding: 0;
+    background: transparent;
+    margin-bottom: 10px;
 }
 
-.custom-value-bonds {
-    font-size: 42px;
-    font-weight: 600;
-    color: var(--bonds-color, #5B7C99);
+.custom-value-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.custom-value-bonds, .custom-value-stocks {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 48px;
+    font-weight: 300; /* Тонкий шрифт = дорого */
+    line-height: 1;
+    letter-spacing: -0.04em;
+}
+
+.custom-value-bonds { color: #5B7C99; }
+.custom-value-stocks { color: #94A8B8; }
+
+.custom-value-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #A0AEC0;
+    margin-top: 6px;
 }
 
 .custom-value-divider {
-    font-size: 42px;
-    font-weight: 300;
+    font-size: 32px;
+    font-weight: 200;
     color: #CBD5E1;
+    margin-top: -15px;
 }
 
-.custom-value-stocks {
-    font-size: 42px;
-    font-weight: 600;
-    color: var(--stocks-color, #94A8B8);
-}
-
-.custom-value-percent {
-    font-size: 20px;
-    color: #94A3B8;
-    margin-left: 2px;
-}
-
-/* Слайдер */
+/* Слайдер "Нить" */
 .custom-slider-block {
-    margin-bottom: 20px;
-}
-
-.custom-slider-labels {
+    margin: 30px 0;
+    position: relative;
+    height: 30px;
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
-
-.custom-slider-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.custom-slider-label.bonds {
-    color: var(--bonds-color, #5B7C99);
-}
-
-.custom-slider-label.stocks {
-    color: var(--stocks-color, #94A8B8);
+    align-items: center;
 }
 
 .custom-ratio-slider {
     -webkit-appearance: none;
     width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: linear-gradient(90deg, var(--bonds-color, #5B7C99) 0%, var(--stocks-color, #94A8B8) 100%);
-    opacity: 0.3;
+    height: 2px; /* Очень тонкая линия */
+    background: #E2E8F0;
     outline: none;
-    margin: 10px 0 20px 0;
+    border-radius: 1px;
+    z-index: 2;
+    position: relative;
 }
 
 .custom-ratio-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Мягкая тень */
     cursor: pointer;
-    border: 2px solid var(--bonds-color, #5B7C99);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.15s ease;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .custom-ratio-slider::-webkit-slider-thumb:active {
-    transform: scale(1.1);
+    transform: scale(1.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Кнопки +/− */
+/* Кнопки +/- в стиле Soft UI */
 .custom-controls-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
+    justify-content: space-between;
+    margin-bottom: 25px;
 }
 
 .custom-adjust-btn {
-    width: 48px;
-    height: 48px;
-    border-radius: 10px;
-    background: linear-gradient(180deg, rgba(91, 124, 153, 0.08) 0%, rgba(91, 124, 153, 0.04) 100%);
-    border: 1px solid rgba(91, 124, 153, 0.15);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%; /* Круглые */
+    background: #FFFFFF;
+    border: 1px solid #F1F5F9;
+    color: #2C364C;
+    font-size: 24px;
+    font-weight: 300;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
-    font-weight: 300;
-    color: var(--bonds-color, #5B7C99);
     cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.custom-adjust-btn:hover {
-    background: rgba(91, 124, 153, 0.15);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s;
 }
 
 .custom-adjust-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.92);
+    background: #F8FAFC;
 }
 
-/* Индикатор точек */
-.custom-dots-indicator {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 20px;
-}
-
-.custom-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #CBD5E1;
-    transition: all 0.2s ease;
-}
-
-.custom-dot.active {
-    width: 8px;
-    height: 8px;
-    background: var(--bonds-color, #5B7C99);
-    box-shadow: 0 0 8px rgba(91, 124, 153, 0.4);
-}
-
-/* Кнопки действий */
+/* Кнопки действий - Премиум */
 .custom-actions-row {
     display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 
+/* Кнопка сброса - минимализм */
 .custom-reset-btn {
     flex: 1;
-    padding: 14px;
-    background: #FFFFFF;
-    border: 1px solid #E2E8F0;
-    border-radius: 12px;
-    color: var(--text-main);
+    padding: 16px;
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 16px;
+    color: #94A3B8;
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 600;
@@ -1497,105 +1244,62 @@ input#sumInput.size-xsmall {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: all 0.15s ease;
+    transition: all 0.2s;
 }
 
 .custom-reset-btn:hover {
-    border-color: var(--bonds-color);
-    color: var(--bonds-color);
+    background: rgba(0,0,0,0.02);
+    color: #64748B;
 }
 
-.custom-reset-btn svg {
-    width: 14px;
-    height: 14px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-}
-
+/* Кнопка Готово - Глубокий Графит */
 .custom-done-btn {
-    flex: 1;
-    padding: 14px;
-    background: linear-gradient(135deg, #5B7C99 0%, #6B8BA8 100%);
+    flex: 1.5; /* Чуть шире */
+    padding: 16px;
+    background: #2C364C; /* Luxury Graphite */
     border: none;
-    border-radius: 12px;
+    border-radius: 16px;
     color: white;
     font-family: 'Inter', sans-serif;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.05em;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: all 0.15s ease;
-}
-
-.custom-done-btn:hover {
-    opacity: 0.9;
+    box-shadow: 0 10px 25px rgba(44, 54, 76, 0.25); /* Тень в цвет */
+    transition: all 0.2s;
 }
 
 .custom-done-btn:active {
     transform: scale(0.98);
+    box-shadow: 0 5px 15px rgba(44, 54, 76, 0.2);
 }
 
-.custom-done-btn svg {
-    width: 14px;
-    height: 14px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
+/* Темная тема */
+.dark-mode .fee-unified-wrapper,
+.dark-mode .custom-strategy-inner {
+    background: rgba(30, 41, 59, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Убираем старую круговую диаграмму */
-.strategy-ring {
-    display: none;
-}
-
-/* Dark mode */
-.dark-mode .strategy-card {
-    background: var(--card-bg);
-    border-color: #334155;
-}
-
-.dark-mode .strategy-card:hover {
-    background: rgba(30, 41, 59, 0.8);
-    border-color: #475569;
-}
-
-.dark-mode .strategy-card.selected {
-    background: linear-gradient(135deg, #1a2234 0%, #1e293b 100%);
-    border-color: #38BDF8;
-    border-width: 2px;
-    box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2);
-    transform: scale(1.01);
-}
-
-.dark-mode .strategy-card-title {
+.dark-mode .fee-unified-trigger,
+.dark-mode .custom-adjust-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
     color: #F1F5F9;
 }
 
-.dark-mode .strategy-card-subtitle {
-    color: #64748B;
+.dark-mode .fee-selector-unified .fee-dropdown-menu {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
-.dark-mode .strategy-divider {
-    background: #334155;
-}
-
-.dark-mode .custom-ratio-slider {
-    opacity: 0.4;
-}
-
-.dark-mode .custom-reset-btn {
-    background: #1E293B;
-    border-color: #334155;
-    color: #94A3B8;
-}
-
-.dark-mode .custom-dot {
-    background: #475569;
-}
+.dark-mode .custom-value-bonds { color: #38BDF8; }
+.dark-mode .custom-value-stocks { color: #94A3B8; }
+.dark-mode .custom-done-btn { background: #38BDF8; color: #0F172A; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.2); }
         /* ========== NEW: Сворачиваемый блок стратегий ========== */
 .strategy-cards-hidden {
     display: none;
@@ -5285,25 +4989,33 @@ textarea {
                     <!-- Развернутый блок настройки -->
 <div class="custom-strategy-expanded" id="customStrategyExpanded">
     <div class="custom-strategy-inner">
-        <div class="custom-slider-block">
-            <div class="custom-slider-labels">
-                <span class="custom-slider-label bonds">Облигации <span id="customBondsPct">50</span>%</span>
-                <span class="custom-slider-label stocks">Акции <span id="customStocksPct">50</span>%</span>
-            </div>
-            <input type="range" id="customRatioSlider" class="custom-ratio-slider" min="0" max="100" value="50" step="5" oninput="updateCustomSlider(this.value)">
-        </div>
         
+        <!-- Верхний ряд: Кнопка минус, Дисплей, Кнопка плюс -->
         <div class="custom-controls-row">
             <button class="custom-adjust-btn" onclick="event.stopPropagation(); adjustCustomRatio(-5)">−</button>
+            
             <div class="custom-value-display">
-                <span class="custom-value-bonds" id="customBondsDisplay">50</span>
+                <div class="custom-value-item">
+                    <span class="custom-value-bonds" id="customBondsDisplay">50</span>
+                    <span class="custom-value-label">Облигации</span>
+                </div>
                 <span class="custom-value-divider">/</span>
-                <span class="custom-value-stocks" id="customStocksDisplay">50</span>
+                <div class="custom-value-item">
+                    <span class="custom-value-stocks" id="customStocksDisplay">50</span>
+                    <span class="custom-value-label">Акции</span>
+                </div>
             </div>
+            
             <button class="custom-adjust-btn" onclick="event.stopPropagation(); adjustCustomRatio(5)">+</button>
         </div>
         
-        <div class="custom-dots-indicator" id="customDotsIndicator">
+        <!-- Слайдер-нить -->
+        <div class="custom-slider-block">
+            <input type="range" id="customRatioSlider" class="custom-ratio-slider" min="0" max="100" value="50" step="5" oninput="updateCustomSlider(this.value)">
+        </div>
+        
+        <!-- Индикатор точек (для красоты) -->
+        <div class="custom-dots-indicator" id="customDotsIndicator" style="margin-bottom: 25px;">
             <div class="custom-dot" data-value="0"></div>
             <div class="custom-dot" data-value="25"></div>
             <div class="custom-dot active" data-value="50"></div>
@@ -5311,23 +5023,18 @@ textarea {
             <div class="custom-dot" data-value="100"></div>
         </div>
         
+        <!-- Кнопки действий -->
         <div class="custom-actions-row">
             <button class="custom-reset-btn" onclick="event.stopPropagation(); resetCustomTo50()">
-                <svg viewBox="0 0 24 24">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                    <path d="M3 3v5h5"/>
-                </svg>
                 Сбросить
             </button>
             <button class="custom-done-btn" onclick="event.stopPropagation(); saveCustomStrategy()">
-                <svg viewBox="0 0 24 24">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
                 Готово
             </button>
         </div>
     </div>
 </div>
+
 </div>
 
             </div>
