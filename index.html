@@ -8139,15 +8139,17 @@ function highlightKeywords(text) {
 }
 
         function draw() {
-            console.log('draw() called');
+    // --- НАЧАЛО ИСПРАВЛЕНИЯ ---
+    const slider = document.getElementById('ratioSlider');
+    if (!slider) return;
+    const bondPct = parseInt(slider.value);
+    
+    // Обновляем видимость карточек СРАЗУ, не дожидаясь ввода денег
+    updateStrategyCardSelection(bondPct);
     
     const inputSum = getSumInputValue();
-    
-    // Если сумма = 0 (поле пустое), не сохраняем и не рисуем
-    if (inputSum === 0) {
-        console.log('Sum is zero, skipping draw');
-        return;
-    }
+    if (inputSum === 0) return;
+    // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
     
     console.log('Drawing with sum:', inputSum);
     
