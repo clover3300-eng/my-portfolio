@@ -6538,6 +6538,8 @@ saveCustomStrategy = function() {
     
     draw();
     if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
         
