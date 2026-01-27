@@ -5019,6 +5019,25 @@ body.dark-mode .header h1 {
 /* Адаптация для Светлой темы (делаем капсулу контрастной) */
 /* В светлой теме капсула остается темной для "премиум" акцента */
 
+/* =================================================================
+   АНИМАЦИЯ ОШИБКИ (LUXURY SHAKE)
+   ================================================================= */
+
+@keyframes shakeLux {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-6px); }
+    30% { transform: translateX(6px); }
+    45% { transform: translateX(-4px); }
+    60% { transform: translateX(4px); }
+    75% { transform: translateX(-2px); }
+}
+
+.shake-error {
+    animation: shakeLux 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    /* Временно меняем цвет рамки на мягкий красный */
+    border-color: rgba(248, 113, 113, 0.5) !important; 
+    box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.1) !important;
+}
 
 
 
@@ -6286,27 +6305,43 @@ function showLuxuryNotification() {
 
 // Основная функция расчета
 function calculateAndShowPortfolio() {
-    // 1. Получаем сумму
+    // 1. Проверка СУММЫ (как было)
     const sum = getSumInputValue();
-
-    // 2. ПРОВЕРКА: Если меньше 10 000 руб
     if (sum < 10000) {
-        // Показываем революционное уведомление
         showLuxuryNotification();
-        
-        // Прокручиваем к полю ввода, чтобы пользователь понял, где ошибка
         const inputBlock = document.querySelector('.input-wrapper');
         if (inputBlock) {
             inputBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // Фокус на поле ввода (опционально, можно убрать если раздражает клавиатура)
-            // document.getElementById('sumInput').focus(); 
         }
-        
-        return; // ОСТАНАВЛИВАЕМ ВСЁ, никуда не переходим
+        return;
     }
 
-    // 3. Если всё ок (>= 10 000) -> Считаем и переходим
+    // 2. НОВАЯ ПРОВЕРКА: КОМИССИЯ
+    if (!isFeeSelected) {
+        // Находим блок комиссии (обертку)
+        const feeBlock = document.querySelector('.fee-unified-wrapper');
+        
+        if (feeBlock) {
+            // Прокручиваем к нему
+            feeBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Добавляем класс тряски
+            feeBlock.classList.add('shake-error');
+            
+            // Вибрация ошибки
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+            }
+            
+            // Убираем класс через 0.5 сек, чтобы можно было потрясти снова
+            setTimeout(() => {
+                feeBlock.classList.remove('shake-error');
+            }, 500);
+        }
+        return; // ОСТАНАВЛИВАЕМ ПЕРЕХОД
+    }
+
+    // 3. УСПЕХ (Все проверки пройдены)
     try {
         draw();
         savePortfolio();
@@ -6622,40 +6657,37 @@ function toggleFeeDropdown() {
 }
 
 
-    function selectFee(value, rateText, nameText) {
-    // 1. Убираем фокус с клавиатуры (на всякий случай)
+    // Глобальная переменная (убедитесь, что она есть в начале скрипта, если нет - добавьте)
+// let isFeeSelected = false; 
+
+function selectFee(value, rateText, nameText) {
     const sumInput = document.getElementById('sumInput');
     if (sumInput) sumInput.blur();
     
     brokerFee = value;
     
-    // 2. Обновляем текст в кнопке "Выбрать"
+    // ВАЖНО: Запоминаем, что выбор сделан
+    isFeeSelected = true; 
+    
+    // Обновляем текст
     const selectedText = document.getElementById('feeSelectedText');
     if (selectedText) {
         selectedText.textContent = rateText;
         selectedText.classList.remove('placeholder');
-        selectedText.style.color = 'var(--text-main)'; // Делаем текст темным
-        selectedText.style.fontWeight = '700';
     }
     
-    // 3. ЛОГИКА ГАЛОЧЕК:
-    // Сначала убираем класс selected у ВСЕХ пунктов
+    // Логика галочек
     document.querySelectorAll('.fee-dropdown-item').forEach(item => {
         item.classList.remove('selected');
     });
-    
-    // Добавляем класс selected ТОМУ, НА КОГО НАЖАЛИ
-    // event.currentTarget ссылается на элемент, на котором висит onclick
     if (event && event.currentTarget) {
         event.currentTarget.classList.add('selected');
     }
     
-    // 4. Закрываем меню
     toggleFeeDropdown();
-    
-    // 5. Пересчитываем
     draw();
 }
+
 
 
 // Закрытие dropdown при клике вне его
