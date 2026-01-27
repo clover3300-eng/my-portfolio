@@ -6531,37 +6531,44 @@ saveCustomStrategy = function() {
     savedCustomStocks = stockPct;
     
     document.getElementById('ratioSlider').value = bondPct;
-
-    // 1. Убираем фокус с кнопки (важно для мобильных, чтобы убрать клавиатуру/курсор)
+    
+    // 1. Убираем фокус с любых полей (важно для iOS)
     if (document.activeElement) document.activeElement.blur();
     
-    // 2. Обновляем визуальную часть
+    // 2. Обновляем UI
     updateMainCardUI(bondPct, 'Индивидуальная', 'Ваша настройка');
     
-    // 3. Сворачиваем ВНУТРЕННИЙ блок настроек
+    // 3. Сворачиваем ВНУТРЕННИЙ блок (анимация началась)
     document.getElementById('customStrategyExpanded').classList.remove('show');
     
-    // 4. Сразу запускаем плавную прокрутку вверх
-    // Делаем это ДО того, как закроется основной список, пока высота страницы большая
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    // 4. ПЕРВАЯ ПРОКРУТКА (Плавная)
+    // Запускаем её сразу, пока страница еще длинная
+    const inputBlock = document.querySelector('.input-wrapper');
+    if (inputBlock) {
+        inputBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-    // 5. Закрываем ОСНОВНОЙ список (водопад) с задержкой
-    // Ждем 500 мс: это даст время внутреннему блоку красиво свернуться, 
-    // а экрану — прокрутиться вверх без "залипания"
+    // 5. ЗАКРЫВАЕМ ВНЕШНИЙ СПИСОК С ЗАДЕРЖКОЙ
+    // Даем 400мс, чтобы сработал первый скролл и прошла анимация внутреннего блока
     setTimeout(() => {
         const container = document.getElementById('waterfallContainer');
         const trigger = document.getElementById('ghostTrigger');
         
         if (container && container.classList.contains('show')) {
             container.classList.remove('show');
-            trigger.classList.remove('open');
+            if (trigger) trigger.classList.remove('open');
             const text = document.getElementById('ghostText');
-            if(text) text.innerText = "ОТКРЫТЬ СТРАТЕГИИ";
+            if (text) text.innerText = "ОТКРЫТЬ СТРАТЕГИИ";
         }
-    }, 500); 
+
+        // 6. ВТОРАЯ ПРОКРУТКА (Мгновенная - страховка)
+        // Это "лечит" залипание. Если браузер заблокировал скролл,
+        // эта команда принудительно вернет его наверх после изменения высоты.
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        
+    }, 400); 
     
     draw();
     
