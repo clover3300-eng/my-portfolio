@@ -135,14 +135,52 @@
         }
         .toast.show { opacity: 1; visibility: visible; }
 
-        .screen { display: none; animation: fadeIn 0.4s ease; }
-        .screen.active { display: block; }
+        /* =================================================================
+   DECK OF CARDS NAVIGATION (STACK EFFECT)
+   ================================================================= */
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+/* Базовый экран */
+.screen {
+    /* Важно: экраны должны уметь лежать друг над другом */
+    position: absolute !important; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    
+    /* Скрыты по умолчанию */
+    display: none;
+    background: var(--bg-color); /* Чтобы не просвечивали */
+    
+    /* Оптимизация */
+    will-change: transform, opacity, filter;
+    transform-origin: center;
+    
+    /* Отключаем стандартную анимацию, чтобы управлял JS */
+    animation: none !important; 
+}
 
+/* Активный экран (Верхняя карта) */
+.screen.active {
+    display: block;
+    z-index: 100; /* Наверху */
+}
+
+/* Предыдущий экран (Нижняя карта - добавляется JS-ом) */
+.screen.previous-card {
+    display: block !important;
+    z-index: 90; /* Снизу */
+    pointer-events: none; /* Нельзя нажать пока он внизу */
+    
+    /* Начальное состояние "в глубине" */
+    transform: scale(0.92);
+    filter: brightness(0.6); /* Сильно затемнен */
+    border-radius: 32px; /* Скруглен */
+    overflow: hidden;
+}
+
+ /* =============================== */
+        
          /* Фон с цветным свечением для эффекта стекла */
         #screen-app {
             background: linear-gradient(90deg, #F5F1EE 0%, #F9FAFC 100%);
@@ -6198,25 +6236,7 @@ body.dark-mode .screen::after {
     </div>
 </div>
 
-  <!-- LUXURY FOIL BACKGROUND -->
-<div class="luxury-depth-layer">
-    <div class="luxury-pattern-container" id="foilPattern">
-        <!-- Текст для тиснения -->
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-    </div>
-</div>
+  
 
 
 
@@ -9111,85 +9131,86 @@ function initNotificationSwipe() {
 initNotificationSwipe();
 
   /* =================================================================
-   ULTIMATE SWIPE ENGINE V2 (NO JITTER / ANTI-SHAKE)
-   Uses requestAnimationFrame for buttery smooth 60/120 FPS
+   ULTIMATE "DECK OF CARDS" SWIPE ENGINE
+   Active moves Right + Rotate | Previous Scales Up + Brightens
    ================================================================= */
 
 function initSwipeBack() {
-    // Переменные состояния
     let startX = 0;
     let startY = 0;
-    let currentX = 0; // Текущая позиция пальца
+    let currentX = 0;
     
     let isDragging = false;
     let isAxisLocked = false;
-    
-    // Переменная для анимационного кадра
     let animationFrameId = null;
     
-    // Элементы
+    // Элементы декора (Стрелку оставляем, она красивая)
     const container = document.getElementById('swipeBackIndicator');
     const lens = container.querySelector('.ls-lens');
     const arrow = container.querySelector('.ls-arrow');
-    const foilPattern = document.querySelector('.luxury-pattern-container');
     
     const triggerZone = 35;
 
-    function getBackTarget() {
+    // Логика: какой экран предыдущий?
+    function getBackTargetId() {
         if (currentScreen === 'screen-home') return null;
         if (currentScreen === 'screen-company') return 'screen-interesting';
         if (currentScreen === 'screen-app') return 'screen-home';
         return 'screen-app'; 
     }
 
-    // --- ФУНКЦИЯ ОТРИСОВКИ (ВЫЗЫВАЕТСЯ БРАУЗЕРОМ) ---
+    // Функция отрисовки кадра
     function updateSwipe() {
-        if (!isDragging) return; // Если уже отпустили - не рисуем
+        if (!isDragging) return;
 
         const deltaX = currentX - startX;
         
-        // Находим активный экран
         const activeScreen = document.querySelector('.screen.active');
+        // Находим экран, который лежит "под низом" (мы ему добавили класс previous-card в touchstart)
+        const prevScreen = document.querySelector('.screen.previous-card');
+        
         if (!activeScreen) return;
 
-        // === МАТЕМАТИКА И ФИЗИКА ===
-        // Коэффициент тяжести 0.4
-        let visualShift = deltaX * 0.4;
-        
-        // Логарифмическое торможение
-        if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
-        visualShift = Math.min(visualShift, 130);
+        // 1. Физика сдвига (Верхняя карта)
+        let visualShift = deltaX; // 1 к 1 для естественности или 0.8 для веса
+        if (visualShift < 0) visualShift = 0; // Нельзя влево
 
-        // 3D Поворот и Масштаб
-        const rotateY = Math.min(visualShift / 15, 8); 
-        const scale = 1 - (visualShift / 130) * 0.04;
-        
-        // --- ПРИМЕНЯЕМ СТИЛИ (Один раз за кадр) ---
-        
-        // 1. Экран (используем translate3d для GPU ускорения)
-        activeScreen.style.transform = `translate3d(${visualShift}px, 0, 0) perspective(800px) rotateY(-${rotateY}deg) scale(${scale})`;
-        
-        // 2. Фон (Паттерн)
-        if(foilPattern) {
-            foilPattern.style.transform = `rotate(-10deg) scale(1.2) translate3d(${visualShift * 0.5}px, 0, 0)`;
-            const lightPercent = -20 + (visualShift / 130) * 80;
-            foilPattern.style.setProperty('--light-pos', `${lightPercent}%`);
+        // Прогресс свайпа (от 0 до 1), где 1 = ширина экрана (примерно)
+        const screenWidth = window.innerWidth;
+        const progress = Math.min(visualShift / screenWidth, 1);
+
+        // 2. Трансформация ВЕРХНЕЙ карты (Активной)
+        // Она просто уезжает вправо с легким поворотом
+        const rotateY = -progress * 5; // Легкий наклон
+        activeScreen.style.transform = `translate3d(${visualShift}px, 0, 0) perspective(1000px) rotateY(${rotateY}deg)`;
+
+        // 3. Трансформация НИЖНЕЙ карты (Предыдущей)
+        if (prevScreen) {
+            // Scale: 0.92 -> 1.0 (Приближается)
+            const scale = 0.92 + (0.08 * progress);
+            
+            // Brightness: 0.6 -> 1.0 (Светлеет)
+            // Мы меняем filter через style
+            // ПРИМЕЧАНИЕ: filter может быть тяжелым для старых телефонов, но выглядит круто
+            const brightness = 0.6 + (0.4 * progress);
+            prevScreen.style.filter = `brightness(${brightness})`;
+            prevScreen.style.transform = `scale(${scale})`;
         }
 
-        // 3. Линза
-        const lensProgress = Math.min(visualShift / 70, 1);
+        // 4. Линза со стрелкой (Визуал)
+        const lensProgress = Math.min(visualShift / 100, 1);
         lens.style.transform = `translate3d(${-100 + (lensProgress * 100)}%, 0, 0)`;
         lens.style.opacity = lensProgress;
         arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
 
-        // 4. Вибрация
-        if (visualShift > 90 && !container.dataset.vibrated) {
+        // 5. Вибрация
+        if (visualShift > 100 && !container.dataset.vibrated) {
             if (window.Telegram?.WebApp?.HapticFeedback) {
                 window.Telegram.WebApp.HapticFeedback.selectionChanged();
             }
             container.dataset.vibrated = "true";
             arrow.style.strokeWidth = "3";
-        } else if (visualShift < 90) {
+        } else if (visualShift < 100) {
             container.dataset.vibrated = "";
             arrow.style.strokeWidth = "2";
         }
@@ -9197,7 +9218,8 @@ function initSwipeBack() {
 
     // --- 1. TOUCH START ---
     document.addEventListener('touchstart', (e) => {
-        if (!getBackTarget()) return;
+        const targetId = getBackTargetId();
+        if (!targetId) return;
 
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
@@ -9208,17 +9230,24 @@ function initSwipeBack() {
         if (startX <= triggerZone) {
             isDragging = true;
             
-            // Подготовка экрана
+            // 1. Подготовка АКТИВНОГО экрана
             const activeScreen = document.querySelector('.screen.active');
             if(activeScreen) {
-                // ВАЖНО: Принудительно отключаем transition через setProperty priority
                 activeScreen.style.setProperty('transition', 'none', 'important');
-                activeScreen.classList.add('swiping');
+                activeScreen.classList.add('swiping'); // Для стеклянного края
             }
             
-            // Подготовка элементов декора
+            // 2. Подготовка ПРЕДЫДУЩЕГО экрана (Кладем его вниз)
+            const prevScreen = document.getElementById(targetId);
+            if (prevScreen) {
+                prevScreen.classList.add('previous-card'); // CSS делает его display: block и z-index: 90
+                prevScreen.style.transition = 'none'; // Убираем анимацию
+                // Начальная позиция
+                prevScreen.style.transform = 'scale(0.92)';
+                prevScreen.style.filter = 'brightness(0.6)';
+            }
+            
             if(lens) lens.style.transition = 'none';
-            if(foilPattern) foilPattern.style.transition = 'none';
         }
     }, { passive: false });
 
@@ -9226,20 +9255,14 @@ function initSwipeBack() {
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
 
-        const x = e.touches[0].clientX;
-        const y = e.touches[0].clientY;
-        
-        // Обновляем текущую координату для функции отрисовки
-        currentX = x;
+        currentX = e.touches[0].clientX;
+        const deltaX = currentX - startX;
+        const deltaY = Math.abs(e.touches[0].clientY - startY);
 
-        const deltaX = x - startX;
-        const deltaY = Math.abs(y - startY);
-
-        // Логика блокировки осей
         if (!isAxisLocked) {
             if (deltaY > Math.abs(deltaX)) {
                 isDragging = false;
-                if(animationFrameId) cancelAnimationFrame(animationFrameId);
+                resetDeck(); // Сброс, если потянули вниз
                 return; 
             } else if (Math.abs(deltaX) > 5) {
                 isAxisLocked = true;
@@ -9247,14 +9270,12 @@ function initSwipeBack() {
         }
 
         if (isAxisLocked) {
-            if (e.cancelable) e.preventDefault(); // Блокируем скролл
-            
+            if (e.cancelable) e.preventDefault();
             if (deltaX > 0) {
-                // Запрашиваем кадр анимации (если он еще не запрошен)
                 if (!animationFrameId) {
                     animationFrameId = requestAnimationFrame(() => {
                         updateSwipe();
-                        animationFrameId = null; // Сбрасываем ID после выполнения
+                        animationFrameId = null;
                     });
                 }
             }
@@ -9265,75 +9286,119 @@ function initSwipeBack() {
     document.addEventListener('touchend', (e) => {
         if (!isDragging) return;
         isDragging = false;
-        
-        // Отменяем запланированную отрисовку, если она есть
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-        }
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
         const activeScreen = document.querySelector('.screen.active');
-        const endX = e.changedTouches[0].clientX;
-        const deltaX = endX - startX;
-        const threshold = 120; 
+        const prevScreen = document.querySelector('.screen.previous-card');
+        const targetId = getBackTargetId();
+        
+        const deltaX = e.changedTouches[0].clientX - startX;
+        const threshold = window.innerWidth * 0.35; // 35% экрана надо протащить
 
-        if (activeScreen) {
-            // Возвращаем плавность CSS
-            activeScreen.style.transition = ''; // Удаляем инлайн none
-            // Форсируем перерисовку стилей (reflow), чтобы transition сработал
-            void activeScreen.offsetWidth; 
-            
-            // Задаем transition явно
-            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.3s ease, box-shadow 0.3s ease';
-            
-            // Восстанавливаем плавность для декора
-            if(lens) lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            if(foilPattern) foilPattern.style.transition = 'transform 0.5s ease';
+        if (activeScreen && prevScreen) {
+            // Включаем плавность
+            const transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease';
+            activeScreen.style.transition = transition;
+            prevScreen.style.transition = transition;
+            lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
             
             if (deltaX > threshold) {
-                // === УСПЕХ ===
-                const targetId = getBackTarget();
-                activeScreen.style.transform = `translate3d(100%, 0, 0) perspective(800px) rotateY(-15deg) scale(0.9)`;
+                // === УСПЕХ: ПЕРЕХОД ===
                 
+                // 1. Верхняя улетает вправо
+                activeScreen.style.transform = `translate3d(100%, 0, 0)`;
+                
+                // 2. Нижняя всплывает на 100%
+                prevScreen.style.transform = `scale(1)`;
+                prevScreen.style.filter = `brightness(1)`;
+                
+                // 3. Линза прячется
                 lens.style.transform = `translateX(-100%)`;
                 lens.style.opacity = '0';
 
+                // 4. Финализация через 300мс
                 setTimeout(() => {
-                    resetScreenStyles(activeScreen);
-                    if(foilPattern) {
-                        foilPattern.style.transform = 'rotate(-10deg) scale(1.2)';
-                        foilPattern.style.setProperty('--light-pos', '-100%');
-                    }
-                    showScreen(targetId);
+                    // Убираем классы свайпа
+                    activeScreen.classList.remove('swiping', 'active');
+                    activeScreen.style.transform = '';
+                    activeScreen.style.display = ''; // Скрыть старый
+                    
+                    // Делаем нижний экран новым активным
+                    prevScreen.classList.remove('previous-card');
+                    prevScreen.classList.add('active');
+                    prevScreen.style.transform = '';
+                    prevScreen.style.filter = '';
+                    
+                    // Обновляем состояние приложения (навигация)
+                    currentScreen = targetId;
+                    updateNavigationState(targetId); // Вспомогательная, см ниже
                     
                     if (window.Telegram?.WebApp?.HapticFeedback) {
                         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
                     }
-                }, 250);
+                }, 300);
                 
             } else {
-                // === ОТМЕНА ===
-                activeScreen.style.transform = 'translate3d(0, 0, 0) perspective(800px) rotateY(0deg) scale(1)';
+                // === ОТМЕНА: ВОЗВРАТ ===
+                activeScreen.style.transform = 'translate3d(0, 0, 0)';
                 
-                setTimeout(() => activeScreen.classList.remove('swiping'), 300);
+                // Нижняя уходит обратно в темноту
+                prevScreen.style.transform = 'scale(0.92)';
+                prevScreen.style.filter = 'brightness(0.6)';
                 
                 lens.style.transform = `translateX(-100%)`;
                 lens.style.opacity = '0';
                 
-                if(foilPattern) {
-                    foilPattern.style.transform = 'rotate(-10deg) scale(1.2)';
-                    foilPattern.style.setProperty('--light-pos', '-100%');
-                }
+                setTimeout(() => {
+                    resetDeck();
+                }, 300);
             }
+        } else {
+            resetDeck();
         }
         
         container.dataset.vibrated = "";
     });
 
-    function resetScreenStyles(screen) {
-        screen.style.transform = '';
-        screen.style.transition = '';
-        screen.classList.remove('swiping');
+    function resetDeck() {
+        const activeScreen = document.querySelector('.screen.active');
+        const prevScreen = document.querySelector('.screen.previous-card');
+        
+        if (activeScreen) {
+            activeScreen.classList.remove('swiping');
+            activeScreen.style.transform = '';
+            activeScreen.style.transition = '';
+        }
+        if (prevScreen) {
+            prevScreen.classList.remove('previous-card');
+            prevScreen.style.transform = '';
+            prevScreen.style.filter = '';
+            prevScreen.style.display = ''; // Скрыть
+        }
+    }
+    
+    // Вспомогательная функция для обновления кнопок меню при свайпе
+    function updateNavigationState(screenId) {
+        // Подсветка кнопок
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        const navId = `nav-${screenId.split('-')[1]}`;
+        const navBtn = document.getElementById(navId);
+        if (navBtn) navBtn.classList.add('active');
+        
+        // Логика меню (скрыть/показать)
+        if (screenId === 'screen-home') {
+            document.body.classList.add('home-mode');
+            document.getElementById('navWrapper').style.display = 'flex';
+            const sticky = document.getElementById('stickyPanel');
+            if(sticky) sticky.style.display = 'none';
+        } else {
+            document.body.classList.remove('home-mode');
+        }
+        
+        // Если вернулись из компании в список
+        if (screenId === 'screen-interesting') {
+            document.getElementById('screen-company').classList.remove('company-screen-active');
+        }
     }
 }
 
