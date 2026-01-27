@@ -5125,7 +5125,7 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
 /* ==================================================================== */
 
         /* =================================================================
-   LUXURY BRAND PAPER BACKGROUND
+   THE GOLDEN WATERMARK (REVOLUTIONARY BACKGROUND)
    ================================================================= */
 
 .luxury-depth-layer {
@@ -5134,91 +5134,90 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* На заднем плане */
+    z-index: -1;
     
-    /* Глубокий, дорогой цвет фона */
-    background: radial-gradient(circle at 50% 50%, #2C364C 0%, #111827 100%);
+    /* 1. Глубокий фон цвета "Графит" */
+    background-color: #1a1f2c;
+    
+    /* 2. Шум (Зернистость дорогой бумаги) */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
     
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden; /* Обрезаем лишнее */
+    overflow: hidden;
 }
 
-/* Контейнер для текста (его мы будем двигать параллаксом) */
 .luxury-pattern-container {
     display: flex;
     flex-direction: column;
-    gap: 40px; /* Расстояние между строками */
-    
-    /* Слегка наклоняем весь паттерн для динамики */
-    transform: rotate(-10deg) scale(1.2); 
-    
-    width: 150%; /* Шире экрана, чтобы не было дырок при повороте */
-    opacity: 1; /* Общая прозрачность текстуры */
+    gap: 50px;
+    width: 150%;
+    transform: rotate(-10deg) scale(1.2);
+    /* Переменная для управления светом через JS */
+    --light-pos: -100%; 
 }
 
-/* Сама строка текста */
-.pattern-line {
+/* Строка с "золотым" текстом */
+.foil-line {
     font-family: 'Inter', sans-serif;
-    font-weight: 800;
-    font-size: 11px; /* Мелкий, аккуратный шрифт */
+    font-weight: 900; /* Жирнее - богаче */
+    font-size: 13px; /* Чуть крупнее */
     text-transform: uppercase;
-    letter-spacing: 4px; /* Широкая разрядка - признак люкса */
+    letter-spacing: 6px; /* Очень широкая разрядка */
+    white-space: nowrap;
     
-    /* Цвет "вдавленной" бумаги */
-    color: rgba(255, 255, 255, 0.04); 
+    /* === МАГИЯ ЗОЛОТА === */
+    /* Градиент: Темный -> Золотой Блик -> Темный */
+    background: linear-gradient(
+        110deg, 
+        rgba(255, 255, 255, 0.02) 0%, 
+        rgba(255, 255, 255, 0.02) calc(var(--light-pos) - 20%), 
+        #b5985a calc(var(--light-pos)), 
+        rgba(255, 255, 255, 0.02) calc(var(--light-pos) + 20%), 
+        rgba(255, 255, 255, 0.02) 100%
+    );
     
-    white-space: nowrap; /* Текст не переносится */
-    user-select: none;
+    /* Обрезаем фон по буквам */
+    -webkit-background-clip: text;
+    background-clip: text;
+    
+    /* Делаем сам текст прозрачным, чтобы виден был градиент */
+    color: transparent; 
+    
+    /* Легкая тень "вдавливания" */
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    
+    transition: margin 0.3s ease;
 }
 
+/* Хаотичный сдвиг (Паттерн) */
+.foil-line:nth-child(5n+1) { margin-left: -50px; }
+.foil-line:nth-child(5n+2) { margin-left: -200px; }
+.foil-line:nth-child(5n+3) { margin-left: 50px; }
+.foil-line:nth-child(5n+4) { margin-left: -100px; }
+.foil-line:nth-child(5n+5) { margin-left: -300px; }
 
-/* =================================================================
-   ХАОТИЧНЫЙ ПАТТЕРН (ЦИКЛ ИЗ 5 СТРОК)
-   ================================================================= */
-
-/* Строка 1: Чуть левее */
-.pattern-line:nth-child(5n+1) {
-    margin-left: -40px;
-    opacity: 0.5; /* Чуть ярче */
-}
-
-/* Строка 2: Сильно влево */
-.pattern-line:nth-child(5n+2) {
-    margin-left: -250px;
-    opacity: 0.3; /* Тусклее (глубже) */
-}
-
-/* Строка 3: Сдвиг вправо */
-.pattern-line:nth-child(5n+3) {
-    margin-left: 80px;
-    opacity: 0.4;
-}
-
-/* Строка 4: Средний сдвиг влево */
-.pattern-line:nth-child(5n+4) {
-    margin-left: -120px;
-    opacity: 0.6; /* Самая яркая */
-}
-
-/* Строка 5: Очень далеко влево */
-.pattern-line:nth-child(5n+5) {
-    margin-left: -300px;
-    opacity: 0.25; /* Еле заметная */
-}
-
-
-/* Адаптация для Светлой темы */
+/* Светлая тема */
 body:not(.dark-mode) .luxury-depth-layer {
-    /* Светлая дорогая бумага */
-    background: #F1F5F9;
+    background-color: #F8FAFC;
 }
-body:not(.dark-mode) .pattern-line {
-    /* Текст чуть темнее фона (эффект тиснения) */
-    color: rgba(44, 54, 76, 0.06);
-    font-weight: 900;
+body:not(.dark-mode) .foil-line {
+    /* Для светлой темы: Серый -> Золото -> Серый */
+    background: linear-gradient(
+        110deg, 
+        rgba(44, 54, 76, 0.05) 0%, 
+        rgba(44, 54, 76, 0.05) calc(var(--light-pos) - 20%), 
+        #b5985a calc(var(--light-pos)), 
+        rgba(44, 54, 76, 0.05) calc(var(--light-pos) + 20%), 
+        rgba(44, 54, 76, 0.05) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 1px 0px #FFFFFF; /* Эффект тиснения на светлом */
 }
+
 
 
 /* ==================================================================== */
@@ -6189,27 +6188,26 @@ body.dark-mode .screen::after {
     </div>
 </div>
 
-   <!-- LUXURY PATTERN BACKGROUND (BRAND PAPER) -->
+  <!-- LUXURY FOIL BACKGROUND -->
 <div class="luxury-depth-layer">
-    <div class="luxury-pattern-container">
-        <!-- Повторяющиеся строки для создания текстуры -->
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
-        <div class="pattern-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+    <div class="luxury-pattern-container" id="foilPattern">
+        <!-- Текст для тиснения -->
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
+        <div class="foil-line">IN THE CARE OF MADAME SOLOMI'NA &nbsp;•&nbsp; IN THE CARE OF MADAME SOLOMI'NA</div>
     </div>
 </div>
+
 
 
 
@@ -9107,7 +9105,8 @@ initNotificationSwipe();
    ================================================================= */
 
 /* =================================================================
-   ULTIMATE SWIPE: HEAVY PHYSICS + 3D + SHEEN + PARALLAX
+   ULTIMATE LUXURY SWIPE ENGINE
+   Physics + 3D + Gold Light + Parallax + Haptics
    ================================================================= */
 
 function initSwipeBack() {
@@ -9116,34 +9115,43 @@ function initSwipeBack() {
     let isDragging = false;
     let isAxisLocked = false; 
     
+    // Элементы интерфейса
     const container = document.getElementById('swipeBackIndicator');
     const lens = container.querySelector('.ls-lens');
     const arrow = container.querySelector('.ls-arrow');
-    const depthText = document.querySelector('.luxury-pattern-container');
-    const triggerZone = 35; 
     
+    // Фон с паттерном (для эффекта золота и параллакса)
+    const foilPattern = document.querySelector('.luxury-pattern-container');
+    
+    const triggerZone = 35; // Зона срабатывания слева (px)
+    
+    // Логика навигации: откуда и куда
     function getBackTarget() {
-        if (currentScreen === 'screen-home') return null;
+        if (currentScreen === 'screen-home') return null; // Со стартовой нельзя уйти
         if (currentScreen === 'screen-company') return 'screen-interesting';
         if (currentScreen === 'screen-app') return 'screen-home';
+        // Со всех остальных возвращаемся в Терминал
         return 'screen-app'; 
     }
 
-    // 1. TOUCH START
+    // --- 1. НАЧАЛО КАСАНИЯ (TOUCH START) ---
     document.addEventListener('touchstart', (e) => {
         isDragging = false;
         isAxisLocked = false;
+        
+        // Если некуда возвращаться — не запускаем
         if (!getBackTarget()) return;
 
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         
+        // Свайп работает только от левого края
         if (startX <= triggerZone) {
             isDragging = true;
         }
-    }, { passive: false });
+    }, { passive: false }); // Важно для блокировки скролла
 
-    // 2. TOUCH MOVE
+    // --- 2. ДВИЖЕНИЕ (TOUCH MOVE) ---
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
 
@@ -9152,65 +9160,75 @@ function initSwipeBack() {
         const deltaX = x - startX;
         const deltaY = Math.abs(y - startY);
 
+        // Определяем намерение пользователя (Скролл или Свайп?)
         if (!isAxisLocked) {
             if (deltaY > Math.abs(deltaX)) {
+                // Вертикальный скролл — отменяем наш свайп
                 isDragging = false;
                 return; 
             } else if (Math.abs(deltaX) > 5) {
+                // Горизонтальный свайп — блокируем ось
                 isAxisLocked = true;
             }
         }
 
+        // Если это свайп — запрещаем странице скроллиться
         if (isAxisLocked && e.cancelable) e.preventDefault();
 
         const activeScreen = document.querySelector('.screen.active');
         
+        // --- ВИЗУАЛЬНАЯ МАГИЯ ---
         if (activeScreen && deltaX > 0 && isAxisLocked) {
+            // Отключаем CSS-анимации для мгновенного отклика на палец
             activeScreen.style.transition = 'none';
             lens.style.transition = 'none';
-            if(depthText) depthText.style.transition = 'none';
+            if(foilPattern) foilPattern.style.transition = 'none';
+            
+            // Включаем эффект стеклянного края (CSS класс)
+            activeScreen.classList.add('swiping');
 
-            // --- ФИЗИКА ---
-            let visualShift = deltaX * 0.4; // Коэф. тяжести
+            // 1. ФИЗИКА ТЯЖЕСТИ
+            // Коэффициент 0.4 — экран двигается медленнее пальца (вес)
+            let visualShift = deltaX * 0.4;
+            
+            // Логарифмическое торможение (чтобы нельзя было утянуть бесконечно далеко)
             if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
-            visualShift = Math.min(visualShift, 130);
+            visualShift = Math.min(visualShift, 130); // Жесткий предел сдвига
 
-            // --- 3D ПОВОРОТ + МАСШТАБИРОВАНИЕ (НОВОЕ) ---
+            // 2. 3D ПОВОРОТ И МАСШТАБ
+            // Экран поворачивается и чуть уменьшается (Breath effect)
             const rotateY = Math.min(visualShift / 15, 8); 
-            // Уменьшаем экран до 96% по мере оттягивания
-            const scale = 1 - (visualShift / 130) * 0.04; 
+            const scale = 1 - (visualShift / 130) * 0.04; // до 0.96
             
             activeScreen.style.transform = `translateX(${visualShift}px) perspective(800px) rotateY(-${rotateY}deg) scale(${scale})`;
             
-            // --- УПРАВЛЕНИЕ БЛИКОМ (НОВОЕ) ---
-            // Сдвигаем градиент блика. 0px сдвига = блик слева. 
-            // Чем больше тянем, тем дальше блик уходит вправо по экрану.
-            const sheenPos = -50 + (visualShift / 130) * 50; // от -50% до 0%
-            activeScreen.style.setProperty('--sheen-pos', `${sheenPos}%`); 
-            // Примечание: Чтобы это работало идеально, мы используем inline переменную или прямой доступ к style,
-            // но т.к. псевдо-элементы недоступны напрямую из JS, мы просто оставим CSS animation на opacity,
-            // а позицию оставим статичной или добавим логику ниже, если нужно супер-качество.
-            // *Для упрощения оставим статический красивый блик или сделаем так:*
-            // (Простой вариант без сложной JS-магии для псевдо-элемента: он просто появляется)
-
-            // --- ПАРАЛЛАКС ФОНА ---
-            if(depthText) {
-                depthText.style.transform = `rotate(-10deg) scale(1.2) translateX(${visualShift * 0.5}px)`;
+            // 3. ЗОЛОТОЙ БЛИК И ПАРАЛЛАКС ФОНА
+            if(foilPattern) {
+                // Параллакс: Фон двигается в 2 раза медленнее экрана
+                // rotate(-10deg) и scale(1.2) — это базовые стили из CSS, их нужно сохранить
+                foilPattern.style.transform = `rotate(-10deg) scale(1.2) translateX(${visualShift * 0.5}px)`;
+                
+                // Свет: Вычисляем позицию луча
+                // -20% (слева) -> 60% (справа)
+                const lightPercent = -20 + (visualShift / 130) * 80;
+                foilPattern.style.setProperty('--light-pos', `${lightPercent}%`);
             }
 
-            // --- ЛИНЗА ---
+            // 4. ИНДИКАТОР-ЛИНЗА
+            // Выезжает на первые 70px движения
             const lensProgress = Math.min(visualShift / 70, 1);
             lens.style.transform = `translateX(${-100 + (lensProgress * 100)}%)`;
             lens.style.opacity = lensProgress;
             arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
 
-            // --- ВИБРАЦИЯ ---
+            // 5. ТАКТИЛЬНАЯ ВИБРАЦИЯ (HAPTICS)
+            // Щелчок, когда мы прошли порог срабатывания (90px)
             if (visualShift > 90 && !container.dataset.vibrated) {
                 if (window.Telegram?.WebApp?.HapticFeedback) {
                     window.Telegram.WebApp.HapticFeedback.selectionChanged();
                 }
                 container.dataset.vibrated = "true";
-                arrow.style.strokeWidth = "3"; 
+                arrow.style.strokeWidth = "3"; // Жирнее стрелка
             } else if (visualShift < 90) {
                 container.dataset.vibrated = "";
                 arrow.style.strokeWidth = "2";
@@ -9218,7 +9236,7 @@ function initSwipeBack() {
         }
     }, { passive: false });
 
-    // 3. TOUCH END
+    // --- 3. КОНЕЦ КАСАНИЯ (TOUCH END) ---
     document.addEventListener('touchend', (e) => {
         if (!isDragging || !isAxisLocked) return;
         
@@ -9228,43 +9246,68 @@ function initSwipeBack() {
         const activeScreen = document.querySelector('.screen.active');
         const endX = e.changedTouches[0].clientX;
         const deltaX = endX - startX;
+        
+        // Порог срабатывания (реальные пиксели пальца)
         const threshold = 120; 
 
         if (activeScreen) {
-            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            // Возвращаем плавность CSS (Пружина)
+            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-radius 0.3s ease';
             lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            if(depthText) depthText.style.transition = 'transform 0.5s ease';
+            if(foilPattern) foilPattern.style.transition = 'transform 0.5s ease';
             
             if (deltaX > threshold) {
-                // === УСПЕХ ===
+                // === ВАРИАНТ А: УСПЕХ (ПЕРЕХОД) ===
                 const targetId = getBackTarget();
-                // Вылет с поворотом и уменьшением
+                
+                // Экран улетает вправо с поворотом
                 activeScreen.style.transform = `translateX(100%) perspective(800px) rotateY(-15deg) scale(0.9)`;
                 
+                // Линза прячется
                 lens.style.transform = `translateX(-100%)`;
                 lens.style.opacity = '0';
 
+                // Ждем завершения анимации и переключаем экран
                 setTimeout(() => {
                     resetScreenStyles(activeScreen);
-                    if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
+                    
+                    // Сбрасываем фон
+                    if(foilPattern) {
+                        foilPattern.style.transform = 'rotate(-10deg) scale(1.2)';
+                        foilPattern.style.setProperty('--light-pos', '-100%');
+                    }
+                    
                     showScreen(targetId);
                     
+                    // Вибрация успеха
                     if (window.Telegram?.WebApp?.HapticFeedback) {
                         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
                     }
                 }, 250);
                 
             } else {
-                // === ОТМЕНА ===
+                // === ВАРИАНТ Б: ОТМЕНА (ВОЗВРАТ) ===
+                // Экран пружинит на место
                 activeScreen.style.transform = 'translateX(0) perspective(800px) rotateY(0deg) scale(1)';
-                lens.style.transform = 'translateX(-100%)';
+                
+                // Убираем стеклянный край чуть позже, чтобы не моргало
+                setTimeout(() => activeScreen.classList.remove('swiping'), 300);
+                
+                lens.style.transform = `translateX(-100%)`;
                 lens.style.opacity = '0';
-                if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
+                
+                // Сбрасываем фон
+                if(foilPattern) {
+                    foilPattern.style.transform = 'rotate(-10deg) scale(1.2)';
+                    foilPattern.style.setProperty('--light-pos', '-100%');
+                }
             }
         }
+        
         container.dataset.vibrated = "";
     });
 
+    // Функция очистки стилей экрана
     function resetScreenStyles(screen) {
         screen.style.transform = '';
         screen.style.transition = '';
@@ -9272,6 +9315,7 @@ function initSwipeBack() {
     }
 }
 
+// Запуск
 initSwipeBack();
 
 
