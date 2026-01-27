@@ -6521,7 +6521,7 @@ function toggleCustomStrategyNew(cardElement) {
 
 // Переопределяем функцию сохранения кастомной стратегии, чтобы она обновляла новую UI
 const originalSaveCustom = saveCustomStrategy; // Сохраняем ссылку если нужно
-// Переопределяем функцию сохранения кастомной стратегии
+
 // Переопределяем функцию сохранения кастомной стратегии
 saveCustomStrategy = function() {
     const bondPct = parseInt(document.getElementById('customRatioSlider').value);
@@ -6531,34 +6531,37 @@ saveCustomStrategy = function() {
     savedCustomStocks = stockPct;
     
     document.getElementById('ratioSlider').value = bondPct;
+
+    // 1. Убираем фокус с кнопки (важно для мобильных, чтобы убрать клавиатуру/курсор)
+    if (document.activeElement) document.activeElement.blur();
     
-    // 1. ОБНОВЛЯЕМ ГЛАВНУЮ КАРТОЧКУ
+    // 2. Обновляем визуальную часть
     updateMainCardUI(bondPct, 'Индивидуальная', 'Ваша настройка');
     
-    // 2. ЗАПУСКАЕМ СВОРАЧИВАНИЕ ВНУТРЕННЕГО БЛОКА
+    // 3. Сворачиваем ВНУТРЕННИЙ блок настроек
     document.getElementById('customStrategyExpanded').classList.remove('show');
     
-    // 3. ПРОКРУЧИВАЕМ К НАЧАЛУ ЭКРАНА (практически сразу)
-    setTimeout(() => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }, 50);
+    // 4. Сразу запускаем плавную прокрутку вверх
+    // Делаем это ДО того, как закроется основной список, пока высота страницы большая
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 
-    // 4. ЗАКРЫВАЕМ ВЕСЬ СПИСОК (с задержкой для плавности)
-    // Ждем 350мс, чтобы внутренний блок успел визуально "схлопнуться"
+    // 5. Закрываем ОСНОВНОЙ список (водопад) с задержкой
+    // Ждем 500 мс: это даст время внутреннему блоку красиво свернуться, 
+    // а экрану — прокрутиться вверх без "залипания"
     setTimeout(() => {
         const container = document.getElementById('waterfallContainer');
         const trigger = document.getElementById('ghostTrigger');
         
-        // Если список еще открыт - закрываем его
-        if (container.classList.contains('show')) {
+        if (container && container.classList.contains('show')) {
             container.classList.remove('show');
             trigger.classList.remove('open');
-            document.getElementById('ghostText').innerText = "ОТКРЫТЬ СТРАТЕГИИ";
+            const text = document.getElementById('ghostText');
+            if(text) text.innerText = "ОТКРЫТЬ СТРАТЕГИИ";
         }
-    }, 350); 
+    }, 500); 
     
     draw();
     
@@ -6566,6 +6569,7 @@ saveCustomStrategy = function() {
         window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
     }
 }
+
 
         
 
