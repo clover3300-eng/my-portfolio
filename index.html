@@ -754,119 +754,7 @@ input#sumInput.size-xsmall {
 .fee-selector {
     margin-bottom: 20px;
 }
-        /* ========== Fee Selector Inline ========== */
-/* =================================================================
-   FEE SELECTOR - QUIET LUXURY DESIGN (CLEAN)
-   ================================================================= */
-
-/* 1. Основной контейнер (Слой выше стратегий) */
-.fee-selector-unified {
-    position: relative;
-    margin-top: 20px;
-    margin-bottom: 25px;
-    z-index: 200; /* Достаточно, чтобы быть выше карт */
-}
-
-/* 2. Стеклянная подложка кнопки */
-.fee-unified-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 20px;
-    
-    /* Эффект дорогого стекла */
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-    transition: transform 0.2s ease;
-}
-
-.fee-unified-wrapper:active {
-    transform: scale(0.995);
-}
-
-.fee-unified-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    color: #64748B; /* Спокойный серый */
-    font-weight: 500;
-}
-
-/* 3. Триггер (сама кнопка "Выбрать") */
-.fee-unified-trigger {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    padding: 8px 14px;
-    background: #FFFFFF;
-    border: 1px solid rgba(0, 0, 0, 0.04);
-    border-radius: 12px;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-}
-
-.fee-unified-trigger:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    transform: translateY(-1px);
-}
-
-.fee-selected-text {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    font-weight: 600;
-    color: #2C364C;
-}
-
-.fee-dropdown-arrow {
-    color: #94A3B8;
-    transition: transform 0.3s ease;
-}
-
-
-/* Исправленные стили для меню */
-.fee-selector-unified .fee-dropdown-menu {
-    position: absolute;
-    top: 100%; /* Прижимаем к нижнему краю */
-    left: 0;
-    width: 100%; /* Растягиваем на всю ширину родителя */
-    margin-top: 8px; /* Небольшой отступ сверху */
-    
-    background: rgba(255, 255, 255, 0.95); /* Менее прозрачный для читаемости */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 18px;
-    padding: 6px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    
-    /* Скрыто по умолчанию */
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-    
-    z-index: 10000; /* Очень высокий Z-index */
-    pointer-events: none; /* Чтобы не мешало кликам, когда скрыто */
-}
-
-/* Класс для показа меню */
-.fee-selector-unified .fee-dropdown-menu.show {
-    display: block !important;; /* Важно для JS */
-    opacity: 1 !important;;
-    visibility: visible;
-    transform: translateY(0) !important;;
-    pointer-events: auto; /* Включаем клики */
-}
-
-
-
-
-/* ========== END: Dropdown для тарифа комиссии ========== */
+      
 
 
 
@@ -4730,46 +4618,47 @@ textarea {
 /* Скрытие старых элементов, если они где-то остались */
 .strategy-cards-container, .strategy-expand-trigger { display: none !important; }
 
-        /* === FORCE FIX FOR DROPDOWN === */
+        /* =================================================================
+   FEE SELECTOR - QUIET LUXURY DESIGN (CLEAN)
+   ================================================================= */
 
-/* Контейнер должен быть выше всего */
+/* 1. Основной контейнер (Слой выше стратегий) */
 .fee-selector-unified {
-    position: relative !important;
-    z-index: 9999 !important;
-    overflow: visible !important; /* Разрешаем выпадать за границы */
+    position: relative;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    z-index: 200; /* Достаточно, чтобы быть выше карт */
 }
 
-/* Меню */
-.fee-selector-unified .fee-dropdown-menu {
-    display: none; /* Скрыто */
-    position: absolute !important;
-    top: 100% !important;
-    left: 0 !important;
-    right: 0 !important;
-    margin-top: 10px !important;
+/* 2. Стеклянная подложка кнопки */
+.fee-unified-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
     
-    /* Стили стекла */
-    background: #ffffff !important;
-    border: 1px solid rgba(0,0,0,0.1) !important;
-    border-radius: 16px !important;
-    padding: 8px !important;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.2) !important;
-    
-    z-index: 10000 !important;
+    /* Эффект дорогого стекла */
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: transform 0.2s ease;
 }
 
-/* Класс показа - самый важный момент */
-.fee-selector-unified .fee-dropdown-menu.show {
-    display: block !important;
-    animation: fadeInDrop 0.2s ease forwards;
+.fee-unified-wrapper:active {
+    transform: scale(0.995);
 }
 
-@keyframes fadeInDrop {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+.fee-unified-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #64748B; /* Спокойный серый */
+    font-weight: 500;
 }
 
-        /* 3. Триггер (сама кнопка "Выбрать") */
+/* 3. Триггер (сама кнопка "Выбрать") */
 .fee-unified-trigger {
     display: flex;
     align-items: center;
@@ -4800,7 +4689,7 @@ textarea {
     transition: transform 0.3s ease;
 }
 
-        /* 4. Выпадающее меню (Парящее) */
+/* 4. Выпадающее меню (Парящее) */
 .fee-dropdown-menu {
     position: absolute;
     top: calc(100% + 10px);
@@ -4827,14 +4716,14 @@ textarea {
     
     z-index: 1000;
 }
-        
+
 /* Состояние: Открыто */
 .fee-dropdown-menu.show {
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
 }
-/* Элементы списка */
+
 /* 5. Пункты меню */
 .fee-dropdown-item {
     display: flex;
@@ -4864,8 +4753,7 @@ textarea {
     color: #2C364C;
 }
 
-
-/* === СТИЛИ ДЛЯ ЧЕКБОКСОВ (КРУЖОЧКИ) === */
+/* 6. ЛОГИКА ГАЛОЧЕК (Круги) */
 
 /* Базовый: Пустой круг */
 .fee-item-check {
@@ -4883,16 +4771,15 @@ textarea {
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* 2. Иконка галочки внутри (Скрыта по умолчанию) */
+/* Галочка внутри (скрыта) */
 .fee-item-check svg {
     width: 14px;
     height: 14px;
-    stroke: white; /* Белая галочка */
-    stroke-width: 3;
-    
-    opacity: 0; /* Невидима */
-    transform: scale(0.5); /* Уменьшена */
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    stroke: white;
+    stroke-width: 2.5;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s ease;
 }
 
 /* Выбрано: Залитый круг */
@@ -4903,9 +4790,10 @@ textarea {
     box-shadow: 0 4px 10px rgba(44, 54, 76, 0.2);
 }
 
+/* Выбрано: Галочка видна */
 .fee-dropdown-item.selected .fee-item-check svg {
-    opacity: 1; /* Появляется */
-    transform: scale(1); /* Вырастает до нормального размера */
+    opacity: 1;
+    transform: scale(1);
 }
 
 /* 7. Темная тема */
