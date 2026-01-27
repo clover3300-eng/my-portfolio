@@ -4748,6 +4748,55 @@ textarea {
 /* Скрытие старых элементов, если они где-то остались */
 .strategy-cards-container, .strategy-expand-trigger { display: none !important; }
 
+        /* === FORCE FIX FOR DROPDOWN === */
+
+/* Контейнер должен быть выше всего */
+.fee-selector-unified {
+    position: relative !important;
+    z-index: 9999 !important;
+    overflow: visible !important; /* Разрешаем выпадать за границы */
+}
+
+/* Меню */
+.fee-selector-unified .fee-dropdown-menu {
+    display: none; /* Скрыто */
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin-top: 10px !important;
+    
+    /* Стили стекла */
+    background: #ffffff !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    border-radius: 16px !important;
+    padding: 8px !important;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.2) !important;
+    
+    z-index: 10000 !important;
+}
+
+/* Класс показа - самый важный момент */
+.fee-selector-unified .fee-dropdown-menu.show {
+    display: block !important;
+    animation: fadeInDrop 0.2s ease forwards;
+}
+
+@keyframes fadeInDrop {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Элементы списка */
+.fee-dropdown-item {
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: 12px 16px !important;
+    cursor: pointer !important;
+}
+.fee-dropdown-item:hover { background: #f5f5f5 !important; }
+
+
 
 
 
@@ -4805,23 +4854,21 @@ textarea {
 
         
        
-      <!-- Комиссия брокера (Quiet Luxury Style) -->
-<div class="fee-selector-unified">
+     <!-- Блок комиссии (Quiet Luxury Fixed) -->
+<div class="fee-selector-unified" style="position: relative; z-index: 200;">
     <div class="fee-unified-wrapper">
         <span class="fee-unified-label">Комиссия Вашего Брокера</span>
         
-        <!-- Важно: id="feeDropdownTrigger" и onclick -->
         <div class="fee-unified-trigger" id="feeDropdownTrigger" onclick="event.stopPropagation(); toggleFeeDropdown()">
             <span class="fee-selected-text placeholder" id="feeSelectedText">Выбрать</span>
-            <svg class="fee-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg class="fee-dropdown-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
         </div>
     </div>
     
-    <!-- Выпадающее меню (id="feeDropdownMenu") -->
+    <!-- Меню с принудительными стилями для теста -->
     <div class="fee-dropdown-menu" id="feeDropdownMenu">
-        <!-- Пункты меню с правильными onclick -->
         <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.0001, '0.01%', '')">
             <span class="fee-item-rate">0.01%</span>
             <div class="fee-item-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -4846,7 +4893,7 @@ textarea {
             <span class="fee-item-rate">0.3%</span>
             <div class="fee-item-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
         </div>
-
+        
         <div class="fee-dropdown-item" onclick="event.stopPropagation(); selectFee(0.005, '0.5%', '')">
             <span class="fee-item-rate">0.5%</span>
             <div class="fee-item-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -6274,28 +6321,28 @@ saveCustomStrategy = function() {
 let isFeeSelected = false;
 
 function toggleFeeDropdown() {
-    // 1. Убираем фокус с клавиатуры
-    const sumInput = document.getElementById('sumInput');
-    if (sumInput) sumInput.blur();
-    
-    const trigger = document.getElementById('feeDropdownTrigger');
-    const menu = document.getElementById('feeDropdownMenu');
-    
-    if (!trigger || !menu) return; // Защита от ошибок
-    
-    // Переключаем классы
-    const isOpen = trigger.classList.toggle('open');
-    menu.classList.toggle('show');
-    
-    // Поворачиваем стрелку
-    const arrow = trigger.querySelector('.fee-dropdown-arrow');
-    if (arrow) {
-        arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
-    }
-    
-    // Вибрация
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    try {
+        const trigger = document.getElementById('feeDropdownTrigger');
+        const menu = document.getElementById('feeDropdownMenu');
+        
+        if (!menu) {
+            console.error('Menu not found!');
+            return;
+        }
+
+        // Переключаем классы
+        const isNowOpen = trigger.classList.toggle('open');
+        menu.classList.toggle('show'); // Этот класс активирует display: block !important
+        
+        // Вращаем стрелку
+        const arrow = trigger.querySelector('.fee-dropdown-arrow');
+        if(arrow) arrow.style.transform = isNowOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        }
+    } catch (e) {
+        console.error(e);
     }
 }
 
@@ -6342,18 +6389,16 @@ document.addEventListener('click', function(event) {
     const container = document.querySelector('.fee-selector-unified');
     const menu = document.getElementById('feeDropdownMenu');
     const trigger = document.getElementById('feeDropdownTrigger');
-    const wrapper = document.querySelector('.fee-unified-wrapper');
     
+    // Если клик НЕ внутри контейнера комиссии - закрываем
     if (container && !container.contains(event.target)) {
-        menu?.classList.remove('show');
-        trigger?.classList.remove('open');
-        
-        // Убираем active только если не выбран тариф
-        if (!isFeeSelected) {
-            wrapper?.classList.remove('active');
-        }
+        if(menu) menu.classList.remove('show');
+        if(trigger) trigger.classList.remove('open');
+        const arrow = trigger?.querySelector('.fee-dropdown-arrow');
+        if(arrow) arrow.style.transform = 'rotate(0deg)';
     }
 });
+
 
         function setTax(val, btn) {
             currentTax = val;
