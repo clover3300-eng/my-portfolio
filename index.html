@@ -764,7 +764,7 @@ input#sumInput.size-xsmall {
     position: relative;
     margin-top: 20px;
     margin-bottom: 25px;
-    z-index: 50; /* Чтобы выпадающий список был выше других элементов */
+    z-index: 9999; /* Чтобы выпадающий список был выше других элементов */
 }
 
 .fee-unified-wrapper {
@@ -846,16 +846,16 @@ input#sumInput.size-xsmall {
     transform: translateY(-10px);
     transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     
-    z-index: 1000; /* Очень высокий Z-index */
+    z-index: 10000; /* Очень высокий Z-index */
     pointer-events: none; /* Чтобы не мешало кликам, когда скрыто */
 }
 
 /* Класс для показа меню */
 .fee-selector-unified .fee-dropdown-menu.show {
-    display: block; /* Важно для JS */
-    opacity: 1;
+    display: block !important;; /* Важно для JS */
+    opacity: 1 !important;;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) !important;;
     pointer-events: auto; /* Включаем клики */
 }
 
