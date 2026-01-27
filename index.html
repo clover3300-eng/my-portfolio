@@ -5046,73 +5046,81 @@ body.dark-mode .header h1 {
 }
 
 /* =================================================================
-   SWIPE BACK INDICATOR (QUIET LUXURY)
+   HEAVY PHYSICS SWIPE (3D PARALLAX)
    ================================================================= */
 
-/* Контейнер индикатора (лежит ПОД экраном, но НАД фоном) */
-.swipe-back-overlay {
+/* 1. Контейнер всего индикатора */
+.luxury-swipe-container {
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
-    width: 100px; /* Активная зона слева */
-    z-index: 1; /* Ниже активного экрана (z-index активного экрана обычно выше) */
-    
+    width: 0; /* Изначально ширины нет */
+    z-index: 9; /* Под активным экраном, но над фоном */
+    pointer-events: none;
     display: flex;
     align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s ease;
+    justify-content: flex-start;
 }
 
-/* Круг со стрелкой */
-.sbi-icon-wrapper {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
+/* 2. Линза (Стрелка) - Революционный дизайн */
+.ls-lens {
+    width: 50px;
+    height: 80px;
     
-    /* Материал: Матовое стекло */
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    /* Форма: Полуовал, выезжающий слева */
+    border-radius: 0 40px 40px 0;
     
-    /* Тень */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    /* Материал: "Жидкое" стекло */
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    
+    /* Свечение */
+    box-shadow: 10px 0 40px rgba(255, 255, 255, 0.4), inset -2px 0 5px rgba(255,255,255,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-left: none;
     
     display: flex;
     align-items: center;
     justify-content: center;
     
-    /* Цвет стрелки (Графит) */
-    color: #2C364C;
-    
-    /* Начальное состояние */
-    transform: scale(0.5) translateX(-20px);
+    /* Изначально скрыта слева */
+    transform: translateX(-100%);
     opacity: 0;
     transition: transform 0.1s linear, opacity 0.1s linear;
 }
 
-/* Активное состояние (когда тянем) */
-.swipe-back-overlay.active {
-    opacity: 1;
+/* Стрелка внутри */
+.ls-arrow {
+    color: #2C364C;
+    width: 28px;
+    height: 28px;
+    transform: scale(0.8);
+    transition: transform 0.2s ease;
 }
 
 /* Темная тема */
-body.dark-mode .sbi-icon-wrapper {
-    background: rgba(30, 41, 59, 0.6);
+body.dark-mode .ls-lens {
+    background: rgba(30, 41, 59, 0.7);
     border-color: rgba(255, 255, 255, 0.1);
-    color: #F1F5F9;
+    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.3);
+}
+body.dark-mode .ls-arrow { color: #FFFFFF; }
+
+/* 3. Эффект для АКТИВНОГО ЭКРАНА при свайпе */
+.screen {
+    /* Добавляем точку трансформации слева, чтобы экран поворачивался как дверь */
+    transform-origin: center left;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+    will-change: transform; /* Оптимизация производительности */
 }
 
-/* ВАЖНО: У активного экрана должен быть высокий z-index, 
-   чтобы он перекрывал индикатор, пока мы его не сдвинем */
-.screen.active {
-    z-index: 10 !important;
-    background: var(--bg-color); /* Чтобы не просвечивал */
-    box-shadow: -10px 0 30px rgba(0,0,0,0.05); /* Тень слева при сдвиге */
+/* Тень, которая появляется сбоку экрана при сдвиге */
+.screen.swiping {
+    box-shadow: -20px 0 50px rgba(0,0,0,0.15);
 }
+
         
 /* ==================================================================== */
 
@@ -5970,15 +5978,16 @@ body.dark-mode .sbi-icon-wrapper {
     </div>
 </div>
 
-    <!-- ИНДИКАТОР СВАЙПА НАЗАД -->
-<div id="swipeBackIndicator" class="swipe-back-overlay">
-    <div class="sbi-icon-wrapper">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 12H5"/>
-            <path d="M12 19l-7-7 7-7"/>
+   <!-- REVOLUTIONARY SWIPE BACK INDICATOR -->
+<div id="swipeBackIndicator" class="luxury-swipe-container">
+    <div class="ls-backdrop"></div>
+    <div class="ls-lens">
+        <svg class="ls-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 19l-7-7 7-7" stroke-linecap="square" stroke-linejoin="miter"/>
         </svg>
     </div>
 </div>
+
 
 
 <script>
@@ -8870,154 +8879,185 @@ function initNotificationSwipe() {
 initNotificationSwipe();
 
     /* =================================================================
-   GESTURE NAVIGATION: SWIPE BACK (LUXURY PHYSICS)
+   HEAVY 3D SWIPE PHYSICS (REVOLUTIONARY UX)
    ================================================================= */
 
 function initSwipeBack() {
     let startX = 0;
     let startY = 0;
-    let currentTranslate = 0;
     let isDragging = false;
-    let isEdgeSwipe = false;
     
     // Элементы
-    const indicator = document.getElementById('swipeBackIndicator');
-    const icon = indicator.querySelector('.sbi-icon-wrapper');
-    const triggerZone = 40; // Зона слева (px), где начинается свайп
+    const container = document.getElementById('swipeBackIndicator');
+    const lens = container.querySelector('.ls-lens');
+    const arrow = container.querySelector('.ls-arrow');
+    const triggerZone = 30; // Узкая зона слева для старта (чтобы не мешать другим жестам)
     
-    // Определяем, куда возвращаться
     function getBackTarget() {
-        if (currentScreen === 'screen-home') return null; // Со стартовой не уходим
+        if (currentScreen === 'screen-home') return null;
         if (currentScreen === 'screen-company') return 'screen-interesting';
         if (currentScreen === 'screen-app') return 'screen-home';
-        // Со всех остальных вкладок возвращаемся в Терминал
         return 'screen-app'; 
     }
 
     // 1. TOUCH START
     document.addEventListener('touchstart', (e) => {
-        const targetScreen = getBackTarget();
-        if (!targetScreen) return;
+        if (!getBackTarget()) return;
 
-        // Проверяем, что свайп от левого края (чтобы не мешать слайдерам)
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         
+        // Начало только от самого края
         if (startX <= triggerZone) {
-            isEdgeSwipe = true;
             isDragging = true;
             
-            // Находим активный экран
             const activeScreen = document.querySelector('.screen.active');
             if (activeScreen) {
-                activeScreen.style.transition = 'none'; // Отключаем плавность для прямого управления
+                // Убираем плавность CSS, чтобы управлять руками
+                activeScreen.style.transition = 'none';
+                activeScreen.classList.add('swiping');
             }
             
-            // Показываем индикатор
-            indicator.classList.add('active');
+            // Сбрасываем стили линзы
+            lens.style.transition = 'none';
         }
     }, { passive: true });
 
-    // 2. TOUCH MOVE
+    // 2. TOUCH MOVE (HEAVY PHYSICS)
     document.addEventListener('touchmove', (e) => {
-        if (!isDragging || !isEdgeSwipe) return;
+        if (!isDragging) return;
 
         const x = e.touches[0].clientX;
         const y = e.touches[0].clientY;
         const deltaX = x - startX;
         const deltaY = Math.abs(y - startY);
 
-        // Если движение больше вертикальное - отменяем свайп
-        if (deltaY > deltaX && deltaX < 20) {
+        // Блокируем, если свайп вертикальный
+        if (deltaY > deltaX && deltaX < 10) {
             isDragging = false;
             resetSwipe();
             return;
         }
 
-        // Двигаем экран, но с сопротивлением (logarithmic)
-        // Чтобы нельзя было утащить экран слишком далеко без усилия
-        const resistance = 0.6; 
-        currentTranslate = Math.max(0, deltaX * resistance); 
-
         const activeScreen = document.querySelector('.screen.active');
-        if (activeScreen) {
-            // Двигаем экран вправо
-            activeScreen.style.transform = `translateX(${currentTranslate}px)`;
+        if (activeScreen && deltaX > 0) {
+            // === ФИЗИКА ТЯЖЕСТИ ===
+            // Коэффициент 0.35 делает свайп "тугим"
+            let visualShift = deltaX * 0.35;
             
-            // Анимация стрелки (появление и зум)
-            // Максимальный прогресс на 150px сдвига
-            const progress = Math.min(currentTranslate / 150, 1); 
+            // ОГРАНИЧИТЕЛЬ: Максимум 100px сдвига визуально
+            // Используем логарифмическое торможение, если тянем дальше
+            if (visualShift > 100) {
+                visualShift = 100 + (visualShift - 100) * 0.2;
+            }
+            // Жесткий потолок в 120px
+            visualShift = Math.min(visualShift, 120);
+
+            // === 3D ЭФФЕКТ ===
+            // Поворачиваем экран немного от себя (макс -5 градусов)
+            const rotateY = Math.min(visualShift / 20, 5); 
             
-            icon.style.opacity = progress;
-            icon.style.transform = `scale(${0.5 + progress * 0.5}) translateX(${-20 + progress * 20}px)`;
+            // Применяем трансформации
+            activeScreen.style.transform = `translateX(${visualShift}px) perspective(1000px) rotateY(-${rotateY}deg)`;
             
-            // Вибрация при достижении порога срабатывания (один раз)
-            if (progress > 0.8 && !icon.dataset.vibrated) {
+            // === АНИМАЦИЯ ЛИНЗЫ ===
+            // Линза выезжает на первые 60px движения пальца
+            const lensProgress = Math.min(visualShift / 60, 1);
+            
+            // Она выезжает слева (-100% -> 0%)
+            lens.style.transform = `translateX(${-100 + (lensProgress * 100)}%)`;
+            lens.style.opacity = lensProgress;
+            
+            // Стрелка внутри чуть увеличивается
+            arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`; // до 1.2
+            
+            // Вибрация-щелчок при достижении порога срабатывания (80px)
+            if (visualShift > 80 && !container.dataset.vibrated) {
                 if (window.Telegram?.WebApp?.HapticFeedback) {
                     window.Telegram.WebApp.HapticFeedback.selectionChanged();
                 }
-                icon.dataset.vibrated = "true";
-            } else if (progress < 0.8) {
-                icon.dataset.vibrated = "";
+                container.dataset.vibrated = "true";
+                // Подсветка стрелки при активации
+                arrow.style.strokeWidth = "3";
+            } else if (visualShift < 80) {
+                container.dataset.vibrated = "";
+                arrow.style.strokeWidth = "2";
             }
         }
     }, { passive: false });
 
     // 3. TOUCH END
-    document.addEventListener('touchend', () => {
+    document.addEventListener('touchend', (e) => {
         if (!isDragging) return;
         isDragging = false;
-        isEdgeSwipe = false;
 
         const activeScreen = document.querySelector('.screen.active');
-        const threshold = 100; // Сколько пикселей нужно протащить для срабатывания
+        const endX = e.changedTouches[0].clientX;
+        const deltaX = endX - startX;
+
+        // Порог срабатывания: нужно протащить палец минимум на 100px (реальных)
+        // С учетом "тяжести" 0.35 это где-то 35px визуального сдвига
+        // Но для надежности требуем явного намерения
+        const threshold = 120; 
 
         if (activeScreen) {
-            // Включаем анимацию обратно
-            activeScreen.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            // Возвращаем CSS анимацию для плавного завершения
+            activeScreen.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
             
-            if (currentTranslate > threshold) {
-                // === УСПЕШНЫЙ ПЕРЕХОД ===
+            if (deltaX > threshold) {
+                // === УСПЕХ: УХОДИМ ===
                 const targetId = getBackTarget();
                 
-                // 1. Досдвигаем экран вправо до конца
-                activeScreen.style.transform = `translateX(100%)`;
+                // 1. Досдвигаем экран вправо и делаем прозрачным (эффект ухода)
+                activeScreen.style.transform = `translateX(100%) perspective(1000px) rotateY(-10deg)`;
                 
-                // 2. Ждем анимацию и переключаем
+                // 2. Скрываем линзу
+                lens.style.transform = `translateX(-100%)`;
+                lens.style.opacity = '0';
+
+                // 3. Переход
                 setTimeout(() => {
-                    activeScreen.style.transform = ''; // Сброс
-                    showScreen(targetId); // Переход
+                    resetScreenStyles(activeScreen);
+                    showScreen(targetId);
                     
-                    // Сильная вибрация успеха
                     if (window.Telegram?.WebApp?.HapticFeedback) {
                         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
                     }
-                }, 200);
+                }, 250); // Ждем чуть меньше, чтобы было динамичнее
                 
             } else {
-                // === ОТМЕНА (ПРУЖИНА НАЗАД) ===
-                activeScreen.style.transform = 'translateX(0)';
+                // === ОТМЕНА: ВОЗВРАТ ===
+                resetSwipe();
             }
         }
         
-        // Скрываем индикатор
-        indicator.classList.remove('active');
-        icon.style.transform = '';
-        icon.style.opacity = '';
-        icon.dataset.vibrated = "";
+        container.dataset.vibrated = "";
     });
 
     function resetSwipe() {
         const activeScreen = document.querySelector('.screen.active');
+        const lens = container.querySelector('.ls-lens');
+        
         if (activeScreen) {
-            activeScreen.style.transition = 'transform 0.3s ease';
-            activeScreen.style.transform = 'translateX(0)';
+            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)'; // Медленный возврат
+            activeScreen.style.transform = 'translateX(0) perspective(1000px) rotateY(0deg)';
+            activeScreen.classList.remove('swiping');
         }
-        indicator.classList.remove('active');
+        
+        if (lens) {
+            lens.style.transform = 'translateX(-100%)';
+            lens.style.opacity = '0';
+        }
+    }
+    
+    function resetScreenStyles(screen) {
+        screen.style.transform = '';
+        screen.style.transition = '';
+        screen.classList.remove('swiping');
     }
 }
 
-// Запуск
 initSwipeBack();
 
 
