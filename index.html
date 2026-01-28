@@ -5362,16 +5362,37 @@ body.dark-mode .screen::after {
 
         /* 1. Заголовок перед списком */
 .ofz-analogs-title {
+    position: relative;
     font-family: 'Inter', sans-serif;
-    font-size: 14px; /* Увеличили с 10px */
+    font-size: 18px; /* Значительный размер */
     font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--text-main); /* Более контрастный цвет */
-    margin: 50px 0 25px 10px !important;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+    margin: 50px 0 30px 10px !important;
     display: flex;
     align-items: center;
-    gap: 12px;
+}
+        /* Градиентный шлейф под заголовком */
+.ofz-analogs-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #3498db, transparent);
+    border-radius: 2px;
+}
+
+/* "Живая" точка рядом */
+.ofz-analogs-title::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #3498db;
+    border-radius: 50%;
+    margin-right: 12px;
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
 }
         /* 2. ИНСТРУМЕНТ И ДИНАМИЧЕСКИЙ ЗНАЧОК */
 .h-label-instrument-wrapper {
@@ -5587,30 +5608,48 @@ body.dark-mode .screen::after {
     letter-spacing: 2px;
     color: #94A3B8;
 }
+/* 2. ИДЕАЛЬНОЕ ЦЕНТРИРОВАНИЕ ПЛАШЕК */
 .headers-right-group {
     display: flex;
-    gap: 32px;
-    padding-right: 15px;
-}
-.header-glass-pill {
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 28px;
+    /* Теперь мы жестко привязываемся к ширине колонок данных */
+    width: 135px; 
+    justify-content: space-between;
+    margin-right: 5px;
+}
+/* Стеклянные плашки теперь центрируют содержимое */
+.header-glass-pill {
+    width: 55px; /* Ширина совпадает с шириной колонки доходности */
     height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    color: var(--text-secondary);
     font-family: 'JetBrains Mono', monospace;
-    font-weight: 600;
-    font-size: 12px;
+    font-size: 11px;
+    color: #94a3b8;
 }
 .dark-mode .header-glass-pill {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
+}
+        /* 3. ФИКС ПРЕВЬЮ РЕБАЛАНСИРОВКИ (Luxury Glow) */
+.rebalance-preview-box, .rebalance-intro-modern {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+    border-radius: 20px !important;
+    padding: 25px !important;
+    color: white !important;
+    box-shadow: 0 15px 35px rgba(30, 58, 138, 0.3) !important;
+    border: none !important;
+}
+
+/* 4. ШРИФТ ДЛЯ ЦИФР В ТЕКСТЕ (Mono-Inline) */
+.mono-digit-span {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 500;
 }
 
 /* 4. СТРОКА ОФЗ */
@@ -8474,27 +8513,42 @@ function formatNameWithMonoDigits(name) {
 }
 
 // Функция для раскрытия/скрытия ВСЕГО списка через заголовок
+// 1. Управление всем блоком ОФЗ
 function toggleGlobalOfzList() {
-    const container = document.querySelector('.ofz-headers-container');
-    const isExpanded = container.classList.toggle('is-expanded');
+    const headerContainer = document.querySelector('.ofz-headers-container');
+    const isExpanding = !headerContainer.classList.contains('is-expanded');
     
-    // Вызываем твою существующую функцию "Показать все"
-    // Если она называется toggleOfzGhost, вызываем её
+    // Переключаем класс для стрелочки
+    headerContainer.classList.toggle('is-expanded');
+    
+    // Если мы СВОРАЧИВАЕМ (isExpanding = false), закрываем все открытые детали
+    if (!isExpanding) {
+        document.querySelectorAll('.ofz-lux-details').forEach(detail => {
+            detail.style.display = 'none';
+        });
+        // Убираем активные классы со строк
+        document.querySelectorAll('.ofz-row-container').forEach(row => {
+            row.classList.remove('active');
+        });
+    }
+
+    // Вызываем твою функцию скрытия лишних строк (из терминала)
     if (typeof toggleOfzGhost === 'function') {
         toggleOfzGhost(); 
     }
 }
 
+// 2. Рендер списка
 function renderOfzList() {
     if (typeof bonds === 'undefined' || bonds.length === 0) return;
     
-    // Фикс градиента
+    // Принудительный фикс стиля превью (убиваем "белый фон")
     const pBox = document.querySelector('.rebalance-preview-box') || document.querySelector('.rebalance-intro-modern');
     if (pBox) {
-        pBox.style.background = "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)";
+        pBox.style.cssText = "background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important; color: white !important;";
+        pBox.querySelectorAll('*').forEach(child => child.style.color = 'white');
     }
 
-    // ШАПКА ТАБЛИЦЫ
     let ofzHtml = `
         <div class="ofz-headers-container">
             <div class="h-label-instrument-wrapper" onclick="toggleGlobalOfzList()">
@@ -8504,26 +8558,18 @@ function renderOfzList() {
                 </svg>
             </div>
             <div class="headers-right-group">
-                <div class="header-glass-pill">%</div>
+                <div class="header-glass-pill" style="margin-left: 10px;">%</div>
                 <div class="header-glass-pill">₽</div>
             </div>
         </div>
     `;
     
     bonds.forEach((b, index) => {
-        // Подтягиваем данные из карты деталей (убедись, что bondDetailsMap заполнен)
-        const details = bondDetailsMap[b.t] || { 
-            matDate: '—', 
-            couponValue: 0, 
-            nextCoupon: '—', 
-            freq: 0 
-        };
-        
+        const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 };
         const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
         
-        // Расчет Текущей Купонной Доходности
         let curYield = "0.00";
-        if (details.couponValue > 0 && details.freq > 0 && parseFloat(priceFinal) > 0) {
+        if (details.couponValue > 0 && details.freq > 0) {
             curYield = ((details.couponValue * details.freq / parseFloat(priceFinal)) * 100).toFixed(2);
         }
 
@@ -8541,56 +8587,41 @@ function renderOfzList() {
             </div>
 
             <div id="details-${b.t}" class="ofz-lux-details" style="display:none; padding: 20px;">
-                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">КОД (ISIN)</span>
-                    <span class="copy-code-blue" onclick="copyTickerNew('${b.t}')">
-                        ${b.t}
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-left:4px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    </span>
+                    <span class="copy-code-blue" onclick="copyTickerNew('${b.t}')">${b.t}</span>
                 </div>
-
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ТЕКУЩАЯ ЦЕНА</span>
                     <span class="ofz-lux-detail-value"><span class="mono-digit-span">${priceFinal}</span> ₽</span>
                 </div>
-
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">НКД</span>
                     <span class="ofz-lux-detail-value"><span class="mono-digit-span">${b.nkd}</span> ₽</span>
                 </div>
-
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ДАТА ПОГАШЕНИЯ</span>
                     <span class="ofz-lux-detail-value mono-digit-span">${details.matDate}</span>
                 </div>
-
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">РАЗМЕР КУПОНА</span>
                     <span class="ofz-lux-detail-value"><span class="mono-digit-span">${details.couponValue}</span> ₽</span>
                 </div>
-
                 <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">ДАТА БЛИЖ. КУПОНА</span>
+                    <span class="ofz-lux-detail-label">БЛИЖ. КУПОН</span>
                     <span class="ofz-lux-detail-value mono-digit-span">${details.nextCoupon}</span>
                 </div>
-
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ТЕКУЩАЯ КУПОННАЯ ДОХОДНОСТЬ</span>
                     <span class="ofz-lux-detail-value" style="color:#3498db; font-weight:800;">
                         <span class="mono-digit-span">${curYield}</span>%
                     </span>
                 </div>
-
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ВЫПЛАТ В ГОД</span>
                     <span class="ofz-lux-detail-value mono-digit-span">${details.freq}</span>
                 </div>
-                
-                <button class="btn-luxury-chart" onclick="openTradingView(event, '${b.t}')">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                    Открыть график TV
-                </button>
+                <button class="btn-luxury-chart" onclick="openTradingView(event, '${b.t}')">Открыть график TV</button>
             </div>
         </div>`;
     });
