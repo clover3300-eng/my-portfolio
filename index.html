@@ -6774,37 +6774,36 @@ function formatNewsDate(dateString) {
         //setInterval(updateMarketStatus, 60000); // Отключено
         
                 function showScreen(screenId) {
-            // 1. Логика для меню: если это Главная (screen-home)
-            if (screenId === 'screen-home') {
-                document.body.classList.add('home-mode'); // Включаем "прозрачный" режим
-                document.getElementById('navWrapper').style.display = 'flex'; // Убеждаемся, что меню видно
-                document.getElementById('stickyPanel').style.display = 'none'; // Скрываем нижнюю панель (где кнопка "Сформировать")
-            } else {
-                document.body.classList.remove('home-mode'); // Выключаем "прозрачный" режим (возвращаем как было)
-                
-                // Управление видимостью stickyPanel как в оригинале
-                const stickyPanel = document.getElementById('stickyPanel');
-                if (stickyPanel) {
-                    stickyPanel.style.display = (screenId === 'screen-app') ? 'block' : 'none';
-                }
-            }
+    // 1. Настройка режима "Главной страницы" (прозрачность)
+    if (screenId === 'screen-home') {
+        document.body.classList.add('home-mode');
+        document.getElementById('navWrapper').style.display = 'flex';
+        document.getElementById('stickyPanel').style.display = 'none';
+    } else {
+        document.body.classList.remove('home-mode');
+        // Показываем кнопку "Сформировать" только на вкладке Терминал
+        const stickyPanel = document.getElementById('stickyPanel');
+        if (stickyPanel) {
+            stickyPanel.style.display = (screenId === 'screen-app') ? 'block' : 'none';
+        }
+    }
 
-            // Старая логика функции (оставляем как было)
-            if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
-                lastNavScreen = screenId;
-                collapseSearch(false);
-            }
-            
-            currentScreen = screenId;
-            
-            // Показываем нужный экран
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const targetScreen = document.getElementById(screenId);
-            if(targetScreen) {
-                targetScreen.classList.add('active');
-            }
-            
-            // === ВАЖНОЕ ИЗМЕНЕНИЕ ЗДЕСЬ ===
+    // 2. Логика возврата из поиска
+    if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
+        lastNavScreen = screenId;
+        collapseSearch(false);
+    }
+    
+    currentScreen = screenId;
+    
+    // 3. ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ И СКРОЛЛ
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const targetScreen = document.getElementById(screenId);
+    
+    if(targetScreen) {
+        targetScreen.classList.add('active');
+        
+        // === ВАЖНОЕ ИЗМЕНЕНИЕ ЗДЕСЬ ===
         // Скроллим сам блок экрана наверх, а не всё окно
         targetScreen.scrollTop = 0; 
     }
@@ -6837,6 +6836,7 @@ function formatNewsDate(dateString) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
 }
+
 
 
         
