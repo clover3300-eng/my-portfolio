@@ -5344,16 +5344,23 @@ body.dark-mode .screen::after {
 .screen.prev-card-layer {
     display: block !important;
     position: fixed !important;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0; left: 0; 
+    width: 100vw;  /* Жестко ширина экрана */
+    height: 100vh; /* Жестко высота экрана */
     z-index: 1;
     pointer-events: none;
     
-    /* Убрали scale, оставили только небольшое затемнение */
-    transform: none !important; 
-    filter: brightness(0.9); 
+    /* Эти свойства отключают лишние расчеты браузера */
+    contain: strict; 
+    overflow: hidden;
     
-    will-change: filter;
-    transition: none !important;
+    transform: scale3d(0.92, 0.92, 1); 
+    filter: brightness(0.9); 
+    will-change: transform, filter;
+    
+    /* Фикс для Safari, чтобы не прыгали отступы */
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
 }
 
 /* Верхний экран, который мы тянем */
@@ -9182,24 +9189,36 @@ function initCardDeckSwipe() {
     return null;
 }
 
-    document.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        if (startX <= triggerZone) {
-            targetPrevScreenId = getPrevScreenId();
-            if (!targetPrevScreenId) return;
+   document.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    
+    if (startX <= triggerZone) {
+        targetPrevScreenId = getPrevScreenId();
+        if (!targetPrevScreenId) return;
 
-            prevEl = document.getElementById(targetPrevScreenId);
-            activeEl = document.querySelector('.screen.active');
+        prevEl = document.getElementById(targetPrevScreenId);
+        activeEl = document.querySelector('.screen.active');
 
-            if (prevEl && activeEl) {
-                isDragging = true;
-                prevEl.classList.add('prev-card-layer');
-                activeEl.classList.add('is-dragging');
-                // Принудительно показываем нижний экран
-                prevEl.style.display = 'block';
-            }
+        if (prevEl && activeEl) {
+            // 1. Сначала просто включаем видимость, но оставляем прозрачным или за экраном
+            prevEl.style.display = 'block';
+            prevEl.style.opacity = '0'; 
+            
+            // 2. Используем requestAnimationFrame, чтобы браузер успел "просчитать" отступы
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    if (isDragging) { // Проверяем, что пользователь все еще тянет
+                        prevEl.classList.add('prev-card-layer');
+                        prevEl.style.opacity = '1';
+                        activeEl.classList.add('is-dragging');
+                    }
+                });
+            });
+            
+            isDragging = true;
         }
-    }, { passive: false });
+    }
+}, { passive: false });
 
     document.addEventListener('touchmove', (e) => {
         if (!isDragging || !activeEl) return;
