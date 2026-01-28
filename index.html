@@ -8543,8 +8543,9 @@ function renderOfzList() {
             </div>
         </div>
         <div id="ofz-items-container">
-            </div>;
-    container.innerHTML = ofzHtml;
+            </div>
+    `;
+   
     bonds.forEach((b, index) => {
         const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 };
         const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
