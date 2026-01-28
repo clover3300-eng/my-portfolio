@@ -5370,6 +5370,35 @@ body.dark-mode .screen::after {
     transition: none !important;
 }
 
+        /* ЕДИНЫЙ СТИЛЬ ДЛЯ ВСЕХ ЭКРАНОВ */
+.screen {
+    display: none;
+    position: fixed; /* Фиксируем экран, чтобы он не прыгал */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-color);
+    overflow-y: auto; /* Скролл только внутри экрана */
+    overflow-x: hidden;
+    padding-bottom: 90px; /* Место для нижнего меню */
+    box-sizing: border-box;
+    
+    /* Ускорение для телефона */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translate3d(0,0,0);
+    
+    /* Эта строка запрещает браузеру пересчитывать отступы (убирает дерганье) */
+    contain: strict; 
+}
+
+/* Только активный экран виден */
+.screen.active {
+    display: block;
+    z-index: 10;
+}
+   /* ==================================================================== */
         
     </style>
 </head>
