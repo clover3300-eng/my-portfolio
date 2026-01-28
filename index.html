@@ -5578,7 +5578,8 @@ body.dark-mode .screen::after {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 10px 15px 10px;
+    padding: 10px 15px;
+    margin-top: 20px;
 }
 .h-label-instrument {
     font-family: 'Inter', sans-serif;
@@ -5599,18 +5600,20 @@ body.dark-mode .screen::after {
 }
 /* Стеклянные плашки теперь центрируют содержимое */
 .header-glass-pill {
-    width: 55px; /* Ширина совпадает с шириной колонки доходности */
+    width: 55px; /* Ширина плашки */
     height: 28px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05); /* Эффект стекла */
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    font-size: 11px; /* ТУТ РЕГУЛИРУЕТСЯ РАЗМЕР % и ₽ */
     color: #94a3b8;
+    font-weight: 600;
 }
 .dark-mode .header-glass-pill {
     background: rgba(255, 255, 255, 0.05);
@@ -8529,19 +8532,19 @@ function renderOfzList() {
         pBox.querySelectorAll('*').forEach(child => child.style.color = 'white');
     }
 
-    let ofzHtml = `
+   let ofzHtml = `
         <div class="ofz-headers-container">
-            <div class="h-label-instrument-wrapper" onclick="toggleGlobalOfzList()">
-                <span class="h-label-instrument">Инструмент</span>
-                <svg class="instrument-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
+            <div class="h-label-instrument-wrapper" onclick="toggleGlobalOfzList()" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                <span style="font-size:12px; font-weight:700; color:#94a3b8; text-transform:uppercase;">Инструмент</span>
+                <svg id="global-ofz-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" style="transition:0.3s;"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </div>
             <div class="headers-right-group">
-                <div class="header-glass-pill" style="margin-left: 10px;">%</div>
+                <div class="header-glass-pill">%</div>
                 <div class="header-glass-pill">₽</div>
             </div>
         </div>
+        <div id="ofz-items-container">
+            </div>
     `;
     
     bonds.forEach((b, index) => {
