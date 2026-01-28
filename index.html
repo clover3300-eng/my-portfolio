@@ -8488,13 +8488,13 @@ function toggleGlobalOfzList() {
 function renderOfzList() {
     if (typeof bonds === 'undefined' || bonds.length === 0) return;
     
-    // Фикс градиента (оставляем, раз он заработал)
+    // Фикс градиента
     const pBox = document.querySelector('.rebalance-preview-box') || document.querySelector('.rebalance-intro-modern');
     if (pBox) {
         pBox.style.background = "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)";
     }
 
-    // ШАПКА: Теперь Инструмент — это кликабельная группа со стрелочкой
+    // ШАПКА ТАБЛИЦЫ
     let ofzHtml = `
         <div class="ofz-headers-container">
             <div class="h-label-instrument-wrapper" onclick="toggleGlobalOfzList()">
@@ -8511,15 +8511,22 @@ function renderOfzList() {
     `;
     
     bonds.forEach((b, index) => {
-        const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, freq: 0 };
+        // Подтягиваем данные из карты деталей (убедись, что bondDetailsMap заполнен)
+        const details = bondDetailsMap[b.t] || { 
+            matDate: '—', 
+            couponValue: 0, 
+            nextCoupon: '—', 
+            freq: 0 
+        };
+        
         const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
         
+        // Расчет Текущей Купонной Доходности
         let curYield = "0.00";
-        if (details.couponValue > 0 && details.freq > 0) {
+        if (details.couponValue > 0 && details.freq > 0 && parseFloat(priceFinal) > 0) {
             curYield = ((details.couponValue * details.freq / parseFloat(priceFinal)) * 100).toFixed(2);
         }
 
-        // Класс ofz-row-hidden скрывает строки после 3-й
         const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
 
         ofzHtml += `
@@ -8532,16 +8539,58 @@ function renderOfzList() {
                     <div class="ofz-price-pill">${priceFinal} ₽</div>
                 </div>
             </div>
+
             <div id="details-${b.t}" class="ofz-lux-details" style="display:none; padding: 20px;">
+                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">КОД (ISIN)</span>
-                    <span class="copy-code-blue" onclick="copyTickerNew('${b.t}')">${b.t}</span>
+                    <span class="copy-code-blue" onclick="copyTickerNew('${b.t}')">
+                        ${b.t}
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-left:4px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </span>
                 </div>
+
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ТЕКУЩАЯ ЦЕНА</span>
+                    <span class="ofz-lux-detail-value"><span class="mono-digit-span">${priceFinal}</span> ₽</span>
+                </div>
+
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">НКД</span>
+                    <span class="ofz-lux-detail-value"><span class="mono-digit-span">${b.nkd}</span> ₽</span>
+                </div>
+
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ДАТА ПОГАШЕНИЯ</span>
+                    <span class="ofz-lux-detail-value mono-digit-span">${details.matDate}</span>
+                </div>
+
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">РАЗМЕР КУПОНА</span>
+                    <span class="ofz-lux-detail-value"><span class="mono-digit-span">${details.couponValue}</span> ₽</span>
+                </div>
+
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ДАТА БЛИЖ. КУПОНА</span>
+                    <span class="ofz-lux-detail-value mono-digit-span">${details.nextCoupon}</span>
+                </div>
+
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ТЕКУЩАЯ КУПОННАЯ ДОХОДНОСТЬ</span>
-                    <span class="mono-digit-span" style="color:#3498db; font-weight:800;">${curYield}%</span>
+                    <span class="ofz-lux-detail-value" style="color:#3498db; font-weight:800;">
+                        <span class="mono-digit-span">${curYield}</span>%
+                    </span>
                 </div>
-                <button class="btn-luxury-chart" onclick="openTradingView(event, '${b.t}')">Открыть график</button>
+
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ВЫПЛАТ В ГОД</span>
+                    <span class="ofz-lux-detail-value mono-digit-span">${details.freq}</span>
+                </div>
+                
+                <button class="btn-luxury-chart" onclick="openTradingView(event, '${b.t}')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    Открыть график TV
+                </button>
             </div>
         </div>`;
     });
