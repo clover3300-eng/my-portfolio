@@ -8418,7 +8418,7 @@ function updateEchelonTable() {
             }
         }
         html += '</tr>';
-        // ИСПРАВЛЕНО: Теперь здесь i вместо row
+        // ИСПРАВЛЕНО: Теперь здесь строго i
         html += `<tr class="et-details-row" id="details-row-${i}" style="display:none;">
             <td colspan="4" class="et-details-container">
                 <div id="details-content-${i}"></div>
@@ -8427,29 +8427,37 @@ function updateEchelonTable() {
     }
     body.innerHTML = html;
 
-    // Скрываем строки эшелонов после второй
+    // Скрываем все строки, кроме первых двух (0 и 1)
     const allRows = body.querySelectorAll('tr:not(.et-details-row)');
     allRows.forEach((row, index) => {
-        if (index > 1) row.classList.add('echelon-row-hidden');
+        if (index > 1) {
+            row.classList.add('echelon-row-hidden');
+        }
     });
 
-    // Управляем кнопкой "Развернуть"
+    // Создаем кнопку, если её еще нет
     let btn = document.getElementById('btn-stocks-more');
     if (!btn) {
         btn = document.createElement('button');
         btn.id = 'btn-stocks-more';
         btn.className = 'btn-show-more-modern';
         btn.innerText = 'Развернуть эшелоны';
-        btn.onclick = toggleStocksEchelon;
+        btn.onclick = toggleStocksEchelon; // Назначаем функцию, которую добавим ниже
+        
         const wrapper = document.querySelector('.echelon-wrapper');
-        if (wrapper) wrapper.after(btn);
+        if (wrapper) {
+            wrapper.after(btn);
+        }
+    } else {
+        btn.innerText = 'Развернуть эшелоны';
     }
 }
 
-    // Эта функция срабатывает, когда ты нажимаешь на кнопку "Развернуть эшелоны"
+// ДОБАВЛЯЕМ ЭТУ ФУНКЦИЮ (ЕЕ НЕ БЫЛО В ФАЙЛЕ!)
 function toggleStocksEchelon() {
     const btn = document.getElementById('btn-stocks-more');
     const rows = document.querySelectorAll('#echelon-tickers-body tr:not(.et-details-row)');
+    
     let isHidden = btn.innerText.includes('Развернуть');
 
     rows.forEach((row, index) => {
@@ -8463,6 +8471,10 @@ function toggleStocksEchelon() {
     });
 
     btn.innerText = isHidden ? 'Скрыть эшелоны' : 'Развернуть эшелоны';
+    
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
 }
 
     function toggleEchelonCell(cellId) {
