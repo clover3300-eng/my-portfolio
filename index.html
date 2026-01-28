@@ -5516,82 +5516,95 @@ body.dark-mode .screen::after {
         
   /* ==================================================================== */
 
- /* 1. ПРИНУДИТЕЛЬНЫЙ ГРАДИЕНТ */
-.rebalance-gradient-fixed {
+/* 1. ПРИНУДИТЕЛЬНЫЙ ГРАДИЕНТ (Для JS) */
+.force-gradient-bg {
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+    background-color: #1e3a8a !important;
     color: white !important;
     border: none !important;
+    box-shadow: 0 10px 30px rgba(30, 58, 138, 0.4) !important;
+}
+/* Красим весь текст внутри в белый */
+.force-gradient-bg *, .force-gradient-bg h2, .force-gradient-bg p {
+    color: white !important;
 }
 
-/* 2. ТАБЛИЦА С ИДЕАЛЬНОЙ ЦЕНТРОВКОЙ */
-.ofz-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr 30px; /* Добавили колонку для стрелочки */
+/* 2. ОТСТУП ЗАГОЛОВКА */
+.ofz-analogs-title {
+    margin-bottom: 25px !important; /* Больше воздуха */
+}
+
+/* 3. СТРОКА ОФЗ (Flexbox для Мостика) */
+.ofz-luxury-item {
+    display: flex;
+    align-items: baseline; /* Выравнивание по базовой линии шрифта */
+    padding: 14px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    cursor: pointer;
+    overflow: hidden; /* Чтобы точки не вылезали */
+}
+
+/* Название */
+.ofz-lux-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    flex-shrink: 0; /* Не сжимать */
+    white-space: nowrap;
+}
+
+/* ЭЛЕГАНТНАЯ СВЯЗКА (МОСТИК) */
+.ofz-lux-bridge {
+    flex-grow: 1; /* Занимает все свободное место */
+    border-bottom: 1px dotted rgba(0,0,0,0.2); /* Точки */
+    margin: 0 10px;
+    position: relative;
+    top: -5px; /* Чуть приподнять над строкой */
+    opacity: 0.6;
+}
+.dark-mode .ofz-lux-bridge { border-bottom-color: rgba(255,255,255,0.2); }
+
+/* Правая часть (Цифры) */
+.ofz-lux-right {
+    display: flex;
     align-items: center;
+    gap: 12px; /* Отступ между процентами и ценой */
+    flex-shrink: 0;
 }
 
-.h-label {
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    text-align: center;
-}
-.h-label:first-child { text-align: left; }
-
-/* 3. ШРИФТ ДЛЯ ЦИФР (JetBrains Mono) */
-.ofz-lux-yield, .ofz-lux-price-value, .ofz-lux-detail-value {
+.ofz-lux-yield {
     font-family: 'JetBrains Mono', monospace !important;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-green);
 }
 
-.ofz-lux-price-value, .ofz-lux-yield {
-    text-align: center;
-    font-size: 13px;
-}
-
-/* 4. ТИХАЯ РОСКОШЬ: ИНДИКАТОР РАСКРЫТИЯ */
-.ofz-chevron {
-    width: 16px;
-    height: 16px;
-    opacity: 0.3;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.active .ofz-chevron {
-    transform: rotate(180deg);
-    opacity: 0.8;
-}
-
-/* 5. УВЕДОМЛЕНИЕ "СКОПИРОВАНО" (Terminal Style) */
-.copy-notification {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: rgba(52, 152, 219, 0.9);
-    backdrop-filter: blur(10px);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
+/* ЦЕНА В СЕРОЙ ПЛАШКЕ */
+.ofz-price-pill {
+    background: rgba(0,0,0,0.06);
+    color: var(--text-secondary);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace !important;
     font-size: 12px;
     font-weight: 600;
-    z-index: 10000;
-    opacity: 0;
-    transition: all 0.3s ease;
-    pointer-events: none;
+    letter-spacing: -0.5px;
 }
-.copy-notification.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
+.dark-mode .ofz-price-pill {
+    background: rgba(255,255,255,0.1);
+    color: #cbd5e1;
 }
 
-/* 6. ПОДСВЕТКА ТОЛЬКО ПРОЦЕНТА */
-.yield-badge-blue {
-    color: #3498db;
-    font-weight: 800;
-    background: rgba(52, 152, 219, 0.1);
-    padding: 2px 6px;
-    border-radius: 4px;
+/* 4. ЗАГОЛОВКИ СТОЛБЦОВ (Скрываем средний, оставляем края) */
+.ofz-headers-flex {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px 5px 10px;
+    margin-bottom: 5px;
+}
+.h-label-right {
+    display: flex;
+    gap: 30px; /* Подгоняем под gap данных */
 }
          /* ==================================================================== */
         
@@ -8370,21 +8383,36 @@ function showToast(message) {
 function renderOfzList() {
     if (typeof bonds === 'undefined' || bonds.length === 0) return;
     
-    // ПРИНУДИТЕЛЬНЫЙ КРАС КРАСНЫЙ (ГРАДИЕНТ)
-    const boxes = [document.getElementById('rebalance-summary'), document.querySelector('.rebalance-preview-box')];
-    boxes.forEach(box => {
-        if(box) {
-            box.classList.add('rebalance-gradient-fixed');
-            box.style.background = "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)";
+    // 1. ПРИНУДИТЕЛЬНЫЙ ГРАДИЕНТ (Исправление белого бокса)
+    // Ищем бокс по всем возможным признакам
+    const previewBox = document.querySelector('.rebalance-intro-modern') || 
+                       document.getElementById('rebalance-intro') || 
+                       document.querySelector('.rebalance-preview-box');
+                       
+    if (previewBox) {
+        previewBox.classList.add('force-gradient-bg');
+        // На случай, если класс не перебьет инлайн-стили:
+        previewBox.style.cssText = "background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important; color: white !important; border: none !important;";
+        
+        // Красим иконку внутри бокса в белый, если она есть
+        const icon = previewBox.querySelector('.ri-icon');
+        if(icon) {
+            icon.style.background = "rgba(255,255,255,0.2)";
+            icon.style.color = "white";
         }
-    });
+        // Красим тексты
+        const titles = previewBox.querySelectorAll('h2, div, p, span');
+        titles.forEach(t => t.style.color = 'white');
+    }
 
+    // 2. ЗАГОЛОВКИ ТАБЛИЦЫ
     let ofzHtml = `
-        <div class="ofz-table-header ofz-grid">
+        <div class="ofz-headers-flex">
             <span class="h-label">Инструмент</span>
-            <span class="h-label">Доходность</span>
-            <span class="h-label">Цена (₽)</span>
-            <span></span>
+            <div class="h-label-right">
+                <span class="h-label">Доходность</span>
+                <span class="h-label" style="margin-right:5px;">Цена</span>
+            </div>
         </div>
     `;
     
@@ -8392,10 +8420,10 @@ function renderOfzList() {
         const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 };
         const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
         
-        // Исправленная цена (берем как есть, раз она уже в рублях)
+        // Цена из данных
         const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
         
-        // Расчет доходности
+        // Текущая доходность
         let currentYield = "0.00";
         if (details.couponValue > 0 && details.freq > 0) {
             currentYield = ((details.couponValue * details.freq / parseFloat(priceFinal)) * 100).toFixed(2);
@@ -8403,22 +8431,24 @@ function renderOfzList() {
         
         ofzHtml += `
         <div class="ofz-row-container ${hiddenClass}" id="container-${b.t}">
-            <div class="ofz-luxury-item ofz-grid" onclick="toggleOfzDetails('${b.t}')">
+            <div class="ofz-luxury-item" onclick="toggleOfzDetails('${b.t}')">
                 <div class="ofz-lux-name">${limitName(b.n)}</div>
-                <div class="ofz-lux-yield">${b.y}</div>
-                <div class="ofz-lux-price-value">${priceFinal}</div>
-                <div class="ofz-chevron-box">
-                    <svg class="ofz-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                
+                <div class="ofz-lux-bridge"></div> <div class="ofz-lux-right">
+                    <div class="ofz-lux-yield">${b.y}</div>
+                    <div class="ofz-price-pill">${priceFinal} ₽</div>
                 </div>
             </div>
             
-            <div id="details-${b.t}" class="ofz-lux-details" style="padding: 15px 20px; display:none;">
+            <div id="details-${b.t}" class="ofz-lux-details" style="display:none; padding: 15px 20px;">
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">КОД (ISIN)</span>
-                    <span class="copy-text-action" style="font-size:11px; color:#3498db; cursor:pointer; font-weight:600;" onclick="copyTicker('${b.t}')">
-                        ${b.t} <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-left:4px; vertical-align:middle;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span class="copy-text-action" onclick="copyTickerNew('${b.t}')">
+                        ${b.t}
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                     </span>
                 </div>
+                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ЦЕНА</span>
                     <span class="ofz-lux-detail-value">${priceFinal} ₽</span>
@@ -8441,9 +8471,7 @@ function renderOfzList() {
                 </div>
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ТЕКУЩАЯ КУПОННАЯ ДОХОДНОСТЬ</span>
-                    <span class="ofz-lux-detail-value">
-                        <span class="yield-badge-blue">${currentYield}%</span>
-                    </span>
+                    <span class="ofz-lux-detail-value">${currentYield}%</span>
                 </div>
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ВЫПЛАТ В ГОД</span>
@@ -8452,7 +8480,7 @@ function renderOfzList() {
                 
                 <button class="details-btn" style="width:100%; margin-top:15px; background: #3498db; color: white; border: none; font-weight: 700; height: 38px; border-radius: 10px;" 
                         onclick="openTradingView(event, '${b.t}')">
-                    ГРАФИК TV
+                    ОТКРЫТЬ ГРАФИК TV
                 </button>
             </div>
         </div>`;
@@ -8525,6 +8553,54 @@ function toggleOfzGhost() {
     }
 }
 
+    // НОВАЯ ФУНКЦИЯ КОПИРОВАНИЯ
+function copyTickerNew(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showLuxuryToast("СКОПИРОВАНО", text);
+        
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+        }
+    });
+}
+
+// Функция управления люксовой капсулой (универсальная)
+function showLuxuryToast(title, message) {
+    const notify = document.getElementById('luxuryNotification');
+    if (!notify) return;
+
+    // 1. Меняем контент
+    const titleEl = notify.querySelector('.notify-title');
+    const msgEl = notify.querySelector('.notify-message');
+    const iconContainer = notify.querySelector('.notify-icon-circle');
+    
+    // Сохраняем исходное состояние (для ошибки)
+    const oldTitle = titleEl.innerText;
+    const oldMsg = msgEl.innerText;
+    const oldIcon = iconContainer.innerHTML;
+    const oldColor = iconContainer.style.color;
+
+    // Ставим галочку успеха
+    titleEl.innerText = title;
+    msgEl.innerText = message;
+    iconContainer.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+    iconContainer.style.color = "#2ecc71"; // Зеленый цвет
+
+    // 2. Показываем
+    notify.classList.add('show');
+
+    // 3. Скрываем и возвращаем как было
+    setTimeout(() => {
+        notify.classList.remove('show');
+        // Возвращаем через 500мс (после анимации скрытия), чтобы вернуть состояние "Ошибки"
+        setTimeout(() => {
+            titleEl.innerText = "Минимальный капитал"; // или верните исходное
+            msgEl.innerText = "Введите сумму от 10 000 ₽";
+            iconContainer.innerHTML = oldIcon;
+            iconContainer.style.color = "";
+        }, 500);
+    }, 2000);
+}
 
     async function fetchBondDetailsInBackground() {
     const promises = bonds.map(async (b) => {
