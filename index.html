@@ -5516,65 +5516,68 @@ body.dark-mode .screen::after {
         
   /* ==================================================================== */
 
-        /* 1. Градиент для превью-бокса (как в терминале) */
-/* ВАЖНО: замените .rebalance-preview-box на актуальный ID вашего бокса, если он другой */
-.rebalance-preview-box, #rebalance-preview {
+       /* 1. Мощный селектор для градиента превью-бокса */
+div[id="rebalance-preview-box"], 
+.rebalance-preview-box, 
+#rebalance-summary {
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
     border: none !important;
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+    border-radius: 16px !important;
     color: white !important;
+    padding: 20px !important;
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.3) !important;
 }
-         /* ==================================================================== */
 
-        /* 2. Революционный элемент: Parity Badge (замена серой цены) */
+/* 2. Обновленный элемент цены с заголовком */
+.ofz-lux-price-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.ofz-price-label {
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
 .ofz-lux-price-tag {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     background: rgba(0, 0, 0, 0.04);
     padding: 4px 10px;
-    border-radius: 20px;
+    border-radius: 8px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
-    color: var(--text-main);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.02);
-}
-        .dark-mode .ofz-lux-price-tag {
-    background: rgba(255, 255, 255, 0.07);
-    color: #fff;
 }
 
-/* Точка-индикатор состояния (дисконт/премия) */
-.parity-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+.dark-mode .ofz-lux-price-tag {
+    background: rgba(255, 255, 255, 0.08);
 }
-.dot-discount { background-color: #f87171; } /* Красная - цена ниже 100% */
-.dot-premium { background-color: #34d399; }  /* Зеленая - цена выше 100% */
 
-/* 3. Стиль для копируемого кода */
-.copy-badge {
-    cursor: pointer;
-    background: var(--accent-blue);
-    color: white;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 10px;
-    margin-left: 5px;
+/* 3. Синее выделение кода (ISIN) */
+.copy-container-blue {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
+    gap: 6px;
+    background: rgba(52, 152, 219, 0.1); /* Нежно-синий фон */
+    color: #3498db; /* Ярко-синий текст */
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(52, 152, 219, 0.2);
 }
 
-.copy-success-blink {
-    animation: blink 0.5s ease;
-}
-
-@keyframes blink {
-    50% { opacity: 0.5; transform: scale(1.05); }
+.copy-container-blue:active {
+    transform: scale(0.95);
+    background: rgba(52, 152, 219, 0.2);
 }
          /* ==================================================================== */
         
@@ -8349,20 +8352,29 @@ function openCompanyFromTable(event, ticker, companyName) {
         };
         
         const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
-        
-        // Революционная логика точки: если цена < 100%, точка красная (дисконт)
         const dotClass = parseFloat(b.p) < 100 ? 'dot-discount' : 'dot-premium';
         
+        // РАСЧЕТ ЦЕНЫ В РУБЛЯХ (Цена % * 10)
+        const priceInRub = (parseFloat(b.p) * 10).toFixed(2);
+        
         ofzHtml += `
-        <div class="ofz-row-container ${hiddenClass}" id="row-container-${index}">
+        <div class="ofz-row-container ${hiddenClass}">
             <div class="ofz-luxury-item" onclick="toggleOfzDetails('details-${b.t}')">
-                <div class="ofz-lux-name">${limitName(b.n)}</div>
+                <div class="ofz-lux-left">
+                    <div class="ofz-lux-name">${limitName(b.n)}</div>
+                </div>
+                
                 <div class="ofz-lux-bridge"></div>
+                
                 <div class="ofz-lux-right">
                     <div class="ofz-lux-yield">${b.y}</div>
-                    <div class="ofz-lux-price-tag">
-                        <span class="parity-dot ${dotClass}"></span>
-                        ${b.p}%
+                    
+                    <div class="ofz-lux-price-wrapper">
+                        <span class="ofz-price-label">Цена</span>
+                        <div class="ofz-lux-price-tag">
+                            <span class="parity-dot ${dotClass}"></span>
+                            ${priceInRub} ₽
+                        </div>
                     </div>
                 </div>
             </div>
@@ -8370,40 +8382,48 @@ function openCompanyFromTable(event, ticker, companyName) {
             <div id="details-${b.t}" class="ofz-lux-details">
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">КОД (ISIN)</span>
-                    <span class="ofz-lux-detail-value" onclick="copyTicker('${b.t}', this)">
-                        ${b.t} <span class="copy-badge">COPY</span>
-                    </span>
+                    <div class="copy-container-blue" onclick="copyTicker('${b.t}', this)">
+                        <span>${b.t}</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </div>
                 </div>
+                
                 <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">ТЕКУЩАЯ ЦЕНА</span>
-                    <span class="ofz-lux-detail-value">${b.p}% от номинала</span>
+                    <span class="ofz-lux-detail-label">РЫНОЧНАЯ ЦЕНА</span>
+                    <span class="ofz-lux-detail-value">${priceInRub} ₽ <small style="opacity:0.6">(${b.p}%)</small></span>
                 </div>
+                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">НКД</span>
                     <span class="ofz-lux-detail-value">${Math.round(b.nkd*100)/100} ₽</span>
                 </div>
+                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ДАТА ПОГАШЕНИЯ</span>
                     <span class="ofz-lux-detail-value">${details.matDate}</span>
                 </div>
+                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">РАЗМЕР КУПОНА</span>
                     <span class="ofz-lux-detail-value">${details.couponValue} ₽</span>
                 </div>
+                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">БЛИЖАЙШИЙ КУПОН</span>
                     <span class="ofz-lux-detail-value">${details.nextCoupon}</span>
                 </div>
-                <div class="ofz-lux-detail-row" style="border-bottom: 2px solid rgba(52, 152, 219, 0.2);">
-                    <span class="ofz-lux-detail-label">КУПОННАЯ ДОХОДНОСТЬ</span>
+                
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ТЕКУЩАЯ КУПОННАЯ ДОХОДНОСТЬ</span>
                     <span class="ofz-lux-detail-value" style="color:var(--accent-blue)">${details.couponYield}%</span>
                 </div>
+                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ВЫПЛАТ В ГОД</span>
                     <span class="ofz-lux-detail-value">${details.freq}</span>
                 </div>
                 
-                <button class="details-btn" style="width:100%; margin-top:15px; background: var(--text-main); color: var(--bg-main);" 
+                <button class="details-btn" style="width:100%; margin-top:15px; background: #3498db; color: white; border: none;" 
                         onclick="openTradingView(event, '${b.t}')">
                     ОТКРЫТЬ ГРАФИК TV
                 </button>
@@ -8415,14 +8435,17 @@ function openCompanyFromTable(event, ticker, companyName) {
 }
     function copyTicker(text, el) {
     navigator.clipboard.writeText(text).then(() => {
-        el.classList.add('copy-success-blink');
-        const badge = el.querySelector('.copy-badge');
-        if(badge) badge.innerText = 'DONE!';
+        // Эффект временного изменения текста
+        const originalContent = el.innerHTML;
+        el.style.background = '#2ecc71'; // Вспышка зеленым при успехе
+        el.style.color = 'white';
+        el.style.borderColor = '#2ecc71';
         
         setTimeout(() => {
-            el.classList.remove('copy-success-blink');
-            if(badge) badge.innerText = 'COPY';
-        }, 1000);
+            el.style.background = ''; // Возвращаем синий из CSS
+            el.style.color = '';
+            el.style.borderColor = '';
+        }, 600);
         
         if (window.Telegram?.WebApp?.HapticFeedback) {
             window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
