@@ -5715,156 +5715,6 @@ body.dark-mode .screen::after {
     gap: 8px;
 }
          /* ==================================================================== */
-
-        /* --- 1. КОНТЕЙНЕР ПЕРЕКЛЮЧАТЕЛЯ (TABS) --- */
-.luxury-tab-container {
-    display: flex;
-    background: rgba(0, 0, 0, 0.04);
-    border-radius: 16px;
-    padding: 4px;
-    margin: 30px 0 20px 0;
-    border: 1px solid rgba(0,0,0,0.02);
-}
-.dark-mode .luxury-tab-container {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255,255,255,0.05);
-}
-
-/* Кнопка вкладки */
-.luxury-tab {
-    flex: 1;
-    text-align: center;
-    padding: 12px 0;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    color: #94a3b8;
-    position: relative;
-    user-select: none;
-}
-
-.tab-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-}
-
-/* Активная вкладка */
-.luxury-tab.active {
-    background: #fff;
-    color: var(--text-main);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-.dark-mode .luxury-tab.active {
-    background: #334155;
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* --- 2. СТИЛИ ДЛЯ ТАБЛИЦЫ ВНУТРИ ВКЛАДКИ --- */
-/* Убираем лишние отступы, так как она теперь внутри контейнера */
-#view-stocks .echelon-table-styled {
-    margin-top: 10px;
-}
-
-/* Делаем заголовки эшелонов (I, II, III, IV) чуть крупнее и красивее */
-.echelon-header-pill {
-    width: 32px; 
-    height: 32px;
-    font-size: 11px;
-    margin-bottom: 10px;
-}
-      /* ==================================================================== */
-
-        /* 1. АНИМАЦИЯ СТРЕЛОЧЕК В СТРОКАХ */
-.ofz-luxury-item svg.row-chevron {
-    width: 12px;
-    height: 12px;
-    margin-left: 10px;
-    opacity: 0.3;
-    transition: transform 0.3s ease;
-}
-/* Поворот стрелки при активации (если добавишь класс active через JS) */
-.ofz-row-container.active svg.row-chevron {
-    transform: rotate(180deg);
-    opacity: 1;
-}
-
-/* 2. СКРЫТИЕ СТРОК В ТАБЛИЦЕ АКЦИЙ */
-.echelon-row-hidden {
-    display: none !important;
-}
-
-/* 3. СТИЛЬ КНОПКИ "ПОКАЗАТЬ ВСЕ" */
-.btn-show-more-modern {
-    width: calc(100% - 20px);
-    margin: 15px 10px;
-    padding: 12px;
-    background: rgba(0,0,0,0.03);
-    border: 1px dashed rgba(0,0,0,0.1);
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-}
-.dark-mode .btn-show-more-modern {
-    background: rgba(255,255,255,0.03);
-    border-color: rgba(255,255,255,0.1);
-}
-  /* ==================================================================== */
-        /* --- СТРЕЛКА В ЗАГОЛОВКЕ ОФЗ --- */
-.instrument-toggle-icon {
-    width: 14px;
-    height: 14px;
-    color: #94A3B8;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-/* Класс поворота для контейнера заголовка */
-.ofz-headers-container.is-expanded .instrument-toggle-icon {
-    transform: rotate(180deg);
-    color: var(--accent-blue);
-}
-
-/* --- СКРЫТИЕ СТРОК В АКЦИЯХ --- */
-.echelon-row-hidden {
-    display: none !important;
-}
-
-/* --- КНОПКИ "ПОКАЗАТЬ ВСЕ" --- */
-.btn-show-more-modern {
-    width: calc(100% - 20px);
-    margin: 15px 10px;
-    padding: 14px;
-    background: rgba(0,0,0,0.03);
-    border: 1px dashed rgba(0,0,0,0.1);
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.dark-mode .btn-show-more-modern {
-    background: rgba(255,255,255,0.03);
-    border-color: rgba(255,255,255,0.1);
-}
-
-/* ФИКС ГРАДИЕНТА ПРЕВЬЮ */
-.rebalance-preview-box, .rebalance-intro-modern {
-    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
-    color: white !important;
-    border: none !important;
-}
-          /* ==================================================================== */
         
     </style>
 </head>
@@ -6428,51 +6278,99 @@ body.dark-mode .screen::after {
     </div>
 </div>
 
-    <div class="luxury-tab-container">
-            <div class="luxury-tab active" id="tab-btn-ofz" onclick="switchLuxuryTab('ofz')">
-                <span class="tab-text">ОФЗ</span>
-            </div>
-            <div class="luxury-tab" id="tab-btn-stocks" onclick="switchLuxuryTab('stocks')">
-                <span class="tab-text">АКЦИИ</span>
-            </div>
+        
+        <div id="ofz-list-headers" class="list-header-row ofz-cols" style="display:none;">
+            <span>Название</span>
+            <span>Цена</span>
+            <span>НКД</span>
+            <span>Доходность</span>
+        </div>
+        
+        <div class="ofz-analogs-title">Аналоги в ОФЗ</div>
+        <div id="ofz-list">
+    </div>
+
+<div class="ghost-trigger-wrapper footer-trigger" id="ghostTriggerOfz" onclick="toggleOfzGhost()">
+    <div class="ghost-line"></div>
+    <div class="ghost-text" id="ghostTextOfz">ПОКАЗАТЬ ВСЕ</div>
+    <div class="ghost-dots">
+        <div class="ghost-dot"></div>
+        <div class="ghost-dot"></div>
+        <div class="ghost-dot"></div>
+    </div>
+</div>
+
+        <div id="ofz-wrapper" class="echelon-wrapper collapsed" style="padding: 0;">
+             <div id="ofz-list"></div>
         </div>
 
-        <div id="view-ofz" class="tab-view active-view">
-            <div id="ofz-list-target"></div>
-        </div>
+     
 
-        <div id="view-stocks" class="tab-view" style="display: none;">
-            <div class="info-expanded-block show" style="margin-bottom: 20px; border:none; background: transparent; padding: 0;">
-                <div style="font-size: 10px; text-align: center; color: var(--text-secondary); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">
-                    Карта рынка по уровням риска
+        <div class="section-header-styled" onclick="toggleInfoBlock(this)">
+            <span>🚀 Акции для замены</span>
+            <span class="info-i-blue">
+                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            </span>
+        </div>
+        
+        <div class="info-expanded-block" style="margin-top:10px;">
+            <div class="echelon-info-graphic">
+                <div class="eig-item e1">
+                    <div class="eig-icon">💎</div>
+                    <div class="eig-text">
+                        <div class="eig-title">I Эшелон <span class="eig-badge">Надежный</span></div>
+                        <div class="eig-desc">Компании, которые платят дивиденды и стараются их повышать каждый год</div>
+                    </div>
+                    <div class="eig-arrow">→</div>
+                </div>
+                <div class="eig-item e2">
+                    <div class="eig-icon">📊</div>
+                    <div class="eig-text">
+                        <div class="eig-title">II Эшелон <span class="eig-badge">Стабильный</span></div>
+                        <div class="eig-desc">Компании, которые платят дивиденды, но размер выплат может меняться</div>
+                    </div>
+                    <div class="eig-arrow">→</div>
+                </div>
+                <div class="eig-item e3">
+                    <div class="eig-icon">⚡</div>
+                    <div class="eig-text">
+                        <div class="eig-title">III Эшелон <span class="eig-badge">Рисковый</span></div>
+                        <div class="eig-desc">Компании с потенциалом выплат, но пока не платят регулярно</div>
+                    </div>
+                    <div class="eig-arrow">→</div>
+                </div>
+                <div class="eig-item e4">
+                    <div class="eig-icon">🚀</div>
+                    <div class="eig-text">
+                        <div class="eig-title">IV Эшелон <span class="eig-badge">Венчурный</span></div>
+                        <div class="eig-desc">Компании роста, которые реинвестируют прибыль вместо дивидендов</div>
+                    </div>
+                    <div class="eig-arrow">→</div>
                 </div>
             </div>
-
-            <div class="echelon-wrapper" style="max-height: none; padding: 0;">
-                <table class="echelon-table-styled">
-                    <thead>
-                        <tr>
-                            <th><div class="echelon-header-pill">I</div></th>
-                            <th><div class="echelon-header-pill">II</div></th>
-                            <th><div class="echelon-header-pill">III</div></th>
-                            <th><div class="echelon-header-pill">IV</div></th>
-                        </tr>
-                    </thead>
-                    <tbody id="echelon-tickers-body"></tbody>
-                </table>
-            </div>
-            
-            <div style="text-align: center; margin-top: 20px; opacity: 0.6;">
-                <span style="font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary);">
-                    Нажмите на тикер для деталей
-                </span>
-            </div>
         </div>
         
-       
+        <div id="echelon-wrapper" class="echelon-wrapper collapsed">
+            <table class="echelon-table-styled">
+                <thead>
+                    <tr>
+                        <th><div class="echelon-header-pill">I</div></th>
+                        <th><div class="echelon-header-pill">II</div></th>
+                        <th><div class="echelon-header-pill">III</div></th>
+                        <th><div class="echelon-header-pill">IV</div></th>
+                    </tr>
+                </thead>
+                <tbody id="echelon-tickers-body"></tbody>
+            </table>
+        </div>
         
-      
-       
+        <div class="expand-arrow-btn" id="expandArrowBtn" onclick="toggleEchelonTable(this)">
+            <div class="eab-line"></div>
+            <div class="eab-icon-box">
+                <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="eab-line"></div>
+        </div>
     </div>
 
     <div id="screen-interesting" class="screen">
@@ -8394,23 +8292,43 @@ function recalcCustomCoupons() {
 
         // --- END OF MONTHLY CALC LOGIC ---
 
-
-// ПЕРЕКЛЮЧАТЕЛЬ (СТАВИМ РЯДОМ)
-function toggleStocksEchelon() {
-    const btn = document.getElementById('btn-stocks-more');
-    const rows = document.querySelectorAll('#echelon-tickers-body tr:not(.et-details-row)');
-    if (!btn || !rows.length) return;
-
-    let isHidden = btn.innerText.includes('Развернуть');
-
-    rows.forEach((row, index) => {
-        if (index > 1) {
-            row.classList.toggle('echelon-row-hidden', !isHidden);
+        function updateEchelonTable() {
+    const body = document.getElementById('echelon-tickers-body');
+    if(!body) return;
+    let html = '';
+    const maxRows = Math.max(...echelonTableData.map(col => col.length));
+    
+    for(let i=0; i<maxRows; i++) {
+        // Основная строка с ячейками
+        html += '<tr>';
+        for(let j=0; j<4; j++) {
+            const asset = echelonTableData[j][i];
+            if(asset) {
+                // Убираем знак рубля из отображения в ячейке
+                const priceDisplay = asset.target.replace(' ₽', '');
+                html += `
+                <td class="et-cell" onclick="toggleEchelonCell('${i}-${j}')">
+                    <div class="et-cell-content">
+                        <span class="et-ticker">${asset.t}</span>
+                        <span class="et-price">${priceDisplay}</span>
+                    </div>
+                </td>`;
+            } else {
+                html += '<td class="et-cell-empty"></td>';
+            }
         }
-    });
-
-    btn.innerText = isHidden ? 'Скрыть эшелоны' : 'Развернуть эшелоны';
+        html += '</tr>';
+        
+        // Скрытая строка с деталями
+        html += `<tr class="et-details-row" id="details-row-${i}" style="display:none;">
+            <td colspan="4" class="et-details-container">
+                <div id="details-content-${i}"></div>
+            </td>
+        </tr>`;
+    }
+    body.innerHTML = html;
 }
+
 
     function toggleEchelonCell(cellId) {
     const [row, col] = cellId.split('-').map(Number);
@@ -8579,21 +8497,22 @@ function formatNameWithMonoDigits(name) {
 // Функция для раскрытия/скрытия ВСЕГО списка через заголовок
 // 1. Управление всем блоком ОФЗ
 function toggleGlobalOfzList() {
-    const header = document.getElementById('ofz-header-wrapper');
-    const isExpanding = !header.classList.contains('is-expanded');
+    const headerContainer = document.querySelector('.ofz-headers-container');
+    const isExpanding = !headerContainer.classList.contains('is-expanded');
     
-    header.classList.toggle('is-expanded');
+    // Переключаем класс для стрелочки
+    headerContainer.classList.toggle('is-expanded');
     
-    // Если сворачиваем, закрываем все открытые детали внутри строк
+    // Если мы СВОРАЧИВАЕМ (isExpanding = false), закрываем все открытые детали
     if (!isExpanding) {
-        document.querySelectorAll('.ofz-lux-details').forEach(d => d.style.display = 'none');
+        document.querySelectorAll('.ofz-lux-details').forEach(detail => {
+            detail.style.display = 'none';
+        });
+        // Убираем активные классы со строк
+        document.querySelectorAll('.ofz-row-container').forEach(row => {
+            row.classList.remove('active');
+        });
     }
-
-    // Вызываем стандартное скрытие строк после 3-й
-    if (typeof toggleOfzGhost === 'function') {
-        toggleOfzGhost(); 
-    }
-
 
     // Вызываем твою функцию скрытия лишних строк (из терминала)
     if (typeof toggleOfzGhost === 'function') {
@@ -8601,152 +8520,96 @@ function toggleGlobalOfzList() {
     }
 }
 
-// 1. ФУНКЦИЯ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК
-function switchLuxuryTab(tabName) {
-    // Деактивируем все кнопки
-    document.querySelectorAll('.luxury-tab').forEach(el => el.classList.remove('active'));
-    // Активируем нажатую
-    document.getElementById(`tab-btn-${tabName}`).classList.add('active');
-
-    // Скрываем все экраны
-    document.getElementById('view-ofz').style.display = 'none';
-    document.getElementById('view-stocks').style.display = 'none';
-
-    // Показываем нужный экран с анимацией
-    const targetView = document.getElementById(`view-${tabName}`);
-    targetView.style.display = 'block';
-    targetView.style.animation = 'fadeIn 0.3s ease';
-    
-    // Вибрация
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.selectionChanged();
-    }
-}
-
-// 2. РЕНДЕР СПИСКА ОФЗ (В НОВОМ МЕСТЕ)
-// 2. Главный рендер ОФЗ (ВЕРНУЛИ ВСЕ ДАННЫЕ)
+// 2. Рендер списка
 function renderOfzList() {
-    const container = document.getElementById('ofz-list-target');
-    if (!container) return;
+    if (typeof bonds === 'undefined' || bonds.length === 0) return;
+    
+    // Принудительный фикс стиля превью (убиваем "белый фон")
+    const pBox = document.querySelector('.rebalance-preview-box') || document.querySelector('.rebalance-intro-modern');
+    if (pBox) {
+        pBox.style.cssText = "background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important; color: white !important;";
+        pBox.querySelectorAll('*').forEach(child => child.style.color = 'white');
+    }
 
-    // 1. Заголовок с той самой стрелочкой
-    let html = `
-        <div class="ofz-headers-container" onclick="toggleGlobalOfzList()" style="cursor:pointer;">
-            <span class="h-label-instrument">
-                Инструмент 
-                <svg id="global-ofz-arrow" class="instrument-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:12px; height:12px; transition: transform 0.3s; margin-left:5px;">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </span>
+   let ofzHtml = `
+        <div class="ofz-headers-container">
+            <div class="h-label-instrument-wrapper" onclick="toggleGlobalOfzList()" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
+                <span style="font-size:12px; font-weight:700; color:#94a3b8; text-transform:uppercase;">Инструмент</span>
+                <svg id="global-ofz-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" style="transition:0.3s;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
             <div class="headers-right-group">
                 <div class="header-glass-pill">%</div>
                 <div class="header-glass-pill">₽</div>
             </div>
-        </div>`;
-
+        </div>
+        <div id="ofz-items-container">
+            </div>
+    `;
+    
     bonds.forEach((b, index) => {
-        const details = bondDetailsMap[b.t] || {};
-        // По умолчанию показываем только первые 3 (индексы 0, 1, 2)
-        const isHiddenClass = index > 2 ? 'ofz-row-hidden' : '';
+        const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 };
+        const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
         
-        html += `
-        <div class="ofz-row-container ${isHiddenClass}" id="container-${b.t}">
+        let curYield = "0.00";
+        if (details.couponValue > 0 && details.freq > 0) {
+            curYield = ((details.couponValue * details.freq / parseFloat(priceFinal)) * 100).toFixed(2);
+        }
+
+        const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
+
+        ofzHtml += `
+        <div class="ofz-row-container ${hiddenClass}" id="container-${b.t}">
             <div class="ofz-luxury-item" onclick="toggleOfzDetails('${b.t}')">
-                <div class="ofz-lux-name">${b.n}</div>
+                <div class="ofz-lux-name">${formatNameWithMonoDigits(limitName(b.n))}</div>
+                <div class="ofz-lux-bridge"></div>
                 <div class="ofz-lux-right">
                     <div class="ofz-lux-yield">${b.y}</div>
-                    <div class="ofz-price-pill">${b.p} ₽</div>
+                    <div class="ofz-price-pill">${priceFinal} ₽</div>
                 </div>
             </div>
-            <div id="details-${b.t}" class="ofz-lux-details" style="display:none; font-size: 11px; color: #94a3b8; padding: 10px 15px; line-height: 1.4;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                    <div>НКД: <span style="color: #eee;">${b.nkd} ₽</span></div>
-                    <div>Мат: <span style="color: #eee;">${details.matDate || '—'}</span></div>
-                    <div>Купон: <span style="color: #eee;">${details.couponValue || '—'} ₽</span></div>
-                    <div>Частота: <span style="color: #eee;">${details.freq || '—'}</span></div>
+
+            <div id="details-${b.t}" class="ofz-lux-details" style="display:none; padding: 20px;">
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">КОД (ISIN)</span>
+                    <span class="copy-code-blue" onclick="copyTickerNew('${b.t}')">${b.t}</span>
                 </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ТЕКУЩАЯ ЦЕНА</span>
+                    <span class="ofz-lux-detail-value"><span class="mono-digit-span">${priceFinal}</span> ₽</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">НКД</span>
+                    <span class="ofz-lux-detail-value"><span class="mono-digit-span">${b.nkd}</span> ₽</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ДАТА ПОГАШЕНИЯ</span>
+                    <span class="ofz-lux-detail-value mono-digit-span">${details.matDate}</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">РАЗМЕР КУПОНА</span>
+                    <span class="ofz-lux-detail-value"><span class="mono-digit-span">${details.couponValue}</span> ₽</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">БЛИЖ. КУПОН</span>
+                    <span class="ofz-lux-detail-value mono-digit-span">${details.nextCoupon}</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ТЕКУЩАЯ КУПОННАЯ ДОХОДНОСТЬ</span>
+                    <span class="ofz-lux-detail-value" style="color:#3498db; font-weight:800;">
+                        <span class="mono-digit-span">${curYield}</span>%
+                    </span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ВЫПЛАТ В ГОД</span>
+                    <span class="ofz-lux-detail-value mono-digit-span">${details.freq}</span>
+                </div>
+                <button class="btn-luxury-chart" onclick="openTradingView(event, '${b.t}')">Открыть график TV</button>
             </div>
         </div>`;
     });
-
-    container.innerHTML = html;
-}
-
-
-
-    function updateEchelonTable() {
-    const body = document.getElementById('echelon-tickers-body');
-    if (!body) return;
-
-    let html = '';
-    const maxRows = Math.max(...echelonTableData.map(col => col.length));
-
-    for (let i = 0; i < maxRows; i++) {
-        html += '<tr>';
-        for (let j = 0; j < 4; j++) {
-            const asset = echelonTableData[j][i];
-            if (asset) {
-                const priceDisplay = asset.target.replace(' ₽', '');
-                // Сборка через обычные строки, чтобы не запутаться в кавычках
-                html += '<td class="et-cell" onclick="toggleEchelonCell(\'' + i + '-' + j + '\')">' +
-                            '<div class="et-cell-content">' +
-                                '<span class="et-ticker">' + asset.t + '</span>' +
-                                '<span class="et-price">' + priceDisplay + '</span>' +
-                            '</div>' +
-                        '</td>';
-            } else {
-                html += '<td class="et-cell-empty"></td>';
-            }
-        }
-        html += '</tr>';
-
-        // Строка деталей. Важно: используем i, а не row!
-        html += '<tr class="et-details-row" id="details-row-' + i + '" style="display:none;">' +
-                    '<td colspan="4" class="et-details-container">' +
-                        '<div id="details-content-' + i + '"></div>' +
-                    '</td>' +
-                '</tr>';
-    }
-    body.innerHTML = html;
-
-    // Логика скрытия строк (оставляем 2 видимыми)
-    const allRows = body.querySelectorAll('tr:not(.et-details-row)');
-    allRows.forEach((row, index) => {
-        if (index > 1) {
-            row.classList.add('echelon-row-hidden');
-        }
-    });
-
-    // Создание кнопки "Развернуть"
-    let btn = document.getElementById('btn-stocks-more');
-    if (!btn) {
-        btn = document.createElement('button');
-        btn.id = 'btn-stocks-more';
-        btn.className = 'btn-show-more-modern';
-        btn.innerText = 'Развернуть эшелоны';
-        btn.onclick = toggleStocksEchelon;
-        const wrapper = document.querySelector('.echelon-wrapper');
-        if (wrapper) wrapper.after(btn);
-    } else {
-        btn.innerText = 'Развернуть эшелоны';
-    }
-}
-
-function toggleStocksEchelon() {
-    const btn = document.getElementById('btn-stocks-more');
-    const rows = document.querySelectorAll('#echelon-tickers-body tr:not(.et-details-row)');
-    let isHidden = btn.innerText.includes('Развернуть');
-
-    rows.forEach((row, index) => {
-        if (index > 1) {
-            if (isHidden) row.classList.remove('echelon-row-hidden');
-            else row.classList.add('echelon-row-hidden');
-        }
-    });
-    btn.innerText = isHidden ? 'Скрыть эшелоны' : 'Развернуть эшелоны';
-}
     
-
+    document.getElementById('ofz-list').innerHTML = ofzHtml;
+}
     
 // Исправленная функция копирования
 function copyTicker(text) {
