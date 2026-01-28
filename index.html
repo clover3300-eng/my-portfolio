@@ -5515,42 +5515,6 @@ body.dark-mode .screen::after {
 }
         
   /* ==================================================================== */
-
-/* 1. ГРАДИЕНТ ДЛЯ ПРЕВЬЮ (как в терминале) */
-.rebalance-preview-box {
-    /* Используем тот же градиент, что и на фоне терминала */
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    border-radius: 16px;
-    padding: 20px;
-    color: white;
-}
-        /* 2. НОВЫЙ ДИЗАЙН ЦЕНЫ (Вместо серого текста) */
-.ofz-lux-price-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-main);
-    background: rgba(0, 0, 0, 0.05); /* Легкая подложка */
-    padding: 2px 8px;
-    border-radius: 4px;
-    border: 1px solid rgba(0, 0, 0, 0.03);
-    text-align: center;
-    min-width: 45px;
-    letter-spacing: -0.02em;
-}
-
-.dark-mode .ofz-lux-price-tag {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.9);
-}
-
-/* 3. УБИРАЕМ СТАРУЮ ГАЛОЧКУ И СТРЕЛКИ */
-.expand-arrow-btn, #expandArrowOfz, .section-header-styled i {
-    display: none !important;
-}
         
     </style>
 </head>
@@ -6141,7 +6105,13 @@ body.dark-mode .screen::after {
              <div id="ofz-list"></div>
         </div>
 
-       
+        <div class="expand-arrow-btn" id="expandArrowOfz" onclick="toggleOfzTable(this)">
+            <div class="eab-line"></div>
+            <div class="eab-icon-box">
+                <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="eab-line"></div>
+        </div>
 
         <div class="section-header-styled" onclick="toggleInfoBlock(this)">
             <span>🚀 Акции для замены</span>
@@ -8319,28 +8289,34 @@ function openCompanyFromTable(event, ticker, companyName) {
         // Если индекс больше 2 (то есть это 4-я строка и далее), добавляем класс скрытия
         const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
         
-        // Внутри функции renderOfzList, замените часть ofzHtml на эту:
-
-ofzHtml += `
-<div class="ofz-row-container ${hiddenClass}" id="row-container-${index}">
-    <div class="ofz-luxury-item" onclick="toggleOfzDetails('details-${b.t}')">
-        <div class="ofz-lux-left">
-            <div class="ofz-lux-name">${limitName(b.n)}</div>
-            <div class="ofz-lux-ticker" style="font-size: 9px; opacity: 0.6;">${b.t}</div>
-        </div>
-        
-        <div class="ofz-lux-bridge"></div> 
-        
-        <div class="ofz-lux-right">
-            <div class="ofz-lux-yield">${b.y}</div>
-            <div class="ofz-lux-price-tag">${b.p}%</div>
-        </div>
-    </div>
-    
-    <div id="details-${b.t}" class="ofz-lux-details">
-        ... (ваш код деталей) ...
-    </div>
-</div>`;
+        ofzHtml += `
+        <div class="ofz-row-container ${hiddenClass}" id="row-container-${index}">
+            <div class="ofz-luxury-item" onclick="toggleOfzDetails('details-${b.t}')">
+                <div class="ofz-lux-name">${limitName(b.n)}</div>
+                <div class="ofz-lux-bridge"></div> <div class="ofz-lux-right">
+                    <div class="ofz-lux-yield">${b.y}</div>
+                    <div class="ofz-lux-price">${b.p}%</div>
+                </div>
+            </div>
+            
+            <div id="details-${b.t}" class="ofz-lux-details">
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">НКД</span>
+                    <span class="ofz-lux-detail-value">${Math.round(b.nkd*10)/10} ₽</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">Погашение</span>
+                    <span class="ofz-lux-detail-value">${details.matDate}</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">Купон</span>
+                    <span class="ofz-lux-detail-value">${details.couponValue} ₽ (${details.freq} р/г)</span>
+                </div>
+                <button class="details-btn" style="width:100%; margin-top:10px;" onclick="openTradingView(event, '${b.t}')">
+                    ГРАФИК TV
+                </button>
+            </div>
+        </div>`;
     });
     
     document.getElementById('ofz-list').innerHTML = ofzHtml;
