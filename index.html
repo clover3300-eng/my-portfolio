@@ -174,6 +174,45 @@
             background: linear-gradient(90deg, #1a2234 0%, #0f172a 100%);
         }
 
+/* ВАЖНО: Фикс дрожания */
+.screen {
+    /* 1. Говорим браузеру не перехватывать горизонтальные свайпы */
+    touch-action: pan-y; 
+    
+    /* 2. Подсказываем браузеру, что это будет двигаться (оптимизация GPU) */
+    will-change: transform; 
+    
+    /* 3. Используем 3D-трансформацию для включения аппаратного ускорения */
+    transform: translate3d(0, 0, 0); 
+    
+    /* Стандартная плавность (для моментов, когда палец отпущен) */
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    background: var(--bg-color); 
+    min-height: 100vh;
+}
+
+/* Класс для активного перетаскивания (отключаем плавность полностью) */
+.screen.is-dragging {
+    transition: none !important; /* Убирает любую задержку/дрожание */
+    box-shadow: -15px 0 40px rgba(0,0,0,0.15); /* Тень */
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+/* Нижний слой без изменений */
+.screen.prev-card-layer {
+    display: block !important;
+    position: fixed !important;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    will-change: transform, filter; /* Оптимизация */
+    transform: scale3d(0.92, 0.92, 1); /* Используем 3D */
+    filter: brightness(0.85);
+}
+
+        
         /* ========== NEW: Welcome Screen Styles ========== */
 .welcome-screen {
     min-height: calc(100vh - 32px);
@@ -9251,17 +9290,16 @@ initNotificationSwipe();
    ================================================================= */
 
 /* =================================================================
-   PRO CARD DECK SWIPE (SHADOW + RADIUS + PHYSICS)
+   SMOOTH GPU SWIPE (NO SHAKE VERSION)
    ================================================================= */
 function initCardDeckSwipe() {
     let startX = 0;
     let startY = 0;
     let isDragging = false;
-    let isAxisLocked = false;
+    let isAxisLocked = false; // true = горизонтальный свайп, false = вертикальный скролл
     let targetPrevScreenId = null;
     
-    // Зона срабатывания (левые 30px экрана)
-    const triggerZone = 30; 
+    const triggerZone = 40; 
 
     function getPrevScreenId() {
         if (currentScreen === 'screen-company') return 'screen-interesting';
@@ -9274,16 +9312,18 @@ function initCardDeckSwipe() {
 
     // 1. НАЧАЛО
     document.addEventListener('touchstart', (e) => {
+        // Сброс флагов
         isDragging = false;
         isAxisLocked = false;
-        targetPrevScreenId = getPrevScreenId();
         
+        targetPrevScreenId = getPrevScreenId();
         if (!targetPrevScreenId) return;
 
         const touch = e.touches[0];
         startX = touch.clientX;
         startY = touch.clientY;
 
+        // Если начали тянуть от левого края
         if (startX <= triggerZone) {
             isDragging = true;
             
@@ -9291,16 +9331,16 @@ function initCardDeckSwipe() {
             const activeEl = document.querySelector('.screen.active');
 
             if (prevEl && activeEl) {
-                // Подготовка слоев
+                // Подготовка нижнего слоя
                 prevEl.classList.add('prev-card-layer');
-                prevEl.style.transition = 'none';
-                activeEl.style.transition = 'none';
+                prevEl.style.transition = 'none'; // Важно!
                 
-                // Добавляем класс "карточки" активному экрану (тень + скругление)
-                activeEl.classList.add('is-swiping-card');
+                // Подготовка активного слоя
+                // Добавляем класс, который делает transition: none !important
+                activeEl.classList.add('is-dragging');
             }
         }
-    }, { passive: false });
+    }, { passive: false }); // passive: false позволяет использовать preventDefault
 
     // 2. ДВИЖЕНИЕ
     document.addEventListener('touchmove', (e) => {
@@ -9308,39 +9348,41 @@ function initCardDeckSwipe() {
 
         const x = e.touches[0].clientX;
         const y = e.touches[0].clientY;
+        
         const deltaX = x - startX;
         const deltaY = Math.abs(y - startY);
 
+        // Определяем направление (один раз за свайп)
         if (!isAxisLocked) {
             if (deltaY > Math.abs(deltaX)) {
+                // Пошли вертикально -> это скролл, отменяем свайп
                 isDragging = false;
-                cleanUpStyles(false); // Отмена
+                cleanUpStyles(false);
                 return;
             } else if (Math.abs(deltaX) > 5) {
+                // Пошли горизонтально -> это свайп, блокируем скролл
                 isAxisLocked = true;
             }
         }
 
         if (isAxisLocked) {
-            if (e.cancelable) e.preventDefault();
+            // Блокируем скролл страницы, чтобы не дергалось
+            if (e.cancelable) e.preventDefault(); 
 
             const activeEl = document.querySelector('.screen.active');
             const prevEl = document.getElementById(targetPrevScreenId);
 
             if (activeEl && prevEl && deltaX > 0) {
-                // Двигаем верхнюю карту
-                // Log10 добавляет "сопротивление" при длинном свайпе (резинка)
-                activeEl.style.transform = `translateX(${deltaX}px)`;
+                // Используем translate3d для GPU-ускорения
+                // Это ключевой момент против дрожания
+                activeEl.style.transform = `translate3d(${deltaX}px, 0, 0)`;
 
-                // Интерполяция для нижней карты
-                // 0px сдвига -> scale 0.92, brightness 0.85
-                // 300px сдвига -> scale 1.0, brightness 1.0
+                // Плавное появление заднего фона
                 const progress = Math.min(deltaX / window.innerWidth, 1);
+                const scale = 0.92 + (0.08 * progress);
+                const brightness = 0.85 + (0.15 * progress);
                 
-                const scale = 0.92 + (0.08 * progress); // Увеличиваем до 1.0
-                const brightness = 0.85 + (0.15 * progress); // Осветляем до 1.0
-                
-                prevEl.style.transform = `scale(${scale})`;
+                prevEl.style.transform = `scale3d(${scale}, ${scale}, 1)`;
                 prevEl.style.filter = `brightness(${brightness})`;
             }
         }
@@ -9357,69 +9399,66 @@ function initCardDeckSwipe() {
 
         if (!activeEl || !prevEl) return;
 
-        // Включаем физику (плавность)
-        activeEl.style.transition = 'transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), border-radius 0.3s ease';
-        prevEl.style.transition = 'transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), filter 0.5s ease';
+        // Включаем плавность обратно (убираем класс is-dragging)
+        activeEl.classList.remove('is-dragging');
+        
+        // Вручную задаем transition для красивого завершения
+        activeEl.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        prevEl.style.transition = 'transform 0.4s ease, filter 0.4s ease';
 
         const endX = e.changedTouches[0].clientX;
         const deltaX = endX - startX;
-        const threshold = window.innerWidth * 0.35; // Порог 35%
+        const threshold = window.innerWidth * 0.35; // 35% экрана
 
         if (deltaX > threshold) {
-            // === УСПЕХ: Улетаем вправо ===
-            activeEl.style.transform = `translateX(100%)`;
-            
-            // Нижняя карта становится полноразмерной
-            prevEl.style.transform = `scale(1)`;
+            // === УСПЕХ ===
+            activeEl.style.transform = `translate3d(100%, 0, 0)`;
+            prevEl.style.transform = `scale3d(1, 1, 1)`;
             prevEl.style.filter = `brightness(1)`;
 
             setTimeout(() => {
                 showScreen(targetPrevScreenId);
-                cleanUpStyles(true); // true = свайп успешен
-                
-                // Сбрасываем позицию старого экрана (он теперь скрыт)
+                cleanUpStyles(true);
                 activeEl.style.transform = ''; 
-                
                 if (window.Telegram?.WebApp?.HapticFeedback) {
                     window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
                 }
-            }, 300); // Ждем чуть меньше, чем длится анимация, для плавности подмены
+            }, 300);
         } else {
-            // === ОТМЕНА: Возвращаемся ===
-            activeEl.style.transform = `translateX(0)`;
-            
-            // Нижняя карта уходит обратно в глубину
-            prevEl.style.transform = `scale(0.92)`;
+            // === ОТМЕНА ===
+            activeEl.style.transform = `translate3d(0, 0, 0)`;
+            prevEl.style.transform = `scale3d(0.92, 0.92, 1)`;
             prevEl.style.filter = `brightness(0.85)`;
-            
-            // Убираем скругление углов (превращаем обратно в экран)
-            activeEl.classList.remove('is-swiping-card');
 
             setTimeout(() => {
                 cleanUpStyles(false);
-            }, 500);
+            }, 400);
         }
     });
 
     function cleanUpStyles(success) {
-        const prevEl = document.getElementById(targetPrevScreenId);
-        const activeEl = document.querySelector('.screen.active'); // Или тот, который БЫЛ активным
+        // Убираем все временные классы
+        document.querySelectorAll('.is-dragging').forEach(el => el.classList.remove('is-dragging'));
         
-        // Убираем класс карточки (тень и скругление)
-        document.querySelectorAll('.is-swiping-card').forEach(el => el.classList.remove('is-swiping-card'));
-
+        const prevEl = document.getElementById(targetPrevScreenId);
         if (prevEl) {
             prevEl.classList.remove('prev-card-layer');
-            prevEl.style = ''; // Полный сброс инлайн-стилей
-        }
-        
-        if (activeEl && !success) {
-             activeEl.style.transition = '';
+            prevEl.style.transform = '';
+            prevEl.style.filter = '';
+            prevEl.style.transition = '';
+            prevEl.style.zIndex = '';
+            // Возвращаем обычное позиционирование
+            if(success) {
+                // Если успешно перешли, старый экран становится активным (уже сделано в showScreen)
+            } else {
+                prevEl.style.display = 'none'; // Прячем обратно
+            }
         }
     }
 }
 
 initCardDeckSwipe();
+
 
 
 
