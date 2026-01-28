@@ -6537,64 +6537,76 @@ function formatNewsDate(dateString) {
         //setInterval(updateMarketStatus, 60000); // Отключено
         
                 function showScreen(screenId) {
-            // 1. Логика для меню: если это Главная (screen-home)
-            if (screenId === 'screen-home') {
-                document.body.classList.add('home-mode'); // Включаем "прозрачный" режим
-                document.getElementById('navWrapper').style.display = 'flex'; // Убеждаемся, что меню видно
-                document.getElementById('stickyPanel').style.display = 'none'; // Скрываем нижнюю панель (где кнопка "Сформировать")
-            } else {
-                document.body.classList.remove('home-mode'); // Выключаем "прозрачный" режим (возвращаем как было)
-                
-                // Управление видимостью stickyPanel как в оригинале
-                const stickyPanel = document.getElementById('stickyPanel');
-                if (stickyPanel) {
-                    stickyPanel.style.display = (screenId === 'screen-app') ? 'block' : 'none';
-                }
-            }
-
-            // Старая логика функции (оставляем как было)
-            if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
-                lastNavScreen = screenId;
-                collapseSearch(false);
-            }
-            
-            currentScreen = screenId;
-            
-            // Показываем нужный экран
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const targetScreen = document.getElementById(screenId);
-            if(targetScreen) {
-                targetScreen.classList.add('active');
-            }
-            
-            // Обновляем навигацию
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('nav-search').classList.remove('active');
-            
-            // Подсветка кнопок
-            const navId = `nav-${screenId.split('-')[1]}`;
-            const navBtn = document.getElementById(navId);
-            if (navBtn) navBtn.classList.add('active');
-            
-            if(screenId === 'screen-interesting' || screenId === 'screen-company') {
-                document.getElementById('nav-search').classList.add('active');
-            }
-            
-            // Action Panel логика
-            const portfolioActionPanel = document.getElementById('portfolioActionPanel');
-            if (portfolioActionPanel) {
-                if (screenId === 'screen-portfolio' && isPortfolioCalculated) {
-                    portfolioActionPanel.style.display = 'flex';
-                } else {
-                    portfolioActionPanel.style.display = 'none';
-                }
-            }
-            
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    // 1. Логика для меню: если это Главная (screen-home)
+    if (screenId === 'screen-home') {
+        document.body.classList.add('home-mode');
+        document.getElementById('navWrapper').style.display = 'flex';
+        document.getElementById('stickyPanel').style.display = 'none';
+    } else {
+        document.body.classList.remove('home-mode');
+        const stickyPanel = document.getElementById('stickyPanel');
+        if (stickyPanel) {
+            stickyPanel.style.display = (screenId === 'screen-app') ? 'block' : 'none';
         }
+    }
 
+    // Логика навигации
+    if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
+        lastNavScreen = screenId;
+        if (typeof collapseSearch === 'function') collapseSearch(false);
+    }
+    
+    currentScreen = screenId;
+    
+    // === ГЛАВНОЕ ИСПРАВЛЕНИЕ: ПЕРЕКЛЮЧЕНИЕ ВИДИМОСТИ ===
+    document.querySelectorAll('.screen').forEach(s => {
+        s.classList.remove('active');
+        s.classList.remove('prev-card-layer'); // Убираем слой свайпа
+        s.classList.remove('is-dragging');     // Убираем слой перетаскивания
+        
+        // СБРОС СТИЛЕЙ (чтобы ничего не залипало после свайпа)
+        s.style.display = 'none'; 
+        s.style.transform = '';
+        s.style.filter = '';
+        s.style.transition = '';
+        s.style.zIndex = '';
+    });
 
+    const targetScreen = document.getElementById(screenId);
+    if(targetScreen) {
+        targetScreen.classList.add('active');
+        targetScreen.style.display = 'block'; // Включаем только нужный экран
+    }
+    // ===============================================
+    
+    // Обновляем навигацию (подсветка кнопок)
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    const navSearch = document.getElementById('nav-search');
+    if (navSearch) navSearch.classList.remove('active');
+    
+    const navId = `nav-${screenId.split('-')[1]}`;
+    const navBtn = document.getElementById(navId);
+    if (navBtn) navBtn.classList.add('active');
+    
+    if((screenId === 'screen-interesting' || screenId === 'screen-company') && navSearch) {
+        navSearch.classList.add('active');
+    }
+    
+    // Action Panel логика
+    const portfolioActionPanel = document.getElementById('portfolioActionPanel');
+    if (portfolioActionPanel) {
+        if (screenId === 'screen-portfolio' && (window.isPortfolioCalculated)) {
+            portfolioActionPanel.style.display = 'flex';
+        } else {
+            portfolioActionPanel.style.display = 'none';
+        }
+    }
+    
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
         
         function expandSearch() {
             const backBtn = document.querySelector('#expandedNav .nav-back-island');
@@ -9239,19 +9251,28 @@ function initCardDeckSwipe() {
 
     // Мощная очистка, чтобы экраны не "терялись"
     function fullReset() {
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.classList.remove('prev-card-layer', 'is-dragging');
-            screen.style.transform = '';
-            screen.style.filter = '';
-            screen.style.transition = '';
-            // Если экран не активный, он должен быть скрыт (кроме момента анимации)
-            if (!screen.classList.contains('active')) {
-                screen.style.display = 'none';
-            } else {
-                screen.style.display = 'block';
-            }
-        });
-    }
+    // 1. Находим ВЕЩЕ ВСЕ элементы с классом screen
+    const allScreens = document.querySelectorAll('.screen');
+    
+    allScreens.forEach(screen => {
+        // 2. Убираем все временные классы анимации
+        screen.classList.remove('prev-card-layer', 'is-dragging');
+        
+        // 3. Полностью очищаем все временные стили, которые мы добавляли пальцем
+        screen.style.transform = '';
+        screen.style.filter = '';
+        screen.style.transition = '';
+        screen.style.zIndex = ''; 
+        
+        // 4. ГЛАВНОЕ: сверяем с текущим активным экраном (переменная currentScreen)
+        if (screen.id === currentScreen) {
+            screen.style.display = 'block'; // Показываем только текущий
+            screen.style.opacity = '1';
+        } else {
+            screen.style.display = 'none';  // Все остальные — в глубокий запас
+        }
+    });
+}
 }
     initCardDeckSwipe();
 
