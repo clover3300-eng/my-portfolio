@@ -5516,32 +5516,18 @@ body.dark-mode .screen::after {
         
   /* ==================================================================== */
 
-   /* 1. ГРАДИЕНТ (Максимальный приоритет) */
-[id="rebalance-summary"], 
-.rebalance-preview-box, 
-#rebalance-result-box {
+ /* 1. ПРИНУДИТЕЛЬНЫЙ ГРАДИЕНТ */
+.rebalance-gradient-fixed {
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
-    background-color: #1e3a8a !important; /* На случай, если градиент не подгрузится */
     color: white !important;
     border: none !important;
 }
 
-/* Красим весь вложенный текст в белый */
-[id="rebalance-summary"] *, 
-.rebalance-preview-box * {
-    color: white !important;
-}
-
-/* 2. ТАБЛИЦА (Grid) */
+/* 2. ТАБЛИЦА С ИДЕАЛЬНОЙ ЦЕНТРОВКОЙ */
 .ofz-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr; /* Название чуть шире, цифры поровну */
+    grid-template-columns: 1.2fr 1fr 1fr 30px; /* Добавили колонку для стрелочки */
     align-items: center;
-}
-
-.ofz-table-header {
-    padding: 15px 10px 8px 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
 .h-label {
@@ -5549,20 +5535,63 @@ body.dark-mode .screen::after {
     font-weight: 800;
     text-transform: uppercase;
     color: var(--text-secondary);
-    text-align: center; /* Центруем по умолчанию */
+    text-align: center;
+}
+.h-label:first-child { text-align: left; }
+
+/* 3. ШРИФТ ДЛЯ ЦИФР (JetBrains Mono) */
+.ofz-lux-yield, .ofz-lux-price-value, .ofz-lux-detail-value {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 500;
 }
 
-.h-label:first-child { text-align: left; } /* Название влево */
+.ofz-lux-price-value, .ofz-lux-yield {
+    text-align: center;
+    font-size: 13px;
+}
 
-/* 3. ДЕТАЛИ (Копирование) */
-.copy-text-action {
-    color: #3498db;
-    cursor: pointer;
-    font-size: 11px; /* Как и label */
+/* 4. ТИХАЯ РОСКОШЬ: ИНДИКАТОР РАСКРЫТИЯ */
+.ofz-chevron {
+    width: 16px;
+    height: 16px;
+    opacity: 0.3;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.active .ofz-chevron {
+    transform: rotate(180deg);
+    opacity: 0.8;
+}
+
+/* 5. УВЕДОМЛЕНИЕ "СКОПИРОВАНО" (Terminal Style) */
+.copy-notification {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(52, 152, 219, 0.9);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
     font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+.copy-notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* 6. ПОДСВЕТКА ТОЛЬКО ПРОЦЕНТА */
+.yield-badge-blue {
+    color: #3498db;
+    font-weight: 800;
+    background: rgba(52, 152, 219, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
 }
          /* ==================================================================== */
         
@@ -8322,97 +8351,108 @@ function openCompanyFromTable(event, ticker, companyName) {
     }
 }
     
+// Функция для уведомления
+function showToast(message) {
+    let toast = document.getElementById('copy-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'copy-toast';
+        toast.className = 'copy-notification';
+        document.body.appendChild(toast);
+    }
+    toast.innerText = message;
+    toast.classList.add('show');
+    
+    setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// Обновленная отрисовка
 function renderOfzList() {
     if (typeof bonds === 'undefined' || bonds.length === 0) return;
     
-    // ПРИНУДИТЕЛЬНО КРАСИМ БОКС (раз CSS не берет)
-    const previewBox = document.querySelector('.rebalance-preview-box') || document.getElementById('rebalance-summary');
-    if (previewBox) {
-        previewBox.style.background = "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)";
-        previewBox.style.color = "white";
-    }
+    // ПРИНУДИТЕЛЬНЫЙ КРАС КРАСНЫЙ (ГРАДИЕНТ)
+    const boxes = [document.getElementById('rebalance-summary'), document.querySelector('.rebalance-preview-box')];
+    boxes.forEach(box => {
+        if(box) {
+            box.classList.add('rebalance-gradient-fixed');
+            box.style.background = "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)";
+        }
+    });
 
     let ofzHtml = `
         <div class="ofz-table-header ofz-grid">
             <span class="h-label">Инструмент</span>
             <span class="h-label">Доходность</span>
             <span class="h-label">Цена (₽)</span>
+            <span></span>
         </div>
     `;
     
     bonds.forEach((b, index) => {
-        const details = bondDetailsMap[b.t] || { 
-            matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 
-        };
-        
+        const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 };
         const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
         
-        // ЦЕНА: Если b.p это уже рубли, просто фиксируем 2 знака
-        const priceNum = parseFloat(String(b.p).replace(',', '.'));
-        const priceFinal = priceNum.toFixed(2);
+        // Исправленная цена (берем как есть, раз она уже в рублях)
+        const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
         
-        // РАСЧЕТ ТЕКУЩЕЙ КУПОННОЙ ДОХОДНОСТИ
-        // Формула: (Размер купона * Кол-во выплат в год / Цена) * 100
-        let currentCouponYield = "—";
-        if (details.couponValue > 0 && details.freq > 0 && priceNum > 0) {
-            currentCouponYield = ((details.couponValue * details.freq / priceNum) * 100).toFixed(2);
+        // Расчет доходности
+        let currentYield = "0.00";
+        if (details.couponValue > 0 && details.freq > 0) {
+            currentYield = ((details.couponValue * details.freq / parseFloat(priceFinal)) * 100).toFixed(2);
         }
         
         ofzHtml += `
-        <div class="ofz-row-container ${hiddenClass}">
-            <div class="ofz-luxury-item ofz-grid" onclick="toggleOfzDetails('details-${b.t}')">
+        <div class="ofz-row-container ${hiddenClass}" id="container-${b.t}">
+            <div class="ofz-luxury-item ofz-grid" onclick="toggleOfzDetails('${b.t}')">
                 <div class="ofz-lux-name">${limitName(b.n)}</div>
                 <div class="ofz-lux-yield">${b.y}</div>
                 <div class="ofz-lux-price-value">${priceFinal}</div>
+                <div class="ofz-chevron-box">
+                    <svg class="ofz-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
             </div>
             
-            <div id="details-${b.t}" class="ofz-lux-details" style="padding: 15px 20px;">
+            <div id="details-${b.t}" class="ofz-lux-details" style="padding: 15px 20px; display:none;">
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">КОД (ISIN)</span>
-                    <span class="copy-text-action" onclick="copyTicker('${b.t}', this)">
-                        ${b.t}
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span class="copy-text-action" style="font-size:11px; color:#3498db; cursor:pointer; font-weight:600;" onclick="copyTicker('${b.t}')">
+                        ${b.t} <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-left:4px; vertical-align:middle;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                     </span>
                 </div>
-                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ЦЕНА</span>
                     <span class="ofz-lux-detail-value">${priceFinal} ₽</span>
                 </div>
-                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">НКД</span>
                     <span class="ofz-lux-detail-value">${b.nkd} ₽</span>
                 </div>
-                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ДАТА ПОГАШЕНИЯ</span>
                     <span class="ofz-lux-detail-value">${details.matDate}</span>
                 </div>
-                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">РАЗМЕР КУПОНА</span>
                     <span class="ofz-lux-detail-value">${details.couponValue} ₽</span>
                 </div>
-                
                 <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">ДАТА БЛИЖ. КУПОНА</span>
+                    <span class="ofz-lux-detail-label">БЛИЖ. КУПОН</span>
                     <span class="ofz-lux-detail-value">${details.nextCoupon}</span>
                 </div>
-                
-                <div class="ofz-lux-detail-row" style="background: rgba(52, 152, 219, 0.05); border-radius: 4px; padding: 4px;">
-                    <span class="ofz-lux-detail-label" style="color: #3498db;">ТЕКУЩАЯ КУПОННАЯ ДОХОДНОСТЬ</span>
-                    <span class="ofz-lux-detail-value" style="color:#3498db; font-weight: 800;">${currentCouponYield}%</span>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ТЕКУЩАЯ КУПОННАЯ ДОХОДНОСТЬ</span>
+                    <span class="ofz-lux-detail-value">
+                        <span class="yield-badge-blue">${currentYield}%</span>
+                    </span>
                 </div>
-                
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">ВЫПЛАТ В ГОД</span>
                     <span class="ofz-lux-detail-value">${details.freq}</span>
                 </div>
                 
-                <button class="details-btn" style="width:100%; margin-top:15px; background: #3498db; color: white; border: none; font-weight: 700; height: 40px; border-radius: 10px;" 
+                <button class="details-btn" style="width:100%; margin-top:15px; background: #3498db; color: white; border: none; font-weight: 700; height: 38px; border-radius: 10px;" 
                         onclick="openTradingView(event, '${b.t}')">
-                    ОТКРЫТЬ ГРАФИК TV
+                    ГРАФИК TV
                 </button>
             </div>
         </div>`;
@@ -8421,24 +8461,34 @@ function renderOfzList() {
     document.getElementById('ofz-list').innerHTML = ofzHtml;
 }
     
-    function copyTicker(text, el) {
+// Исправленная функция копирования
+function copyTicker(text) {
     navigator.clipboard.writeText(text).then(() => {
-        // Эффект временного изменения текста
-        const originalContent = el.innerHTML;
-        el.style.background = '#2ecc71'; // Вспышка зеленым при успехе
-        el.style.color = 'white';
-        el.style.borderColor = '#2ecc71';
-        
-        setTimeout(() => {
-            el.style.background = ''; // Возвращаем синий из CSS
-            el.style.color = '';
-            el.style.borderColor = '';
-        }, 600);
-        
+        showToast("Скопировано!");
         if (window.Telegram?.WebApp?.HapticFeedback) {
             window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
         }
     });
+}
+
+// Исправленная функция раскрытия
+function toggleOfzDetails(ticker) {
+    const detailEl = document.getElementById(`details-${ticker}`);
+    const container = document.getElementById(`container-${ticker}`);
+    
+    const isOpen = detailEl.style.display === 'block';
+    
+    // Закрываем все остальные (опционально, для чистоты дизайна)
+    // document.querySelectorAll('.ofz-lux-details').forEach(el => el.style.display = 'none');
+    // document.querySelectorAll('.ofz-row-container').forEach(el => el.classList.remove('active'));
+
+    if (isOpen) {
+        detailEl.style.display = 'none';
+        container.classList.remove('active');
+    } else {
+        detailEl.style.display = 'block';
+        container.classList.add('active');
+    }
 }
 
     // Функция для нового триггера ОФЗ
@@ -8475,20 +8525,7 @@ function toggleOfzGhost() {
     }
 }
 
-// Вспомогательная функция для деталей (чтобы они плавно сдвигали всё вниз)
-function toggleOfzDetails(id) {
-    const el = document.getElementById(id);
-    const allDetails = document.querySelectorAll('.ofz-lux-details');
-    
-    // Закрываем другие, если открываем новую (опционально)
-    // allDetails.forEach(d => { if(d.id !== id) d.classList.remove('active'); });
 
-    el.classList.toggle('active');
-    
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.selectionChanged();
-    }
-}
     async function fetchBondDetailsInBackground() {
     const promises = bonds.map(async (b) => {
         try {
