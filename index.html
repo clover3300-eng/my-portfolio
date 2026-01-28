@@ -5515,22 +5515,29 @@ body.dark-mode .screen::after {
 }
         
   /* ==================================================================== */
+/* --- ФИНАЛЬНЫЙ БЛОК ОФЗ (ЗАМЕНА ВСЕГО ПРЕДЫДУЩЕГО) --- */
 
-/* 1. ЗАГОЛОВОК "АНАЛОГИ В ОФЗ" (Quiet Luxury) */
+/* 1. ПРИНУДИТЕЛЬНЫЙ ГРАДИЕНТ (Раз и навсегда) */
+.force-gradient-bg {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+    color: white !important;
+    border: none !important;
+}
+.force-gradient-bg * { color: white !important; }
+
+/* 2. ЗАГОЛОВОК СЕКЦИИ */
 .ofz-analogs-title {
     font-family: 'Inter', sans-serif;
-    font-size: 10px; /* Утонченный размер */
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.2em; /* Очень широкий трекинг для "дорогого" вида */
+    letter-spacing: 0.2em;
     color: #94A3B8;
-    margin: 40px 0 20px 10px !important; /* Пространство сверху */
+    margin: 45px 0 25px 10px !important; /* Большой отступ сверху */
     display: flex;
     align-items: center;
-    gap: 15px; /* Отступ от линии */
+    gap: 15px;
 }
-
-/* Декоративная линия перед заголовком */
 .ofz-analogs-title::before {
     content: '';
     width: 20px;
@@ -5539,118 +5546,125 @@ body.dark-mode .screen::after {
     opacity: 0.5;
 }
 
-/* 2. ЗАГОЛОВОК "ИНСТРУМЕНТ" (Как Выбор Стратегии) */
+/* 3. ШАПКА ТАБЛИЦЫ */
+.ofz-headers-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px 10px 10px;
+}
 .h-label-instrument {
     font-family: 'Inter', sans-serif;
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 2px; /* Широкий трекинг */
+    letter-spacing: 2px;
     color: #94A3B8;
-    text-align: left;
 }
-
-/* 3. СТЕКЛЯННЫЕ ПЛАШКИ ЗАГОЛОВКОВ (% и Р) */
+.headers-right-group {
+    display: flex;
+    gap: 32px;
+    padding-right: 15px;
+}
 .header-glass-pill {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 28px;
     height: 28px;
-    border-radius: 8px; /* Мягкий квадрат */
-    
-    /* Эффект стекла */
+    border-radius: 8px;
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-    
-    /* Текст */
     color: var(--text-secondary);
     font-family: 'JetBrains Mono', monospace;
     font-weight: 600;
     font-size: 12px;
 }
-
 .dark-mode .header-glass-pill {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
-    color: #94a3b8;
 }
 
-/* Контейнер для выравнивания заголовков */
-.ofz-headers-container {
+/* 4. СТРОКА ОФЗ */
+.ofz-luxury-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px 10px 10px;
-    margin-bottom: 5px;
+    align-items: baseline;
+    padding: 16px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    cursor: pointer;
 }
-
-.headers-right-group {
-    display: flex;
-    gap: 30px; /* Расстояние между значками, подгоняем под столбцы */
-    padding-right: 15px; /* Компенсация отступов */
+.ofz-lux-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    flex-shrink: 0;
 }
-
-/* 4. ЦИФРЫ В НАЗВАНИИ (Стиль как у других цифр) */
 .mono-digit-span {
     font-family: 'JetBrains Mono', monospace !important;
     font-weight: 500;
-    letter-spacing: -0.02em;
-    font-size: 0.95em;
 }
 
-/* 5. КОПИРУЕМЫЙ КОД (Синий шрифт) */
+/* ЭЛЕГАНТНАЯ СВЯЗКА (ТОЧКИ) */
+.ofz-lux-bridge {
+    flex-grow: 1;
+    border-bottom: 1px dotted rgba(0,0,0,0.15);
+    margin: 0 12px;
+    position: relative;
+    top: -4px;
+}
+.dark-mode .ofz-lux-bridge { border-bottom-color: rgba(255,255,255,0.15); }
+
+.ofz-lux-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+}
+.ofz-lux-yield {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-green);
+    width: 55px;
+    text-align: right;
+}
+.ofz-price-pill {
+    background: rgba(0,0,0,0.05);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+.dark-mode .ofz-price-pill { background: rgba(255,255,255,0.08); }
+
+/* 5. ДЕТАЛИ И КНОПКА */
 .copy-code-blue {
+    color: #3498db;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: #3498db; /* Синий */
     font-weight: 600;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: opacity 0.2s;
 }
-.copy-code-blue:active { opacity: 0.6; }
-
-/* 6. КНОПКА ГРАФИК (Quiet Luxury) */
 .btn-luxury-chart {
     width: 100%;
-    margin-top: 25px;
+    margin-top: 20px;
     padding: 14px;
-    
-    /* Прозрачный фон, тонкая рамка */
     background: transparent;
     border: 1px solid rgba(52, 152, 219, 0.3);
     border-radius: 14px;
-    
-    /* Типографика */
     color: var(--accent-blue);
     font-family: 'Inter', sans-serif;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    
-    cursor: pointer;
-    transition: all 0.2s ease;
+    letter-spacing: 0.1em;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-}
-
-.btn-luxury-chart:hover {
-    background: rgba(52, 152, 219, 0.05);
-    border-color: var(--accent-blue);
-    transform: translateY(-1px);
-}
-
-.btn-luxury-chart:active {
-    transform: scale(0.98);
 }
          /* ==================================================================== */
         
