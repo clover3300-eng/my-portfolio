@@ -6287,8 +6287,7 @@ body.dark-mode .screen::after {
         </div>
         
         <div class="ofz-analogs-title">Аналоги в ОФЗ</div>
-
-<div id="ofz-list">
+        <div id="ofz-list">
     </div>
 
 <div class="ghost-trigger-wrapper footer-trigger" id="ghostTriggerOfz" onclick="toggleOfzGhost()">
@@ -8546,7 +8545,7 @@ function renderOfzList() {
         <div id="ofz-items-container">
             </div>
     `;
-    
+    container.innerHTML = ofzHtml;
     bonds.forEach((b, index) => {
         const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 };
         const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
