@@ -5360,6 +5360,17 @@ body.dark-mode .screen::after {
 
         /* ========== НОВЫЙ ДИЗАЙН ОФЗ (QUIET LUXURY) ========== */
 
+        /* 1. Заголовок перед списком */
+.ofz-analogs-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    margin: 25px 0 15px 10px;
+    opacity: 0.8;
+}
+
 /* 1. Контейнер списка (убираем старые ограничения) */
 #ofz-wrapper {
     transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -5371,16 +5382,14 @@ body.dark-mode .screen::after {
     opacity: 0;
 }
 
-/* 2. Строка ОФЗ - Чистый стиль */
+/* 2. Революционный дизайн строки с "мостиком" */
 .ofz-luxury-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 10px; /* Больше воздуха */
-    border-bottom: 1px solid rgba(0,0,0,0.05); /* Еле заметный разделитель */
-    background: transparent;
+    align-items: baseline; /* Выравнивание по базовой линии текста */
+    padding: 14px 10px;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
+    overflow: hidden;
 }
 
 .ofz-luxury-item:active {
@@ -5403,11 +5412,24 @@ body.dark-mode .screen::after {
 }
 
 .ofz-lux-name {
-    font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 600;
+    white-space: nowrap;
     color: var(--text-main);
-    letter-spacing: -0.01em;
+    flex-shrink: 0; /* Название не сжимается */
+}
+
+        /* Тот самый "Мостик" - пунктирная линия */
+.ofz-lux-bridge {
+    flex-grow: 1; /* Линия забирает всё свободное место */
+    border-bottom: 1px dotted rgba(0,0,0,0.15); 
+    margin: 0 10px;
+    position: relative;
+    top: -4px; /* Приподнимаем к центру текста */
+}
+
+.dark-mode .ofz-lux-bridge {
+    border-bottom-color: rgba(255,255,255,0.1);
 }
 
 .ofz-lux-ticker {
@@ -5427,24 +5449,36 @@ body.dark-mode .screen::after {
 
 /* Правая часть: Доходность и Цена */
 .ofz-lux-right {
-    text-align: right;
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: baseline;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .ofz-lux-yield {
     font-family: 'JetBrains Mono', monospace;
     font-size: 14px;
     font-weight: 700;
-    color: var(--accent-green); /* Зеленый акцент */
+    color: var(--accent-green);
 }
 
 .ofz-lux-price {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: var(--text-secondary);
-    opacity: 0.8;
+    width: 45px;
+    text-align: right;
+}
+
+        /* 3. Логика скрытия строк (после 3-й) */
+.ofz-row-hidden {
+    display: none !important;
+}
+
+/* 4. Раскрыватель (Ghost Trigger) внизу */
+.ghost-trigger-wrapper.footer-trigger {
+    margin-top: 10px;
+    margin-bottom: 30px;
 }
 
 /* Детали (выпадающая панель) - Стиль стекла */
@@ -6052,15 +6086,20 @@ body.dark-mode .screen::after {
             <span>Доходность</span>
         </div>
         
-        <div class="ghost-trigger-wrapper" id="ghostTriggerOfz" onclick="toggleOfzGhost()" style="margin: 15px auto;">
-            <div class="ghost-line"></div>
-            <div class="ghost-text" id="ghostTextOfz">ПОКАЗАТЬ ОФЗ</div>
-            <div class="ghost-dots">
-                <div class="ghost-dot"></div>
-                <div class="ghost-dot"></div>
-                <div class="ghost-dot"></div>
-            </div>
-        </div>
+        <div class="ofz-analogs-title">Аналоги в ОФЗ</div>
+
+<div id="ofz-list">
+    </div>
+
+<div class="ghost-trigger-wrapper footer-trigger" id="ghostTriggerOfz" onclick="toggleOfzGhost()">
+    <div class="ghost-line"></div>
+    <div class="ghost-text" id="ghostTextOfz">ПОКАЗАТЬ ВСЕ</div>
+    <div class="ghost-dots">
+        <div class="ghost-dot"></div>
+        <div class="ghost-dot"></div>
+        <div class="ghost-dot"></div>
+    </div>
+</div>
 
         <div id="ofz-wrapper" class="echelon-wrapper collapsed" style="padding: 0;">
              <div id="ofz-list"></div>
@@ -8240,91 +8279,97 @@ function openCompanyFromTable(event, ticker, companyName) {
 }
     
     function renderOfzList() {
-    console.log('renderOfzList (Luxury) called, bonds:', bonds.length);
-    if (bonds.length === 0) return;
+    if (typeof bonds === 'undefined' || bonds.length === 0) return;
     
     let ofzHtml = '';
-    bonds.forEach(b => {
-        const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
-        // Расчет простой доходности
-        const calculatedCY = (b.p > 0 && details.couponValue && details.freq) ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) : '0.00';
+    
+    bonds.forEach((b, index) => {
+        const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', freq:0 };
+        
+        // Если индекс больше 2 (то есть это 4-я строка и далее), добавляем класс скрытия
+        const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
         
         ofzHtml += `
-        <div class="ofz-luxury-item" onclick="toggleOfzDetails('details-${b.t}')">
-            <div class="ofz-lux-left">
+        <div class="ofz-row-container ${hiddenClass}" id="row-container-${index}">
+            <div class="ofz-luxury-item" onclick="toggleOfzDetails('details-${b.t}')">
                 <div class="ofz-lux-name">${limitName(b.n)}</div>
-                <div class="ofz-lux-ticker">${b.t}</div>
+                <div class="ofz-lux-bridge"></div> <div class="ofz-lux-right">
+                    <div class="ofz-lux-yield">${b.y}</div>
+                    <div class="ofz-lux-price">${b.p}%</div>
+                </div>
             </div>
             
-            <div class="ofz-lux-right">
-                <div class="ofz-lux-yield">${b.y}</div>
-                <div class="ofz-lux-price">${b.p}%</div>
+            <div id="details-${b.t}" class="ofz-lux-details">
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">НКД</span>
+                    <span class="ofz-lux-detail-value">${Math.round(b.nkd*10)/10} ₽</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">Погашение</span>
+                    <span class="ofz-lux-detail-value">${details.matDate}</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">Купон</span>
+                    <span class="ofz-lux-detail-value">${details.couponValue} ₽ (${details.freq} р/г)</span>
+                </div>
+                <button class="details-btn" style="width:100%; margin-top:10px;" onclick="openTradingView(event, '${b.t}')">
+                    ГРАФИК TV
+                </button>
             </div>
-        </div>
-        
-        <div id="details-${b.t}" class="ofz-lux-details">
-            <div class="ofz-lux-detail-row">
-                <span class="ofz-lux-detail-label">Полное название</span>
-                <span class="ofz-lux-detail-value">${b.n}</span>
-            </div>
-            <div class="ofz-lux-detail-row">
-                <span class="ofz-lux-detail-label">НКД (накопленный доход)</span>
-                <span class="ofz-lux-detail-value">${Math.round(b.nkd*10)/10} ₽</span>
-            </div>
-            <div class="ofz-lux-detail-row">
-                <span class="ofz-lux-detail-label">Дата погашения</span>
-                <span class="ofz-lux-detail-value">${details.matDate}</span>
-            </div>
-            <div class="ofz-lux-detail-row">
-                <span class="ofz-lux-detail-label">Купон</span>
-                <span class="ofz-lux-detail-value">${details.couponValue} ₽</span>
-            </div>
-            <div class="ofz-lux-detail-row">
-                <span class="ofz-lux-detail-label">Частота выплат</span>
-                <span class="ofz-lux-detail-value">${details.freq} раз(а) в год</span>
-            </div>
-            
-            <button class="details-btn" style="margin-top: 10px;" onclick="openTradingView(event, '${b.t}')">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                График на TradingView
-            </button>
         </div>`;
     });
     
-    const ofzListElement = document.getElementById('ofz-list');
-    if(ofzListElement) {
-        ofzListElement.innerHTML = ofzHtml;
-    }
+    document.getElementById('ofz-list').innerHTML = ofzHtml;
 }
 
     // Функция для нового триггера ОФЗ
 function toggleOfzGhost() {
-    const wrapper = document.getElementById('ofz-wrapper');
+    const hiddenRows = document.querySelectorAll('.ofz-row-hidden');
+    const allRows = document.querySelectorAll('.ofz-row-container');
     const trigger = document.getElementById('ghostTriggerOfz');
     const text = document.getElementById('ghostTextOfz');
-    const headers = document.getElementById('ofz-list-headers');
 
-    // Переключаем класс collapsed (в CSS мы настроили его скрытие)
-    const isClosed = wrapper.classList.contains('collapsed');
-    
-    if (isClosed) {
-        wrapper.classList.remove('collapsed'); // Показываем список
-        if(headers) headers.style.display = 'grid'; // Показываем заголовки колонок
-        trigger.classList.add('open'); // Активируем триггер (точки синеют)
-        text.innerText = "СКРЫТЬ СПИСОК";
-        
-        // Вибрация
-        if (window.Telegram?.WebApp?.HapticFeedback) {
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-        }
+    // Если у нас есть скрытые строки — значит нужно раскрыть
+    if (hiddenRows.length > 0) {
+        hiddenRows.forEach(row => {
+            row.classList.remove('ofz-row-hidden');
+            row.style.animation = 'fadeIn 0.4s ease forwards';
+        });
+        text.innerText = "СКРЫТЬ";
+        trigger.classList.add('open');
     } else {
-        wrapper.classList.add('collapsed'); // Скрываем
-        if(headers) headers.style.display = 'none'; // Скрываем заголовки
+        // Если скрытых нет — значит нужно скрыть всё после 3-й строки
+        allRows.forEach((row, index) => {
+            if (index > 2) {
+                row.classList.add('ofz-row-hidden');
+            }
+        });
+        text.innerText = "ПОКАЗАТЬ ВСЕ";
         trigger.classList.remove('open');
-        text.innerText = "ПОКАЗАТЬ ОФЗ";
+        
+        // Скроллим чуть выше, чтобы пользователь не потерялся
+        document.querySelector('.ofz-analogs-title').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
 }
 
+// Вспомогательная функция для деталей (чтобы они плавно сдвигали всё вниз)
+function toggleOfzDetails(id) {
+    const el = document.getElementById(id);
+    const allDetails = document.querySelectorAll('.ofz-lux-details');
+    
+    // Закрываем другие, если открываем новую (опционально)
+    // allDetails.forEach(d => { if(d.id !== id) d.classList.remove('active'); });
+
+    el.classList.toggle('active');
+    
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
     async function fetchBondDetailsInBackground() {
     const promises = bonds.map(async (b) => {
         try {
