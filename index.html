@@ -5516,34 +5516,32 @@ body.dark-mode .screen::after {
         
   /* ==================================================================== */
 
-    /* 1. ГРАДИЕНТ (Пробиваем конфликт) */
-#screen-assets .rebalance-preview-box, 
-#screen-assets #rebalance-result-box,
-#screen-assets [style*="background-color: white"] {
+   /* 1. ГРАДИЕНТ (Максимальный приоритет) */
+[id="rebalance-summary"], 
+.rebalance-preview-box, 
+#rebalance-result-box {
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
-    background-color: transparent !important; /* Убиваем белый фон */
+    background-color: #1e3a8a !important; /* На случай, если градиент не подгрузится */
     color: white !important;
     border: none !important;
-    border-radius: 20px !important;
-    box-shadow: 0 10px 30px rgba(30, 58, 138, 0.4) !important;
 }
 
-/* Принудительно красим текст внутри бокса в белый */
-#screen-assets .rebalance-preview-box *, 
-#screen-assets #rebalance-result-box * {
+/* Красим весь вложенный текст в белый */
+[id="rebalance-summary"] *, 
+.rebalance-preview-box * {
     color: white !important;
 }
 
-/* 2. ТАБЛИЦА: Сетка для идеального выравнивания */
+/* 2. ТАБЛИЦА (Grid) */
 .ofz-grid {
     display: grid;
-    grid-template-columns: 1fr 100px 100px; /* Имя | Доходность | Цена */
+    grid-template-columns: 1.5fr 1fr 1fr; /* Название чуть шире, цифры поровну */
     align-items: center;
 }
 
 .ofz-table-header {
-    padding: 15px 10px 10px 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 15px 10px 8px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
 .h-label {
@@ -5551,38 +5549,16 @@ body.dark-mode .screen::after {
     font-weight: 800;
     text-transform: uppercase;
     color: var(--text-secondary);
-    text-align: center; /* Центруем текст в колонке */
+    text-align: center; /* Центруем по умолчанию */
 }
 
-.h-label:first-child { text-align: left; } /* Название прижимаем к лево */
+.h-label:first-child { text-align: left; } /* Название влево */
 
-/* 3. СТРОКА ОФЗ */
-.ofz-luxury-item {
-    padding: 16px 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.03);
-    cursor: pointer;
-}
-
-.ofz-lux-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-main);
-}
-
-.ofz-lux-yield, .ofz-lux-price-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    text-align: center; /* Данные строго по центру колонки */
-}
-
-.ofz-lux-yield { color: var(--accent-green); }
-
-/* 4. КОПИРОВАНИЕ (Текст как в деталях) */
+/* 3. ДЕТАЛИ (Копирование) */
 .copy-text-action {
     color: #3498db;
     cursor: pointer;
-    font-size: 11px; /* Такой же как label в деталях */
+    font-size: 11px; /* Как и label */
     font-weight: 600;
     display: inline-flex;
     align-items: center;
@@ -8349,7 +8325,13 @@ function openCompanyFromTable(event, ticker, companyName) {
 function renderOfzList() {
     if (typeof bonds === 'undefined' || bonds.length === 0) return;
     
-    // Шапка таблицы
+    // ПРИНУДИТЕЛЬНО КРАСИМ БОКС (раз CSS не берет)
+    const previewBox = document.querySelector('.rebalance-preview-box') || document.getElementById('rebalance-summary');
+    if (previewBox) {
+        previewBox.style.background = "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)";
+        previewBox.style.color = "white";
+    }
+
     let ofzHtml = `
         <div class="ofz-table-header ofz-grid">
             <span class="h-label">Инструмент</span>
@@ -8360,36 +8342,42 @@ function renderOfzList() {
     
     bonds.forEach((b, index) => {
         const details = bondDetailsMap[b.t] || { 
-            matDate: '—', couponValue: '—', nextCoupon: '—', couponYield: '—', freq: '—' 
+            matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 
         };
         
         const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
         
-        // ЧЕСТНАЯ МАТЕМАТИКА
-        // b.p — это процент (например 98.5). Умножаем на 10, получаем 985.00
+        // ЦЕНА: Если b.p это уже рубли, просто фиксируем 2 знака
         const priceNum = parseFloat(String(b.p).replace(',', '.'));
-        const priceInRub = (priceNum * 10).toFixed(2);
+        const priceFinal = priceNum.toFixed(2);
+        
+        // РАСЧЕТ ТЕКУЩЕЙ КУПОННОЙ ДОХОДНОСТИ
+        // Формула: (Размер купона * Кол-во выплат в год / Цена) * 100
+        let currentCouponYield = "—";
+        if (details.couponValue > 0 && details.freq > 0 && priceNum > 0) {
+            currentCouponYield = ((details.couponValue * details.freq / priceNum) * 100).toFixed(2);
+        }
         
         ofzHtml += `
         <div class="ofz-row-container ${hiddenClass}">
             <div class="ofz-luxury-item ofz-grid" onclick="toggleOfzDetails('details-${b.t}')">
                 <div class="ofz-lux-name">${limitName(b.n)}</div>
                 <div class="ofz-lux-yield">${b.y}</div>
-                <div class="ofz-lux-price-value">${priceInRub}</div>
+                <div class="ofz-lux-price-value">${priceFinal}</div>
             </div>
             
-            <div id="details-${b.t}" class="ofz-lux-details" style="padding: 20px;">
+            <div id="details-${b.t}" class="ofz-lux-details" style="padding: 15px 20px;">
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">КОД (ISIN)</span>
                     <span class="copy-text-action" onclick="copyTicker('${b.t}', this)">
                         ${b.t}
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                     </span>
                 </div>
                 
                 <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">ТЕКУЩАЯ ЦЕНА</span>
-                    <span class="ofz-lux-detail-value">${priceInRub} ₽</span>
+                    <span class="ofz-lux-detail-label">ЦЕНА</span>
+                    <span class="ofz-lux-detail-value">${priceFinal} ₽</span>
                 </div>
                 
                 <div class="ofz-lux-detail-row">
@@ -8412,9 +8400,9 @@ function renderOfzList() {
                     <span class="ofz-lux-detail-value">${details.nextCoupon}</span>
                 </div>
                 
-                <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">КУПОННАЯ ДОХОДНОСТЬ</span>
-                    <span class="ofz-lux-detail-value" style="color:#3498db">${details.couponYield}%</span>
+                <div class="ofz-lux-detail-row" style="background: rgba(52, 152, 219, 0.05); border-radius: 4px; padding: 4px;">
+                    <span class="ofz-lux-detail-label" style="color: #3498db;">ТЕКУЩАЯ КУПОННАЯ ДОХОДНОСТЬ</span>
+                    <span class="ofz-lux-detail-value" style="color:#3498db; font-weight: 800;">${currentCouponYield}%</span>
                 </div>
                 
                 <div class="ofz-lux-detail-row">
@@ -8422,7 +8410,7 @@ function renderOfzList() {
                     <span class="ofz-lux-detail-value">${details.freq}</span>
                 </div>
                 
-                <button class="details-btn" style="width:100%; margin-top:15px; background: #3498db; color: white; border: none; font-weight: 700;" 
+                <button class="details-btn" style="width:100%; margin-top:15px; background: #3498db; color: white; border: none; font-weight: 700; height: 40px; border-radius: 10px;" 
                         onclick="openTradingView(event, '${b.t}')">
                     ОТКРЫТЬ ГРАФИК TV
                 </button>
