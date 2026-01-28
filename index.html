@@ -8627,63 +8627,52 @@ function switchLuxuryTab(tabName) {
 // 2. Главный рендер ОФЗ (ВЕРНУЛИ ВСЕ ДАННЫЕ)
 function renderOfzList() {
     const container = document.getElementById('ofz-list-target');
-    if (!container || typeof bonds === 'undefined') return;
+    if (!container) return;
 
-    let ofzHtml = `
-        <div class="ofz-headers-container" id="ofz-header-wrapper">
-            <div class="h-label-instrument-wrapper" onclick="toggleGlobalOfzList()" style="cursor:pointer; display:flex; align-items:center; gap:8px;">
-                <span class="h-label-instrument">Инструмент</span>
-                <svg class="instrument-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+    // 1. Заголовок с той самой стрелочкой
+    let html = `
+        <div class="ofz-headers-container" onclick="toggleGlobalOfzList()" style="cursor:pointer;">
+            <span class="h-label-instrument">
+                Инструмент 
+                <svg id="global-ofz-arrow" class="instrument-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:12px; height:12px; transition: transform 0.3s; margin-left:5px;">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
-            </div>
+            </span>
             <div class="headers-right-group">
                 <div class="header-glass-pill">%</div>
                 <div class="header-glass-pill">₽</div>
             </div>
-        </div>
-    `;
-    
+        </div>`;
+
     bonds.forEach((b, index) => {
-        const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 };
-        const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
+        const details = bondDetailsMap[b.t] || {};
+        // По умолчанию показываем только первые 3 (индексы 0, 1, 2)
+        const isHiddenClass = index > 2 ? 'ofz-row-hidden' : '';
         
-        let curYield = (details.couponValue > 0 && details.freq > 0) 
-            ? ((details.couponValue * details.freq / parseFloat(priceFinal)) * 100).toFixed(2) 
-            : "0.00";
-
-        const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
-
-        ofzHtml += `
-        <div class="ofz-row-container ${hiddenClass}" id="container-${b.t}">
+        html += `
+        <div class="ofz-row-container ${isHiddenClass}" id="container-${b.t}">
             <div class="ofz-luxury-item" onclick="toggleOfzDetails('${b.t}')">
-                <div class="ofz-lux-name">${formatNameWithMonoDigits(limitName(b.n))}</div>
-                <div class="ofz-lux-bridge"></div>
+                <div class="ofz-lux-name">${b.n}</div>
                 <div class="ofz-lux-right">
                     <div class="ofz-lux-yield">${b.y}</div>
-                    <div class="ofz-price-pill">${priceFinal} ₽</div>
+                    <div class="ofz-price-pill">${b.p} ₽</div>
                 </div>
             </div>
-            
-            <div id="details-${b.t}" class="ofz-lux-details" style="display:none; padding: 20px;">
-                <div class="ofz-lux-detail-row"><span class="ofz-lux-detail-label">КОД (ISIN)</span><span class="copy-code-blue" onclick="copyTickerNew('${b.t}')">${b.t}</span></div>
-                <div class="ofz-lux-detail-row"><span class="ofz-lux-detail-label">ТЕКУЩАЯ ЦЕНА</span><span class="mono-digit-span">${priceFinal} ₽</span></div>
-                <div class="ofz-lux-detail-row"><span class="ofz-lux-detail-label">НКД</span><span class="mono-digit-span">${b.nkd} ₽</span></div>
-                <div class="ofz-lux-detail-row"><span class="ofz-lux-detail-label">ДАТА ПОГАШЕНИЯ</span><span class="mono-digit-span">${details.matDate}</span></div>
-                <div class="ofz-lux-detail-row"><span class="ofz-lux-detail-label">РАЗМЕР КУПОНА</span><span class="mono-digit-span">${details.couponValue} ₽</span></div>
-                <div class="ofz-lux-detail-row"><span class="ofz-lux-detail-label">БЛИЖ. КУПОН</span><span class="mono-digit-span">${details.nextCoupon}</span></div>
-                <div class="ofz-lux-detail-row"><span class="ofz-lux-detail-label">КУПОННАЯ ДОХОДНОСТЬ</span><span class="mono-digit-span" style="color:#3498db; font-weight:800;">${curYield}%</span></div>
-                <div class="ofz-lux-detail-row"><span class="ofz-lux-detail-label">ВЫПЛАТ В ГОД</span><span class="mono-digit-span">${details.freq}</span></div>
-                <button class="btn-luxury-chart" onclick="openTradingView(event, '${b.t}')">Открыть график TV</button>
+            <div id="details-${b.t}" class="ofz-lux-details" style="display:none; font-size: 11px; color: #94a3b8; padding: 10px 15px; line-height: 1.4;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                    <div>НКД: <span style="color: #eee;">${b.nkd} ₽</span></div>
+                    <div>Мат: <span style="color: #eee;">${details.matDate || '—'}</span></div>
+                    <div>Купон: <span style="color: #eee;">${details.couponValue || '—'} ₽</span></div>
+                    <div>Частота: <span style="color: #eee;">${details.freq || '—'}</span></div>
+                </div>
             </div>
         </div>`;
     });
 
-   if (!document.getElementById('btn-ofz-more')) {
-        ofzHtml += `<button class="btn-show-more-modern" id="btn-ofz-more" onclick="toggleGlobalOfzList()">Показать все аналоги</button>`;
-    }
-    container.innerHTML = ofzHtml;
+    container.innerHTML = html;
 }
+
+
 
     function updateEchelonTable() {
     const body = document.getElementById('echelon-tickers-body');
@@ -8757,16 +8746,7 @@ function toggleStocksEchelon() {
     btn.innerText = isHidden ? 'Скрыть эшелоны' : 'Развернуть эшелоны';
 }
     
-function toggleGlobalOfzList() {
-    const header = document.getElementById('ofz-header-wrapper');
-    const btn = document.getElementById('btn-ofz-more');
-    const rows = document.querySelectorAll('.ofz-row-hidden');
-    
-    const isExpanded = header.classList.toggle('is-expanded');
-    
-    rows.forEach(r => r.style.display = isExpanded ? 'block' : 'none');
-    if (btn) btn.innerText = isExpanded ? 'Скрыть лишние' : 'Показать все аналоги';
-}
+
     
 // Исправленная функция копирования
 function copyTicker(text) {
