@@ -5886,7 +5886,7 @@ body.dark-mode .screen::after {
     margin-top: 2px;
 }
 
-/* 5. Аккордеон ОФЗ */
+/* 5. Аккордеон ОФЗ (Сетка 8 элементов) */
 .evo-ofz-row {
     background: rgba(30, 41, 59, 0.4);
     border-radius: 12px;
@@ -5912,10 +5912,57 @@ body.dark-mode .screen::after {
 .evo-ofz-details {
     max-height: 0;
     overflow: hidden;
-    background: rgba(0,0,0,0.2);
+    background: rgba(15, 23, 42, 0.6); /* Чуть темнее внутри */
     transition: max-height 0.3s ease;
 }
-.evo-ofz-details.open { max-height: 250px; }
+.evo-ofz-details.open {
+    max-height: 300px; /* Увеличили высоту для 8 элементов */
+}
+
+/* Сетка данных (2 колонки x 4 строки = 8 элементов) */
+.evo-data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.evo-data-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.evo-data-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.evo-data-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #e2e8f0;
+    font-weight: 500;
+}
+
+/* Кнопка графика внутри деталей */
+.evo-graph-btn {
+    margin: 0 12px 12px 12px;
+    width: calc(100% - 24px);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    font-size: 10px;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+}
 
 /* Утилиты */
 .num-mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
@@ -10063,7 +10110,8 @@ function switchEvoTab(index) {
     });
 } // <--- ВОТ ЭТОЙ СКОБКИ НЕ ХВАТАЛО! Теперь функция закрыта.
 
-// 2. Рендер ОФЗ (Исправлен и вынесен наружу)
+
+// 2. Рендер ОФЗ (ВСЕ 8 ЭЛЕМЕНТОВ ДАННЫХ)
 function renderEvoRebalance() {
     const container = document.getElementById('evo-ofz-list');
     if (!container || !bonds || bonds.length === 0) return;
@@ -10073,44 +10121,75 @@ function renderEvoRebalance() {
         const delay = i * 0.05; 
         const details = bondDetailsMap[b.t] || { couponValue: 0, matDate: '-', nextCoupon: '-', freq: 0 };
         
-        // Форматируем Название и Подстроку
-        const formattedTicker = formatWithMono(b.n);
-        const formattedSub = formatWithMono(b.t);
+        // Логика цены из твоего исходника
+        const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
+
+        // Формируем красивую подстроку для заголовка (самое важное)
+        const subInfo = `
+            <span class="evo-sub-item">${details.matDate}</span>
+            <div class="evo-sub-dot"></div>
+            <span class="evo-sub-item">${b.y}%</span>
+        `;
 
         html += `
         <div class="evo-ofz-row evo-card stagger-in" style="animation-delay: ${delay}s" onclick="toggleEvoAccordion(this)">
             <div class="evo-ofz-main">
                 <div style="max-width: 65%;">
-                    <div class="evo-ticker">${formattedTicker}</div>
-                    <div class="evo-name">${formattedSub}</div>
+                    <div class="evo-ticker">${formatWithMono(b.n)}</div>
+                    <div class="evo-sub-row">${subInfo}</div>
                 </div>
-                
                 <div class="evo-bridge"></div>
-                
                 <div class="text-right">
                     <div class="num-mono" style="color:#4ade80; font-weight:bold; font-size:13px;">${b.y}%</div>
-                    <div class="num-mono" style="font-size:11px; opacity:0.7;">${b.p} ₽</div>
+                    <div class="num-mono" style="font-size:11px; opacity:0.7;">${priceFinal} ₽</div>
                 </div>
             </div>
             
             <div class="evo-ofz-details">
-                <div style="padding: 12px; font-size: 11px; color: #cbd5e1; border-top: 1px solid rgba(255,255,255,0.05);">
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <div>Погашение: <span class="num-mono text-white">${details.matDate}</span></div>
-                        <div>Купон: <span class="num-mono text-white">${details.couponValue} ₽</span></div>
-                        <div>НКД: <span class="num-mono text-white">${b.nkd} ₽</span></div>
-                        <div>Частота: <span class="num-mono text-white">${details.freq}</span></div>
-                        <div>След. выплата: <span class="num-mono text-white">${details.nextCoupon}</span></div>
+                <div class="evo-data-grid">
+                    <div class="evo-data-item">
+                        <span class="evo-data-label">Код (ISIN)</span>
+                        <span class="evo-data-value">${b.t}</span>
                     </div>
-                    <button class="btn-tiny-graph" style="margin-top:12px; width:100%; background:rgba(255,255,255,0.1);" onclick="openTradingView(event, '${b.t}')">ОТКРЫТЬ ГРАФИК</button>
+                    <div class="evo-data-item">
+                        <span class="evo-data-label">Цена</span>
+                        <span class="evo-data-value">${priceFinal} ₽</span>
+                    </div>
+                    <div class="evo-data-item">
+                        <span class="evo-data-label">НКД</span>
+                        <span class="evo-data-value">${b.nkd} ₽</span>
+                    </div>
+                    <div class="evo-data-item">
+                        <span class="evo-data-label">Погашение</span>
+                        <span class="evo-data-value">${details.matDate}</span>
+                    </div>
+                    <div class="evo-data-item">
+                        <span class="evo-data-label">Купон</span>
+                        <span class="evo-data-value">${details.couponValue} ₽</span>
+                    </div>
+                     <div class="evo-data-item">
+                        <span class="evo-data-label">След. Выплата</span>
+                        <span class="evo-data-value">${details.nextCoupon}</span>
+                    </div>
+                    <div class="evo-data-item">
+                        <span class="evo-data-label">Частота</span>
+                        <span class="evo-data-value">${details.freq} / год</span>
+                    </div>
+                    <div class="evo-data-item">
+                        <span class="evo-data-label">Доходность</span>
+                        <span class="evo-data-value text-white" style="color:#4ade80;">${b.y}%</span>
+                    </div>
                 </div>
+                
+                <button class="evo-graph-btn" onclick="openTradingView(event, '${b.t}')">
+                    ОТКРЫТЬ ГРАФИК
+                </button>
             </div>
         </div>
         `;
     });
     container.innerHTML = html;
 }
-
 // 3. Рендер Акций (Исправлен и вынесен наружу)
 function renderEvoStocks() {
     const grid = document.getElementById('evo-stocks-grid');
