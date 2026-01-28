@@ -8169,7 +8169,7 @@ function resetCustomTo50() {
                 }
                 
                 distributeMonthlyInvestment();
-                // updateEchelonTable();
+                updateEchelonTable();
                 renderOfzList();
                 
                 // Не вызываем draw() при первой загрузке, чтобы был виден плейсхолдер
@@ -8685,6 +8685,78 @@ function renderOfzList() {
     container.innerHTML = ofzHtml;
 }
 
+    function updateEchelonTable() {
+    const body = document.getElementById('echelon-tickers-body');
+    if (!body) return;
+
+    let html = '';
+    const maxRows = Math.max(...echelonTableData.map(col => col.length));
+
+    for (let i = 0; i < maxRows; i++) {
+        html += '<tr>';
+        for (let j = 0; j < 4; j++) {
+            const asset = echelonTableData[j][i];
+            if (asset) {
+                const priceDisplay = asset.target.replace(' ₽', '');
+                // Сборка через обычные строки, чтобы не запутаться в кавычках
+                html += '<td class="et-cell" onclick="toggleEchelonCell(\'' + i + '-' + j + '\')">' +
+                            '<div class="et-cell-content">' +
+                                '<span class="et-ticker">' + asset.t + '</span>' +
+                                '<span class="et-price">' + priceDisplay + '</span>' +
+                            '</div>' +
+                        '</td>';
+            } else {
+                html += '<td class="et-cell-empty"></td>';
+            }
+        }
+        html += '</tr>';
+
+        // Строка деталей. Важно: используем i, а не row!
+        html += '<tr class="et-details-row" id="details-row-' + i + '" style="display:none;">' +
+                    '<td colspan="4" class="et-details-container">' +
+                        '<div id="details-content-' + i + '"></div>' +
+                    '</td>' +
+                '</tr>';
+    }
+    body.innerHTML = html;
+
+    // Логика скрытия строк (оставляем 2 видимыми)
+    const allRows = body.querySelectorAll('tr:not(.et-details-row)');
+    allRows.forEach((row, index) => {
+        if (index > 1) {
+            row.classList.add('echelon-row-hidden');
+        }
+    });
+
+    // Создание кнопки "Развернуть"
+    let btn = document.getElementById('btn-stocks-more');
+    if (!btn) {
+        btn = document.createElement('button');
+        btn.id = 'btn-stocks-more';
+        btn.className = 'btn-show-more-modern';
+        btn.innerText = 'Развернуть эшелоны';
+        btn.onclick = toggleStocksEchelon;
+        const wrapper = document.querySelector('.echelon-wrapper');
+        if (wrapper) wrapper.after(btn);
+    } else {
+        btn.innerText = 'Развернуть эшелоны';
+    }
+}
+
+function toggleStocksEchelon() {
+    const btn = document.getElementById('btn-stocks-more');
+    const rows = document.querySelectorAll('#echelon-tickers-body tr:not(.et-details-row)');
+    let isHidden = btn.innerText.includes('Развернуть');
+
+    rows.forEach((row, index) => {
+        if (index > 1) {
+            if (isHidden) row.classList.remove('echelon-row-hidden');
+            else row.classList.add('echelon-row-hidden');
+        }
+    });
+    btn.innerText = isHidden ? 'Скрыть эшелоны' : 'Развернуть эшелоны';
+}
+    
 function toggleGlobalOfzList() {
     const header = document.getElementById('ofz-header-wrapper');
     const btn = document.getElementById('btn-ofz-more');
@@ -9619,7 +9691,7 @@ if(document.getElementById('listBonds')) {
                 document.getElementById('summ-total-3y').innerHTML = Math.round(projectedTotal).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽' + changeHtml;
             }
             
-            // updateEchelonTable();
+            updateEchelonTable();
             renderOfzList();
         } // Закрытие функции draw
 
