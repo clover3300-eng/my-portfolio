@@ -8418,7 +8418,7 @@ function updateEchelonTable() {
             }
         }
         html += '</tr>';
-        // Строка деталей (скрытая)
+        // ИСПРАВЛЕНО: id="details-row-${i}" вместо row
         html += `<tr class="et-details-row" id="details-row-${i}" style="display:none;">
             <td colspan="4" class="et-details-container">
                 <div id="details-content-${i}"></div>
@@ -8427,7 +8427,7 @@ function updateEchelonTable() {
     }
     body.innerHTML = html;
 
-    // Скрываем строки эшелонов (кроме первых двух)
+    // --- ЛОГИКА СКРЫТИЯ СТРОК ---
     const allRows = body.querySelectorAll('tr:not(.et-details-row)');
     allRows.forEach((row, index) => {
         if (index > 1) {
@@ -8435,7 +8435,7 @@ function updateEchelonTable() {
         }
     });
 
-    // Создаем или обновляем кнопку "Развернуть"
+    // Создаем кнопку, если её нет
     let btn = document.getElementById('btn-stocks-more');
     if (!btn) {
         btn = document.createElement('button');
