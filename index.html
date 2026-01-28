@@ -5495,63 +5495,88 @@ body.dark-mode .screen::after {
 
   /* ==================================================================== */
 
-      /* === ГЛОБАЛЬНЫЙ ФИКС СКРОЛЛА И СВАЙПА === */
+      /* === ВОССТАНОВЛЕНИЕ ВЕРСТКИ И ФИКС СВАЙПА === */
 
+/* 1. Базовая настройка экранов */
 .screen {
-    /* 1. Экран занимает всё место, но разрешает скролл внутри себя */
-    position: fixed !important;
-    top: 0; left: 0; right: 0; bottom: 0;
-    width: 100% !important;
-    height: 100% !important;
+    /* Фиксируем экраны, чтобы они лежали слоями (нужно для свайпа) */
+    position: fixed !important; 
+    top: 0; left: 0; width: 100%; height: 100%;
     
-    /* 2. Самое важное: разрешаем вертикальную прокрутку */
+    /* Включаем скролл ВНУТРИ экрана */
     overflow-y: auto !important;
     overflow-x: hidden !important;
-    -webkit-overflow-scrolling: touch; /* Плавность на iOS */
+    -webkit-overflow-scrolling: touch;
     
-    /* 3. Убираем лишние отступы самого контейнера */
+    /* Убираем внешние отступы, чтобы не ломать верстку */
     padding: 0 !important;
-    box-sizing: border-box;
+    margin: 0 !important;
     
-    /* 4. Фон должен быть задан явно */
+    /* Фон обязателен */
     background: var(--bg-color);
+    z-index: 10;
+    
+    /* Скрываем по умолчанию */
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s;
 }
 
-/* Исправляем отступы для Главной, Портфеля и Интересного */
-#screen-home, #screen-portfolio, #screen-assets, #screen-interesting, #screen-app {
-    /* Добавляем внутренний отступ, чтобы контент не прилипал к верху */
-    padding-top: env(safe-area-inset-top) !important;
+/* Активный экран */
+.screen.active {
+    display: block;
+    opacity: 1;
+}
+
+/* 2. Восстанавливаем отступы контента (учитываем "челку" iPhone) */
+
+/* Заголовки (Терминал, Портфель, Интересное) */
+.terminal-header-v2,
+.header {
+    /* Возвращаем оригинальные отступы + защита от наложения на статус-бар */
+    padding: 40px 16px 20px 16px !important;
+    padding-top: calc(env(safe-area-inset-top) + 40px) !important;
+    margin: 0 !important;
+}
+
+/* Нижняя панель (sticky) */
+.bottom-sticky-panel {
+    /* Прижимаем к низу скролла */
     padding-bottom: 40px !important;
+    margin-top: 20px !important;
 }
 
-/* === ФИКС КОНКРЕТНО ЭКРАНА КОМПАНИИ === */
-#screen-company {
-    background: var(--bg-color);
-    z-index: 200; /* Поверх всех */
-}
+/* 3. ФИКС ЭКРАНА КОМПАНИИ (То, что было обрезано) */
 
-/* Контент внутри компании */
 #company-content {
-    /* Отступ сверху, чтобы текст не наезжал на кнопку "Назад" */
-    /* 60px - примерная высота кнопки + отступ */
-    padding-top: calc(60px + env(safe-area-inset-top)) !important;
-    padding-bottom: 50px !important;
+    /* Большой отступ сверху, чтобы текст не был под кнопкой "Назад" */
+    padding-top: calc(env(safe-area-inset-top) + 80px) !important;
+    /* Большой отступ снизу, чтобы прокрутить до конца */
+    padding-bottom: 100px !important;
     padding-left: 16px;
     padding-right: 16px;
 }
 
-/* Кнопка назад и тикер */
 .company-top-bar {
-    position: absolute !important; /* Absolute работает лучше внутри скролла */
-    top: 0;
-    left: 0;
+    /* Кнопка "Назад" всегда сверху */
+    position: absolute !important;
+    top: 0; 
+    left: 0; 
     width: 100%;
-    z-index: 10;
-    padding: 16px !important;
-    padding-top: calc(16px + env(safe-area-inset-top)) !important;
+    z-index: 20;
+    padding: 10px 16px !important;
+    padding-top: calc(env(safe-area-inset-top) + 10px) !important;
     
-    /* Прозрачный фон для читаемости */
-    background: linear-gradient(to bottom, var(--bg-color) 80%, rgba(255,255,255,0));
+    /* Легкий градиент, чтобы кнопка читалась */
+    background: linear-gradient(to bottom, var(--bg-color) 60%, transparent);
+}
+
+/* 4. Фикс для "Нижней карты" при свайпе */
+.screen.prev-card-layer {
+    display: block !important;
+    opacity: 1 !important;
+    pointer-events: none;
+    z-index: 1; /* Лежит под активным */
 }
 
   /* ==================================================================== */
@@ -6779,32 +6804,39 @@ function formatNewsDate(dateString) {
                 targetScreen.classList.add('active');
             }
             
-            // Обновляем навигацию
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('nav-search').classList.remove('active');
-            
-            // Подсветка кнопок
-            const navId = `nav-${screenId.split('-')[1]}`;
-            const navBtn = document.getElementById(navId);
-            if (navBtn) navBtn.classList.add('active');
-            
-            if(screenId === 'screen-interesting' || screenId === 'screen-company') {
-                document.getElementById('nav-search').classList.add('active');
-            }
-            
-            // Action Panel логика
-            const portfolioActionPanel = document.getElementById('portfolioActionPanel');
-            if (portfolioActionPanel) {
-                if (screenId === 'screen-portfolio' && isPortfolioCalculated) {
-                    portfolioActionPanel.style.display = 'flex';
-                } else {
-                    portfolioActionPanel.style.display = 'none';
-                }
-            }
-            
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+            // === ВАЖНОЕ ИЗМЕНЕНИЕ ЗДЕСЬ ===
+        // Скроллим сам блок экрана наверх, а не всё окно
+        targetScreen.scrollTop = 0; 
+    }
+    
+    // 4. Подсветка кнопок в меню
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.getElementById('nav-search').classList.remove('active');
+    
+    const navId = `nav-${screenId.split('-')[1]}`;
+    const navBtn = document.getElementById(navId);
+    if (navBtn) navBtn.classList.add('active');
+    
+    // Подсветка поиска
+    if(screenId === 'screen-interesting' || screenId === 'screen-company') {
+        document.getElementById('nav-search').classList.add('active');
+    }
+    
+    // 5. Панель действий (внизу портфеля)
+    const portfolioActionPanel = document.getElementById('portfolioActionPanel');
+    if (portfolioActionPanel) {
+        if (screenId === 'screen-portfolio' && isPortfolioCalculated) {
+            portfolioActionPanel.style.display = 'flex';
+        } else {
+            portfolioActionPanel.style.display = 'none';
         }
+    }
+    
+    // 6. Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
 
 
         
