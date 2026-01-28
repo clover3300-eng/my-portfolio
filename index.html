@@ -8418,7 +8418,8 @@ function updateEchelonTable() {
             }
         }
         html += '</tr>';
-        html += `<tr class="et-details-row" id="details-row-${row}" style="display:none;">
+        // Строка деталей (скрытая)
+        html += `<tr class="et-details-row" id="details-row-${i}" style="display:none;">
             <td colspan="4" class="et-details-container">
                 <div id="details-content-${i}"></div>
             </td>
@@ -8426,48 +8427,51 @@ function updateEchelonTable() {
     }
     body.innerHTML = html;
 
-    // --- ВОТ ЭТОТ КУСОК ВЫ ПРОПУСТИЛИ (ЛОГИКА СКРЫТИЯ) ---
-    // Скрываем все строки после первых двух
+    // Скрываем строки эшелонов (кроме первых двух)
     const allRows = body.querySelectorAll('tr:not(.et-details-row)');
     allRows.forEach((row, index) => {
-        if (index > 1) row.classList.add('echelon-row-hidden');
+        if (index > 1) {
+            row.classList.add('echelon-row-hidden');
+        }
     });
 
-    // Создаем кнопку, если её нет
-    if (!document.getElementById('btn-stocks-more')) {
-        const btn = document.createElement('button');
+    // Создаем или обновляем кнопку "Развернуть"
+    let btn = document.getElementById('btn-stocks-more');
+    if (!btn) {
+        btn = document.createElement('button');
         btn.id = 'btn-stocks-more';
         btn.className = 'btn-show-more-modern';
         btn.innerText = 'Развернуть эшелоны';
         btn.onclick = toggleStocksEchelon;
         
         const wrapper = document.querySelector('.echelon-wrapper');
-        if (wrapper) wrapper.after(btn);
+        if (wrapper) {
+            wrapper.after(btn);
+        }
+    } else {
+        btn.innerText = 'Развернуть эшелоны';
     }
 }
 
     // Эта функция срабатывает, когда ты нажимаешь на кнопку "Развернуть эшелоны"
 function toggleStocksEchelon() {
     const btn = document.getElementById('btn-stocks-more');
-    const rows = document.querySelectorAll('#echelon-tickers-body tr');
+    const rows = document.querySelectorAll('#echelon-tickers-body tr:not(.et-details-row)');
     
-    // Проверяем, что сейчас написано на кнопке
     let isHidden = btn.innerText.includes('Развернуть');
 
     rows.forEach((row, index) => {
-        if (index > 1) { // Индекс 0 и 1 — это первые две строки. Остальное скрываем/показываем.
+        if (index > 1) {
             if (isHidden) {
-                row.classList.remove('echelon-row-hidden'); // Показываем
+                row.classList.remove('echelon-row-hidden');
             } else {
-                row.classList.add('echelon-row-hidden'); // Скрываем
+                row.classList.add('echelon-row-hidden');
             }
         }
     });
 
-    // Меняем текст на кнопке
     btn.innerText = isHidden ? 'Скрыть эшелоны' : 'Развернуть эшелоны';
     
-    // Добавим легкую вибрацию для красоты
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
