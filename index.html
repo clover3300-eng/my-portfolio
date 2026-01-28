@@ -5715,6 +5715,212 @@ body.dark-mode .screen::after {
     gap: 8px;
 }
          /* ==================================================================== */
+
+        /* ========== EVOLUTION TERMINAL STYLES (REBALANCE) ========== */
+
+/* 1. Глобальный фон и шум (Aurora & Noise) */
+.evo-background {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    background: #0f172a; /* Глубокий темный */
+    overflow: hidden;
+}
+
+.evo-aurora {
+    position: absolute;
+    width: 140%; height: 140%;
+    top: -20%; left: -20%;
+    background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.15), transparent 60%),
+                radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.1), transparent 50%);
+    filter: blur(60px);
+    animation: auroraFloat 15s infinite alternate ease-in-out;
+}
+
+.evo-noise {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+@keyframes auroraFloat {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(-20px, 20px) rotate(5deg); }
+}
+
+/* 2. Жидкий переключатель (Liquid Switcher) */
+.evo-tabs-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 30px;
+    position: relative;
+}
+
+.evo-liquid-switch {
+    position: relative;
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 30px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.evo-tab-btn {
+    position: relative;
+    z-index: 2;
+    padding: 10px 24px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.evo-tab-btn.active {
+    color: #fff;
+}
+
+.evo-glider {
+    position: absolute;
+    top: 4px; left: 4px;
+    height: calc(100% - 8px);
+    width: 50%; /* Будет меняться JS */
+    background: linear-gradient(90deg, #38bdf8, #3b82f6);
+    border-radius: 24px;
+    z-index: 1;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+}
+
+/* 3. Сетка акций (Echelon Grid) */
+.evo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 колонки */
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.evo-grid-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.evo-col-header {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #64748b;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+/* 4. Карточка актива (Evolution Card) */
+.evo-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, background 0.3s;
+    cursor: pointer;
+    opacity: 0; /* Для анимации появления */
+    transform: translateY(10px);
+}
+
+.evo-card.stagger-in {
+    animation: fadeInUp 0.5s forwards;
+}
+
+@keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.evo-card:active {
+    transform: scale(0.96);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Эффект Spotlight (JS добавит координаты) */
+.evo-card::before {
+    content: '';
+    position: absolute;
+    top: var(--y, 0); left: var(--x, 0);
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15), transparent);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.evo-card:hover::before { opacity: 1; }
+
+/* Текстовые стили внутри карточек */
+.evo-ticker {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    color: #f1f5f9;
+}
+.evo-name {
+    font-size: 9px;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.evo-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #38bdf8;
+    margin-top: 4px;
+}
+
+/* 5. Аккордеон ОФЗ (Bridge Design) */
+.evo-ofz-row {
+    background: rgba(30, 41, 59, 0.4);
+    border-radius: 16px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+}
+
+.evo-ofz-main {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.evo-bridge {
+    flex-grow: 1;
+    border-bottom: 1px dotted rgba(255,255,255,0.2);
+    margin: 0 10px;
+    position: relative;
+    top: -4px;
+}
+
+.evo-ofz-details {
+    max-height: 0;
+    overflow: hidden;
+    background: rgba(0,0,0,0.2);
+    transition: max-height 0.4s ease;
+}
+.evo-ofz-details.open {
+    max-height: 200px; /* Достаточно для контента */
+}
+
+/* Цифры */
+.num-mono { font-family: 'JetBrains Mono', monospace; }
+         /* ==================================================================== */
         
     </style>
 </head>
@@ -6257,121 +6463,49 @@ body.dark-mode .screen::after {
 </div>
 
 <div id="screen-assets" class="screen">
-    <div class="header"><h1>Ребалансировка</h1></div>
-    
-    <div class="rebalance-intro-modern">
-    <!-- Иконка слева -->
-    <div class="ri-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-        </svg>
+    <div class="evo-background">
+        <div class="evo-aurora"></div>
+        <div class="evo-noise"></div>
     </div>
-    
-    <!-- Текстовый блок справа -->
-    <div class="rebalance-text-block">
-        <h2 class="rebalance-card-title">Ребалансировка</h2>
-        <p class="rebalance-card-desc">
-            Пересмотр состава активов. Продаем то, что выросло или имеет низкий потенциал, покупаем недооцененные инструменты из списков ниже.
-        </p>
-    </div>
-</div>
 
-        
-        <div id="ofz-list-headers" class="list-header-row ofz-cols" style="display:none;">
-            <span>Название</span>
-            <span>Цена</span>
-            <span>НКД</span>
-            <span>Доходность</span>
+    <div class="header" style="position: relative; z-index: 2;">
+        <h1 style="background: linear-gradient(90deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            РЕБАЛАНСИРОВКА
+        </h1>
+    </div>
+
+    <div class="rebalance-intro-modern" style="background: rgba(255,255,255,0.05) !important; backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1) !important;">
+        <div class="ri-icon" style="background: rgba(255,255,255,0.1); color: #fff;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
-        
-        <div class="ofz-analogs-title">Аналоги в ОФЗ</div>
-        <div id="ofz-list">
+        <div class="rebalance-text-block">
+            <h2 class="rebalance-card-title" style="color: #fff;">Умная замена</h2>
+            <p class="rebalance-card-desc" style="color: #cbd5e1;">Оптимизируйте портфель, заменяя переоцененные активы.</p>
+        </div>
     </div>
 
-<div class="ghost-trigger-wrapper footer-trigger" id="ghostTriggerOfz" onclick="toggleOfzGhost()">
-    <div class="ghost-line"></div>
-    <div class="ghost-text" id="ghostTextOfz">ПОКАЗАТЬ ВСЕ</div>
-    <div class="ghost-dots">
-        <div class="ghost-dot"></div>
-        <div class="ghost-dot"></div>
-        <div class="ghost-dot"></div>
+    <div class="evo-tabs-container">
+        <div class="evo-liquid-switch">
+            <div class="evo-glider" id="evoGlider"></div>
+            <button class="evo-tab-btn active" onclick="switchEvoTab(0)">ОФЗ</button>
+            <button class="evo-tab-btn" onclick="switchEvoTab(1)">АКЦИИ</button>
+        </div>
     </div>
-</div>
 
-        <div id="ofz-wrapper" class="echelon-wrapper collapsed" style="padding: 0;">
-             <div id="ofz-list"></div>
-        </div>
-
-     
-
-        <div class="section-header-styled" onclick="toggleInfoBlock(this)">
-            <span>🚀 Акции для замены</span>
-            <span class="info-i-blue">
-                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-            </span>
-        </div>
-        
-        <div class="info-expanded-block" style="margin-top:10px;">
-            <div class="echelon-info-graphic">
-                <div class="eig-item e1">
-                    <div class="eig-icon">💎</div>
-                    <div class="eig-text">
-                        <div class="eig-title">I Эшелон <span class="eig-badge">Надежный</span></div>
-                        <div class="eig-desc">Компании, которые платят дивиденды и стараются их повышать каждый год</div>
-                    </div>
-                    <div class="eig-arrow">→</div>
-                </div>
-                <div class="eig-item e2">
-                    <div class="eig-icon">📊</div>
-                    <div class="eig-text">
-                        <div class="eig-title">II Эшелон <span class="eig-badge">Стабильный</span></div>
-                        <div class="eig-desc">Компании, которые платят дивиденды, но размер выплат может меняться</div>
-                    </div>
-                    <div class="eig-arrow">→</div>
-                </div>
-                <div class="eig-item e3">
-                    <div class="eig-icon">⚡</div>
-                    <div class="eig-text">
-                        <div class="eig-title">III Эшелон <span class="eig-badge">Рисковый</span></div>
-                        <div class="eig-desc">Компании с потенциалом выплат, но пока не платят регулярно</div>
-                    </div>
-                    <div class="eig-arrow">→</div>
-                </div>
-                <div class="eig-item e4">
-                    <div class="eig-icon">🚀</div>
-                    <div class="eig-text">
-                        <div class="eig-title">IV Эшелон <span class="eig-badge">Венчурный</span></div>
-                        <div class="eig-desc">Компании роста, которые реинвестируют прибыль вместо дивидендов</div>
-                    </div>
-                    <div class="eig-arrow">→</div>
-                </div>
+    <div id="evo-tab-ofz" style="display: block;">
+        <div class="ofz-analogs-title" style="color: #fff;">Аналоги в ОФЗ</div>
+        <div id="evo-ofz-list">
             </div>
-        </div>
-        
-        <div id="echelon-wrapper" class="echelon-wrapper collapsed">
-            <table class="echelon-table-styled">
-                <thead>
-                    <tr>
-                        <th><div class="echelon-header-pill">I</div></th>
-                        <th><div class="echelon-header-pill">II</div></th>
-                        <th><div class="echelon-header-pill">III</div></th>
-                        <th><div class="echelon-header-pill">IV</div></th>
-                    </tr>
-                </thead>
-                <tbody id="echelon-tickers-body"></tbody>
-            </table>
-        </div>
-        
-        <div class="expand-arrow-btn" id="expandArrowBtn" onclick="toggleEchelonTable(this)">
-            <div class="eab-line"></div>
-            <div class="eab-icon-box">
-                <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </div>
-            <div class="eab-line"></div>
-        </div>
     </div>
+
+    <div id="evo-tab-stocks" style="display: none;">
+        <div class="ofz-analogs-title" style="color: #fff;">Матрица Эшелонов</div>
+        <div class="evo-grid" id="evo-stocks-grid">
+            </div>
+    </div>
+    
+    <div style="height: 100px;"></div>
+</div>
 
     <div id="screen-interesting" class="screen">
     <!-- Заголовок экрана -->
@@ -8069,6 +8203,7 @@ function resetCustomTo50() {
                 distributeMonthlyInvestment();
                 updateEchelonTable();
                 renderOfzList();
+                renderEvoRebalance();
                 
                 // Не вызываем draw() при первой загрузке, чтобы был виден плейсхолдер
                 // draw() вызовется когда пользователь начнет вводить сумму
@@ -9883,6 +10018,180 @@ function initSwipeBack() {
 }
 
 initSwipeBack();
+
+    // ========== EVOLUTION TERMINAL LOGIC ==========
+
+// 1. Переключение вкладок
+function switchEvoTab(index) {
+    const glider = document.getElementById('evoGlider');
+    const btns = document.querySelectorAll('.evo-tab-btn');
+    const tabOfz = document.getElementById('evo-tab-ofz');
+    const tabStocks = document.getElementById('evo-tab-stocks');
+
+    // Двигаем глайдер
+    if (index === 0) {
+        glider.style.transform = 'translateX(0)';
+        tabOfz.style.display = 'block';
+        tabStocks.style.display = 'none';
+        renderEvoRebalance(); // Перерисовать список ОФЗ (чтобы сработала анимация)
+    } else {
+        glider.style.transform = 'translateX(100%)';
+        tabOfz.style.display = 'none';
+        tabStocks.style.display = 'block';
+        renderEvoStocks(); // Перерисовать акции
+    }
+
+    // Обновляем классы кнопок
+    btns.forEach((btn, i) => {
+        if(i === index) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
+
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
+
+// 2. Рендер ОФЗ (Новый стиль)
+function renderEvoRebalance() {
+    const container = document.getElementById('evo-ofz-list');
+    if (!container || !bonds || bonds.length === 0) return;
+
+    let html = '';
+    bonds.forEach((b, i) => {
+        // Задержка анимации (staggering)
+        const delay = i * 0.1; 
+        
+        // Получаем детали (как в старом коде)
+        const details = bondDetailsMap[b.t] || { couponValue: 0, matDate: '-' };
+        
+        html += `
+        <div class="evo-ofz-row evo-card stagger-in" style="animation-delay: ${delay}s" onclick="toggleEvoAccordion(this)">
+            <div class="evo-ofz-main">
+                <div>
+                    <div class="evo-ticker" style="font-size:13px;">${b.n}</div>
+                    <div class="evo-name" style="font-size:10px; opacity:0.6;">${b.t}</div>
+                </div>
+                <div class="evo-bridge"></div>
+                <div class="text-right">
+                    <div class="num-mono" style="color:#4ade80; font-weight:bold;">${b.y}</div>
+                    <div class="num-mono" style="font-size:10px; opacity:0.7;">${b.p} ₽</div>
+                </div>
+            </div>
+            <div class="evo-ofz-details">
+                <div style="padding: 0 16px 16px 16px; font-size: 11px; color: #cbd5e1;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <span>Купон:</span> <span class="num-mono">${details.couponValue} ₽</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <span>НКД:</span> <span class="num-mono">${b.nkd} ₽</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>Погашение:</span> <span class="num-mono">${details.matDate}</span>
+                    </div>
+                    <button class="btn-tiny-graph" style="margin-top:10px; width:100%;" onclick="openTradingView(event, '${b.t}')">ГРАФИК</button>
+                </div>
+            </div>
+        </div>
+        `;
+    });
+    container.innerHTML = html;
+    initSpotlight(); // Включаем эффект света
+}
+
+// 3. Рендер Акций (Сетка Эшелонов)
+function renderEvoStocks() {
+    const grid = document.getElementById('evo-stocks-grid');
+    if (!grid || !echelonTableData) return;
+
+    let html = '';
+    // Создаем 4 колонки
+    for (let i = 0; i < 4; i++) {
+        let colHtml = `<div class="evo-grid-col">`;
+        // Заголовок колонки (римские цифры)
+        const romans = ['I', 'II', 'III', 'IV'];
+        const colors = ['#4ade80', '#38bdf8', '#facc15', '#fb923c']; // Цвета эшелонов
+        
+        colHtml += `<div class="evo-col-header" style="color:${colors[i]}">${romans[i]}</div>`;
+
+        // Заполняем данными из твоего массива echelonTableData
+        if (echelonTableData[i]) {
+            echelonTableData[i].forEach((asset, idx) => {
+                const delay = idx * 0.05; // Быстрый каскад
+                colHtml += `
+                <div class="evo-card stagger-in" style="animation-delay: ${delay}s" onclick="openCompanyFromTable(event, '${asset.t}', '${asset.n}')">
+                    <div class="evo-ticker">${asset.t}</div>
+                    <div class="evo-price">${asset.target}</div>
+                    <div style="width:20px; height:2px; background:${colors[i]}; margin-top:6px; opacity:0.5;"></div>
+                </div>
+                `;
+            });
+        }
+        colHtml += `</div>`; // Закрываем колонку
+        html += colHtml;
+    }
+    grid.innerHTML = html;
+    initSpotlight();
+}
+
+// 4. Логика Аккордеона
+function toggleEvoAccordion(element) {
+    const details = element.querySelector('.evo-ofz-details');
+    details.classList.toggle('open');
+    
+    // Эффект накрутки цифр (Kinetic Typography)
+    if(details.classList.contains('open')) {
+        // Находим цифры внутри и анимируем их (пример)
+        const nums = details.querySelectorAll('.num-mono');
+        nums.forEach(num => animateValue(num));
+    }
+}
+
+// 5. Kinetic Typography (Эффект слота)
+function animateValue(obj) {
+    const originalText = obj.innerText;
+    // Если это не число, выходим
+    if(!/\d/.test(originalText)) return;
+    
+    let startTimestamp = null;
+    const duration = 500;
+
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        
+        // Генерируем случайные цифры пока идет анимация
+        if (progress < 1) {
+            obj.innerText = Math.floor(Math.random() * 1000);
+        } else {
+            obj.innerText = originalText;
+        }
+        
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+// 6. Spotlight Effect (Умный свет)
+function initSpotlight() {
+    const cards = document.querySelectorAll('.evo-card');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--x', `${x}px`);
+            card.style.setProperty('--y', `${y}px`);
+        });
+    });
+}
+
+// 7. ВАЖНО: Подключение к твоей функции загрузки
+// Найди в коде функцию loadData() и в самом конце (перед catch) добавь:
+// renderEvoRebalance();
 
 
 
