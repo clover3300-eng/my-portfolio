@@ -9148,15 +9148,27 @@ function initCardDeckSwipe() {
     const triggerZone = 60; 
 
     function getPrevScreenId() {
-        const routes = {
-            'screen-company': 'screen-interesting',
-            'screen-interesting': 'screen-app',
-            'screen-portfolio': 'screen-app',
-            'screen-assets': 'screen-app',
-            'screen-app': 'screen-home'
-        };
-        return routes[currentScreen] || null;
+    // Определяем, куда вернуться в зависимости от того, где мы сейчас
+    const routes = {
+        'screen-company': 'screen-interesting', // Из карточки компании назад в список
+        'screen-interesting': 'screen-assets',     // Из списка "Интересное" в меню приложений
+        'screen-portfolio': 'screen-app',       // Из портфолио в меню приложений
+        'screen-assets': 'screen-portfolio',          // Из активов в меню приложений
+        'screen-app': 'screen-home',            // Из меню приложений на главный экран
+        
+        // Добавь сюда новые экраны, если они появятся, например:
+        // 'screen-settings': 'screen-home',
+    };
+
+    const prevId = routes[currentScreen];
+    
+    // Проверка: существует ли такой элемент в HTML вообще?
+    if (prevId && document.getElementById(prevId)) {
+        return prevId;
     }
+    
+    return null;
+}
 
     document.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
