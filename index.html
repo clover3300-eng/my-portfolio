@@ -5515,6 +5515,68 @@ body.dark-mode .screen::after {
 }
         
   /* ==================================================================== */
+
+        /* 1. Градиент для превью-бокса (как в терминале) */
+/* ВАЖНО: замените .rebalance-preview-box на актуальный ID вашего бокса, если он другой */
+.rebalance-preview-box, #rebalance-preview {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+    border: none !important;
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+    color: white !important;
+}
+         /* ==================================================================== */
+
+        /* 2. Революционный элемент: Parity Badge (замена серой цены) */
+.ofz-lux-price-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-main);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+        .dark-mode .ofz-lux-price-tag {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+}
+
+/* Точка-индикатор состояния (дисконт/премия) */
+.parity-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+.dot-discount { background-color: #f87171; } /* Красная - цена ниже 100% */
+.dot-premium { background-color: #34d399; }  /* Зеленая - цена выше 100% */
+
+/* 3. Стиль для копируемого кода */
+.copy-badge {
+    cursor: pointer;
+    background: var(--accent-blue);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    margin-left: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.copy-success-blink {
+    animation: blink 0.5s ease;
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; transform: scale(1.05); }
+}
+         /* ==================================================================== */
         
     </style>
 </head>
@@ -6105,13 +6167,7 @@ body.dark-mode .screen::after {
              <div id="ofz-list"></div>
         </div>
 
-        <div class="expand-arrow-btn" id="expandArrowOfz" onclick="toggleOfzTable(this)">
-            <div class="eab-line"></div>
-            <div class="eab-icon-box">
-                <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </div>
-            <div class="eab-line"></div>
-        </div>
+     
 
         <div class="section-header-styled" onclick="toggleInfoBlock(this)">
             <span>🚀 Акции для замены</span>
@@ -8284,42 +8340,94 @@ function openCompanyFromTable(event, ticker, companyName) {
     let ofzHtml = '';
     
     bonds.forEach((b, index) => {
-        const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', freq:0 };
+        const details = bondDetailsMap[b.t] || { 
+            matDate: '—', 
+            couponValue: 0, 
+            nextCoupon: '—', 
+            couponYield: '—', 
+            freq: 0 
+        };
         
-        // Если индекс больше 2 (то есть это 4-я строка и далее), добавляем класс скрытия
         const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
+        
+        // Революционная логика точки: если цена < 100%, точка красная (дисконт)
+        const dotClass = parseFloat(b.p) < 100 ? 'dot-discount' : 'dot-premium';
         
         ofzHtml += `
         <div class="ofz-row-container ${hiddenClass}" id="row-container-${index}">
             <div class="ofz-luxury-item" onclick="toggleOfzDetails('details-${b.t}')">
                 <div class="ofz-lux-name">${limitName(b.n)}</div>
-                <div class="ofz-lux-bridge"></div> <div class="ofz-lux-right">
+                <div class="ofz-lux-bridge"></div>
+                <div class="ofz-lux-right">
                     <div class="ofz-lux-yield">${b.y}</div>
-                    <div class="ofz-lux-price">${b.p}%</div>
+                    <div class="ofz-lux-price-tag">
+                        <span class="parity-dot ${dotClass}"></span>
+                        ${b.p}%
+                    </div>
                 </div>
             </div>
             
             <div id="details-${b.t}" class="ofz-lux-details">
                 <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">НКД</span>
-                    <span class="ofz-lux-detail-value">${Math.round(b.nkd*10)/10} ₽</span>
+                    <span class="ofz-lux-detail-label">КОД (ISIN)</span>
+                    <span class="ofz-lux-detail-value" onclick="copyTicker('${b.t}', this)">
+                        ${b.t} <span class="copy-badge">COPY</span>
+                    </span>
                 </div>
                 <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">Погашение</span>
+                    <span class="ofz-lux-detail-label">ТЕКУЩАЯ ЦЕНА</span>
+                    <span class="ofz-lux-detail-value">${b.p}% от номинала</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">НКД</span>
+                    <span class="ofz-lux-detail-value">${Math.round(b.nkd*100)/100} ₽</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ДАТА ПОГАШЕНИЯ</span>
                     <span class="ofz-lux-detail-value">${details.matDate}</span>
                 </div>
                 <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">Купон</span>
-                    <span class="ofz-lux-detail-value">${details.couponValue} ₽ (${details.freq} р/г)</span>
+                    <span class="ofz-lux-detail-label">РАЗМЕР КУПОНА</span>
+                    <span class="ofz-lux-detail-value">${details.couponValue} ₽</span>
                 </div>
-                <button class="details-btn" style="width:100%; margin-top:10px;" onclick="openTradingView(event, '${b.t}')">
-                    ГРАФИК TV
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">БЛИЖАЙШИЙ КУПОН</span>
+                    <span class="ofz-lux-detail-value">${details.nextCoupon}</span>
+                </div>
+                <div class="ofz-lux-detail-row" style="border-bottom: 2px solid rgba(52, 152, 219, 0.2);">
+                    <span class="ofz-lux-detail-label">КУПОННАЯ ДОХОДНОСТЬ</span>
+                    <span class="ofz-lux-detail-value" style="color:var(--accent-blue)">${details.couponYield}%</span>
+                </div>
+                <div class="ofz-lux-detail-row">
+                    <span class="ofz-lux-detail-label">ВЫПЛАТ В ГОД</span>
+                    <span class="ofz-lux-detail-value">${details.freq}</span>
+                </div>
+                
+                <button class="details-btn" style="width:100%; margin-top:15px; background: var(--text-main); color: var(--bg-main);" 
+                        onclick="openTradingView(event, '${b.t}')">
+                    ОТКРЫТЬ ГРАФИК TV
                 </button>
             </div>
         </div>`;
     });
     
     document.getElementById('ofz-list').innerHTML = ofzHtml;
+}
+    function copyTicker(text, el) {
+    navigator.clipboard.writeText(text).then(() => {
+        el.classList.add('copy-success-blink');
+        const badge = el.querySelector('.copy-badge');
+        if(badge) badge.innerText = 'DONE!';
+        
+        setTimeout(() => {
+            el.classList.remove('copy-success-blink');
+            if(badge) badge.innerText = 'COPY';
+        }, 1000);
+        
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+        }
+    });
 }
 
     // Функция для нового триггера ОФЗ
