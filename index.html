@@ -5159,103 +5159,46 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
         
 /* ==================================================================== */
 
-        /* =================================================================
-   LUXURY BRAND PAPER BACKGROUND
-   ================================================================= */
-
-.luxury-depth-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* На заднем плане */
-    
-    /* Глубокий, дорогой цвет фона */
-    background: radial-gradient(circle at 50% 50%, #2C364C 0%, #111827 100%);
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden; /* Обрезаем лишнее */
+       /* 3. Настройка экранов для наложения друг на друга */
+.screen {
+    /* Обязательно задаем фон, чтобы экраны не просвечивали */
+    background: var(--bg-color); 
+    /* Плавность движения */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+    /* Улучшение производительности на iPhone */
+    will-change: transform;
+    /* Важно: гарантируем, что экран занимает всю высоту */
+    min-height: 100vh; 
 }
 
-/* Контейнер для текста (его мы будем двигать параллаксом) */
-.luxury-pattern-container {
-    display: flex;
-    flex-direction: column;
-    gap: 40px; /* Расстояние между строками */
-    
-    /* Слегка наклоняем весь паттерн для динамики */
-    transform: rotate(-10deg) scale(1.2); 
-    
-    width: 150%; /* Шире экрана, чтобы не было дырок при повороте */
-    opacity: 0.6; /* Общая прозрачность текстуры */
+/* Тень для активного экрана, чтобы он отделялся от нижнего */
+.screen.active {
+    z-index: 10; /* Верхний слой */
+    box-shadow: -10px 0 30px rgba(0,0,0,0.15); /* Тень слева */
 }
 
-/* Сама строка текста */
-.pattern-line {
-    font-family: 'Inter', sans-serif;
-    font-weight: 800;
-    font-size: 11px; /* Мелкий, аккуратный шрифт */
-    text-transform: uppercase;
-    letter-spacing: 4px; /* Широкая разрядка - признак люкса */
-    
-    /* Цвет "вдавленной" бумаги */
-    color: rgba(255, 255, 255, 0.04); 
-    
-    white-space: nowrap; /* Текст не переносится */
-    user-select: none;
+/* Стиль для "Нижней карты" (предыдущий экран во время свайпа) */
+.screen.prev-card-layer {
+    display: block !important;     /* Делаем видимым */
+    position: fixed !important;    /* Фиксируем под верхом */
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;                    /* Нижний слой */
+    overflow: hidden;              /* Чтобы не скроллился пока он снизу */
+    pointer-events: none;          /* Нельзя нажимать пока он снизу */
+    filter: brightness(0.9);       /* Слегка затемняем */
+    transform: scale(0.95);        /* Слегка уменьшаем */
+    transform-origin: center;      /* Центр масштабирования */
+    transition: none;              /* Управляем анимацией через JS */
 }
 
-
-/* =================================================================
-   ХАОТИЧНЫЙ ПАТТЕРН (ЦИКЛ ИЗ 5 СТРОК)
-   ================================================================= */
-
-/* Строка 1: Чуть левее */
-.pattern-line:nth-child(5n+1) {
-    margin-left: -40px;
-    opacity: 0.5; /* Чуть ярче */
+/* Фон для главной страницы и ребалансировки (восстанавливаем градиенты) */
+#screen-home, #screen-assets {
+    background: linear-gradient(180deg, #F1F6FB 0%, #F9FAFC 100%);
 }
-
-/* Строка 2: Сильно влево */
-.pattern-line:nth-child(5n+2) {
-    margin-left: -250px;
-    opacity: 0.3; /* Тусклее (глубже) */
+body.dark-mode #screen-home, 
+body.dark-mode #screen-assets {
+    background: linear-gradient(180deg, #0f172a 0%, #1a2234 100%);
 }
-
-/* Строка 3: Сдвиг вправо */
-.pattern-line:nth-child(5n+3) {
-    margin-left: 80px;
-    opacity: 0.4;
-}
-
-/* Строка 4: Средний сдвиг влево */
-.pattern-line:nth-child(5n+4) {
-    margin-left: -120px;
-    opacity: 0.6; /* Самая яркая */
-}
-
-/* Строка 5: Очень далеко влево */
-.pattern-line:nth-child(5n+5) {
-    margin-left: -300px;
-    opacity: 0.25; /* Еле заметная */
-}
-
-
-/* Адаптация для Светлой темы */
-body:not(.dark-mode) .luxury-depth-layer {
-    /* Светлая дорогая бумага */
-    background: #F1F5F9;
-}
-body:not(.dark-mode) .pattern-line {
-    /* Текст чуть темнее фона (эффект тиснения) */
-    color: rgba(44, 54, 76, 0.06);
-    font-weight: 900;
-}
-
-
 /* ==================================================================== */
 
         /* =================================================================
@@ -5357,6 +5300,89 @@ body.dark-mode .screen::after {
     /* Позиция управляется через JS, но здесь база */
 }
   /* ==================================================================== */
+
+        /* УЛУЧШЕННЫЕ СТИЛИ СВАЙПА */
+
+/* 1. Класс, который добавляется активному экрану при свайпе */
+.screen.is-swiping-card {
+    /* Скругляем углы слева, превращая экран в "карточку" */
+    border-top-left-radius: 30px !important;
+    border-bottom-left-radius: 30px !important;
+    
+    /* Обрезаем контент, чтобы он не вылезал за углы */
+    overflow: hidden !important; 
+    
+    /* Глубокая тень слева, создающая объем */
+    box-shadow: -15px 0 40px rgba(0,0,0,0.15) !important;
+}
+
+/* 2. Настройка нижнего слоя (предыдущей карты) */
+.screen.prev-card-layer {
+    display: block !important;
+    position: fixed !important;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    
+    /* Начальное состояние: чуть меньше и темнее */
+    transform: scale(0.92); 
+    filter: brightness(0.85); 
+    
+    transform-origin: center;
+    transition: none; /* Управляется пальцем */
+    
+    /* Фикс для Safari, чтобы не мигало */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* 3. Анимация возврата (пружина) */
+.screen {
+    /* Кривая Безье для "дорогого" ощущения физики */
+    transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), 
+                border-radius 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+/* ВАЖНО: Фикс дрожания */
+.screen {
+    /* 1. Говорим браузеру не перехватывать горизонтальные свайпы */
+    touch-action: pan-y; 
+    
+    /* 2. Подсказываем браузеру, что это будет двигаться (оптимизация GPU) */
+    will-change: transform; 
+    
+    /* 3. Используем 3D-трансформацию для включения аппаратного ускорения */
+    transform: translate3d(0, 0, 0); 
+    
+    /* Стандартная плавность (для моментов, когда палец отпущен) */
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    background: var(--bg-color); 
+    min-height: 100vh;
+}
+
+/* Класс для активного перетаскивания (отключаем плавность полностью) */
+.screen.is-dragging {
+    transition: none !important; /* Убирает любую задержку/дрожание */
+    box-shadow: -15px 0 40px rgba(0,0,0,0.15); /* Тень */
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+/* Нижний слой без изменений */
+.screen.prev-card-layer {
+    display: block !important;
+    position: fixed !important;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    will-change: transform, filter; /* Оптимизация */
+    transform: scale3d(0.92, 0.92, 1); /* Используем 3D */
+    filter: brightness(0.85);
+}
+
+        
 
         
     </style>
@@ -9154,173 +9180,174 @@ initNotificationSwipe();
    ================================================================= */
 
 /* =================================================================
-   ULTIMATE SWIPE: HEAVY PHYSICS + 3D + SHEEN + PARALLAX
+   SMOOTH GPU SWIPE (NO SHAKE VERSION)
    ================================================================= */
-
-function initSwipeBack() {
+function initCardDeckSwipe() {
     let startX = 0;
     let startY = 0;
     let isDragging = false;
-    let isAxisLocked = false; 
+    let isAxisLocked = false; // true = горизонтальный свайп, false = вертикальный скролл
+    let targetPrevScreenId = null;
     
-    const container = document.getElementById('swipeBackIndicator');
-    const lens = container.querySelector('.ls-lens');
-    const arrow = container.querySelector('.ls-arrow');
-    const depthText = document.querySelector('.luxury-pattern-container');
-    const triggerZone = 35; 
-    
-    function getBackTarget() {
-        if (currentScreen === 'screen-home') return null;
+    const triggerZone = 40; 
+
+    function getPrevScreenId() {
         if (currentScreen === 'screen-company') return 'screen-interesting';
+        if (currentScreen === 'screen-interesting') return 'screen-app'; 
+        if (currentScreen === 'screen-portfolio') return 'screen-app';
+        if (currentScreen === 'screen-assets') return 'screen-app';
         if (currentScreen === 'screen-app') return 'screen-home';
-        return 'screen-app'; 
+        return null;
     }
 
-    // 1. TOUCH START
+    // 1. НАЧАЛО
     document.addEventListener('touchstart', (e) => {
+        // Сброс флагов
         isDragging = false;
         isAxisLocked = false;
-        if (!getBackTarget()) return;
-
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
         
+        targetPrevScreenId = getPrevScreenId();
+        if (!targetPrevScreenId) return;
+
+        const touch = e.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+
+        // Если начали тянуть от левого края
         if (startX <= triggerZone) {
             isDragging = true;
-        }
-    }, { passive: false });
+            
+            const prevEl = document.getElementById(targetPrevScreenId);
+            const activeEl = document.querySelector('.screen.active');
 
-    // 2. TOUCH MOVE
+            if (prevEl && activeEl) {
+                // Подготовка нижнего слоя
+                prevEl.classList.add('prev-card-layer');
+                prevEl.style.transition = 'none'; // Важно!
+                
+                // Подготовка активного слоя
+                // Добавляем класс, который делает transition: none !important
+                activeEl.classList.add('is-dragging');
+            }
+        }
+    }, { passive: false }); // passive: false позволяет использовать preventDefault
+
+    // 2. ДВИЖЕНИЕ
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
 
         const x = e.touches[0].clientX;
         const y = e.touches[0].clientY;
+        
         const deltaX = x - startX;
         const deltaY = Math.abs(y - startY);
 
+        // Определяем направление (один раз за свайп)
         if (!isAxisLocked) {
             if (deltaY > Math.abs(deltaX)) {
+                // Пошли вертикально -> это скролл, отменяем свайп
                 isDragging = false;
-                return; 
+                cleanUpStyles(false);
+                return;
             } else if (Math.abs(deltaX) > 5) {
+                // Пошли горизонтально -> это свайп, блокируем скролл
                 isAxisLocked = true;
             }
         }
 
-        if (isAxisLocked && e.cancelable) e.preventDefault();
+        if (isAxisLocked) {
+            // Блокируем скролл страницы, чтобы не дергалось
+            if (e.cancelable) e.preventDefault(); 
 
-        const activeScreen = document.querySelector('.screen.active');
-        
-        if (activeScreen && deltaX > 0 && isAxisLocked) {
-            activeScreen.style.transition = 'none';
-            lens.style.transition = 'none';
-            if(depthText) depthText.style.transition = 'none';
+            const activeEl = document.querySelector('.screen.active');
+            const prevEl = document.getElementById(targetPrevScreenId);
 
-            // --- ФИЗИКА ---
-            let visualShift = deltaX * 0.4; // Коэф. тяжести
-            if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
-            visualShift = Math.min(visualShift, 130);
+            if (activeEl && prevEl && deltaX > 0) {
+                // Используем translate3d для GPU-ускорения
+                // Это ключевой момент против дрожания
+                activeEl.style.transform = `translate3d(${deltaX}px, 0, 0)`;
 
-            // --- 3D ПОВОРОТ + МАСШТАБИРОВАНИЕ (НОВОЕ) ---
-            const rotateY = Math.min(visualShift / 15, 8); 
-            // Уменьшаем экран до 96% по мере оттягивания
-            const scale = 1 - (visualShift / 130) * 0.04; 
-            
-            activeScreen.style.transform = `translateX(${visualShift}px) perspective(800px) rotateY(-${rotateY}deg) scale(${scale})`;
-            
-            // --- УПРАВЛЕНИЕ БЛИКОМ (НОВОЕ) ---
-            // Сдвигаем градиент блика. 0px сдвига = блик слева. 
-            // Чем больше тянем, тем дальше блик уходит вправо по экрану.
-            const sheenPos = -50 + (visualShift / 130) * 50; // от -50% до 0%
-            activeScreen.style.setProperty('--sheen-pos', `${sheenPos}%`); 
-            // Примечание: Чтобы это работало идеально, мы используем inline переменную или прямой доступ к style,
-            // но т.к. псевдо-элементы недоступны напрямую из JS, мы просто оставим CSS animation на opacity,
-            // а позицию оставим статичной или добавим логику ниже, если нужно супер-качество.
-            // *Для упрощения оставим статический красивый блик или сделаем так:*
-            // (Простой вариант без сложной JS-магии для псевдо-элемента: он просто появляется)
-
-            // --- ПАРАЛЛАКС ФОНА ---
-            if(depthText) {
-                depthText.style.transform = `rotate(-10deg) scale(1.2) translateX(${visualShift * 0.5}px)`;
-            }
-
-            // --- ЛИНЗА ---
-            const lensProgress = Math.min(visualShift / 70, 1);
-            lens.style.transform = `translateX(${-100 + (lensProgress * 100)}%)`;
-            lens.style.opacity = lensProgress;
-            arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
-
-            // --- ВИБРАЦИЯ ---
-            if (visualShift > 90 && !container.dataset.vibrated) {
-                if (window.Telegram?.WebApp?.HapticFeedback) {
-                    window.Telegram.WebApp.HapticFeedback.selectionChanged();
-                }
-                container.dataset.vibrated = "true";
-                arrow.style.strokeWidth = "3"; 
-            } else if (visualShift < 90) {
-                container.dataset.vibrated = "";
-                arrow.style.strokeWidth = "2";
+                // Плавное появление заднего фона
+                const progress = Math.min(deltaX / window.innerWidth, 1);
+                const scale = 0.92 + (0.08 * progress);
+                const brightness = 0.85 + (0.15 * progress);
+                
+                prevEl.style.transform = `scale3d(${scale}, ${scale}, 1)`;
+                prevEl.style.filter = `brightness(${brightness})`;
             }
         }
     }, { passive: false });
 
-    // 3. TOUCH END
+    // 3. КОНЕЦ
     document.addEventListener('touchend', (e) => {
         if (!isDragging || !isAxisLocked) return;
-        
         isDragging = false;
         isAxisLocked = false;
 
-        const activeScreen = document.querySelector('.screen.active');
+        const activeEl = document.querySelector('.screen.active');
+        const prevEl = document.getElementById(targetPrevScreenId);
+
+        if (!activeEl || !prevEl) return;
+
+        // Включаем плавность обратно (убираем класс is-dragging)
+        activeEl.classList.remove('is-dragging');
+        
+        // Вручную задаем transition для красивого завершения
+        activeEl.style.transition = 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        prevEl.style.transition = 'transform 0.4s ease, filter 0.4s ease';
+
         const endX = e.changedTouches[0].clientX;
         const deltaX = endX - startX;
-        const threshold = 120; 
+        const threshold = window.innerWidth * 0.35; // 35% экрана
 
-        if (activeScreen) {
-            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
-            lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            if(depthText) depthText.style.transition = 'transform 0.5s ease';
-            
-            if (deltaX > threshold) {
-                // === УСПЕХ ===
-                const targetId = getBackTarget();
-                // Вылет с поворотом и уменьшением
-                activeScreen.style.transform = `translateX(100%) perspective(800px) rotateY(-15deg) scale(0.9)`;
-                
-                lens.style.transform = `translateX(-100%)`;
-                lens.style.opacity = '0';
+        if (deltaX > threshold) {
+            // === УСПЕХ ===
+            activeEl.style.transform = `translate3d(100%, 0, 0)`;
+            prevEl.style.transform = `scale3d(1, 1, 1)`;
+            prevEl.style.filter = `brightness(1)`;
 
-                setTimeout(() => {
-                    resetScreenStyles(activeScreen);
-                    if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
-                    showScreen(targetId);
-                    
-                    if (window.Telegram?.WebApp?.HapticFeedback) {
-                        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-                    }
-                }, 250);
-                
-            } else {
-                // === ОТМЕНА ===
-                activeScreen.style.transform = 'translateX(0) perspective(800px) rotateY(0deg) scale(1)';
-                lens.style.transform = 'translateX(-100%)';
-                lens.style.opacity = '0';
-                if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
-            }
+            setTimeout(() => {
+                showScreen(targetPrevScreenId);
+                cleanUpStyles(true);
+                activeEl.style.transform = ''; 
+                if (window.Telegram?.WebApp?.HapticFeedback) {
+                    window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+                }
+            }, 300);
+        } else {
+            // === ОТМЕНА ===
+            activeEl.style.transform = `translate3d(0, 0, 0)`;
+            prevEl.style.transform = `scale3d(0.92, 0.92, 1)`;
+            prevEl.style.filter = `brightness(0.85)`;
+
+            setTimeout(() => {
+                cleanUpStyles(false);
+            }, 400);
         }
-        container.dataset.vibrated = "";
     });
 
-    function resetScreenStyles(screen) {
-        screen.style.transform = '';
-        screen.style.transition = '';
-        screen.classList.remove('swiping');
+    function cleanUpStyles(success) {
+        // Убираем все временные классы
+        document.querySelectorAll('.is-dragging').forEach(el => el.classList.remove('is-dragging'));
+        
+        const prevEl = document.getElementById(targetPrevScreenId);
+        if (prevEl) {
+            prevEl.classList.remove('prev-card-layer');
+            prevEl.style.transform = '';
+            prevEl.style.filter = '';
+            prevEl.style.transition = '';
+            prevEl.style.zIndex = '';
+            // Возвращаем обычное позиционирование
+            if(success) {
+                // Если успешно перешли, старый экран становится активным (уже сделано в showScreen)
+            } else {
+                prevEl.style.display = 'none'; // Прячем обратно
+            }
+        }
     }
 }
 
-initSwipeBack();
-
+initCardDeckSwipe();
 
 
 
