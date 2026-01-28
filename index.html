@@ -5716,7 +5716,7 @@ body.dark-mode .screen::after {
 }
          /* ==================================================================== */
 
-       /* ========== EVOLUTION TERMINAL STYLES (REBALANCE v2) ========== */
+       /* ========== EVOLUTION TERMINAL STYLES (FINAL) ========== */
 
 /* 1. Глобальный фон и шум */
 .evo-background {
@@ -5755,7 +5755,7 @@ body.dark-mode .screen::after {
 .evo-tabs-container {
     display: flex;
     justify-content: center;
-    margin: 15px 0 20px; /* Чуть уменьшил отступы */
+    margin: 15px 0 20px;
     position: relative;
 }
 
@@ -5782,7 +5782,6 @@ body.dark-mode .screen::after {
     cursor: pointer;
     transition: color 0.3s ease;
 }
-
 .evo-tab-btn.active { color: #fff; }
 
 .evo-glider {
@@ -5797,12 +5796,13 @@ body.dark-mode .screen::after {
     box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
 }
 
-/* 3. Сетка и Карточки */
+/* 3. Сетка Акций (Echelons) */
 .evo-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
     margin-top: 10px;
+    transition: max-height 0.5s ease;
 }
 
 .evo-grid-col { display: flex; flex-direction: column; gap: 6px; }
@@ -5816,29 +5816,51 @@ body.dark-mode .screen::after {
     font-weight: 700;
 }
 
+/* Скрываем элементы свыше 4-го */
+.evo-card-hidden {
+    display: none;
+}
+
+/* Кнопка "Показать все" */
+.evo-expand-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #94a3b8;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: background 0.3s, color 0.3s;
+}
+.evo-expand-btn:active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* 4. Карточки (ОФЗ и Акции) */
 .evo-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 10px;
-    padding: 8px; /* Уменьшен padding */
+    padding: 8px;
     position: relative;
     overflow: hidden;
-    transition: opacity 0.5s, transform 0.5s;
-    cursor: default; /* Убираем курсор руки, чтобы не намекать на клик */
-    -webkit-tap-highlight-color: transparent; /* Убирает синее мигание на мобильных */
+    -webkit-tap-highlight-color: transparent;
 }
-
-/* Убрал эффекты :active и :hover, чтобы не было "свечения" при клике */
 
 .evo-card.stagger-in {
     animation: fadeInUp 0.4s forwards;
     opacity: 0;
     transform: translateY(10px);
 }
-
-@keyframes fadeInUp {
-    to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
 /* Текстовые стили */
 .evo-ticker {
@@ -5848,12 +5870,14 @@ body.dark-mode .screen::after {
     color: #f1f5f9;
 }
 .evo-name {
+    font-family: 'Inter', sans-serif;
     font-size: 10px;
     color: #94a3b8;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 2px;
+    letter-spacing: -0.01em;
 }
 .evo-price {
     font-family: 'JetBrains Mono', monospace;
@@ -5862,18 +5886,16 @@ body.dark-mode .screen::after {
     margin-top: 2px;
 }
 
-/* 4. ОФЗ Аккордеон (Bridge) */
+/* 5. Аккордеон ОФЗ */
 .evo-ofz-row {
     background: rgba(30, 41, 59, 0.4);
     border-radius: 12px;
-    margin-bottom: 6px; /* Чуть ближе друг к другу */
+    margin-bottom: 6px;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    overflow: hidden;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .evo-ofz-main {
-    padding: 10px 12px; /* УМЕНЬШИЛ ВЫСОТУ КАРТОЧКИ ЗДЕСЬ */
+    padding: 10px 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -5893,11 +5915,11 @@ body.dark-mode .screen::after {
     background: rgba(0,0,0,0.2);
     transition: max-height 0.3s ease;
 }
-.evo-ofz-details.open {
-    max-height: 250px;
-}
+.evo-ofz-details.open { max-height: 250px; }
 
-.num-mono { font-family: 'JetBrains Mono', monospace; }
+/* Утилиты */
+.num-mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+.text-white { color: #fff; }
          /* ==================================================================== */
         
     </style>
@@ -10004,6 +10026,15 @@ initSwipeBack();
 // 1. Переключение вкладок
 // ========== EVOLUTION TERMINAL LOGIC v2 ==========
 
+// ========== EVOLUTION TERMINAL LOGIC (FINAL) ==========
+
+// Хелпер для форматирования цифр внутри текста в Mono шрифт
+function formatWithMono(text) {
+    if (!text) return '';
+    // Заменяем любые последовательности цифр на span с классом num-mono
+    return String(text).replace(/(\d+)/g, '<span class="num-mono">$1</span>');
+}
+
 function switchEvoTab(index) {
     const glider = document.getElementById('evoGlider');
     const btns = document.querySelectorAll('.evo-tab-btn');
@@ -10026,26 +10057,28 @@ function switchEvoTab(index) {
         if(i === index) btn.classList.add('active');
         else btn.classList.remove('active');
     });
-}
-
-function renderEvoRebalance() {
+    
+    function renderEvoRebalance() {
     const container = document.getElementById('evo-ofz-list');
     if (!container || !bonds || bonds.length === 0) return;
 
     let html = '';
     bonds.forEach((b, i) => {
         const delay = i * 0.05; 
+        // Получаем все оригинальные детали
         const details = bondDetailsMap[b.t] || { couponValue: 0, matDate: '-', nextCoupon: '-', freq: 0 };
         
-        // Формируем подстроку со всеми данными (Тикер + Погашение)
-        const subString = `${b.t} • Погаш: ${details.matDate}`;
+        // Форматируем Название (Тикер) с Mono цифрами
+        const formattedTicker = formatWithMono(b.n);
+        // Форматируем Подстроку (Название инструмента) с Mono цифрами
+        const formattedSub = formatWithMono(b.t);
 
         html += `
         <div class="evo-ofz-row evo-card stagger-in" style="animation-delay: ${delay}s" onclick="toggleEvoAccordion(this)">
             <div class="evo-ofz-main">
                 <div style="max-width: 65%;">
-                    <div class="evo-ticker" style="font-size:13px; color:#fff;">${b.n}</div>
-                    <div class="evo-name" style="font-size:11px; opacity:0.7; margin-top:3px;">${subString}</div>
+                    <div class="evo-ticker">${formattedTicker}</div>
+                    <div class="evo-name">${formattedSub}</div>
                 </div>
                 
                 <div class="evo-bridge"></div>
@@ -10059,10 +10092,11 @@ function renderEvoRebalance() {
             <div class="evo-ofz-details">
                 <div style="padding: 12px; font-size: 11px; color: #cbd5e1; border-top: 1px solid rgba(255,255,255,0.05);">
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div>Погашение: <span class="num-mono text-white">${details.matDate}</span></div>
                         <div>Купон: <span class="num-mono text-white">${details.couponValue} ₽</span></div>
                         <div>НКД: <span class="num-mono text-white">${b.nkd} ₽</span></div>
-                        <div>След. выплата: <span class="num-mono text-white">${details.nextCoupon}</span></div>
                         <div>Частота: <span class="num-mono text-white">${details.freq}</span></div>
+                        <div>След. выплата: <span class="num-mono text-white">${details.nextCoupon}</span></div>
                     </div>
                     <button class="btn-tiny-graph" style="margin-top:12px; width:100%; background:rgba(255,255,255,0.1);" onclick="openTradingView(event, '${b.t}')">ОТКРЫТЬ ГРАФИК</button>
                 </div>
@@ -10077,7 +10111,11 @@ function renderEvoStocks() {
     const grid = document.getElementById('evo-stocks-grid');
     if (!grid || !echelonTableData) return;
 
-    let html = '';
+    // Очищаем и подготавливаем контейнер
+    grid.innerHTML = '';
+    
+    // Создаем обертку для колонок
+    let columnsHtml = '';
     for (let i = 0; i < 4; i++) {
         let colHtml = `<div class="evo-grid-col">`;
         const romans = ['I', 'II', 'III', 'IV'];
@@ -10087,123 +10125,73 @@ function renderEvoStocks() {
 
         if (echelonTableData[i]) {
             echelonTableData[i].forEach((asset, idx) => {
+                // Если индекс > 3 (то есть 5-й элемент и далее), добавляем класс скрытия
+                const hiddenClass = idx > 3 ? 'evo-card-hidden' : '';
                 const delay = idx * 0.03;
+                
+                // Форматируем тикер с Mono цифрами (если есть)
+                const formattedTicker = formatWithMono(asset.t);
+
                 colHtml += `
-                <div class="evo-card stagger-in" style="animation-delay: ${delay}s" onclick="openCompanyFromTable(event, '${asset.t}', '${asset.n}')">
-                    <div class="evo-ticker">${asset.t}</div>
+                <div class="evo-card stagger-in ${hiddenClass}" style="animation-delay: ${delay}s" onclick="openCompanyFromTable(event, '${asset.t}', '${asset.n}')">
+                    <div class="evo-ticker">${formattedTicker}</div>
                     <div class="evo-price">${asset.target}</div>
                     <div style="width:15px; height:2px; background:${colors[i]}; margin-top:4px; opacity:0.5;"></div>
                 </div>
                 `;
             });
         }
-        colHtml += `</div>`;
-        html += colHtml;
+        colHtml += `</div>`; // Закрыть колонку
+        columnsHtml += colHtml;
     }
-    grid.innerHTML = html;
+    
+    grid.innerHTML = columnsHtml;
+
+    // Добавляем кнопку "Показать все" ПОД сеткой
+    // Проверяем, есть ли скрытые элементы
+    const hasHidden = grid.querySelectorAll('.evo-card-hidden').length > 0;
+    
+    if (hasHidden) {
+        // Удаляем старую кнопку если есть
+        const oldBtn = document.getElementById('evo-stocks-toggle-btn');
+        if(oldBtn) oldBtn.remove();
+
+        const btn = document.createElement('div');
+        btn.id = 'evo-stocks-toggle-btn';
+        btn.className = 'evo-expand-btn';
+        btn.innerHTML = 'Показать все стратегии';
+        btn.onclick = function() {
+            const hiddenCards = grid.querySelectorAll('.evo-card-hidden');
+            const isExpanding = hiddenCards.length > 0; // Если есть скрытые, значит мы раскрываем
+
+            if (isExpanding) {
+                // Раскрываем
+                grid.querySelectorAll('.evo-card').forEach(c => c.classList.remove('evo-card-hidden'));
+                this.innerHTML = 'Свернуть';
+            } else {
+                // Сворачиваем (восстанавливаем логику > 3)
+                const cols = grid.querySelectorAll('.evo-grid-col');
+                cols.forEach(col => {
+                    const cards = col.querySelectorAll('.evo-card');
+                    cards.forEach((c, index) => {
+                        if (index > 3) c.classList.add('evo-card-hidden');
+                    });
+                });
+                this.innerHTML = 'Показать все стратегии';
+                // Скролл чуть вверх, чтобы было удобно
+                grid.scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+        };
+        // Вставляем кнопку после сетки
+        grid.parentNode.appendChild(btn); 
+    }
 }
 
 function toggleEvoAccordion(element) {
-    // Закрываем другие (опционально, если нужно)
-    // document.querySelectorAll('.evo-ofz-details.open').forEach(el => el !== element.querySelector('.evo-ofz-details') && el.classList.remove('open'));
-    
     const details = element.querySelector('.evo-ofz-details');
     details.classList.toggle('open');
 }
-// 2. Рендер ОФЗ (Новый стиль)
-function renderEvoRebalance() {
-    const container = document.getElementById('evo-ofz-list');
-    if (!container || !bonds || bonds.length === 0) return;
 
-    let html = '';
-    bonds.forEach((b, i) => {
-        // Задержка анимации (staggering)
-        const delay = i * 0.1; 
-        
-        // Получаем детали (как в старом коде)
-        const details = bondDetailsMap[b.t] || { couponValue: 0, matDate: '-' };
-        
-        html += `
-        <div class="evo-ofz-row evo-card stagger-in" style="animation-delay: ${delay}s" onclick="toggleEvoAccordion(this)">
-            <div class="evo-ofz-main">
-                <div>
-                    <div class="evo-ticker" style="font-size:13px;">${b.n}</div>
-                    <div class="evo-name" style="font-size:10px; opacity:0.6;">${b.t}</div>
-                </div>
-                <div class="evo-bridge"></div>
-                <div class="text-right">
-                    <div class="num-mono" style="color:#4ade80; font-weight:bold;">${b.y}</div>
-                    <div class="num-mono" style="font-size:10px; opacity:0.7;">${b.p} ₽</div>
-                </div>
-            </div>
-            <div class="evo-ofz-details">
-                <div style="padding: 0 16px 16px 16px; font-size: 11px; color: #cbd5e1;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                        <span>Купон:</span> <span class="num-mono">${details.couponValue} ₽</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                        <span>НКД:</span> <span class="num-mono">${b.nkd} ₽</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between;">
-                        <span>Погашение:</span> <span class="num-mono">${details.matDate}</span>
-                    </div>
-                    <button class="btn-tiny-graph" style="margin-top:10px; width:100%;" onclick="openTradingView(event, '${b.t}')">ГРАФИК</button>
-                </div>
-            </div>
-        </div>
-        `;
-    });
-    container.innerHTML = html;
-    initSpotlight(); // Включаем эффект света
-}
-
-// 3. Рендер Акций (Сетка Эшелонов)
-function renderEvoStocks() {
-    const grid = document.getElementById('evo-stocks-grid');
-    if (!grid || !echelonTableData) return;
-
-    let html = '';
-    // Создаем 4 колонки
-    for (let i = 0; i < 4; i++) {
-        let colHtml = `<div class="evo-grid-col">`;
-        // Заголовок колонки (римские цифры)
-        const romans = ['I', 'II', 'III', 'IV'];
-        const colors = ['#4ade80', '#38bdf8', '#facc15', '#fb923c']; // Цвета эшелонов
-        
-        colHtml += `<div class="evo-col-header" style="color:${colors[i]}">${romans[i]}</div>`;
-
-        // Заполняем данными из твоего массива echelonTableData
-        if (echelonTableData[i]) {
-            echelonTableData[i].forEach((asset, idx) => {
-                const delay = idx * 0.05; // Быстрый каскад
-                colHtml += `
-                <div class="evo-card stagger-in" style="animation-delay: ${delay}s" onclick="openCompanyFromTable(event, '${asset.t}', '${asset.n}')">
-                    <div class="evo-ticker">${asset.t}</div>
-                    <div class="evo-price">${asset.target}</div>
-                    <div style="width:20px; height:2px; background:${colors[i]}; margin-top:6px; opacity:0.5;"></div>
-                </div>
-                `;
-            });
-        }
-        colHtml += `</div>`; // Закрываем колонку
-        html += colHtml;
-    }
-    grid.innerHTML = html;
-    initSpotlight();
-}
-
-// 4. Логика Аккордеона
-function toggleEvoAccordion(element) {
-    const details = element.querySelector('.evo-ofz-details');
-    details.classList.toggle('open');
-    
-    // Эффект накрутки цифр (Kinetic Typography)
-    if(details.classList.contains('open')) {
-        // Находим цифры внутри и анимируем их (пример)
-        const nums = details.querySelectorAll('.num-mono');
-        nums.forEach(num => animateValue(num));
-    }
-}
 
 // 5. Kinetic Typography (Эффект слота)
 function animateValue(obj) {
@@ -10250,6 +10238,7 @@ function initSpotlight() {
 // Найди в коде функцию loadData() и в самом конце (перед catch) добавь:
 // renderEvoRebalance();
 
+    
 
 
 
