@@ -5516,95 +5516,141 @@ body.dark-mode .screen::after {
         
   /* ==================================================================== */
 
-/* 1. ПРИНУДИТЕЛЬНЫЙ ГРАДИЕНТ (Для JS) */
-.force-gradient-bg {
-    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
-    background-color: #1e3a8a !important;
-    color: white !important;
-    border: none !important;
-    box-shadow: 0 10px 30px rgba(30, 58, 138, 0.4) !important;
-}
-/* Красим весь текст внутри в белый */
-.force-gradient-bg *, .force-gradient-bg h2, .force-gradient-bg p {
-    color: white !important;
-}
-
-/* 2. ОТСТУП ЗАГОЛОВКА */
+/* 1. ЗАГОЛОВОК "АНАЛОГИ В ОФЗ" (Quiet Luxury) */
 .ofz-analogs-title {
-    margin-bottom: 25px !important; /* Больше воздуха */
-}
-
-/* 3. СТРОКА ОФЗ (Flexbox для Мостика) */
-.ofz-luxury-item {
-    display: flex;
-    align-items: baseline; /* Выравнивание по базовой линии шрифта */
-    padding: 14px 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.03);
-    cursor: pointer;
-    overflow: hidden; /* Чтобы точки не вылезали */
-}
-
-/* Название */
-.ofz-lux-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-main);
-    flex-shrink: 0; /* Не сжимать */
-    white-space: nowrap;
-}
-
-/* ЭЛЕГАНТНАЯ СВЯЗКА (МОСТИК) */
-.ofz-lux-bridge {
-    flex-grow: 1; /* Занимает все свободное место */
-    border-bottom: 1px dotted rgba(0,0,0,0.2); /* Точки */
-    margin: 0 10px;
-    position: relative;
-    top: -5px; /* Чуть приподнять над строкой */
-    opacity: 0.6;
-}
-.dark-mode .ofz-lux-bridge { border-bottom-color: rgba(255,255,255,0.2); }
-
-/* Правая часть (Цифры) */
-.ofz-lux-right {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; /* Утонченный размер */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em; /* Очень широкий трекинг для "дорогого" вида */
+    color: #94A3B8;
+    margin: 40px 0 20px 10px !important; /* Пространство сверху */
     display: flex;
     align-items: center;
-    gap: 12px; /* Отступ между процентами и ценой */
-    flex-shrink: 0;
+    gap: 15px; /* Отступ от линии */
 }
 
-.ofz-lux-yield {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 14px;
+/* Декоративная линия перед заголовком */
+.ofz-analogs-title::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: #cbd5e1;
+    opacity: 0.5;
+}
+
+/* 2. ЗАГОЛОВОК "ИНСТРУМЕНТ" (Как Выбор Стратегии) */
+.h-label-instrument {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
     font-weight: 700;
-    color: var(--accent-green);
+    text-transform: uppercase;
+    letter-spacing: 2px; /* Широкий трекинг */
+    color: #94A3B8;
+    text-align: left;
 }
 
-/* ЦЕНА В СЕРОЙ ПЛАШКЕ */
-.ofz-price-pill {
-    background: rgba(0,0,0,0.06);
+/* 3. СТЕКЛЯННЫЕ ПЛАШКИ ЗАГОЛОВКОВ (% и Р) */
+.header-glass-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px; /* Мягкий квадрат */
+    
+    /* Эффект стекла */
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    
+    /* Текст */
     color: var(--text-secondary);
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
     font-weight: 600;
-    letter-spacing: -0.5px;
-}
-.dark-mode .ofz-price-pill {
-    background: rgba(255,255,255,0.1);
-    color: #cbd5e1;
+    font-size: 12px;
 }
 
-/* 4. ЗАГОЛОВКИ СТОЛБЦОВ (Скрываем средний, оставляем края) */
-.ofz-headers-flex {
+.dark-mode .header-glass-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+}
+
+/* Контейнер для выравнивания заголовков */
+.ofz-headers-container {
     display: flex;
     justify-content: space-between;
-    padding: 0 10px 5px 10px;
+    align-items: center;
+    padding: 0 10px 10px 10px;
     margin-bottom: 5px;
 }
-.h-label-right {
+
+.headers-right-group {
     display: flex;
-    gap: 30px; /* Подгоняем под gap данных */
+    gap: 30px; /* Расстояние между значками, подгоняем под столбцы */
+    padding-right: 15px; /* Компенсация отступов */
+}
+
+/* 4. ЦИФРЫ В НАЗВАНИИ (Стиль как у других цифр) */
+.mono-digit-span {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    font-size: 0.95em;
+}
+
+/* 5. КОПИРУЕМЫЙ КОД (Синий шрифт) */
+.copy-code-blue {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #3498db; /* Синий */
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.2s;
+}
+.copy-code-blue:active { opacity: 0.6; }
+
+/* 6. КНОПКА ГРАФИК (Quiet Luxury) */
+.btn-luxury-chart {
+    width: 100%;
+    margin-top: 25px;
+    padding: 14px;
+    
+    /* Прозрачный фон, тонкая рамка */
+    background: transparent;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    border-radius: 14px;
+    
+    /* Типографика */
+    color: var(--accent-blue);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-luxury-chart:hover {
+    background: rgba(52, 152, 219, 0.05);
+    border-color: var(--accent-blue);
+    transform: translateY(-1px);
+}
+
+.btn-luxury-chart:active {
+    transform: scale(0.98);
 }
          /* ==================================================================== */
         
@@ -8380,38 +8426,32 @@ function showToast(message) {
 }
 
 // Обновленная отрисовка
+// Вспомогательная функция для оборачивания цифр в шрифт Mono
+function formatNameWithMonoDigits(name) {
+    if (!name) return '';
+    // Ищем все группы цифр и оборачиваем их в span
+    return name.replace(/(\d+)/g, '<span class="mono-digit-span">$1</span>');
+}
+
 function renderOfzList() {
     if (typeof bonds === 'undefined' || bonds.length === 0) return;
     
-    // 1. ПРИНУДИТЕЛЬНЫЙ ГРАДИЕНТ (Исправление белого бокса)
-    // Ищем бокс по всем возможным признакам
-    const previewBox = document.querySelector('.rebalance-intro-modern') || 
-                       document.getElementById('rebalance-intro') || 
-                       document.querySelector('.rebalance-preview-box');
-                       
+    // Принудительный градиент для бокса (на всякий случай)
+    const previewBox = document.querySelector('.rebalance-preview-box') || document.querySelector('.rebalance-intro-modern');
     if (previewBox) {
         previewBox.classList.add('force-gradient-bg');
-        // На случай, если класс не перебьет инлайн-стили:
         previewBox.style.cssText = "background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important; color: white !important; border: none !important;";
-        
-        // Красим иконку внутри бокса в белый, если она есть
-        const icon = previewBox.querySelector('.ri-icon');
-        if(icon) {
-            icon.style.background = "rgba(255,255,255,0.2)";
-            icon.style.color = "white";
-        }
-        // Красим тексты
-        const titles = previewBox.querySelectorAll('h2, div, p, span');
-        titles.forEach(t => t.style.color = 'white');
+        const titles = previewBox.querySelectorAll('h2, div, p, span, svg');
+        titles.forEach(t => { t.style.color = 'white'; if(t.tagName === 'svg') t.style.stroke = 'white'; });
     }
 
-    // 2. ЗАГОЛОВКИ ТАБЛИЦЫ
+    // ЗАГОЛОВКИ: Инструмент + Стеклянные плашки
     let ofzHtml = `
-        <div class="ofz-headers-flex">
-            <span class="h-label">Инструмент</span>
-            <div class="h-label-right">
-                <span class="h-label">Доходность</span>
-                <span class="h-label" style="margin-right:5px;">Цена</span>
+        <div class="ofz-headers-container">
+            <span class="h-label-instrument">Инструмент</span>
+            <div class="headers-right-group">
+                <div class="header-glass-pill" title="Доходность">%</div>
+                <div class="header-glass-pill" title="Цена">₽</div>
             </div>
         </div>
     `;
@@ -8420,32 +8460,36 @@ function renderOfzList() {
         const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 };
         const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
         
-        // Цена из данных
+        // Цена и Доходность
         const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
-        
-        // Текущая доходность
         let currentYield = "0.00";
         if (details.couponValue > 0 && details.freq > 0) {
             currentYield = ((details.couponValue * details.freq / parseFloat(priceFinal)) * 100).toFixed(2);
         }
         
+        // ФОРМАТИРОВАНИЕ НАЗВАНИЯ (Цифры в стиле Mono)
+        // Обрезаем длинное имя, затем форматируем цифры
+        const niceName = formatNameWithMonoDigits(limitName(b.n));
+
         ofzHtml += `
         <div class="ofz-row-container ${hiddenClass}" id="container-${b.t}">
             <div class="ofz-luxury-item" onclick="toggleOfzDetails('${b.t}')">
-                <div class="ofz-lux-name">${limitName(b.n)}</div>
+                <div class="ofz-lux-name">${niceName}</div>
                 
-                <div class="ofz-lux-bridge"></div> <div class="ofz-lux-right">
+                <div class="ofz-lux-bridge"></div>
+                
+                <div class="ofz-lux-right">
                     <div class="ofz-lux-yield">${b.y}</div>
                     <div class="ofz-price-pill">${priceFinal} ₽</div>
                 </div>
             </div>
             
-            <div id="details-${b.t}" class="ofz-lux-details" style="display:none; padding: 15px 20px;">
+            <div id="details-${b.t}" class="ofz-lux-details" style="display:none; padding: 20px;">
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">КОД (ISIN)</span>
-                    <span class="copy-text-action" onclick="copyTickerNew('${b.t}')">
+                    <span class="copy-code-blue" onclick="copyTickerNew('${b.t}')">
                         ${b.t}
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                     </span>
                 </div>
                 
@@ -8478,9 +8522,9 @@ function renderOfzList() {
                     <span class="ofz-lux-detail-value">${details.freq}</span>
                 </div>
                 
-                <button class="details-btn" style="width:100%; margin-top:15px; background: #3498db; color: white; border: none; font-weight: 700; height: 38px; border-radius: 10px;" 
-                        onclick="openTradingView(event, '${b.t}')">
-                    ОТКРЫТЬ ГРАФИК TV
+                <button class="btn-luxury-chart" onclick="openTradingView(event, '${b.t}')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    Открыть график
                 </button>
             </div>
         </div>`;
