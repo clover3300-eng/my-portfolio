@@ -5340,30 +5340,28 @@ body.dark-mode .screen::after {
     border-bottom-left-radius: 30px;
 }
 
-/* ЕДИНЫЙ И ИСПРАВЛЕННЫЙ СТИЛЬ ДЛЯ СВАЙПА */
+/* Нижний экран теперь статичен (без зума) */
 .screen.prev-card-layer {
     display: block !important;
     position: fixed !important;
     top: 0; left: 0; width: 100%; height: 100%;
     z-index: 1;
     pointer-events: none;
-    transform: scale3d(0.92, 0.92, 1); 
-    filter: brightness(0.85);
-    will-change: transform, filter; 
-    transform-origin: center;
+    
+    /* Убрали scale, оставили только небольшое затемнение */
+    transform: none !important; 
+    filter: brightness(0.9); 
+    
+    will-change: filter;
     transition: none !important;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 
-/* Эффект для верхнего экрана во время сдвига */
+/* Верхний экран, который мы тянем */
 .screen.is-dragging {
     z-index: 100 !important;
-    box-shadow: -15px 0 40px rgba(0,0,0,0.2) !important;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.3);
     transition: none !important;
-    pointer-events: none;
 }
-        
 
         
     </style>
@@ -9142,31 +9140,26 @@ initNotificationSwipe();
 
 function initCardDeckSwipe() {
     let startX = 0;
-    let startY = 0;
     let isDragging = false;
-    let isAxisLocked = false;
     let targetPrevScreenId = null;
     let activeEl = null;
     let prevEl = null;
     
-    const triggerZone = 70; // Увеличил зону до 70px, чтобы легче было зацепить край
+    const triggerZone = 60; 
 
     function getPrevScreenId() {
-        if (currentScreen === 'screen-company') return 'screen-interesting';
-        if (currentScreen === 'screen-interesting') return 'screen-app'; 
-        if (currentScreen === 'screen-portfolio') return 'screen-app';
-        if (currentScreen === 'screen-assets') return 'screen-app';
-        if (currentScreen === 'screen-app') return 'screen-home';
-        return null;
+        const routes = {
+            'screen-company': 'screen-interesting',
+            'screen-interesting': 'screen-app',
+            'screen-portfolio': 'screen-app',
+            'screen-assets': 'screen-app',
+            'screen-app': 'screen-home'
+        };
+        return routes[currentScreen] || null;
     }
 
     document.addEventListener('touchstart', (e) => {
-        const touch = e.touches[0];
-        startX = touch.clientX;
-        startY = touch.clientY;
-        isDragging = false;
-        isAxisLocked = false;
-
+        startX = e.touches[0].clientX;
         if (startX <= triggerZone) {
             targetPrevScreenId = getPrevScreenId();
             if (!targetPrevScreenId) return;
@@ -9178,86 +9171,74 @@ function initCardDeckSwipe() {
                 isDragging = true;
                 prevEl.classList.add('prev-card-layer');
                 activeEl.classList.add('is-dragging');
+                // Принудительно показываем нижний экран
+                prevEl.style.display = 'block';
             }
         }
     }, { passive: false });
 
     document.addEventListener('touchmove', (e) => {
-        if (!isDragging || !activeEl || !prevEl) return;
+        if (!isDragging || !activeEl) return;
 
         const x = e.touches[0].clientX;
-        const y = e.touches[0].clientY;
         const deltaX = x - startX;
-        const deltaY = Math.abs(y - startY);
 
-        if (!isAxisLocked) {
-            if (deltaY > Math.abs(deltaX)) {
-                isDragging = false;
-                cleanUpStyles(false);
-                return;
-            } else if (deltaX > 5) {
-                isAxisLocked = true;
-            }
-        }
-
-        if (isAxisLocked && deltaX > 0) {
+        if (deltaX > 0) {
             if (e.cancelable) e.preventDefault();
             
-            // Двигаем верхнюю карту
+            // Двигаем только верхнюю карту
             activeEl.style.transform = `translate3d(${deltaX}px, 0, 0)`;
 
-            // Увеличиваем нижнюю карту
+            // Плавно меняем только яркость нижней карты
             const percent = Math.min(deltaX / window.innerWidth, 1);
-            const scale = 0.92 + (0.08 * percent); 
-            const brightness = 0.85 + (0.15 * percent);
-            
-            prevEl.style.transform = `scale3d(${scale}, ${scale}, 1)`;
-            prevEl.style.filter = `brightness(${brightness})`;
+            const brightness = 0.9 + (0.1 * percent);
+            if (prevEl) prevEl.style.filter = `brightness(${brightness})`;
         }
     }, { passive: false });
 
     document.addEventListener('touchend', (e) => {
-        if (!isDragging || !activeEl || !prevEl) return;
+        if (!isDragging || !activeEl) return;
         
         const deltaX = e.changedTouches[0].clientX - startX;
         const threshold = window.innerWidth * 0.3;
 
-        activeEl.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        prevEl.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.3s ease';
+        // Включаем анимацию доводки
+        activeEl.style.transition = 'transform 0.3s ease-out';
+        if (prevEl) prevEl.style.transition = 'filter 0.3s ease-out';
 
-        if (deltaX > threshold && isAxisLocked) {
+        if (deltaX > threshold) {
+            // Успешный переход
             activeEl.style.transform = `translate3d(100%, 0, 0)`;
-            prevEl.style.transform = `scale3d(1, 1, 1)`;
-            prevEl.style.filter = `brightness(1)`;
+            if (prevEl) prevEl.style.filter = 'brightness(1)';
 
             setTimeout(() => {
                 showScreen(targetPrevScreenId);
-                cleanUpStyles(true);
+                fullReset(); // Очистка
             }, 300);
         } else {
+            // Возврат назад
             activeEl.style.transform = `translate3d(0, 0, 0)`;
-            prevEl.style.transform = `scale3d(0.92, 0.92, 1)`;
-            prevEl.style.filter = `brightness(0.85)`;
-            setTimeout(() => cleanUpStyles(false), 300);
+            if (prevEl) prevEl.style.filter = 'brightness(0.9)';
+            setTimeout(() => fullReset(), 300);
         }
         
         isDragging = false;
-        isAxisLocked = false;
     });
 
-    function cleanUpStyles(success) {
-        if (activeEl) {
-            activeEl.classList.remove('is-dragging');
-            activeEl.style.transform = '';
-            activeEl.style.transition = '';
-        }
-        if (prevEl) {
-            prevEl.classList.remove('prev-card-layer');
-            prevEl.style.transform = '';
-            prevEl.style.filter = '';
-            prevEl.style.transition = '';
-            if (!success) prevEl.style.display = 'none';
-        }
+    // Мощная очистка, чтобы экраны не "терялись"
+    function fullReset() {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('prev-card-layer', 'is-dragging');
+            screen.style.transform = '';
+            screen.style.filter = '';
+            screen.style.transition = '';
+            // Если экран не активный, он должен быть скрыт (кроме момента анимации)
+            if (!screen.classList.contains('active')) {
+                screen.style.display = 'none';
+            } else {
+                screen.style.display = 'block';
+            }
+        });
     }
 }
     initCardDeckSwipe();
