@@ -8418,7 +8418,7 @@ function updateEchelonTable() {
             }
         }
         html += '</tr>';
-        // ИСПРАВЛЕНО: id="details-row-${i}" вместо row
+        // ИСПРАВЛЕНО: Теперь здесь i вместо row
         html += `<tr class="et-details-row" id="details-row-${i}" style="display:none;">
             <td colspan="4" class="et-details-container">
                 <div id="details-content-${i}"></div>
@@ -8427,15 +8427,13 @@ function updateEchelonTable() {
     }
     body.innerHTML = html;
 
-    // --- ЛОГИКА СКРЫТИЯ СТРОК ---
+    // Скрываем строки эшелонов после второй
     const allRows = body.querySelectorAll('tr:not(.et-details-row)');
     allRows.forEach((row, index) => {
-        if (index > 1) {
-            row.classList.add('echelon-row-hidden');
-        }
+        if (index > 1) row.classList.add('echelon-row-hidden');
     });
 
-    // Создаем кнопку, если её нет
+    // Управляем кнопкой "Развернуть"
     let btn = document.getElementById('btn-stocks-more');
     if (!btn) {
         btn = document.createElement('button');
@@ -8443,13 +8441,8 @@ function updateEchelonTable() {
         btn.className = 'btn-show-more-modern';
         btn.innerText = 'Развернуть эшелоны';
         btn.onclick = toggleStocksEchelon;
-        
         const wrapper = document.querySelector('.echelon-wrapper');
-        if (wrapper) {
-            wrapper.after(btn);
-        }
-    } else {
-        btn.innerText = 'Развернуть эшелоны';
+        if (wrapper) wrapper.after(btn);
     }
 }
 
@@ -8457,7 +8450,6 @@ function updateEchelonTable() {
 function toggleStocksEchelon() {
     const btn = document.getElementById('btn-stocks-more');
     const rows = document.querySelectorAll('#echelon-tickers-body tr:not(.et-details-row)');
-    
     let isHidden = btn.innerText.includes('Развернуть');
 
     rows.forEach((row, index) => {
@@ -8471,10 +8463,6 @@ function toggleStocksEchelon() {
     });
 
     btn.innerText = isHidden ? 'Скрыть эшелоны' : 'Развернуть эшелоны';
-    
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-    }
 }
 
     function toggleEchelonCell(cellId) {
