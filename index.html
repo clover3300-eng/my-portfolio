@@ -5494,6 +5494,67 @@ body.dark-mode .screen::after {
 }
 
   /* ==================================================================== */
+
+        /* === ФИКС СТРАНИЦЫ КОМПАНИИ === */
+
+#screen-company {
+    /* 1. Разрешаем вертикальный скролл */
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch; /* Плавность на iPhone */
+    
+    /* 2. Гарантируем высоту на весь экран */
+    height: 100vh !important;
+    display: block !important;
+    
+    /* 3. Сбрасываем общие отступы, чтобы настроить их точечно */
+    padding: 0 !important;
+    box-sizing: border-box;
+    
+    /* 4. Важно: чтобы скролл не конфликтовал со свайпом */
+    overscroll-behavior-y: contain;
+}
+
+/* Контейнер с контентом внутри страницы */
+#company-content {
+    /* Большой отступ сверху, чтобы текст не прятался за кнопкой "Назад" */
+    padding-top: calc(90px + env(safe-area-inset-top)) !important;
+    
+    /* Отступ снизу, чтобы можно было прокрутить до конца */
+    padding-bottom: 120px !important;
+    
+    /* Боковые отступы */
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+/* Верхняя панель (Кнопка назад и Тикер) */
+.company-top-bar {
+    /* Фиксируем сверху, чтобы она всегда была видна */
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 50;
+    
+    /* Отступы с учетом "челки" телефона */
+    padding-top: calc(10px + env(safe-area-inset-top)) !important;
+    padding-bottom: 15px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    
+    /* Размытый фон (эффект стекла), чтобы текст под ней размывался */
+    background: rgba(241, 246, 251, 0.85); /* Полупрозрачный фон */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Темная тема для верхней панели */
+body.dark-mode .company-top-bar {
+    background: rgba(15, 23, 42, 0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+  /* ==================================================================== */
         
     </style>
 </head>
