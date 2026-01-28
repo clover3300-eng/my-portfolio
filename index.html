@@ -8393,75 +8393,7 @@ function recalcCustomCoupons() {
       
 
         // --- END OF MONTHLY CALC LOGIC ---
-function updateEchelonTable() {
-    console.log("Запуск обновления таблицы эшелонов..."); // Проверка в консоли
-    const body = document.getElementById('echelon-tickers-body');
-    if(!body) {
-        console.error("Ошибка: элемент echelon-tickers-body не найден!");
-        return;
-    }
-    
-    let html = '';
-    // Проверка наличия данных
-    if (typeof echelonTableData === 'undefined') {
-        console.error("Ошибка: echelonTableData не определена!");
-        return;
-    }
 
-    const maxRows = Math.max(...echelonTableData.map(col => col.length));
-    
-    for(let i = 0; i < maxRows; i++) {
-        html += '<tr>';
-        for(let j = 0; j < 4; j++) {
-            const asset = echelonTableData[j][i];
-            if(asset) {
-                const priceDisplay = asset.target.replace(' ₽', '');
-                // Используем обычные кавычки для надежности
-                html += '<td class="et-cell" onclick="toggleEchelonCell(\'' + i + '-' + j + '\')">' +
-                            '<div class="et-cell-content">' +
-                                '<span class="et-ticker">' + asset.t + '</span>' +
-                                '<span class="et-price">' + priceDisplay + '</span>' +
-                            '</div>' +
-                        '</td>';
-            } else {
-                html += '<td class="et-cell-empty"></td>';
-            }
-        }
-        html += '</tr>';
-        
-        // Скрытая строка деталей
-        html += '<tr class="et-details-row" id="details-row-' + i + '" style="display:none;">' +
-                    '<td colspan="4" class="et-details-container">' +
-                        '<div id="details-content-' + i + '"></div>' +
-                    '</td>' +
-                '</tr>';
-    }
-    
-    body.innerHTML = html;
-
-    // Скрываем строки после 2-й
-    const allRows = body.querySelectorAll('tr:not(.et-details-row)');
-    allRows.forEach((row, index) => {
-        if (index > 1) {
-            row.classList.add('echelon-row-hidden');
-        }
-    });
-
-    // Управление кнопкой
-    let btn = document.getElementById('btn-stocks-more');
-    if (!btn) {
-        btn = document.createElement('button');
-        btn.id = 'btn-stocks-more';
-        btn.className = 'btn-show-more-modern';
-        btn.innerText = 'Развернуть эшелоны';
-        btn.onclick = function() { toggleStocksEchelon(); };
-        const wrapper = document.querySelector('.echelon-wrapper');
-        if (wrapper) wrapper.after(btn);
-    } else {
-        btn.innerText = 'Развернуть эшелоны';
-    }
-    console.log("Таблица успешно отрисована.");
-}
 
 // ПЕРЕКЛЮЧАТЕЛЬ (СТАВИМ РЯДОМ)
 function toggleStocksEchelon() {
