@@ -8393,20 +8393,18 @@ function recalcCustomCoupons() {
       
 
         // --- END OF MONTHLY CALC LOGIC ---
-
-        function updateEchelonTable() {
+function updateEchelonTable() {
     const body = document.getElementById('echelon-tickers-body');
     if(!body) return;
+    
     let html = '';
     const maxRows = Math.max(...echelonTableData.map(col => col.length));
     
     for(let i=0; i<maxRows; i++) {
-        // Основная строка с ячейками
         html += '<tr>';
         for(let j=0; j<4; j++) {
             const asset = echelonTableData[j][i];
             if(asset) {
-                // Убираем знак рубля из отображения в ячейке
                 const priceDisplay = asset.target.replace(' ₽', '');
                 html += `
                 <td class="et-cell" onclick="toggleEchelonCell('${i}-${j}')">
@@ -8420,15 +8418,32 @@ function recalcCustomCoupons() {
             }
         }
         html += '</tr>';
-        
-        // Скрытая строка с деталями
-        html += `<tr class="et-details-row" id="details-row-${i}" style="display:none;">
+        html += `<tr class="et-details-row" id="details-row-${row}" style="display:none;">
             <td colspan="4" class="et-details-container">
                 <div id="details-content-${i}"></div>
             </td>
         </tr>`;
     }
     body.innerHTML = html;
+
+    // --- ВОТ ЭТОТ КУСОК ВЫ ПРОПУСТИЛИ (ЛОГИКА СКРЫТИЯ) ---
+    // Скрываем все строки после первых двух
+    const allRows = body.querySelectorAll('tr:not(.et-details-row)');
+    allRows.forEach((row, index) => {
+        if (index > 1) row.classList.add('echelon-row-hidden');
+    });
+
+    // Создаем кнопку, если её нет
+    if (!document.getElementById('btn-stocks-more')) {
+        const btn = document.createElement('button');
+        btn.id = 'btn-stocks-more';
+        btn.className = 'btn-show-more-modern';
+        btn.innerText = 'Развернуть эшелоны';
+        btn.onclick = toggleStocksEchelon;
+        
+        const wrapper = document.querySelector('.echelon-wrapper');
+        if (wrapper) wrapper.after(btn);
+    }
 }
 
     // Эта функция срабатывает, когда ты нажимаешь на кнопку "Развернуть эшелоны"
@@ -8725,8 +8740,21 @@ function renderOfzList() {
         </div>`;
     });
 
-    ofzHtml += `<button class="btn-show-more-modern" id="btn-ofz-more" onclick="toggleGlobalOfzList()">Показать все аналоги</button>`;
+   if (!document.getElementById('btn-ofz-more')) {
+        ofzHtml += `<button class="btn-show-more-modern" id="btn-ofz-more" onclick="toggleGlobalOfzList()">Показать все аналоги</button>`;
+    }
     container.innerHTML = ofzHtml;
+}
+
+function toggleGlobalOfzList() {
+    const header = document.getElementById('ofz-header-wrapper');
+    const btn = document.getElementById('btn-ofz-more');
+    const rows = document.querySelectorAll('.ofz-row-hidden');
+    
+    const isExpanded = header.classList.toggle('is-expanded');
+    
+    rows.forEach(r => r.style.display = isExpanded ? 'block' : 'none');
+    if (btn) btn.innerText = isExpanded ? 'Скрыть лишние' : 'Показать все аналоги';
 }
     
 // Исправленная функция копирования
