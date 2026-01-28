@@ -5516,68 +5516,81 @@ body.dark-mode .screen::after {
         
   /* ==================================================================== */
 
-       /* 1. Мощный селектор для градиента превью-бокса */
-div[id="rebalance-preview-box"], 
-.rebalance-preview-box, 
-#rebalance-summary {
+      /* 1. ФИНАЛЬНЫЙ ГРАДИЕНТ (Пробиваем через все приоритеты) */
+#rebalance-summary, .rebalance-preview-box, #rebalance-result-box {
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
-    border: none !important;
-    border-radius: 16px !important;
     color: white !important;
+    border-radius: 16px !important;
     padding: 20px !important;
-    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.3) !important;
+    box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3) !important;
+    border: none !important;
 }
 
-/* 2. Обновленный элемент цены с заголовком */
-.ofz-lux-price-wrapper {
+/* 2. Заголовки столбцов (Quiet Luxury) */
+.ofz-table-header {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
+    justify-content: space-between;
+    padding: 0 10px 8px 10px;
+    margin-top: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-.ofz-price-label {
-    font-size: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-secondary);
+.dark-mode .ofz-table-header { border-bottom-color: rgba(255,255,255,0.05); }
+
+.h-label {
+    font-size: 10px;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
 }
 
-.ofz-lux-price-tag {
+/* 3. Выравнивание строки (всё в одну линию) */
+.ofz-luxury-item {
     display: flex;
-    align-items: center;
-    gap: 5px;
-    background: rgba(0, 0, 0, 0.04);
-    padding: 4px 10px;
-    border-radius: 8px;
+    align-items: center; /* Центрируем по вертикали */
+    padding: 14px 10px;
+    gap: 0;
+}
+
+.ofz-lux-right {
+    display: flex;
+    align-items: center; /* Проценты и рубли теперь строго на одной линии */
+    gap: 15px; /* Расстояние между доходностью и ценой */
+    flex-shrink: 0;
+}
+
+.ofz-lux-yield {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-green);
+}
+
+.ofz-lux-price-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
     font-weight: 600;
+    color: var(--text-main);
+    width: 75px; /* Фиксированная ширина для ровности колонки */
+    text-align: right;
 }
 
-.dark-mode .ofz-lux-price-tag {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-/* 3. Синее выделение кода (ISIN) */
-.copy-container-blue {
+/* 4. Копирование текстом (без плашки) */
+.copy-text-blue {
+    color: #3498db;
+    cursor: pointer;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: rgba(52, 152, 219, 0.1); /* Нежно-синий фон */
-    color: #3498db; /* Ярко-синий текст */
-    padding: 4px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 700;
-    transition: all 0.2s ease;
-    border: 1px solid rgba(52, 152, 219, 0.2);
+    gap: 5px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background 0.2s;
 }
 
-.copy-container-blue:active {
-    transform: scale(0.95);
-    background: rgba(52, 152, 219, 0.2);
+.copy-text-blue:active {
+    background: rgba(52, 152, 219, 0.1);
 }
          /* ==================================================================== */
         
@@ -8337,65 +8350,59 @@ function openCompanyFromTable(event, ticker, companyName) {
     }
 }
     
-    function renderOfzList() {
+function renderOfzList() {
     if (typeof bonds === 'undefined' || bonds.length === 0) return;
     
-    let ofzHtml = '';
+    // Генерируем заголовки столбцов
+    let ofzHtml = `
+        <div class="ofz-table-header">
+            <span class="h-label">Инструмент</span>
+            <div style="display:flex; gap:35px; padding-right:15px;">
+                <span class="h-label">Доходн.</span>
+                <span class="h-label">Цена (₽)</span>
+            </div>
+        </div>
+    `;
     
     bonds.forEach((b, index) => {
         const details = bondDetailsMap[b.t] || { 
-            matDate: '—', 
-            couponValue: 0, 
-            nextCoupon: '—', 
-            couponYield: '—', 
-            freq: 0 
+            matDate: '—', couponValue: 0, nextCoupon: '—', couponYield: '—', freq: 0 
         };
         
         const hiddenClass = index > 2 ? 'ofz-row-hidden' : '';
-        const dotClass = parseFloat(b.p) < 100 ? 'dot-discount' : 'dot-premium';
         
-        // РАСЧЕТ ЦЕНЫ В РУБЛЯХ (Цена % * 10)
-        const priceInRub = (parseFloat(b.p) * 10).toFixed(2);
+        // КОРРЕКТНАЯ МАТЕМАТИКА: 52% -> 520.00 руб
+        const rawPrice = parseFloat(b.p);
+        const priceInRub = (rawPrice * 10).toFixed(2);
         
         ofzHtml += `
         <div class="ofz-row-container ${hiddenClass}">
             <div class="ofz-luxury-item" onclick="toggleOfzDetails('details-${b.t}')">
-                <div class="ofz-lux-left">
-                    <div class="ofz-lux-name">${limitName(b.n)}</div>
-                </div>
-                
+                <div class="ofz-lux-name">${limitName(b.n)}</div>
                 <div class="ofz-lux-bridge"></div>
-                
                 <div class="ofz-lux-right">
                     <div class="ofz-lux-yield">${b.y}</div>
-                    
-                    <div class="ofz-lux-price-wrapper">
-                        <span class="ofz-price-label">Цена</span>
-                        <div class="ofz-lux-price-tag">
-                            <span class="parity-dot ${dotClass}"></span>
-                            ${priceInRub} ₽
-                        </div>
-                    </div>
+                    <div class="ofz-lux-price-value">${priceInRub}</div>
                 </div>
             </div>
             
             <div id="details-${b.t}" class="ofz-lux-details">
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">КОД (ISIN)</span>
-                    <div class="copy-container-blue" onclick="copyTicker('${b.t}', this)">
-                        <span>${b.t}</span>
+                    <span class="copy-text-blue" onclick="copyTicker('${b.t}', this)">
+                        ${b.t}
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    </div>
+                    </span>
                 </div>
                 
                 <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">РЫНОЧНАЯ ЦЕНА</span>
-                    <span class="ofz-lux-detail-value">${priceInRub} ₽ <small style="opacity:0.6">(${b.p}%)</small></span>
+                    <span class="ofz-lux-detail-label">ЦЕНА В РУБЛЯХ</span>
+                    <span class="ofz-lux-detail-value">${priceInRub} ₽</span>
                 </div>
                 
                 <div class="ofz-lux-detail-row">
                     <span class="ofz-lux-detail-label">НКД</span>
-                    <span class="ofz-lux-detail-value">${Math.round(b.nkd*100)/100} ₽</span>
+                    <span class="ofz-lux-detail-value">${Math.round(b.nkd * 100) / 100} ₽</span>
                 </div>
                 
                 <div class="ofz-lux-detail-row">
@@ -8409,12 +8416,12 @@ function openCompanyFromTable(event, ticker, companyName) {
                 </div>
                 
                 <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">БЛИЖАЙШИЙ КУПОН</span>
+                    <span class="ofz-lux-detail-label">ДАТА БЛИЖ. КУПОНА</span>
                     <span class="ofz-lux-detail-value">${details.nextCoupon}</span>
                 </div>
                 
                 <div class="ofz-lux-detail-row">
-                    <span class="ofz-lux-detail-label">ТЕКУЩАЯ КУПОННАЯ ДОХОДНОСТЬ</span>
+                    <span class="ofz-lux-detail-label">КУПОННАЯ ДОХОДНОСТЬ</span>
                     <span class="ofz-lux-detail-value" style="color:var(--accent-blue)">${details.couponYield}%</span>
                 </div>
                 
@@ -8433,6 +8440,7 @@ function openCompanyFromTable(event, ticker, companyName) {
     
     document.getElementById('ofz-list').innerHTML = ofzHtml;
 }
+    
     function copyTicker(text, el) {
     navigator.clipboard.writeText(text).then(() => {
         // Эффект временного изменения текста
