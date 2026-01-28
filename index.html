@@ -5495,65 +5495,65 @@ body.dark-mode .screen::after {
 
   /* ==================================================================== */
 
-        /* === ФИКС СТРАНИЦЫ КОМПАНИИ === */
+      /* === ГЛОБАЛЬНЫЙ ФИКС СКРОЛЛА И СВАЙПА === */
 
-#screen-company {
-    /* 1. Разрешаем вертикальный скролл */
+.screen {
+    /* 1. Экран занимает всё место, но разрешает скролл внутри себя */
+    position: fixed !important;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100% !important;
+    height: 100% !important;
+    
+    /* 2. Самое важное: разрешаем вертикальную прокрутку */
     overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch; /* Плавность на iPhone */
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch; /* Плавность на iOS */
     
-    /* 2. Гарантируем высоту на весь экран */
-    height: 100vh !important;
-    display: block !important;
-    
-    /* 3. Сбрасываем общие отступы, чтобы настроить их точечно */
+    /* 3. Убираем лишние отступы самого контейнера */
     padding: 0 !important;
     box-sizing: border-box;
     
-    /* 4. Важно: чтобы скролл не конфликтовал со свайпом */
-    overscroll-behavior-y: contain;
+    /* 4. Фон должен быть задан явно */
+    background: var(--bg-color);
 }
 
-/* Контейнер с контентом внутри страницы */
+/* Исправляем отступы для Главной, Портфеля и Интересного */
+#screen-home, #screen-portfolio, #screen-assets, #screen-interesting, #screen-app {
+    /* Добавляем внутренний отступ, чтобы контент не прилипал к верху */
+    padding-top: env(safe-area-inset-top) !important;
+    padding-bottom: 40px !important;
+}
+
+/* === ФИКС КОНКРЕТНО ЭКРАНА КОМПАНИИ === */
+#screen-company {
+    background: var(--bg-color);
+    z-index: 200; /* Поверх всех */
+}
+
+/* Контент внутри компании */
 #company-content {
-    /* Большой отступ сверху, чтобы текст не прятался за кнопкой "Назад" */
-    padding-top: calc(90px + env(safe-area-inset-top)) !important;
-    
-    /* Отступ снизу, чтобы можно было прокрутить до конца */
-    padding-bottom: 120px !important;
-    
-    /* Боковые отступы */
+    /* Отступ сверху, чтобы текст не наезжал на кнопку "Назад" */
+    /* 60px - примерная высота кнопки + отступ */
+    padding-top: calc(60px + env(safe-area-inset-top)) !important;
+    padding-bottom: 50px !important;
     padding-left: 16px;
     padding-right: 16px;
 }
 
-/* Верхняя панель (Кнопка назад и Тикер) */
+/* Кнопка назад и тикер */
 .company-top-bar {
-    /* Фиксируем сверху, чтобы она всегда была видна */
-    position: fixed !important;
+    position: absolute !important; /* Absolute работает лучше внутри скролла */
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 50;
+    z-index: 10;
+    padding: 16px !important;
+    padding-top: calc(16px + env(safe-area-inset-top)) !important;
     
-    /* Отступы с учетом "челки" телефона */
-    padding-top: calc(10px + env(safe-area-inset-top)) !important;
-    padding-bottom: 15px !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    
-    /* Размытый фон (эффект стекла), чтобы текст под ней размывался */
-    background: rgba(241, 246, 251, 0.85); /* Полупрозрачный фон */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    /* Прозрачный фон для читаемости */
+    background: linear-gradient(to bottom, var(--bg-color) 80%, rgba(255,255,255,0));
 }
 
-/* Темная тема для верхней панели */
-body.dark-mode .company-top-bar {
-    background: rgba(15, 23, 42, 0.85);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
   /* ==================================================================== */
         
     </style>
@@ -8643,6 +8643,8 @@ function openCompanyFromTable(event, ticker, companyName) {
     `;
     
     content.innerHTML = html;
+
+             document.getElementById('screen-company').scrollTop = 0; 
             // Загружаем новости асинхронно после отрисовки страницы
     loadAndDisplayNews(item.t);
     showScreen('screen-company');
