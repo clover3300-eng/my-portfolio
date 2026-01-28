@@ -10021,20 +10021,17 @@ function initSwipeBack() {
 
 initSwipeBack();
 
-    // ========== EVOLUTION TERMINAL LOGIC ==========
-
-// 1. Переключение вкладок
-// ========== EVOLUTION TERMINAL LOGIC v2 ==========
 
 // ========== EVOLUTION TERMINAL LOGIC (FINAL) ==========
+// ========== EVOLUTION TERMINAL LOGIC (FINAL & FIXED) ==========
 
 // Хелпер для форматирования цифр внутри текста в Mono шрифт
 function formatWithMono(text) {
     if (!text) return '';
-    // Заменяем любые последовательности цифр на span с классом num-mono
     return String(text).replace(/(\d+)/g, '<span class="num-mono">$1</span>');
 }
 
+// 1. Переключение вкладок
 function switchEvoTab(index) {
     const glider = document.getElementById('evoGlider');
     const btns = document.querySelectorAll('.evo-tab-btn');
@@ -10045,32 +10042,39 @@ function switchEvoTab(index) {
         glider.style.transform = 'translateX(0)';
         tabOfz.style.display = 'block';
         tabStocks.style.display = 'none';
-        renderEvoRebalance(); 
+        
+        // Проверяем, существует ли функция перед вызовом
+        if (typeof renderEvoRebalance === 'function') {
+            renderEvoRebalance();
+        }
     } else {
         glider.style.transform = 'translateX(100%)';
         tabOfz.style.display = 'none';
         tabStocks.style.display = 'block';
-        renderEvoStocks(); 
+        
+        if (typeof renderEvoStocks === 'function') {
+            renderEvoStocks();
+        }
     }
 
     btns.forEach((btn, i) => {
         if(i === index) btn.classList.add('active');
         else btn.classList.remove('active');
     });
-    
-    function renderEvoRebalance() {
+} // <--- ВОТ ЭТОЙ СКОБКИ НЕ ХВАТАЛО! Теперь функция закрыта.
+
+// 2. Рендер ОФЗ (Исправлен и вынесен наружу)
+function renderEvoRebalance() {
     const container = document.getElementById('evo-ofz-list');
     if (!container || !bonds || bonds.length === 0) return;
 
     let html = '';
     bonds.forEach((b, i) => {
         const delay = i * 0.05; 
-        // Получаем все оригинальные детали
         const details = bondDetailsMap[b.t] || { couponValue: 0, matDate: '-', nextCoupon: '-', freq: 0 };
         
-        // Форматируем Название (Тикер) с Mono цифрами
+        // Форматируем Название и Подстроку
         const formattedTicker = formatWithMono(b.n);
-        // Форматируем Подстроку (Название инструмента) с Mono цифрами
         const formattedSub = formatWithMono(b.t);
 
         html += `
@@ -10107,14 +10111,13 @@ function switchEvoTab(index) {
     container.innerHTML = html;
 }
 
+// 3. Рендер Акций (Исправлен и вынесен наружу)
 function renderEvoStocks() {
     const grid = document.getElementById('evo-stocks-grid');
     if (!grid || !echelonTableData) return;
 
-    // Очищаем и подготавливаем контейнер
     grid.innerHTML = '';
     
-    // Создаем обертку для колонок
     let columnsHtml = '';
     for (let i = 0; i < 4; i++) {
         let colHtml = `<div class="evo-grid-col">`;
@@ -10125,11 +10128,8 @@ function renderEvoStocks() {
 
         if (echelonTableData[i]) {
             echelonTableData[i].forEach((asset, idx) => {
-                // Если индекс > 3 (то есть 5-й элемент и далее), добавляем класс скрытия
                 const hiddenClass = idx > 3 ? 'evo-card-hidden' : '';
                 const delay = idx * 0.03;
-                
-                // Форматируем тикер с Mono цифрами (если есть)
                 const formattedTicker = formatWithMono(asset.t);
 
                 colHtml += `
@@ -10141,18 +10141,15 @@ function renderEvoStocks() {
                 `;
             });
         }
-        colHtml += `</div>`; // Закрыть колонку
+        colHtml += `</div>`;
         columnsHtml += colHtml;
     }
     
     grid.innerHTML = columnsHtml;
 
-    // Добавляем кнопку "Показать все" ПОД сеткой
-    // Проверяем, есть ли скрытые элементы
+    // Кнопка "Показать все"
     const hasHidden = grid.querySelectorAll('.evo-card-hidden').length > 0;
-    
     if (hasHidden) {
-        // Удаляем старую кнопку если есть
         const oldBtn = document.getElementById('evo-stocks-toggle-btn');
         if(oldBtn) oldBtn.remove();
 
@@ -10162,14 +10159,12 @@ function renderEvoStocks() {
         btn.innerHTML = 'Показать все стратегии';
         btn.onclick = function() {
             const hiddenCards = grid.querySelectorAll('.evo-card-hidden');
-            const isExpanding = hiddenCards.length > 0; // Если есть скрытые, значит мы раскрываем
+            const isExpanding = hiddenCards.length > 0;
 
             if (isExpanding) {
-                // Раскрываем
                 grid.querySelectorAll('.evo-card').forEach(c => c.classList.remove('evo-card-hidden'));
                 this.innerHTML = 'Свернуть';
             } else {
-                // Сворачиваем (восстанавливаем логику > 3)
                 const cols = grid.querySelectorAll('.evo-grid-col');
                 cols.forEach(col => {
                     const cards = col.querySelectorAll('.evo-card');
@@ -10178,25 +10173,22 @@ function renderEvoStocks() {
                     });
                 });
                 this.innerHTML = 'Показать все стратегии';
-                // Скролл чуть вверх, чтобы было удобно
                 grid.scrollIntoView({behavior: 'smooth', block: 'start'});
             }
         };
-        // Вставляем кнопку после сетки
         grid.parentNode.appendChild(btn); 
     }
 }
 
+// 4. Логика Аккордеона
 function toggleEvoAccordion(element) {
     const details = element.querySelector('.evo-ofz-details');
     details.classList.toggle('open');
 }
 
-
-// 5. Kinetic Typography (Эффект слота)
+// 5. Анимация цифр
 function animateValue(obj) {
     const originalText = obj.innerText;
-    // Если это не число, выходим
     if(!/\d/.test(originalText)) return;
     
     let startTimestamp = null;
@@ -10205,14 +10197,11 @@ function animateValue(obj) {
     const step = (timestamp) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        
-        // Генерируем случайные цифры пока идет анимация
         if (progress < 1) {
             obj.innerText = Math.floor(Math.random() * 1000);
         } else {
             obj.innerText = originalText;
         }
-        
         if (progress < 1) {
             window.requestAnimationFrame(step);
         }
@@ -10220,7 +10209,7 @@ function animateValue(obj) {
     window.requestAnimationFrame(step);
 }
 
-// 6. Spotlight Effect (Умный свет)
+// 6. Инициализация света
 function initSpotlight() {
     const cards = document.querySelectorAll('.evo-card');
     cards.forEach(card => {
@@ -10234,11 +10223,8 @@ function initSpotlight() {
     });
 }
 
-// 7. ВАЖНО: Подключение к твоей функции загрузки
-// Найди в коде функцию loadData() и в самом конце (перед catch) добавь:
-// renderEvoRebalance();
 
-    
+
 
 
 
