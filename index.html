@@ -5297,72 +5297,193 @@ body.dark-mode .noise-overlay {
     margin: 0;
 }
 
-/* === 6. ВКЛАДКИ ОФЗ / АКЦИИ === */
+/* === 6. LIQUID TAB SWITCHER (Evolution Luxury) === */
 .rebalance-tabs-container {
-    margin: 30px 0 20px;
+    position: sticky;
+    top: 10px;
+    z-index: 100;
+    margin: 20px 0 30px;
+    padding: 0 4px;
 }
 
-.rebalance-tabs {
+.tab-switcher {
+    position: relative;
     display: flex;
-    gap: 8px;
+    align-items: center;
     padding: 6px;
-    background: var(--card-glass-aurora);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--card-border-aurora);
-    border-radius: 16px;
-    box-shadow: var(--shadow-luxury);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 100px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.rebalance-tab {
+body.dark-mode .tab-switcher {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Глайдер (плавающий индикатор) */
+.tab-glider {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: calc(50% - 6px);
+    height: calc(100% - 12px);
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 100px;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.3);
+}
+
+/* Когда активна вкладка "Акции" - глайдер вправо */
+.tab-switcher.show-stocks .tab-glider {
+    transform: translateX(100%);
+}
+
+/* Кнопки вкладок */
+.tab-btn {
     flex: 1;
+    position: relative;
+    z-index: 2;
     padding: 14px 20px;
-    border: none;
     background: transparent;
+    border: none;
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-slate);
-    border-radius: 12px;
+    color: #64748b;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-.rebalance-tab::before {
+.tab-btn.active {
+    color: white;
+}
+
+body.dark-mode .tab-btn {
+    color: #64748b;
+}
+
+body.dark-mode .tab-btn.active {
+    color: white;
+}
+
+.tab-btn-icon {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.tab-btn:hover .tab-btn-icon {
+    transform: scale(1.1);
+}
+
+/* === 7. КАРТОЧКА "УМНАЯ ЗАМЕНА" (Dark Premium Glass) === */
+.smart-replace-card {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.3);
+    overflow: hidden;
+    cursor: default;
+}
+
+/* Spotlight эффект при наведении */
+.smart-replace-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, transparent 70%);
+    background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 50%
+    );
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
-.rebalance-tab:hover::before {
+.smart-replace-card:hover::before {
+    opacity: 1;
+}
+
+/* Иконка */
+.smart-replace-icon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.smart-replace-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Текст */
+.smart-replace-content {
+    flex: 1;
+}
+
+.smart-replace-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.02em;
+}
+
+.smart-replace-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* === 8. ЗАГОЛОВКИ СПИСКА (List Headers) === */
+.list-headers {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px 12px;
+    margin-bottom: 0;
+}
+
+.list-header-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-deep);
     opacity: 0.5;
 }
 
-.rebalance-tab.active {
-    background: white;
-    color: var(--text-deep);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-body.dark-mode .rebalance-tab.active {
-    background: rgba(255, 255, 255, 0.15);
-    color: var(--text-deep);
-}
-
-.rebalance-tab-icon {
-    margin-right: 8px;
-    font-size: 16px;
-}
-
-/* === 7. КОНТЕНТ ВКЛАДОК === */
+/* === 9. КОНТЕНТ ВКЛАДОК === */
 .rebalance-tab-content {
     display: none;
     animation: tabFadeIn 0.4s ease;
@@ -6711,37 +6832,45 @@ body.dark-mode .stocks-cell {
     <!-- Заголовок -->
     <div class="header"><h1>Ребалансировка</h1></div>
     
-    <!-- Информационный блок -->
-    <div class="rebalance-intro-modern">
-        <div class="ri-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+    <!-- Карточка "Умная замена" (Dark Premium Glass) -->
+    <div class="smart-replace-card" id="smartReplaceCard">
+        <div class="smart-replace-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M4.9 19.1L19.1 4.9"/>
             </svg>
         </div>
-        <div class="rebalance-text-block">
-            <h2 class="rebalance-card-title">Ребалансировка</h2>
-            <p class="rebalance-card-desc">
-                Пересмотр состава активов. Продаем то, что выросло или имеет низкий потенциал, покупаем недооцененные инструменты из списков ниже.
+        <div class="smart-replace-content">
+            <h2 class="smart-replace-title">Умная замена</h2>
+            <p class="smart-replace-desc">
+                Пересмотр состава активов. Продаём то, что выросло или имеет низкий потенциал, покупаем недооценённые инструменты из списков ниже.
             </p>
         </div>
     </div>
 
-    <!-- ВКЛАДКИ ОФЗ / АКЦИИ -->
+    <!-- LIQUID TAB SWITCHER -->
     <div class="rebalance-tabs-container">
-        <div class="rebalance-tabs">
-            <button class="rebalance-tab active" onclick="switchRebalanceTab('ofz')">
-                <span class="rebalance-tab-icon">🛡️</span>ОФЗ
+        <div class="tab-switcher" id="tabSwitcher">
+            <!-- Глайдер (плавающий индикатор) -->
+            <div class="tab-glider"></div>
+            
+            <!-- Кнопки вкладок -->
+            <button class="tab-btn active" onclick="switchRebalanceTab('ofz')" data-tab="ofz">
+                <span class="tab-btn-icon">🛡️</span>ОФЗ
             </button>
-            <button class="rebalance-tab" onclick="switchRebalanceTab('stocks')">
-                <span class="rebalance-tab-icon">📈</span>АКЦИИ
+            <button class="tab-btn" onclick="switchRebalanceTab('stocks')" data-tab="stocks">
+                <span class="tab-btn-icon">📈</span>АКЦИИ
             </button>
         </div>
     </div>
 
     <!-- КОНТЕНТ ВКЛАДКИ ОФЗ -->
     <div id="rebalance-tab-ofz" class="rebalance-tab-content active">
+        <!-- Заголовки списка -->
+        <div class="list-headers">
+            <span class="list-header-text">ИНСТРУМЕНТ</span>
+            <span class="list-header-text">ДОХОДН. / ЦЕНА</span>
+        </div>
+        
         <div id="ofz-aurora-list" class="ofz-aurora-list">
             <!-- Динамически заполняется через JS -->
         </div>
@@ -9064,22 +9193,27 @@ function renderOfzList() {
 // AURORA REBALANCE - НОВЫЕ ФУНКЦИИ ДЛЯ ВКЛАДОК
 // ========================================================================
 
-// Переключение вкладок ОФЗ / АКЦИИ
+// Переключение вкладок ОФЗ / АКЦИИ (Liquid Tab Switcher)
 function switchRebalanceTab(tabName) {
-    // Убираем активный класс со всех вкладок
-    document.querySelectorAll('.rebalance-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
+    const tabSwitcher = document.getElementById('tabSwitcher');
+    const tabs = document.querySelectorAll('.tab-btn');
+    
+    // Убираем активный класс со всех кнопок
+    tabs.forEach(tab => tab.classList.remove('active'));
     
     // Скрываем весь контент
     document.querySelectorAll('.rebalance-tab-content').forEach(content => {
         content.classList.remove('active');
     });
     
-    // Активируем нужную вкладку
-    const tabs = document.querySelectorAll('.rebalance-tab');
-    const tabIndex = tabName === 'ofz' ? 0 : 1;
-    tabs[tabIndex].classList.add('active');
+    // Управляем глайдером
+    if (tabName === 'stocks') {
+        tabSwitcher.classList.add('show-stocks');
+        tabs[1].classList.add('active');
+    } else {
+        tabSwitcher.classList.remove('show-stocks');
+        tabs[0].classList.add('active');
+    }
     
     // Показываем нужный контент
     document.getElementById(`rebalance-tab-${tabName}`).classList.add('active');
@@ -9094,6 +9228,23 @@ function switchRebalanceTab(tabName) {
         renderAuroraStocksTable();
     }
 }
+
+// Инициализация Spotlight эффекта для карточки "Умная замена"
+function initSmartReplaceSpotlight() {
+    const card = document.getElementById('smartReplaceCard');
+    if (!card) return;
+    
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        card.style.setProperty('--mouse-x', x + '%');
+        card.style.setProperty('--mouse-y', y + '%');
+    });
+}
+
+// Вызываем инициализацию при загрузке
+document.addEventListener('DOMContentLoaded', initSmartReplaceSpotlight);
 
 // Рендер списка ОФЗ в Aurora стиле
 function renderAuroraOfzList() {
