@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -60,6 +59,19 @@
             --claude-accent-subtle: rgba(217, 119, 87, 0.1);
             --claude-text-primary: #1a1a1a;
             --claude-text-secondary: #6b6b6b;
+            
+            /* === AURORA DESIGN TOKENS === */
+            --bg-base: #F3F4F6;
+            --aurora-blue: rgba(59, 130, 246, 0.15);
+            --aurora-green: rgba(16, 185, 129, 0.1);
+            --aurora-orange: rgba(249, 115, 22, 0.08);
+            --text-deep: #0F172A;
+            --text-slate: #64748B;
+            --text-muted: #94A3B8;
+            --card-glass-aurora: rgba(255, 255, 255, 0.65);
+            --card-border-aurora: rgba(255, 255, 255, 0.4);
+            --shadow-luxury: 0 20px 40px -10px rgba(15, 23, 42, 0.05);
+            --accent-purple: #8B5CF6;
         }
 
                 /* ========== ОТКЛЮЧЕНИЕ ЭФФЕКТА РЕЗИНКИ ========== */
@@ -111,6 +123,19 @@
             --claude-accent-subtle: rgba(232, 149, 106, 0.15);
             --claude-text-primary: #f1f5f9;
             --claude-text-secondary: #94a3b8;
+            
+            /* === AURORA DARK MODE TOKENS === */
+            --bg-base: #0f172a;
+            --aurora-blue: rgba(59, 130, 246, 0.12);
+            --aurora-green: rgba(16, 185, 129, 0.08);
+            --aurora-orange: rgba(249, 115, 22, 0.06);
+            --text-deep: #f1f5f9;
+            --text-slate: #94a3b8;
+            --text-muted: #64748B;
+            --card-glass-aurora: rgba(30, 41, 59, 0.75);
+            --card-border-aurora: rgba(255, 255, 255, 0.1);
+            --shadow-luxury: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+            --accent-purple: #A78BFA;
         }
 
         body {
@@ -5130,6 +5155,722 @@ body.dark-mode .screen::after {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
 }
+
+/* ========================================================================
+   AURORA REBALANCE DESIGN - НОВЫЙ ДИЗАЙН ВКЛАДКИ РЕБАЛАНСИРОВКА
+   ======================================================================== */
+
+/* === 1. ОСНОВНОЙ КОНТЕЙНЕР ЭКРАНА === */
+#screen-assets {
+    position: relative;
+    background: var(--bg-base);
+    min-height: 100vh;
+    margin: -16px;
+    padding: 20px 16px 140px 16px;
+    overflow: hidden;
+}
+
+/* === 2. AURORA MESH GRADIENT BACKGROUND === */
+#screen-assets::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-base);
+    z-index: -2;
+}
+
+#screen-assets::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Aurora Floating Spots */
+.aurora-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.aurora-spot {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: auroraFloat 15s ease-in-out infinite;
+}
+
+.aurora-spot.blue {
+    width: 400px;
+    height: 400px;
+    background: var(--aurora-blue);
+    top: -10%;
+    right: -10%;
+    animation-delay: 0s;
+}
+
+.aurora-spot.green {
+    width: 350px;
+    height: 350px;
+    background: var(--aurora-green);
+    bottom: 20%;
+    left: -15%;
+    animation-delay: -5s;
+}
+
+.aurora-spot.orange {
+    width: 300px;
+    height: 300px;
+    background: var(--aurora-orange);
+    top: 40%;
+    right: 10%;
+    animation-delay: -10s;
+}
+
+@keyframes auroraFloat {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translate(30px, -20px) scale(1.1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(-20px, 30px) scale(0.95);
+        opacity: 0.7;
+    }
+    75% {
+        transform: translate(15px, 15px) scale(1.05);
+        opacity: 0.75;
+    }
+}
+
+/* === 3. NOISE OVERLAY === */
+.noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+}
+
+body.dark-mode .noise-overlay {
+    opacity: 0.04;
+}
+
+/* === 4. КОНТЕНТ ПОВЕРХ ФОНА === */
+#screen-assets > *:not(.aurora-container):not(.noise-overlay) {
+    position: relative;
+    z-index: 2;
+}
+
+/* === 5. ЗАГОЛОВОК ЭКРАНА === */
+#screen-assets .header {
+    padding: 10px 0 20px;
+}
+
+#screen-assets .header h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-deep);
+    margin: 0;
+}
+
+/* === 6. ВКЛАДКИ ОФЗ / АКЦИИ === */
+.rebalance-tabs-container {
+    margin: 30px 0 20px;
+}
+
+.rebalance-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 6px;
+    background: var(--card-glass-aurora);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border-aurora);
+    border-radius: 16px;
+    box-shadow: var(--shadow-luxury);
+}
+
+.rebalance-tab {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-slate);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.rebalance-tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.rebalance-tab:hover::before {
+    opacity: 0.5;
+}
+
+.rebalance-tab.active {
+    background: white;
+    color: var(--text-deep);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+body.dark-mode .rebalance-tab.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--text-deep);
+}
+
+.rebalance-tab-icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* === 7. КОНТЕНТ ВКЛАДОК === */
+.rebalance-tab-content {
+    display: none;
+    animation: tabFadeIn 0.4s ease;
+}
+
+.rebalance-tab-content.active {
+    display: block;
+}
+
+@keyframes tabFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === 8. НОВЫЙ ДИЗАЙН СПИСКА ОФЗ === */
+.ofz-aurora-list {
+    background: var(--card-glass-aurora);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border-aurora);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-luxury);
+}
+
+/* Строка ОФЗ */
+.ofz-aurora-item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: staggerIn 0.4s ease forwards;
+}
+
+body.dark-mode .ofz-aurora-item {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.ofz-aurora-item:last-child {
+    border-bottom: none;
+}
+
+/* Stagger Animation */
+@keyframes staggerIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ofz-aurora-item:nth-child(1) { animation-delay: 0.05s; }
+.ofz-aurora-item:nth-child(2) { animation-delay: 0.1s; }
+.ofz-aurora-item:nth-child(3) { animation-delay: 0.15s; }
+.ofz-aurora-item:nth-child(4) { animation-delay: 0.2s; }
+.ofz-aurora-item:nth-child(5) { animation-delay: 0.25s; }
+.ofz-aurora-item:nth-child(6) { animation-delay: 0.3s; }
+.ofz-aurora-item:nth-child(7) { animation-delay: 0.35s; }
+.ofz-aurora-item:nth-child(8) { animation-delay: 0.4s; }
+.ofz-aurora-item:nth-child(9) { animation-delay: 0.45s; }
+.ofz-aurora-item:nth-child(10) { animation-delay: 0.5s; }
+
+/* Spotlight эффект при наведении */
+.ofz-aurora-item:hover {
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.5) 0%, transparent 60%);
+}
+
+body.dark-mode .ofz-aurora-item:hover {
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.08) 0%, transparent 60%);
+}
+
+/* Свернутая строка (Summary) */
+.ofz-aurora-summary {
+    display: flex;
+    align-items: baseline;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ofz-aurora-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-deep);
+    white-space: nowrap;
+}
+
+/* Пунктирный мостик */
+.ofz-aurora-bridge {
+    flex: 1;
+    border-bottom: 1px dotted var(--text-muted);
+    margin: 0 12px;
+    position: relative;
+    top: -4px;
+    opacity: 0.4;
+}
+
+.ofz-aurora-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ofz-aurora-yield {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-green);
+    background: rgba(16, 185, 129, 0.1);
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+.ofz-aurora-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-slate);
+    min-width: 70px;
+    text-align: right;
+}
+
+/* Раскрытые детали (Аккордеон) */
+.ofz-aurora-details {
+    display: none;
+    padding: 0 20px 20px;
+    animation: accordionOpen 0.3s ease;
+}
+
+.ofz-aurora-item.expanded .ofz-aurora-details {
+    display: block;
+}
+
+@keyframes accordionOpen {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ofz-aurora-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: rgba(139, 92, 246, 0.04);
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+body.dark-mode .ofz-aurora-details-grid {
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(139, 92, 246, 0.15);
+}
+
+.ofz-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ofz-detail-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+.ofz-detail-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-deep);
+}
+
+.ofz-detail-value.highlight {
+    color: var(--accent-purple);
+}
+
+/* Кнопка графика */
+.ofz-aurora-chart-btn {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--accent-purple) 0%, #7C3AED 100%);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ofz-aurora-chart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+}
+
+/* Код для копирования */
+.ofz-copy-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ofz-copy-code:hover {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+/* === 9. КНОПКА "ПОКАЗАТЬ ВСЕ" === */
+.aurora-show-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 20px 0 30px;
+    padding: 14px 24px;
+    background: var(--card-glass-aurora);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px dashed var(--text-muted);
+    border-radius: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-slate);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.aurora-show-more:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.aurora-show-more.open {
+    border-style: solid;
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+.aurora-show-more-icon {
+    transition: transform 0.3s ease;
+}
+
+.aurora-show-more.open .aurora-show-more-icon {
+    transform: rotate(180deg);
+}
+
+/* === 10. СКРЫТИЕ СТРОК ОФЗ === */
+.ofz-aurora-item.aurora-hidden {
+    display: none !important;
+}
+
+/* === 11. ВКЛАДКА АКЦИИ - ТАБЛИЦА ЭШЕЛОНОВ === */
+.stocks-aurora-container {
+    background: var(--card-glass-aurora);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border-aurora);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--shadow-luxury);
+}
+
+.stocks-echelon-info {
+    margin-bottom: 20px;
+}
+
+.echelon-info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateX(-10px);
+    animation: echelonSlideIn 0.4s ease forwards;
+}
+
+body.dark-mode .echelon-info-card {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.echelon-info-card:nth-child(1) { animation-delay: 0.1s; }
+.echelon-info-card:nth-child(2) { animation-delay: 0.2s; }
+.echelon-info-card:nth-child(3) { animation-delay: 0.3s; }
+.echelon-info-card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes echelonSlideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.echelon-info-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.echelon-info-text {
+    flex: 1;
+}
+
+.echelon-info-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-deep);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.echelon-badge {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    border-radius: 20px;
+}
+
+.echelon-badge.e1 {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+}
+
+.echelon-badge.e2 {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3B82F6;
+}
+
+.echelon-badge.e3 {
+    background: rgba(245, 158, 11, 0.15);
+    color: #F59E0B;
+}
+
+.echelon-badge.e4 {
+    background: rgba(239, 68, 68, 0.15);
+    color: #EF4444;
+}
+
+.echelon-info-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--text-slate);
+    line-height: 1.5;
+}
+
+/* Таблица эшелонов */
+.stocks-aurora-table {
+    margin-top: 20px;
+}
+
+.stocks-table-header {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.stocks-header-pill {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    border: 2px solid;
+}
+
+.stocks-header-pill.e1 {
+    color: #10B981;
+    border-color: #10B981;
+    background: rgba(16, 185, 129, 0.08);
+}
+
+.stocks-header-pill.e2 {
+    color: #3B82F6;
+    border-color: #3B82F6;
+    background: rgba(59, 130, 246, 0.08);
+}
+
+.stocks-header-pill.e3 {
+    color: #F59E0B;
+    border-color: #F59E0B;
+    background: rgba(245, 158, 11, 0.08);
+}
+
+.stocks-header-pill.e4 {
+    color: #EF4444;
+    border-color: #EF4444;
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.stocks-table-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stocks-table-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    opacity: 0;
+    animation: staggerIn 0.3s ease forwards;
+}
+
+.stocks-table-row:nth-child(1) { animation-delay: 0.1s; }
+.stocks-table-row:nth-child(2) { animation-delay: 0.15s; }
+.stocks-table-row:nth-child(3) { animation-delay: 0.2s; }
+.stocks-table-row:nth-child(4) { animation-delay: 0.25s; }
+.stocks-table-row:nth-child(5) { animation-delay: 0.3s; }
+.stocks-table-row:nth-child(6) { animation-delay: 0.35s; }
+
+.stocks-cell {
+    text-align: center;
+    padding: 12px 8px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-deep);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+body.dark-mode .stocks-cell {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.stocks-cell:hover {
+    background: var(--card-glass-aurora);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.stocks-cell:empty {
+    background: transparent;
+    cursor: default;
+}
+
+.stocks-cell:empty:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Кнопка показать больше акций */
+.stocks-show-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 12px;
+    background: transparent;
+    border: 1px dashed var(--text-muted);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-slate);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.stocks-show-more:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
         /* 3. ФИКС ПРЕВЬЮ РЕБАЛАНСИРОВКИ (Luxury Glow) */
 .rebalance-preview-box, .rebalance-intro-modern {
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
@@ -5959,114 +6700,133 @@ body.dark-mode .screen::after {
 </div>
 
 <div id="screen-assets" class="screen">
+    <!-- Aurora Background -->
+    <div class="aurora-container">
+        <div class="aurora-spot blue"></div>
+        <div class="aurora-spot green"></div>
+        <div class="aurora-spot orange"></div>
+    </div>
+    <div class="noise-overlay"></div>
+    
+    <!-- Заголовок -->
     <div class="header"><h1>Ребалансировка</h1></div>
     
+    <!-- Информационный блок -->
     <div class="rebalance-intro-modern">
-    <!-- Иконка слева -->
-    <div class="ri-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-        </svg>
+        <div class="ri-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+        </div>
+        <div class="rebalance-text-block">
+            <h2 class="rebalance-card-title">Ребалансировка</h2>
+            <p class="rebalance-card-desc">
+                Пересмотр состава активов. Продаем то, что выросло или имеет низкий потенциал, покупаем недооцененные инструменты из списков ниже.
+            </p>
+        </div>
+    </div>
+
+    <!-- ВКЛАДКИ ОФЗ / АКЦИИ -->
+    <div class="rebalance-tabs-container">
+        <div class="rebalance-tabs">
+            <button class="rebalance-tab active" onclick="switchRebalanceTab('ofz')">
+                <span class="rebalance-tab-icon">🛡️</span>ОФЗ
+            </button>
+            <button class="rebalance-tab" onclick="switchRebalanceTab('stocks')">
+                <span class="rebalance-tab-icon">📈</span>АКЦИИ
+            </button>
+        </div>
+    </div>
+
+    <!-- КОНТЕНТ ВКЛАДКИ ОФЗ -->
+    <div id="rebalance-tab-ofz" class="rebalance-tab-content active">
+        <div id="ofz-aurora-list" class="ofz-aurora-list">
+            <!-- Динамически заполняется через JS -->
+        </div>
+        
+        <div class="aurora-show-more" id="auroraShowMoreOfz" onclick="toggleAuroraOfzList()">
+            <span id="auroraShowMoreText">ПОКАЗАТЬ ВСЕ</span>
+            <svg class="aurora-show-more-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+    </div>
+
+    <!-- КОНТЕНТ ВКЛАДКИ АКЦИИ -->
+    <div id="rebalance-tab-stocks" class="rebalance-tab-content">
+        <div class="stocks-aurora-container">
+            <!-- Информация об эшелонах -->
+            <div class="stocks-echelon-info">
+                <div class="echelon-info-card">
+                    <div class="echelon-info-icon">💎</div>
+                    <div class="echelon-info-text">
+                        <div class="echelon-info-title">I Эшелон <span class="echelon-badge e1">Надежный</span></div>
+                        <div class="echelon-info-desc">Компании, которые платят дивиденды и стараются их повышать каждый год</div>
+                    </div>
+                </div>
+                <div class="echelon-info-card">
+                    <div class="echelon-info-icon">📊</div>
+                    <div class="echelon-info-text">
+                        <div class="echelon-info-title">II Эшелон <span class="echelon-badge e2">Стабильный</span></div>
+                        <div class="echelon-info-desc">Компании, которые платят дивиденды, но размер выплат может меняться</div>
+                    </div>
+                </div>
+                <div class="echelon-info-card">
+                    <div class="echelon-info-icon">⚡</div>
+                    <div class="echelon-info-text">
+                        <div class="echelon-info-title">III Эшелон <span class="echelon-badge e3">Рисковый</span></div>
+                        <div class="echelon-info-desc">Компании с потенциалом выплат, но пока не платят регулярно</div>
+                    </div>
+                </div>
+                <div class="echelon-info-card">
+                    <div class="echelon-info-icon">🚀</div>
+                    <div class="echelon-info-text">
+                        <div class="echelon-info-title">IV Эшелон <span class="echelon-badge e4">Венчурный</span></div>
+                        <div class="echelon-info-desc">Компании роста, которые реинвестируют прибыль вместо дивидендов</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Таблица эшелонов -->
+            <div class="stocks-aurora-table">
+                <div class="stocks-table-header">
+                    <div class="stocks-header-pill e1">I</div>
+                    <div class="stocks-header-pill e2">II</div>
+                    <div class="stocks-header-pill e3">III</div>
+                    <div class="stocks-header-pill e4">IV</div>
+                </div>
+                <div class="stocks-table-body" id="stocks-aurora-body">
+                    <!-- Динамически заполняется через JS -->
+                </div>
+            </div>
+            
+            <button class="stocks-show-more" id="stocksShowMore" onclick="toggleStocksTable()">
+                <span id="stocksShowMoreText">ПОКАЗАТЬ ВСЕ</span>
+                <svg class="aurora-show-more-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+        </div>
     </div>
     
-    <!-- Текстовый блок справа -->
-    <div class="rebalance-text-block">
-        <h2 class="rebalance-card-title">Ребалансировка</h2>
-        <p class="rebalance-card-desc">
-            Пересмотр состава активов. Продаем то, что выросло или имеет низкий потенциал, покупаем недооцененные инструменты из списков ниже.
-        </p>
+    <!-- Старый код для совместимости (скрыт) -->
+    <div id="ofz-list" style="display:none;"></div>
+    <div id="echelon-wrapper" class="echelon-wrapper collapsed" style="display:none;">
+        <table class="echelon-table-styled">
+            <thead>
+                <tr>
+                    <th><div class="echelon-header-pill">I</div></th>
+                    <th><div class="echelon-header-pill">II</div></th>
+                    <th><div class="echelon-header-pill">III</div></th>
+                    <th><div class="echelon-header-pill">IV</div></th>
+                </tr>
+            </thead>
+            <tbody id="echelon-tickers-body"></tbody>
+        </table>
     </div>
 </div>
-
-        
-       
-        
-        <div class="ofz-analogs-title">Аналоги в ОФЗ</div>
-        <div id="ofz-list">
-    </div>
-
-<div class="ghost-trigger-wrapper footer-trigger" id="ghostTriggerOfz" onclick="toggleOfzGhost()">
-    <div class="ghost-line"></div>
-    <div class="ghost-text" id="ghostTextOfz">ПОКАЗАТЬ ВСЕ</div>
-    <div class="ghost-dots">
-        <div class="ghost-dot"></div>
-        <div class="ghost-dot"></div>
-        <div class="ghost-dot"></div>
-    </div>
-</div>
-
-   
-
-     
-
-        <div class="section-header-styled" onclick="toggleInfoBlock(this)">
-            <span>🚀 Акции для замены</span>
-            <span class="info-i-blue">
-                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-            </span>
-        </div>
-        
-        <div class="info-expanded-block" style="margin-top:10px;">
-            <div class="echelon-info-graphic">
-                <div class="eig-item e1">
-                    <div class="eig-icon">💎</div>
-                    <div class="eig-text">
-                        <div class="eig-title">I Эшелон <span class="eig-badge">Надежный</span></div>
-                        <div class="eig-desc">Компании, которые платят дивиденды и стараются их повышать каждый год</div>
-                    </div>
-                    <div class="eig-arrow">→</div>
-                </div>
-                <div class="eig-item e2">
-                    <div class="eig-icon">📊</div>
-                    <div class="eig-text">
-                        <div class="eig-title">II Эшелон <span class="eig-badge">Стабильный</span></div>
-                        <div class="eig-desc">Компании, которые платят дивиденды, но размер выплат может меняться</div>
-                    </div>
-                    <div class="eig-arrow">→</div>
-                </div>
-                <div class="eig-item e3">
-                    <div class="eig-icon">⚡</div>
-                    <div class="eig-text">
-                        <div class="eig-title">III Эшелон <span class="eig-badge">Рисковый</span></div>
-                        <div class="eig-desc">Компании с потенциалом выплат, но пока не платят регулярно</div>
-                    </div>
-                    <div class="eig-arrow">→</div>
-                </div>
-                <div class="eig-item e4">
-                    <div class="eig-icon">🚀</div>
-                    <div class="eig-text">
-                        <div class="eig-title">IV Эшелон <span class="eig-badge">Венчурный</span></div>
-                        <div class="eig-desc">Компании роста, которые реинвестируют прибыль вместо дивидендов</div>
-                    </div>
-                    <div class="eig-arrow">→</div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="echelon-wrapper" class="echelon-wrapper collapsed">
-            <table class="echelon-table-styled">
-                <thead>
-                    <tr>
-                        <th><div class="echelon-header-pill">I</div></th>
-                        <th><div class="echelon-header-pill">II</div></th>
-                        <th><div class="echelon-header-pill">III</div></th>
-                        <th><div class="echelon-header-pill">IV</div></th>
-                    </tr>
-                </thead>
-                <tbody id="echelon-tickers-body"></tbody>
-            </table>
-        </div>
-        
-        <div class="expand-arrow-btn" id="expandArrowBtn" onclick="toggleEchelonTable(this)">
-            <div class="eab-line"></div>
-            <div class="eab-icon-box">
-                <svg style="width:16px;height:16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </div>
-            <div class="eab-line"></div>
-        </div>
-    </div>
 
     <div id="screen-interesting" class="screen">
     <!-- Заголовок экрана -->
@@ -8295,7 +9055,290 @@ function renderOfzList() {
     });
     
     document.getElementById('ofz-list').innerHTML = ofzHtml;
+    
+    // Также рендерим новый Aurora список
+    renderAuroraOfzList();
 }
+
+// ========================================================================
+// AURORA REBALANCE - НОВЫЕ ФУНКЦИИ ДЛЯ ВКЛАДОК
+// ========================================================================
+
+// Переключение вкладок ОФЗ / АКЦИИ
+function switchRebalanceTab(tabName) {
+    // Убираем активный класс со всех вкладок
+    document.querySelectorAll('.rebalance-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Скрываем весь контент
+    document.querySelectorAll('.rebalance-tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Активируем нужную вкладку
+    const tabs = document.querySelectorAll('.rebalance-tab');
+    const tabIndex = tabName === 'ofz' ? 0 : 1;
+    tabs[tabIndex].classList.add('active');
+    
+    // Показываем нужный контент
+    document.getElementById(`rebalance-tab-${tabName}`).classList.add('active');
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+    
+    // Если переключились на акции — рендерим таблицу
+    if (tabName === 'stocks') {
+        renderAuroraStocksTable();
+    }
+}
+
+// Рендер списка ОФЗ в Aurora стиле
+function renderAuroraOfzList() {
+    const container = document.getElementById('ofz-aurora-list');
+    if (!container || typeof bonds === 'undefined' || bonds.length === 0) return;
+    
+    let html = '';
+    
+    bonds.forEach((b, index) => {
+        const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 };
+        const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
+        
+        let curYield = "0.00";
+        if (details.couponValue > 0 && details.freq > 0) {
+            curYield = ((details.couponValue * details.freq / parseFloat(priceFinal)) * 100).toFixed(2);
+        }
+        
+        const hiddenClass = index > 2 ? 'aurora-hidden' : '';
+        
+        html += `
+        <div class="ofz-aurora-item ${hiddenClass}" id="aurora-${b.t}" data-index="${index}">
+            <div class="ofz-aurora-summary" onclick="toggleAuroraOfzDetails('${b.t}')">
+                <span class="ofz-aurora-name">${formatNameWithMonoDigits(limitName(b.n))}</span>
+                <span class="ofz-aurora-bridge"></span>
+                <div class="ofz-aurora-right">
+                    <span class="ofz-aurora-yield">${b.y}</span>
+                    <span class="ofz-aurora-price">${priceFinal} ₽</span>
+                </div>
+            </div>
+            
+            <div class="ofz-aurora-details" id="aurora-details-${b.t}">
+                <div class="ofz-aurora-details-grid">
+                    <div class="ofz-detail-item">
+                        <span class="ofz-detail-label">Код (ISIN)</span>
+                        <span class="ofz-copy-code" onclick="copyTickerNew('${b.t}')">${b.t}</span>
+                    </div>
+                    <div class="ofz-detail-item">
+                        <span class="ofz-detail-label">Текущая цена</span>
+                        <span class="ofz-detail-value">${priceFinal} ₽</span>
+                    </div>
+                    <div class="ofz-detail-item">
+                        <span class="ofz-detail-label">НКД</span>
+                        <span class="ofz-detail-value">${b.nkd || 0} ₽</span>
+                    </div>
+                    <div class="ofz-detail-item">
+                        <span class="ofz-detail-label">Погашение</span>
+                        <span class="ofz-detail-value">${details.matDate}</span>
+                    </div>
+                    <div class="ofz-detail-item">
+                        <span class="ofz-detail-label">Размер купона</span>
+                        <span class="ofz-detail-value">${details.couponValue} ₽</span>
+                    </div>
+                    <div class="ofz-detail-item">
+                        <span class="ofz-detail-label">Ближ. купон</span>
+                        <span class="ofz-detail-value">${details.nextCoupon}</span>
+                    </div>
+                    <div class="ofz-detail-item">
+                        <span class="ofz-detail-label">Тек. доходность</span>
+                        <span class="ofz-detail-value highlight">${curYield}%</span>
+                    </div>
+                    <div class="ofz-detail-item">
+                        <span class="ofz-detail-label">Выплат в год</span>
+                        <span class="ofz-detail-value">${details.freq}</span>
+                    </div>
+                    <button class="ofz-aurora-chart-btn" onclick="openTradingView(event, '${b.t}')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        Открыть график
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    });
+    
+    container.innerHTML = html;
+    
+    // Добавляем spotlight эффект при движении мыши
+    container.querySelectorAll('.ofz-aurora-item').forEach(item => {
+        item.addEventListener('mousemove', (e) => {
+            const rect = item.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            item.style.setProperty('--mouse-x', x + '%');
+            item.style.setProperty('--mouse-y', y + '%');
+        });
+    });
+}
+
+// Раскрытие/скрытие деталей ОФЗ в Aurora стиле
+function toggleAuroraOfzDetails(ticker) {
+    const item = document.getElementById(`aurora-${ticker}`);
+    if (!item) return;
+    
+    const isExpanded = item.classList.contains('expanded');
+    
+    // Закрываем все открытые
+    document.querySelectorAll('.ofz-aurora-item.expanded').forEach(el => {
+        el.classList.remove('expanded');
+    });
+    
+    // Если не был открыт — открываем
+    if (!isExpanded) {
+        item.classList.add('expanded');
+    }
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
+
+// Показать/скрыть все ОФЗ в Aurora стиле
+function toggleAuroraOfzList() {
+    const items = document.querySelectorAll('.ofz-aurora-item');
+    const btn = document.getElementById('auroraShowMoreOfz');
+    const text = document.getElementById('auroraShowMoreText');
+    const isExpanded = btn.classList.contains('open');
+    
+    if (isExpanded) {
+        // Сворачиваем — показываем только первые 3
+        items.forEach((item, index) => {
+            if (index > 2) {
+                item.classList.add('aurora-hidden');
+            }
+        });
+        text.innerText = 'ПОКАЗАТЬ ВСЕ';
+        btn.classList.remove('open');
+    } else {
+        // Разворачиваем — показываем все с анимацией
+        items.forEach((item, index) => {
+            item.classList.remove('aurora-hidden');
+            // Перезапускаем анимацию stagger
+            item.style.animation = 'none';
+            item.offsetHeight; // Триггер reflow
+            item.style.animation = `staggerIn 0.4s ease forwards`;
+            item.style.animationDelay = `${index * 0.05}s`;
+        });
+        text.innerText = 'СКРЫТЬ';
+        btn.classList.add('open');
+    }
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
+
+// Рендер таблицы эшелонов акций в Aurora стиле
+function renderAuroraStocksTable() {
+    const container = document.getElementById('stocks-aurora-body');
+    if (!container) return;
+    
+    // Получаем данные из старой таблицы
+    const oldBody = document.getElementById('echelon-tickers-body');
+    if (!oldBody || oldBody.children.length === 0) {
+        // Если старая таблица пуста, ждем загрузки данных
+        setTimeout(renderAuroraStocksTable, 500);
+        return;
+    }
+    
+    let html = '';
+    const rows = oldBody.querySelectorAll('tr');
+    const maxVisibleRows = 5;
+    
+    rows.forEach((row, rowIndex) => {
+        const cells = row.querySelectorAll('td');
+        const hiddenClass = rowIndex >= maxVisibleRows ? 'stocks-row-hidden' : '';
+        
+        html += `<div class="stocks-table-row ${hiddenClass}" data-row="${rowIndex}">`;
+        
+        cells.forEach((cell, cellIndex) => {
+            const ticker = cell.textContent.trim();
+            if (ticker) {
+                html += `<div class="stocks-cell" onclick="copyTickerNew('${ticker}')">${ticker}</div>`;
+            } else {
+                html += `<div class="stocks-cell"></div>`;
+            }
+        });
+        
+        html += '</div>';
+    });
+    
+    container.innerHTML = html;
+    
+    // Обновляем кнопку показать/скрыть
+    updateStocksShowMoreButton();
+}
+
+// Показать/скрыть все акции
+let stocksExpanded = false;
+
+function toggleStocksTable() {
+    const rows = document.querySelectorAll('.stocks-table-row');
+    const btn = document.getElementById('stocksShowMore');
+    const text = document.getElementById('stocksShowMoreText');
+    
+    stocksExpanded = !stocksExpanded;
+    
+    rows.forEach((row, index) => {
+        if (stocksExpanded) {
+            row.classList.remove('stocks-row-hidden');
+            row.style.animation = 'none';
+            row.offsetHeight;
+            row.style.animation = `staggerIn 0.3s ease forwards`;
+            row.style.animationDelay = `${index * 0.05}s`;
+        } else {
+            if (index >= 5) {
+                row.classList.add('stocks-row-hidden');
+            }
+        }
+    });
+    
+    text.innerText = stocksExpanded ? 'СКРЫТЬ' : 'ПОКАЗАТЬ ВСЕ';
+    btn.classList.toggle('open', stocksExpanded);
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
+
+function updateStocksShowMoreButton() {
+    const rows = document.querySelectorAll('.stocks-table-row');
+    const btn = document.getElementById('stocksShowMore');
+    
+    if (rows.length <= 5) {
+        btn.style.display = 'none';
+    } else {
+        btn.style.display = 'flex';
+    }
+}
+
+// CSS для скрытых строк акций
+const stocksHiddenStyle = document.createElement('style');
+stocksHiddenStyle.textContent = `
+    .stocks-row-hidden {
+        display: none !important;
+    }
+`;
+document.head.appendChild(stocksHiddenStyle);
+
+// ========================================================================
+// КОНЕЦ AURORA REBALANCE ФУНКЦИЙ
+// ========================================================================
     
 // Исправленная функция копирования
 function copyTicker(text) {
