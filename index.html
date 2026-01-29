@@ -5324,18 +5324,18 @@ body.dark-mode .tab-switcher {
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Глайдер (плавающий индикатор) */
+/* Глайдер (плавающий индикатор) - ГРАФИТОВЫЙ */
 .tab-glider {
     position: absolute;
     top: 6px;
     left: 6px;
     width: calc(50% - 6px);
     height: calc(100% - 12px);
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
     border-radius: 100px;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1;
-    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.3);
+    box-shadow: 0 4px 15px rgba(75, 85, 99, 0.4);
 }
 
 /* Когда активна вкладка "Акции" - глайдер вправо */
@@ -5458,19 +5458,23 @@ body.dark-mode .tab-btn.active {
 /* === 8. ЗАГОЛОВКИ СПИСКА (List Headers) === */
 .list-headers {
     display: grid;
-    grid-template-columns: auto 1fr 80px 70px;
+    grid-template-columns: 1fr 60px 60px;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     padding: 0 16px 12px;
     margin-bottom: 0;
 }
 
+.list-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .list-header-text {
     font-family: 'Inter', sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
     color: var(--text-deep);
     opacity: 0.5;
 }
@@ -5483,16 +5487,35 @@ body.dark-mode .tab-btn.active {
     text-align: right;
 }
 
-/* Галочка сворачивания списка */
+/* Кликабельный заголовок цены */
+.list-header-price {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-deep);
+    opacity: 0.5;
+    text-align: right;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.list-header-price:hover {
+    opacity: 0.8;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Галочка сворачивания списка - справа от ИНСТРУМЕНТ */
 .list-collapse-toggle {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
 .list-collapse-toggle:hover {
@@ -5500,8 +5523,8 @@ body.dark-mode .tab-btn.active {
 }
 
 .list-collapse-toggle svg {
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
     stroke: var(--text-muted);
     transition: stroke 0.2s ease, transform 0.3s ease;
 }
@@ -5512,6 +5535,29 @@ body.dark-mode .tab-btn.active {
 
 .list-collapse-toggle.collapsed svg {
     transform: rotate(-90deg);
+}
+
+/* Тултип для цены */
+.price-tooltip {
+    position: fixed;
+    background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    max-width: 260px;
+    line-height: 1.5;
+    animation: tooltipFadeIn 0.2s ease;
+    pointer-events: none;
+}
+
+@keyframes tooltipFadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* === 9. КОНТЕНТ ВКЛАДОК === */
@@ -5595,10 +5641,10 @@ body.dark-mode .ofz-aurora-item {
 /* Свернутая строка (Summary) - GRID для выравнивания */
 .ofz-aurora-summary {
     display: grid;
-    grid-template-columns: 1fr 80px 70px;
+    grid-template-columns: 1fr 60px 60px;
     align-items: center;
-    gap: 12px;
-    padding: 16px 20px;
+    gap: 8px;
+    padding: 14px 16px;
     cursor: pointer;
     user-select: none;
 }
@@ -5613,19 +5659,19 @@ body.dark-mode .ofz-aurora-item {
     text-overflow: ellipsis;
 }
 
-/* Доходность - по центру */
+/* Доходность - по центру ЗЕЛЕНАЯ */
 .ofz-aurora-yield {
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
     font-weight: 700;
-    color: #8B5CF6; /* Фиолетовый вместо зеленого */
+    color: #10B981;
     text-align: center;
 }
 
 /* Цена - справа */
 .ofz-aurora-price {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     color: var(--text-slate);
     text-align: right;
@@ -5768,7 +5814,7 @@ body.dark-mode .ofz-detail-row {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    padding: 10px;
+    padding: 12px;
     transition: opacity 0.3s;
 }
 
@@ -5777,17 +5823,17 @@ body.dark-mode .ofz-detail-row {
 }
 
 .rebalance-ghost-trigger .ghost-line {
-    width: 40px;
-    height: 3px;
-    background: #E2E8F0;
+    width: 50px;
+    height: 4px;
+    background: linear-gradient(90deg, #E2E8F0, #CBD5E1, #E2E8F0);
     border-radius: 2px;
     position: relative;
     overflow: hidden;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 body.dark-mode .rebalance-ghost-trigger .ghost-line {
-    background: #334155;
+    background: linear-gradient(90deg, #334155, #475569, #334155);
 }
 
 .rebalance-ghost-trigger .ghost-line::after {
@@ -5797,9 +5843,15 @@ body.dark-mode .rebalance-ghost-trigger .ghost-line {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.9) 50%, transparent 100%);
     transform: translateX(-100%);
-    animation: ghostShimmer 2.5s infinite;
+    animation: ghostShimmerBright 1.8s infinite;
+}
+
+@keyframes ghostShimmerBright {
+    0% { transform: translateX(-100%); }
+    60% { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
 }
 
 .rebalance-ghost-trigger .ghost-text {
@@ -5809,11 +5861,47 @@ body.dark-mode .rebalance-ghost-trigger .ghost-line {
     text-transform: uppercase;
     letter-spacing: 2px;
     color: #94A3B8;
+    margin-bottom: 6px;
     transition: color 0.3s;
 }
 
 .rebalance-ghost-trigger.open .ghost-text {
     color: var(--accent-blue);
+}
+
+/* Точки под текстом */
+.rebalance-ghost-trigger .ghost-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.rebalance-ghost-trigger .ghost-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #CBD5E1;
+    animation: dotPulse 1.5s infinite;
+}
+
+.rebalance-ghost-trigger .ghost-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.rebalance-ghost-trigger .ghost-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.rebalance-ghost-trigger.open .ghost-dot {
+    background: var(--accent-blue);
+}
+
+body.dark-mode .rebalance-ghost-trigger .ghost-dot {
+    background: #475569;
 }
 
 /* === 12. СКРЫТИЕ СТРОК ОФЗ === */
@@ -5970,39 +6058,72 @@ body.dark-mode .echelon-info-card {
 .stocks-table-header {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    margin-bottom: 10px;
-    padding: 0 4px;
+    gap: 4px;
+    margin-bottom: 8px;
+    padding: 0 2px;
 }
 
+/* Светящиеся иконки эшелонов в кружках */
 .stocks-header-pill {
-    text-align: center;
-    padding: 8px;
-    border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border: none;
-    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
 }
 
-.stocks-header-pill.e1 { color: #10B981; }
-.stocks-header-pill.e2 { color: #3B82F6; }
-.stocks-header-pill.e3 { color: #F59E0B; }
-.stocks-header-pill.e4 { color: #EF4444; }
+.echelon-icon-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 800;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .echelon-icon-circle {
+    background: rgba(30, 41, 59, 0.9);
+}
+
+.echelon-icon-circle.e1 {
+    color: #10B981;
+    border-color: #10B981;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.echelon-icon-circle.e2 {
+    color: #3B82F6;
+    border-color: #3B82F6;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+.echelon-icon-circle.e3 {
+    color: #F59E0B;
+    border-color: #F59E0B;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+}
+
+.echelon-icon-circle.e4 {
+    color: #EF4444;
+    border-color: #EF4444;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
 
 .stocks-table-body {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .stocks-table-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
+    gap: 4px;
     opacity: 0;
     animation: staggerIn 0.3s ease forwards;
 }
@@ -6020,13 +6141,13 @@ body.dark-mode .echelon-info-card {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
-    padding: 12px 6px;
+    gap: 2px;
+    padding: 10px 4px;
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.04);
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.25s ease;
 }
@@ -6071,21 +6192,28 @@ body.dark-mode .stocks-cell {
 .stocks-cell-change.negative { color: #EF4444; }
 .stocks-cell-change.neutral { color: var(--text-muted); }
 
+/* Ячейка активная */
+.stocks-cell.active {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
 /* Карточка деталей тикера - ТИХАЯ РОСКОШЬ */
 .stock-detail-card {
     display: none;
-    margin-top: 10px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.7);
+    margin: 6px 0;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 16px;
+    border-radius: 14px;
     animation: accordionOpen 0.3s ease;
+    position: relative;
 }
 
 body.dark-mode .stock-detail-card {
-    background: rgba(30, 41, 59, 0.8);
+    background: rgba(30, 41, 59, 0.9);
     border-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -6093,12 +6221,45 @@ body.dark-mode .stock-detail-card {
     display: block;
 }
 
+/* Стрелочка закрытия карточки */
+.stock-detail-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.stock-detail-close:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.stock-detail-close svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--text-muted);
+    transition: stroke 0.2s ease, transform 0.2s ease;
+    transform: rotate(180deg);
+}
+
+.stock-detail-close:hover svg {
+    stroke: var(--text-deep);
+}
+
 .stock-detail-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
     padding-bottom: 12px;
+    padding-right: 30px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
@@ -6106,11 +6267,37 @@ body.dark-mode .stock-detail-header {
     border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
+.stock-detail-main {
+    flex: 1;
+}
+
 .stock-detail-ticker {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 800;
     color: var(--text-deep);
+    margin-bottom: 4px;
+}
+
+.stock-detail-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-slate);
+    margin-bottom: 6px;
+}
+
+.stock-detail-sector {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
 }
 
 .stock-detail-echelon {
@@ -6121,6 +6308,7 @@ body.dark-mode .stock-detail-header {
     letter-spacing: 0.05em;
     padding: 4px 10px;
     border-radius: 20px;
+    white-space: nowrap;
 }
 
 .stock-detail-grid {
@@ -7098,14 +7286,16 @@ body.dark-mode .stock-btn-info {
     <div id="rebalance-tab-ofz" class="rebalance-tab-content active">
         <!-- Заголовки списка с галочкой -->
         <div class="list-headers">
-            <div class="list-collapse-toggle" id="ofzCollapseToggle" onclick="toggleOfzListCollapse()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="6 9 12 15 18 9"/>
-                </svg>
+            <div class="list-header-left">
+                <span class="list-header-text">ИНСТРУМЕНТ</span>
+                <div class="list-collapse-toggle" id="ofzCollapseToggle" onclick="toggleOfzListCollapse()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
             </div>
-            <span class="list-header-text">ИНСТРУМЕНТ</span>
-            <span class="list-header-text center">ДОХОДНОСТЬ</span>
-            <span class="list-header-text right">ЦЕНА</span>
+            <span class="list-header-text center">%</span>
+            <span class="list-header-price right" onclick="showPriceTooltip(event)">₽</span>
         </div>
         
         <div id="ofz-aurora-list" class="ofz-aurora-list">
@@ -7115,7 +7305,12 @@ body.dark-mode .stock-btn-info {
         <!-- Ghost Trigger для ОФЗ -->
         <div class="rebalance-ghost-trigger" id="ofzGhostTrigger" onclick="toggleAuroraOfzList()">
             <div class="ghost-line"></div>
-            <div class="ghost-text" id="ofzGhostText">ПОКАЗАТЬ ВСЕ</div>
+            <div class="ghost-text" id="ofzGhostText">ОТКРЫТЬ СПИСОК</div>
+            <div class="ghost-dots">
+                <div class="ghost-dot"></div>
+                <div class="ghost-dot"></div>
+                <div class="ghost-dot"></div>
+            </div>
         </div>
     </div>
 
@@ -7165,10 +7360,10 @@ body.dark-mode .stock-btn-info {
             <!-- Таблица эшелонов -->
             <div class="stocks-aurora-table">
                 <div class="stocks-table-header">
-                    <div class="stocks-header-pill e1">I</div>
-                    <div class="stocks-header-pill e2">II</div>
-                    <div class="stocks-header-pill e3">III</div>
-                    <div class="stocks-header-pill e4">IV</div>
+                    <div class="stocks-header-pill"><div class="echelon-icon-circle e1">I</div></div>
+                    <div class="stocks-header-pill"><div class="echelon-icon-circle e2">II</div></div>
+                    <div class="stocks-header-pill"><div class="echelon-icon-circle e3">III</div></div>
+                    <div class="stocks-header-pill"><div class="echelon-icon-circle e4">IV</div></div>
                 </div>
                 <div class="stocks-table-body" id="stocks-aurora-body">
                     <!-- Динамически заполняется через JS -->
@@ -7183,7 +7378,12 @@ body.dark-mode .stock-btn-info {
             <!-- Ghost Trigger для акций -->
             <div class="rebalance-ghost-trigger" id="stocksGhostTrigger" onclick="toggleStocksTable()">
                 <div class="ghost-line"></div>
-                <div class="ghost-text" id="stocksGhostText">ПОКАЗАТЬ ВСЕ</div>
+                <div class="ghost-text" id="stocksGhostText">ОТКРЫТЬ СПИСОК</div>
+                <div class="ghost-dots">
+                    <div class="ghost-dot"></div>
+                    <div class="ghost-dot"></div>
+                    <div class="ghost-dot"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -9499,11 +9699,28 @@ function renderAuroraOfzList() {
     const container = document.getElementById('ofz-aurora-list');
     if (!container || typeof bonds === 'undefined' || bonds.length === 0) return;
     
+    // Функция форматирования даты в день-месяц-год
+    function formatDateDMY(dateStr) {
+        if (!dateStr || dateStr === '—') return '—';
+        try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
+        } catch (e) {
+            return dateStr;
+        }
+    }
+    
     let html = '';
     
     bonds.forEach((b, index) => {
         const details = bondDetailsMap[b.t] || { matDate: '—', couponValue: 0, nextCoupon: '—', freq: 0 };
         const priceFinal = parseFloat(String(b.p).replace(',', '.')).toFixed(2);
+        const nkd = parseFloat(b.nkd || 0).toFixed(2);
+        const priceWithNkd = (parseFloat(priceFinal) + parseFloat(nkd)).toFixed(2);
         
         let curYield = "0.00";
         if (details.couponValue > 0 && details.freq > 0) {
@@ -9517,7 +9734,7 @@ function renderAuroraOfzList() {
             <div class="ofz-aurora-summary" onclick="toggleAuroraOfzDetails('${b.t}')">
                 <span class="ofz-aurora-name">${formatNameWithMonoDigits(limitName(b.n))}</span>
                 <span class="ofz-aurora-yield">${curYield}%</span>
-                <span class="ofz-aurora-price">${priceFinal} ₽</span>
+                <span class="ofz-aurora-price">${priceWithNkd}</span>
             </div>
             
             <div class="ofz-aurora-details" id="aurora-details-${b.t}">
@@ -9538,11 +9755,15 @@ function renderAuroraOfzList() {
                     </div>
                     <div class="ofz-detail-row">
                         <span class="ofz-detail-label">НКД</span>
-                        <span class="ofz-detail-value">${b.nkd || 0} ₽</span>
+                        <span class="ofz-detail-value">${nkd} ₽</span>
+                    </div>
+                    <div class="ofz-detail-row">
+                        <span class="ofz-detail-label">Итого (цена + НКД)</span>
+                        <span class="ofz-detail-value" style="font-weight: 700;">${priceWithNkd} ₽</span>
                     </div>
                     <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Погашение</span>
-                        <span class="ofz-detail-value">${details.matDate}</span>
+                        <span class="ofz-detail-value">${formatDateDMY(details.matDate)}</span>
                     </div>
                     <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Размер купона</span>
@@ -9550,11 +9771,11 @@ function renderAuroraOfzList() {
                     </div>
                     <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Ближайший купон</span>
-                        <span class="ofz-detail-value">${details.nextCoupon}</span>
+                        <span class="ofz-detail-value">${formatDateDMY(details.nextCoupon)}</span>
                     </div>
                     <div class="ofz-detail-row">
-                        <span class="ofz-detail-label">Текущая доходность</span>
-                        <span class="ofz-detail-value" style="color: #8B5CF6;">${curYield}%</span>
+                        <span class="ofz-detail-label">Текущая купонная доходность</span>
+                        <span class="ofz-detail-value" style="color: #10B981;">${curYield}%</span>
                     </div>
                     <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Выплат в год</span>
@@ -9574,7 +9795,7 @@ function renderAuroraOfzList() {
     container.innerHTML = html;
 }
 
-// Раскрытие/скрытие деталей ОФЗ в Aurora стиле
+// Раскрытие/скрытие деталей ОФЗ в Aurora стиле с прокруткой
 function toggleAuroraOfzDetails(ticker) {
     const item = document.getElementById(`aurora-${ticker}`);
     if (!item) return;
@@ -9586,9 +9807,13 @@ function toggleAuroraOfzDetails(ticker) {
         el.classList.remove('expanded');
     });
     
-    // Если не был открыт — открываем
+    // Если не был открыт — открываем и прокручиваем
     if (!isExpanded) {
         item.classList.add('expanded');
+        // Прокрутка чтобы карточка влезла в экран
+        setTimeout(() => {
+            item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
     }
     
     // Вибрация
@@ -9616,7 +9841,7 @@ function toggleAuroraOfzList() {
             // Также закрываем все подстроки
             item.classList.remove('expanded');
         });
-        text.innerText = 'ПОКАЗАТЬ ВСЕ';
+        text.innerText = 'ОТКРЫТЬ СПИСОК';
         trigger.classList.remove('open');
     } else {
         // Разворачиваем — показываем все с анимацией
@@ -9712,17 +9937,17 @@ function renderAuroraStocksTable() {
                 const price = cellContent.querySelector('.et-price')?.textContent || '';
                 const echelonNum = cellIndex + 1;
                 
-                // Определяем изменение цены (можно взять из данных)
+                // Определяем изменение цены
                 const changeClass = price.includes('+') ? 'positive' : (price.includes('-') ? 'negative' : 'neutral');
                 
-                html += `<div class="stocks-cell" onclick="openStockDetail('${ticker}', ${echelonNum})">
+                html += `<div class="stocks-cell" onclick="openStockDetail('${ticker}', ${echelonNum}, this)">
                     <span class="stocks-cell-ticker">${ticker}</span>
                     <span class="stocks-cell-change ${changeClass}">${price}</span>
                 </div>`;
             } else if (cell.textContent.trim()) {
                 const ticker = cell.textContent.trim();
                 const echelonNum = cellIndex + 1;
-                html += `<div class="stocks-cell" onclick="openStockDetail('${ticker}', ${echelonNum})">
+                html += `<div class="stocks-cell" onclick="openStockDetail('${ticker}', ${echelonNum}, this)">
                     <span class="stocks-cell-ticker">${ticker}</span>
                 </div>`;
             } else {
@@ -9740,18 +9965,39 @@ function renderAuroraStocksTable() {
 }
 
 // Открытие карточки деталей тикера
-function openStockDetail(ticker, echelon) {
+function openStockDetail(ticker, echelon, clickedCell = null) {
     const card = document.getElementById('stockDetailCard');
     if (!card || !ticker) return;
     
+    // Снимаем активный класс с предыдущей ячейки
+    document.querySelectorAll('.stocks-cell.active').forEach(c => c.classList.remove('active'));
+    
     // Закрываем если уже открыта эта же карточка
     if (card.classList.contains('open') && card.dataset.ticker === ticker) {
-        card.classList.remove('open');
-        card.dataset.ticker = '';
+        closeStockDetail();
         return;
     }
     
-    // Получаем данные о тикере (можно расширить получением из API)
+    // Добавляем активный класс на кликнутую ячейку
+    if (clickedCell) {
+        clickedCell.classList.add('active');
+    }
+    
+    // Ищем данные о компании в echelonTableData
+    let companyName = ticker;
+    let companySector = '';
+    
+    if (typeof echelonTableData !== 'undefined') {
+        const echelonIndex = echelon - 1;
+        if (echelonTableData[echelonIndex]) {
+            const found = echelonTableData[echelonIndex].find(item => item.t === ticker);
+            if (found) {
+                companyName = found.n || ticker;
+                companySector = found.sector || '';
+            }
+        }
+    }
+    
     const echelonColors = {
         1: { bg: 'rgba(16, 185, 129, 0.15)', color: '#10B981', name: 'I Эшелон' },
         2: { bg: 'rgba(59, 130, 246, 0.15)', color: '#3B82F6', name: 'II Эшелон' },
@@ -9761,9 +10007,29 @@ function openStockDetail(ticker, echelon) {
     
     const echelonStyle = echelonColors[echelon] || echelonColors[1];
     
+    // Сектор HTML
+    const sectorHtml = companySector ? `
+        <div class="stock-detail-sector">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            ${companySector}
+        </div>
+    ` : '';
+    
     card.innerHTML = `
+        <div class="stock-detail-close" onclick="closeStockDetail()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"/>
+            </svg>
+        </div>
         <div class="stock-detail-header">
-            <span class="stock-detail-ticker">${ticker}</span>
+            <div class="stock-detail-main">
+                <div class="stock-detail-ticker">${ticker}</div>
+                <div class="stock-detail-name">${companyName}</div>
+                ${sectorHtml}
+            </div>
             <span class="stock-detail-echelon" style="background: ${echelonStyle.bg}; color: ${echelonStyle.color};">${echelonStyle.name}</span>
         </div>
         <div class="stock-detail-grid">
@@ -9789,7 +10055,7 @@ function openStockDetail(ticker, echelon) {
                 </svg>
                 График
             </button>
-            <button class="stock-btn stock-btn-info" onclick="showCompanyInfo('${ticker}')">
+            <button class="stock-btn stock-btn-info" onclick="goToCompanyPage('${ticker}')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -9801,14 +10067,56 @@ function openStockDetail(ticker, echelon) {
     `;
     
     card.dataset.ticker = ticker;
+    card.dataset.echelon = echelon;
     card.classList.add('open');
     
     // Прокручиваем к карточке
-    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    setTimeout(() => {
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 50);
     
     // Вибрация
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
+
+// Закрыть карточку деталей
+function closeStockDetail() {
+    const card = document.getElementById('stockDetailCard');
+    if (card) {
+        card.classList.remove('open');
+        card.dataset.ticker = '';
+    }
+    // Снимаем активный класс со всех ячеек
+    document.querySelectorAll('.stocks-cell.active').forEach(c => c.classList.remove('active'));
+}
+
+// Переход на страницу компании
+function goToCompanyPage(ticker) {
+    // Ищем данные о компании в echelonTableData
+    let companyData = null;
+    
+    if (typeof echelonTableData !== 'undefined') {
+        for (let i = 0; i < echelonTableData.length; i++) {
+            const found = echelonTableData[i].find(item => item.t === ticker);
+            if (found) {
+                companyData = {
+                    t: found.t,
+                    n: found.n || ticker,
+                    sector: found.sector || '',
+                    target: found.target || '—',
+                    type: 'Акция'
+                };
+                break;
+            }
+        }
+    }
+    
+    if (companyData && typeof openCompanyPage === 'function') {
+        openCompanyPage(companyData);
+    } else {
+        showToast('Информация о компании недоступна');
     }
 }
 
@@ -9836,7 +10144,7 @@ function toggleStocksTable() {
         }
     });
     
-    text.innerText = stocksExpanded ? 'СКРЫТЬ' : 'ПОКАЗАТЬ ВСЕ';
+    text.innerText = stocksExpanded ? 'СКРЫТЬ' : 'ОТКРЫТЬ СПИСОК';
     trigger.classList.toggle('open', stocksExpanded);
     
     // Вибрация
@@ -9864,6 +10172,42 @@ stocksHiddenStyle.textContent = `
     }
 `;
 document.head.appendChild(stocksHiddenStyle);
+
+// Функция показа тултипа для цены
+function showPriceTooltip(event) {
+    event.stopPropagation();
+    
+    // Удаляем старый тултип если есть
+    const oldTooltip = document.querySelector('.price-tooltip');
+    if (oldTooltip) {
+        oldTooltip.remove();
+        return;
+    }
+    
+    const tooltip = document.createElement('div');
+    tooltip.className = 'price-tooltip';
+    tooltip.innerHTML = 'Цена формируется как:<br><b>Текущая цена + НКД</b>';
+    document.body.appendChild(tooltip);
+    
+    const rect = event.target.getBoundingClientRect();
+    tooltip.style.top = (rect.bottom + 8) + 'px';
+    tooltip.style.right = (window.innerWidth - rect.right) + 'px';
+    
+    // Закрытие по клику в любом месте
+    setTimeout(() => {
+        document.addEventListener('click', function closeTooltip() {
+            tooltip.remove();
+            document.removeEventListener('click', closeTooltip);
+        });
+    }, 100);
+    
+    // Автозакрытие через 3 секунды
+    setTimeout(() => {
+        if (tooltip.parentNode) {
+            tooltip.remove();
+        }
+    }, 3000);
+}
 
 // ========================================================================
 // КОНЕЦ AURORA REBALANCE ФУНКЦИЙ
