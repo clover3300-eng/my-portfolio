@@ -5324,18 +5324,18 @@ body.dark-mode .tab-switcher {
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Глайдер (плавающий индикатор) - ГРАФИТОВЫЙ */
+/* Глайдер (плавающий индикатор) - как кнопка расчета */
 .tab-glider {
     position: absolute;
     top: 6px;
     left: 6px;
     width: calc(50% - 6px);
     height: calc(100% - 12px);
-    background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+    background: #2C364C;
     border-radius: 100px;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1;
-    box-shadow: 0 4px 15px rgba(75, 85, 99, 0.4);
+    box-shadow: 0 4px 15px rgba(44, 54, 76, 0.3);
 }
 
 /* Когда активна вкладка "Акции" - глайдер вправо */
@@ -5487,14 +5487,33 @@ body.dark-mode .tab-btn.active {
     text-align: right;
 }
 
-/* Кликабельный заголовок цены */
+/* Кликабельный заголовок процента */
+.list-header-percent {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-deep);
+    opacity: 0.5;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.list-header-percent:hover {
+    opacity: 0.8;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Кликабельный заголовок цены - центрируем */
 .list-header-price {
     font-family: 'Inter', sans-serif;
     font-size: 11px;
     font-weight: 700;
     color: var(--text-deep);
     opacity: 0.5;
-    text-align: right;
+    text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
     padding: 4px 8px;
@@ -5537,10 +5556,10 @@ body.dark-mode .tab-btn.active {
     transform: rotate(-90deg);
 }
 
-/* Тултип для цены */
-.price-tooltip {
+/* Общий тултип */
+.header-tooltip {
     position: fixed;
-    background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+    background: #2C364C;
     color: white;
     padding: 12px 16px;
     border-radius: 12px;
@@ -5914,15 +5933,32 @@ body.dark-mode .rebalance-ghost-trigger .ghost-dot {
     /* Без белого бокса - впечатано в фон */
 }
 
-/* Заголовок ЭШЕЛОНЫ - раскрывающийся */
+/* Заголовок ЭШЕЛОНЫ - красивый дизайн */
 .echelons-header {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 16px;
+    gap: 10px;
+    padding: 20px 16px;
+    margin-bottom: 20px;
     cursor: pointer;
+    position: relative;
     transition: all 0.3s ease;
+}
+
+/* Декоративные линии по бокам */
+.echelons-header::before,
+.echelons-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(44, 54, 76, 0.2), transparent);
+    max-width: 80px;
+}
+
+body.dark-mode .echelons-header::before,
+body.dark-mode .echelons-header::after {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
 }
 
 .echelons-header:hover .echelons-title {
@@ -5931,17 +5967,45 @@ body.dark-mode .rebalance-ghost-trigger .ghost-dot {
 
 .echelons-title {
     font-family: 'Inter', sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--text-muted);
+    letter-spacing: 0.2em;
+    color: var(--text-slate);
     transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Иконка вопроса */
+.echelons-title::after {
+    content: '?';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(44, 54, 76, 0.1);
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.echelons-header:hover .echelons-title::after {
+    background: rgba(44, 54, 76, 0.2);
+    color: var(--text-deep);
+}
+
+body.dark-mode .echelons-title::after {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .echelons-toggle-icon {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     stroke: var(--text-muted);
     transition: transform 0.3s ease, stroke 0.3s ease;
 }
@@ -5954,15 +6018,23 @@ body.dark-mode .rebalance-ghost-trigger .ghost-dot {
     transform: rotate(180deg);
 }
 
+.echelons-header.open .echelons-title::after {
+    content: '×';
+    background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+}
+
 /* Описания эшелонов - скрытые по умолчанию */
 .stocks-echelon-info {
-    display: none;
-    margin-bottom: 20px;
-    animation: accordionOpen 0.3s ease;
+    max-height: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+    transition: max-height 0.4s ease, margin 0.4s ease;
 }
 
 .stocks-echelon-info.open {
-    display: block;
+    max-height: 500px;
+    margin-bottom: 20px;
 }
 
 .echelon-info-card {
@@ -5974,24 +6046,22 @@ body.dark-mode .rebalance-ghost-trigger .ghost-dot {
     border-radius: 12px;
     margin-bottom: 8px;
     opacity: 0;
-    transform: translateX(-10px);
-    animation: echelonSlideIn 0.4s ease forwards;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
+
+.stocks-echelon-info.open .echelon-info-card {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stocks-echelon-info.open .echelon-info-card:nth-child(1) { transition-delay: 0.05s; }
+.stocks-echelon-info.open .echelon-info-card:nth-child(2) { transition-delay: 0.1s; }
+.stocks-echelon-info.open .echelon-info-card:nth-child(3) { transition-delay: 0.15s; }
+.stocks-echelon-info.open .echelon-info-card:nth-child(4) { transition-delay: 0.2s; }
 
 body.dark-mode .echelon-info-card {
     background: rgba(255, 255, 255, 0.04);
-}
-
-.echelon-info-card:nth-child(1) { animation-delay: 0.1s; }
-.echelon-info-card:nth-child(2) { animation-delay: 0.2s; }
-.echelon-info-card:nth-child(3) { animation-delay: 0.3s; }
-.echelon-info-card:nth-child(4) { animation-delay: 0.4s; }
-
-@keyframes echelonSlideIn {
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
 }
 
 .echelon-info-icon {
@@ -6117,13 +6187,13 @@ body.dark-mode .echelon-icon-circle {
 .stocks-table-body {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .stocks-table-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
+    gap: 2px;
     opacity: 0;
     animation: staggerIn 0.3s ease forwards;
 }
@@ -6141,13 +6211,13 @@ body.dark-mode .echelon-icon-circle {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    padding: 10px 4px;
+    gap: 1px;
+    padding: 8px 3px;
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.04);
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.25s ease;
 }
@@ -7294,8 +7364,8 @@ body.dark-mode .stock-btn-info {
                     </svg>
                 </div>
             </div>
-            <span class="list-header-text center">%</span>
-            <span class="list-header-price right" onclick="showPriceTooltip(event)">₽</span>
+            <span class="list-header-percent" onclick="showYieldTooltip(event)">%</span>
+            <span class="list-header-price" onclick="showPriceTooltip(event)">₽</span>
         </div>
         
         <div id="ofz-aurora-list" class="ofz-aurora-list">
@@ -7317,12 +7387,9 @@ body.dark-mode .stock-btn-info {
     <!-- КОНТЕНТ ВКЛАДКИ АКЦИИ -->
     <div id="rebalance-tab-stocks" class="rebalance-tab-content">
         <div class="stocks-aurora-container">
-            <!-- Заголовок ЭШЕЛОНЫ - раскрывающийся -->
+            <!-- Заголовок ЭШЕЛОНЫ - красивый дизайн -->
             <div class="echelons-header" id="echelonsHeader" onclick="toggleEchelonsInfo()">
                 <span class="echelons-title">ЭШЕЛОНЫ</span>
-                <svg class="echelons-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="6 9 12 15 18 9"/>
-                </svg>
             </div>
             
             <!-- Информация об эшелонах (скрыта по умолчанию) -->
@@ -9722,6 +9789,10 @@ function renderAuroraOfzList() {
         const nkd = parseFloat(b.nkd || 0).toFixed(2);
         const priceWithNkd = (parseFloat(priceFinal) + parseFloat(nkd)).toFixed(2);
         
+        // Доходность из Google Sheets для строки
+        const sheetYield = b.y ? b.y.replace('%', '') : '—';
+        
+        // Рассчитанная текущая купонная доходность для подстроки
         let curYield = "0.00";
         if (details.couponValue > 0 && details.freq > 0) {
             curYield = ((details.couponValue * details.freq / parseFloat(priceFinal)) * 100).toFixed(2);
@@ -9733,7 +9804,7 @@ function renderAuroraOfzList() {
         <div class="ofz-aurora-item ${hiddenClass}" id="aurora-${b.t}" data-index="${index}">
             <div class="ofz-aurora-summary" onclick="toggleAuroraOfzDetails('${b.t}')">
                 <span class="ofz-aurora-name">${formatNameWithMonoDigits(limitName(b.n))}</span>
-                <span class="ofz-aurora-yield">${curYield}%</span>
+                <span class="ofz-aurora-yield">${sheetYield}%</span>
                 <span class="ofz-aurora-price">${priceWithNkd}</span>
             </div>
             
@@ -9782,7 +9853,7 @@ function renderAuroraOfzList() {
                         <span class="ofz-detail-value">${details.freq}</span>
                     </div>
                 </div>
-                <button class="ofz-aurora-chart-btn" onclick="openTradingView(event, '${b.t}')">
+                <button class="ofz-aurora-chart-btn" onclick="openTradingViewDirect('${b.t}')">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                     </svg>
@@ -9810,10 +9881,22 @@ function toggleAuroraOfzDetails(ticker) {
     // Если не был открыт — открываем и прокручиваем
     if (!isExpanded) {
         item.classList.add('expanded');
-        // Прокрутка чтобы карточка влезла в экран
+        // Прокрутка чтобы низ карточки был выше навигации
         setTimeout(() => {
-            item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
+            const details = item.querySelector('.ofz-aurora-details');
+            if (details) {
+                const navHeight = 70; // высота навигационного меню
+                const itemRect = item.getBoundingClientRect();
+                const detailsRect = details.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+                const bottomOfCard = itemRect.top + item.offsetHeight;
+                
+                if (bottomOfCard > viewportHeight - navHeight) {
+                    const scrollBy = bottomOfCard - (viewportHeight - navHeight) + 20;
+                    window.scrollBy({ top: scrollBy, behavior: 'smooth' });
+                }
+            }
+        }, 150);
     }
     
     // Вибрация
@@ -9870,19 +9953,36 @@ function toggleOfzListCollapse() {
     const list = document.getElementById('ofz-aurora-list');
     const toggle = document.getElementById('ofzCollapseToggle');
     const ghostTrigger = document.getElementById('ofzGhostTrigger');
+    const items = document.querySelectorAll('.ofz-aurora-item');
     
     ofzListCollapsed = !ofzListCollapsed;
     
     if (ofzListCollapsed) {
-        list.classList.add('collapsed');
+        // Показываем только 3 первые строки
+        items.forEach((item, index) => {
+            if (index > 2) {
+                item.classList.add('aurora-hidden');
+            }
+        });
         toggle.classList.add('collapsed');
         ghostTrigger.style.display = 'none';
+        // Сбрасываем состояние списка
+        ofzListExpanded = false;
+        document.getElementById('ofzGhostText').innerText = 'ОТКРЫТЬ СПИСОК';
+        ghostTrigger.classList.remove('open');
         // Закрываем все подстроки
         document.querySelectorAll('.ofz-aurora-item.expanded').forEach(el => {
             el.classList.remove('expanded');
         });
     } else {
-        list.classList.remove('collapsed');
+        // Восстанавливаем - показываем 3 первые
+        items.forEach((item, index) => {
+            if (index <= 2) {
+                item.classList.remove('aurora-hidden');
+            } else if (!ofzListExpanded) {
+                item.classList.add('aurora-hidden');
+            }
+        });
         toggle.classList.remove('collapsed');
         ghostTrigger.style.display = 'flex';
     }
@@ -9898,8 +9998,17 @@ function toggleEchelonsInfo() {
     const info = document.getElementById('stocksEchelonInfo');
     const header = document.getElementById('echelonsHeader');
     
-    info.classList.toggle('open');
-    header.classList.toggle('open');
+    if (!info || !header) return;
+    
+    const isOpen = info.classList.contains('open');
+    
+    if (isOpen) {
+        info.classList.remove('open');
+        header.classList.remove('open');
+    } else {
+        info.classList.add('open');
+        header.classList.add('open');
+    }
     
     // Вибрация
     if (window.Telegram?.WebApp?.HapticFeedback) {
@@ -10049,7 +10158,7 @@ function openStockDetail(ticker, echelon, clickedCell = null) {
             </div>
         </div>
         <div class="stock-detail-actions">
-            <button class="stock-btn stock-btn-chart" onclick="openTradingView(event, '${ticker}')">
+            <button class="stock-btn stock-btn-chart" onclick="openTradingViewDirect('${ticker}')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                 </svg>
@@ -10070,10 +10179,18 @@ function openStockDetail(ticker, echelon, clickedCell = null) {
     card.dataset.echelon = echelon;
     card.classList.add('open');
     
-    // Прокручиваем к карточке
+    // Прокручиваем так чтобы низ карточки был выше навигации
     setTimeout(() => {
-        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 50);
+        const navHeight = 70;
+        const cardRect = card.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const bottomOfCard = cardRect.top + card.offsetHeight;
+        
+        if (bottomOfCard > viewportHeight - navHeight) {
+            const scrollBy = bottomOfCard - (viewportHeight - navHeight) + 20;
+            window.scrollBy({ top: scrollBy, behavior: 'smooth' });
+        }
+    }, 100);
     
     // Вибрация
     if (window.Telegram?.WebApp?.HapticFeedback) {
@@ -10177,15 +10294,11 @@ document.head.appendChild(stocksHiddenStyle);
 function showPriceTooltip(event) {
     event.stopPropagation();
     
-    // Удаляем старый тултип если есть
-    const oldTooltip = document.querySelector('.price-tooltip');
-    if (oldTooltip) {
-        oldTooltip.remove();
-        return;
-    }
+    // Удаляем старые тултипы
+    document.querySelectorAll('.header-tooltip').forEach(t => t.remove());
     
     const tooltip = document.createElement('div');
-    tooltip.className = 'price-tooltip';
+    tooltip.className = 'header-tooltip';
     tooltip.innerHTML = 'Цена формируется как:<br><b>Текущая цена + НКД</b>';
     document.body.appendChild(tooltip);
     
@@ -10207,6 +10320,44 @@ function showPriceTooltip(event) {
             tooltip.remove();
         }
     }, 3000);
+}
+
+// Функция показа тултипа для доходности
+function showYieldTooltip(event) {
+    event.stopPropagation();
+    
+    // Удаляем старые тултипы
+    document.querySelectorAll('.header-tooltip').forEach(t => t.remove());
+    
+    const tooltip = document.createElement('div');
+    tooltip.className = 'header-tooltip';
+    tooltip.innerHTML = '<b>Простая доходность к погашению</b>';
+    document.body.appendChild(tooltip);
+    
+    const rect = event.target.getBoundingClientRect();
+    tooltip.style.top = (rect.bottom + 8) + 'px';
+    tooltip.style.left = (rect.left) + 'px';
+    
+    // Закрытие по клику в любом месте
+    setTimeout(() => {
+        document.addEventListener('click', function closeTooltip() {
+            tooltip.remove();
+            document.removeEventListener('click', closeTooltip);
+        });
+    }, 100);
+    
+    // Автозакрытие через 3 секунды
+    setTimeout(() => {
+        if (tooltip.parentNode) {
+            tooltip.remove();
+        }
+    }, 3000);
+}
+
+// Функция прямого открытия TradingView без предупреждения
+function openTradingViewDirect(ticker) {
+    const tvUrl = `https://ru.tradingview.com/chart/?symbol=MOEX%3A${ticker}`;
+    window.open(tvUrl, '_blank');
 }
 
 // ========================================================================
