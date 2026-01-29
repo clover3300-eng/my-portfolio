@@ -5343,7 +5343,7 @@ body.dark-mode .tab-switcher {
     transform: translateX(100%);
 }
 
-/* Кнопки вкладок */
+/* Кнопки вкладок - БЕЗ ИКОНОК */
 .tab-btn {
     flex: 1;
     position: relative;
@@ -5360,7 +5360,6 @@ body.dark-mode .tab-switcher {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
 }
 
 .tab-btn.active {
@@ -5375,24 +5374,16 @@ body.dark-mode .tab-btn.active {
     color: white;
 }
 
-.tab-btn-icon {
-    font-size: 16px;
-    transition: transform 0.3s ease;
-}
-
-.tab-btn:hover .tab-btn-icon {
-    transform: scale(1.1);
-}
-
 /* === 7. КАРТОЧКА "УМНАЯ ЗАМЕНА" (Dark Premium Glass) === */
 .smart-replace-card {
     position: relative;
     display: flex;
-    align-items: flex-start;
+    align-items: center; /* ЦЕНТРИРОВАНИЕ ПО ВЫСОТЕ */
     gap: 16px;
     padding: 24px;
     background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
     border-radius: 20px;
+    margin-top: 16px; /* ОТСТУП ОТ ЗАГОЛОВКА */
     margin-bottom: 24px;
     box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.3);
     overflow: hidden;
@@ -5466,9 +5457,10 @@ body.dark-mode .tab-btn.active {
 
 /* === 8. ЗАГОЛОВКИ СПИСКА (List Headers) === */
 .list-headers {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr 80px 70px;
     align-items: center;
+    gap: 10px;
     padding: 0 16px 12px;
     margin-bottom: 0;
 }
@@ -5481,6 +5473,45 @@ body.dark-mode .tab-btn.active {
     letter-spacing: 0.1em;
     color: var(--text-deep);
     opacity: 0.5;
+}
+
+.list-header-text.center {
+    text-align: center;
+}
+
+.list-header-text.right {
+    text-align: right;
+}
+
+/* Галочка сворачивания списка */
+.list-collapse-toggle {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+}
+
+.list-collapse-toggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.list-collapse-toggle svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--text-muted);
+    transition: stroke 0.2s ease, transform 0.3s ease;
+}
+
+.list-collapse-toggle:hover svg {
+    stroke: var(--text-deep);
+}
+
+.list-collapse-toggle.collapsed svg {
+    transform: rotate(-90deg);
 }
 
 /* === 9. КОНТЕНТ ВКЛАДОК === */
@@ -5504,32 +5535,36 @@ body.dark-mode .tab-btn.active {
     }
 }
 
-/* === 8. НОВЫЙ ДИЗАЙН СПИСКА ОФЗ === */
+/* === 10. НОВЫЙ ДИЗАЙН СПИСКА ОФЗ (отдельные боксы) === */
 .ofz-aurora-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Скрытый список */
+.ofz-aurora-list.collapsed {
+    display: none;
+}
+
+/* Строка ОФЗ - ОТДЕЛЬНЫЙ БОКС */
+.ofz-aurora-item {
     background: var(--card-glass-aurora);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--card-border-aurora);
-    border-radius: 20px;
-    overflow: hidden;
+    border-radius: 16px;
     box-shadow: var(--shadow-luxury);
-}
-
-/* Строка ОФЗ */
-.ofz-aurora-item {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     transition: all 0.2s ease;
     opacity: 0;
     transform: translateY(10px);
     animation: staggerIn 0.4s ease forwards;
+    overflow: hidden;
 }
 
 body.dark-mode .ofz-aurora-item {
-    border-bottom-color: rgba(255, 255, 255, 0.06);
-}
-
-.ofz-aurora-item:last-child {
-    border-bottom: none;
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Stagger Animation */
@@ -5551,19 +5586,18 @@ body.dark-mode .ofz-aurora-item {
 .ofz-aurora-item:nth-child(9) { animation-delay: 0.45s; }
 .ofz-aurora-item:nth-child(10) { animation-delay: 0.5s; }
 
-/* Spotlight эффект при наведении */
+/* Hover эффект */
 .ofz-aurora-item:hover {
-    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.5) 0%, transparent 60%);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px -8px rgba(15, 23, 42, 0.12);
 }
 
-body.dark-mode .ofz-aurora-item:hover {
-    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.08) 0%, transparent 60%);
-}
-
-/* Свернутая строка (Summary) */
+/* Свернутая строка (Summary) - GRID для выравнивания */
 .ofz-aurora-summary {
-    display: flex;
-    align-items: baseline;
+    display: grid;
+    grid-template-columns: 1fr 80px 70px;
+    align-items: center;
+    gap: 12px;
     padding: 16px 20px;
     cursor: pointer;
     user-select: none;
@@ -5575,44 +5609,29 @@ body.dark-mode .ofz-aurora-item:hover {
     font-weight: 600;
     color: var(--text-deep);
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Пунктирный мостик */
-.ofz-aurora-bridge {
-    flex: 1;
-    border-bottom: 1px dotted var(--text-muted);
-    margin: 0 12px;
-    position: relative;
-    top: -4px;
-    opacity: 0.4;
-}
-
-.ofz-aurora-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
+/* Доходность - по центру */
 .ofz-aurora-yield {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    color: var(--accent-green);
-    background: rgba(16, 185, 129, 0.1);
-    padding: 4px 10px;
-    border-radius: 8px;
+    color: #8B5CF6; /* Фиолетовый вместо зеленого */
+    text-align: center;
 }
 
+/* Цена - справа */
 .ofz-aurora-price {
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
     font-weight: 500;
     color: var(--text-slate);
-    min-width: 70px;
     text-align: right;
 }
 
-/* Раскрытые детали (Аккордеон) */
+/* Раскрытые детали (Аккордеон) - ПОСТРОЧНО */
 .ofz-aurora-details {
     display: none;
     padding: 0 20px 20px;
@@ -5634,33 +5653,40 @@ body.dark-mode .ofz-aurora-item:hover {
     }
 }
 
-.ofz-aurora-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    background: rgba(139, 92, 246, 0.04);
-    padding: 16px;
-    border-radius: 14px;
-    border: 1px solid rgba(139, 92, 246, 0.1);
-}
-
-body.dark-mode .ofz-aurora-details-grid {
-    background: rgba(139, 92, 246, 0.08);
-    border-color: rgba(139, 92, 246, 0.15);
-}
-
-.ofz-detail-item {
+/* Детали - ПОСТРОЧНО */
+.ofz-aurora-details-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 0;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+body.dark-mode .ofz-aurora-details-list {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.ofz-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+body.dark-mode .ofz-detail-row {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.ofz-detail-row:last-child {
+    border-bottom: none;
 }
 
 .ofz-detail-label {
     font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-size: 12px;
+    font-weight: 500;
     color: var(--text-muted);
 }
 
@@ -5669,22 +5695,50 @@ body.dark-mode .ofz-aurora-details-grid {
     font-size: 13px;
     font-weight: 600;
     color: var(--text-deep);
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.ofz-detail-value.highlight {
-    color: var(--accent-purple);
+/* Код с иконкой копирования */
+.ofz-copy-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 4px 10px;
+    background: rgba(59, 130, 246, 0.08);
+    border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
-/* Кнопка графика */
-.ofz-aurora-chart-btn {
-    grid-column: 1 / -1;
-    margin-top: 8px;
-    padding: 12px;
-    background: linear-gradient(135deg, var(--accent-purple) 0%, #7C3AED 100%);
-    border: none;
-    border-radius: 10px;
-    font-family: 'Inter', sans-serif;
+.ofz-copy-wrapper:hover {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.ofz-copy-code {
+    font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-blue);
+}
+
+.ofz-copy-icon {
+    width: 14px;
+    height: 14px;
+    stroke: var(--accent-blue);
+    opacity: 0.7;
+}
+
+/* Кнопка графика - новый цвет */
+.ofz-aurora-chart-btn {
+    margin-top: 12px;
+    padding: 14px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
     font-weight: 600;
     color: white;
     cursor: pointer;
@@ -5693,101 +5747,144 @@ body.dark-mode .ofz-aurora-details-grid {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    width: 100%;
 }
 
 .ofz-aurora-chart-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
 }
 
-/* Код для копирования */
-.ofz-copy-code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--accent-blue);
-    background: rgba(59, 130, 246, 0.1);
-    padding: 4px 8px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+.ofz-aurora-chart-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
-.ofz-copy-code:hover {
-    background: rgba(59, 130, 246, 0.2);
-}
-
-/* === 9. КНОПКА "ПОКАЗАТЬ ВСЕ" === */
-.aurora-show-more {
+/* === 11. GHOST TRIGGER для ОФЗ и АКЦИИ === */
+.rebalance-ghost-trigger {
+    margin: 20px 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin: 20px 0 30px;
-    padding: 14px 24px;
-    background: var(--card-glass-aurora);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px dashed var(--text-muted);
-    border-radius: 14px;
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-slate);
     cursor: pointer;
-    transition: all 0.3s ease;
+    padding: 10px;
+    transition: opacity 0.3s;
 }
 
-.aurora-show-more:hover {
-    border-color: var(--accent-blue);
+.rebalance-ghost-trigger:active {
+    opacity: 0.6;
+}
+
+.rebalance-ghost-trigger .ghost-line {
+    width: 40px;
+    height: 3px;
+    background: #E2E8F0;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+body.dark-mode .rebalance-ghost-trigger .ghost-line {
+    background: #334155;
+}
+
+.rebalance-ghost-trigger .ghost-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    transform: translateX(-100%);
+    animation: ghostShimmer 2.5s infinite;
+}
+
+.rebalance-ghost-trigger .ghost-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #94A3B8;
+    transition: color 0.3s;
+}
+
+.rebalance-ghost-trigger.open .ghost-text {
     color: var(--accent-blue);
-    background: rgba(59, 130, 246, 0.05);
 }
 
-.aurora-show-more.open {
-    border-style: solid;
-    border-color: var(--accent-blue);
-    color: var(--accent-blue);
-}
-
-.aurora-show-more-icon {
-    transition: transform 0.3s ease;
-}
-
-.aurora-show-more.open .aurora-show-more-icon {
-    transform: rotate(180deg);
-}
-
-/* === 10. СКРЫТИЕ СТРОК ОФЗ === */
+/* === 12. СКРЫТИЕ СТРОК ОФЗ === */
 .ofz-aurora-item.aurora-hidden {
     display: none !important;
 }
 
-/* === 11. ВКЛАДКА АКЦИИ - ТАБЛИЦА ЭШЕЛОНОВ === */
+/* === 13. ВКЛАДКА АКЦИИ - НОВЫЙ ДИЗАЙН "ТИХАЯ РОСКОШЬ" === */
 .stocks-aurora-container {
-    background: var(--card-glass-aurora);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--card-border-aurora);
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: var(--shadow-luxury);
+    /* Без белого бокса - впечатано в фон */
 }
 
+/* Заголовок ЭШЕЛОНЫ - раскрывающийся */
+.echelons-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.echelons-header:hover .echelons-title {
+    color: var(--text-deep);
+}
+
+.echelons-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.echelons-toggle-icon {
+    width: 16px;
+    height: 16px;
+    stroke: var(--text-muted);
+    transition: transform 0.3s ease, stroke 0.3s ease;
+}
+
+.echelons-header:hover .echelons-toggle-icon {
+    stroke: var(--text-deep);
+}
+
+.echelons-header.open .echelons-toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Описания эшелонов - скрытые по умолчанию */
 .stocks-echelon-info {
+    display: none;
     margin-bottom: 20px;
+    animation: accordionOpen 0.3s ease;
+}
+
+.stocks-echelon-info.open {
+    display: block;
 }
 
 .echelon-info-card {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    padding: 14px;
+    padding: 14px 16px;
     background: rgba(0, 0, 0, 0.02);
     border-radius: 12px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     opacity: 0;
     transform: translateX(-10px);
     animation: echelonSlideIn 0.4s ease forwards;
@@ -5810,7 +5907,7 @@ body.dark-mode .echelon-info-card {
 }
 
 .echelon-info-icon {
-    font-size: 24px;
+    font-size: 20px;
     flex-shrink: 0;
 }
 
@@ -5820,7 +5917,7 @@ body.dark-mode .echelon-info-card {
 
 .echelon-info-title {
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--text-deep);
     margin-bottom: 4px;
@@ -5865,62 +5962,47 @@ body.dark-mode .echelon-info-card {
     line-height: 1.5;
 }
 
-/* Таблица эшелонов */
+/* Таблица эшелонов - ТИХАЯ РОСКОШЬ */
 .stocks-aurora-table {
-    margin-top: 20px;
+    /* Без фона - впечатана */
 }
 
 .stocks-table-header {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 12px;
+    gap: 6px;
+    margin-bottom: 10px;
+    padding: 0 4px;
 }
 
 .stocks-header-pill {
     text-align: center;
-    padding: 10px;
-    border-radius: 10px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
+    padding: 8px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
     font-weight: 700;
-    border: 2px solid;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: none;
+    background: transparent;
 }
 
-.stocks-header-pill.e1 {
-    color: #10B981;
-    border-color: #10B981;
-    background: rgba(16, 185, 129, 0.08);
-}
-
-.stocks-header-pill.e2 {
-    color: #3B82F6;
-    border-color: #3B82F6;
-    background: rgba(59, 130, 246, 0.08);
-}
-
-.stocks-header-pill.e3 {
-    color: #F59E0B;
-    border-color: #F59E0B;
-    background: rgba(245, 158, 11, 0.08);
-}
-
-.stocks-header-pill.e4 {
-    color: #EF4444;
-    border-color: #EF4444;
-    background: rgba(239, 68, 68, 0.08);
-}
+.stocks-header-pill.e1 { color: #10B981; }
+.stocks-header-pill.e2 { color: #3B82F6; }
+.stocks-header-pill.e3 { color: #F59E0B; }
+.stocks-header-pill.e4 { color: #EF4444; }
 
 .stocks-table-body {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .stocks-table-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: 6px;
     opacity: 0;
     animation: staggerIn 0.3s ease forwards;
 }
@@ -5932,32 +6014,39 @@ body.dark-mode .echelon-info-card {
 .stocks-table-row:nth-child(5) { animation-delay: 0.3s; }
 .stocks-table-row:nth-child(6) { animation-delay: 0.35s; }
 
+/* Ячейка тикера - минималистичный стиль */
 .stocks-cell {
-    text-align: center;
-    padding: 12px 8px;
-    background: rgba(0, 0, 0, 0.02);
-    border-radius: 10px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-deep);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 12px 6px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
 }
 
 body.dark-mode .stocks-cell {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.08);
 }
 
 .stocks-cell:hover {
-    background: var(--card-glass-aurora);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
+    border-color: rgba(0, 0, 0, 0.08);
 }
 
 .stocks-cell:empty {
     background: transparent;
+    border: none;
     cursor: default;
+    backdrop-filter: none;
 }
 
 .stocks-cell:empty:hover {
@@ -5965,31 +6054,180 @@ body.dark-mode .stocks-cell {
     box-shadow: none;
 }
 
-/* Кнопка показать больше акций */
-.stocks-show-more {
+.stocks-cell-ticker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-deep);
+}
+
+.stocks-cell-change {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.stocks-cell-change.positive { color: #10B981; }
+.stocks-cell-change.negative { color: #EF4444; }
+.stocks-cell-change.neutral { color: var(--text-muted); }
+
+/* Карточка деталей тикера - ТИХАЯ РОСКОШЬ */
+.stock-detail-card {
+    display: none;
+    margin-top: 10px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 16px;
+    animation: accordionOpen 0.3s ease;
+}
+
+body.dark-mode .stock-detail-card {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.stock-detail-card.open {
+    display: block;
+}
+
+.stock-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.dark-mode .stock-detail-header {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.stock-detail-ticker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-deep);
+}
+
+.stock-detail-echelon {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.stock-detail-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 16px;
+}
+
+.stock-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+body.dark-mode .stock-detail-row {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.stock-detail-row:last-child {
+    border-bottom: none;
+}
+
+.stock-detail-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.stock-detail-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-deep);
+}
+
+.stock-detail-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.stock-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 16px;
-    padding: 12px;
-    background: transparent;
-    border: 1px dashed var(--text-muted);
-    border-radius: 10px;
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-slate);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 100%;
 }
 
-.stocks-show-more:hover {
-    border-color: var(--accent-blue);
-    color: var(--accent-blue);
+.stock-btn-chart {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white;
+}
+
+.stock-btn-chart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.25);
+}
+
+.stock-btn-info {
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--text-deep);
+}
+
+body.dark-mode .stock-btn-info {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.stock-btn-info:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.stock-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Ghost trigger для акций */
+.stocks-ghost-trigger {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 10px;
+    transition: opacity 0.3s;
+}
+
+.stocks-ghost-trigger:active {
+    opacity: 0.6;
+}
+
+/* Скрытие строк */
+.stocks-table-row.stocks-row-hidden {
+    display: none !important;
 }
 
         /* 3. ФИКС ПРЕВЬЮ РЕБАЛАНСИРОВКИ (Luxury Glow) */
@@ -6847,47 +7085,53 @@ body.dark-mode .stocks-cell {
         </div>
     </div>
 
-    <!-- LIQUID TAB SWITCHER -->
+    <!-- LIQUID TAB SWITCHER (без иконок) -->
     <div class="rebalance-tabs-container">
         <div class="tab-switcher" id="tabSwitcher">
-            <!-- Глайдер (плавающий индикатор) -->
             <div class="tab-glider"></div>
-            
-            <!-- Кнопки вкладок -->
-            <button class="tab-btn active" onclick="switchRebalanceTab('ofz')" data-tab="ofz">
-                <span class="tab-btn-icon">🛡️</span>ОФЗ
-            </button>
-            <button class="tab-btn" onclick="switchRebalanceTab('stocks')" data-tab="stocks">
-                <span class="tab-btn-icon">📈</span>АКЦИИ
-            </button>
+            <button class="tab-btn active" onclick="switchRebalanceTab('ofz')" data-tab="ofz">ОФЗ</button>
+            <button class="tab-btn" onclick="switchRebalanceTab('stocks')" data-tab="stocks">АКЦИИ</button>
         </div>
     </div>
 
     <!-- КОНТЕНТ ВКЛАДКИ ОФЗ -->
     <div id="rebalance-tab-ofz" class="rebalance-tab-content active">
-        <!-- Заголовки списка -->
+        <!-- Заголовки списка с галочкой -->
         <div class="list-headers">
+            <div class="list-collapse-toggle" id="ofzCollapseToggle" onclick="toggleOfzListCollapse()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </div>
             <span class="list-header-text">ИНСТРУМЕНТ</span>
-            <span class="list-header-text">ДОХОДН. / ЦЕНА</span>
+            <span class="list-header-text center">ДОХОДНОСТЬ</span>
+            <span class="list-header-text right">ЦЕНА</span>
         </div>
         
         <div id="ofz-aurora-list" class="ofz-aurora-list">
             <!-- Динамически заполняется через JS -->
         </div>
         
-        <div class="aurora-show-more" id="auroraShowMoreOfz" onclick="toggleAuroraOfzList()">
-            <span id="auroraShowMoreText">ПОКАЗАТЬ ВСЕ</span>
-            <svg class="aurora-show-more-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
+        <!-- Ghost Trigger для ОФЗ -->
+        <div class="rebalance-ghost-trigger" id="ofzGhostTrigger" onclick="toggleAuroraOfzList()">
+            <div class="ghost-line"></div>
+            <div class="ghost-text" id="ofzGhostText">ПОКАЗАТЬ ВСЕ</div>
         </div>
     </div>
 
     <!-- КОНТЕНТ ВКЛАДКИ АКЦИИ -->
     <div id="rebalance-tab-stocks" class="rebalance-tab-content">
         <div class="stocks-aurora-container">
-            <!-- Информация об эшелонах -->
-            <div class="stocks-echelon-info">
+            <!-- Заголовок ЭШЕЛОНЫ - раскрывающийся -->
+            <div class="echelons-header" id="echelonsHeader" onclick="toggleEchelonsInfo()">
+                <span class="echelons-title">ЭШЕЛОНЫ</span>
+                <svg class="echelons-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </div>
+            
+            <!-- Информация об эшелонах (скрыта по умолчанию) -->
+            <div class="stocks-echelon-info" id="stocksEchelonInfo">
                 <div class="echelon-info-card">
                     <div class="echelon-info-icon">💎</div>
                     <div class="echelon-info-text">
@@ -6931,12 +7175,16 @@ body.dark-mode .stocks-cell {
                 </div>
             </div>
             
-            <button class="stocks-show-more" id="stocksShowMore" onclick="toggleStocksTable()">
-                <span id="stocksShowMoreText">ПОКАЗАТЬ ВСЕ</span>
-                <svg class="aurora-show-more-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </button>
+            <!-- Карточка деталей тикера -->
+            <div class="stock-detail-card" id="stockDetailCard">
+                <!-- Динамически заполняется -->
+            </div>
+            
+            <!-- Ghost Trigger для акций -->
+            <div class="rebalance-ghost-trigger" id="stocksGhostTrigger" onclick="toggleStocksTable()">
+                <div class="ghost-line"></div>
+                <div class="ghost-text" id="stocksGhostText">ПОКАЗАТЬ ВСЕ</div>
+            </div>
         </div>
     </div>
     
@@ -9268,70 +9516,62 @@ function renderAuroraOfzList() {
         <div class="ofz-aurora-item ${hiddenClass}" id="aurora-${b.t}" data-index="${index}">
             <div class="ofz-aurora-summary" onclick="toggleAuroraOfzDetails('${b.t}')">
                 <span class="ofz-aurora-name">${formatNameWithMonoDigits(limitName(b.n))}</span>
-                <span class="ofz-aurora-bridge"></span>
-                <div class="ofz-aurora-right">
-                    <span class="ofz-aurora-yield">${b.y}</span>
-                    <span class="ofz-aurora-price">${priceFinal} ₽</span>
-                </div>
+                <span class="ofz-aurora-yield">${curYield}%</span>
+                <span class="ofz-aurora-price">${priceFinal} ₽</span>
             </div>
             
             <div class="ofz-aurora-details" id="aurora-details-${b.t}">
-                <div class="ofz-aurora-details-grid">
-                    <div class="ofz-detail-item">
+                <div class="ofz-aurora-details-list">
+                    <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Код (ISIN)</span>
-                        <span class="ofz-copy-code" onclick="copyTickerNew('${b.t}')">${b.t}</span>
+                        <div class="ofz-copy-wrapper" onclick="copyTickerNew('${b.t}')">
+                            <span class="ofz-copy-code">${b.t}</span>
+                            <svg class="ofz-copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </div>
                     </div>
-                    <div class="ofz-detail-item">
+                    <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Текущая цена</span>
                         <span class="ofz-detail-value">${priceFinal} ₽</span>
                     </div>
-                    <div class="ofz-detail-item">
+                    <div class="ofz-detail-row">
                         <span class="ofz-detail-label">НКД</span>
                         <span class="ofz-detail-value">${b.nkd || 0} ₽</span>
                     </div>
-                    <div class="ofz-detail-item">
+                    <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Погашение</span>
                         <span class="ofz-detail-value">${details.matDate}</span>
                     </div>
-                    <div class="ofz-detail-item">
+                    <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Размер купона</span>
                         <span class="ofz-detail-value">${details.couponValue} ₽</span>
                     </div>
-                    <div class="ofz-detail-item">
-                        <span class="ofz-detail-label">Ближ. купон</span>
+                    <div class="ofz-detail-row">
+                        <span class="ofz-detail-label">Ближайший купон</span>
                         <span class="ofz-detail-value">${details.nextCoupon}</span>
                     </div>
-                    <div class="ofz-detail-item">
-                        <span class="ofz-detail-label">Тек. доходность</span>
-                        <span class="ofz-detail-value highlight">${curYield}%</span>
+                    <div class="ofz-detail-row">
+                        <span class="ofz-detail-label">Текущая доходность</span>
+                        <span class="ofz-detail-value" style="color: #8B5CF6;">${curYield}%</span>
                     </div>
-                    <div class="ofz-detail-item">
+                    <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Выплат в год</span>
                         <span class="ofz-detail-value">${details.freq}</span>
                     </div>
-                    <button class="ofz-aurora-chart-btn" onclick="openTradingView(event, '${b.t}')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                        </svg>
-                        Открыть график
-                    </button>
                 </div>
+                <button class="ofz-aurora-chart-btn" onclick="openTradingView(event, '${b.t}')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    Открыть график
+                </button>
             </div>
         </div>`;
     });
     
     container.innerHTML = html;
-    
-    // Добавляем spotlight эффект при движении мыши
-    container.querySelectorAll('.ofz-aurora-item').forEach(item => {
-        item.addEventListener('mousemove', (e) => {
-            const rect = item.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-            item.style.setProperty('--mouse-x', x + '%');
-            item.style.setProperty('--mouse-y', y + '%');
-        });
-    });
 }
 
 // Раскрытие/скрытие деталей ОФЗ в Aurora стиле
@@ -9358,21 +9598,26 @@ function toggleAuroraOfzDetails(ticker) {
 }
 
 // Показать/скрыть все ОФЗ в Aurora стиле
+let ofzListExpanded = false;
+
 function toggleAuroraOfzList() {
     const items = document.querySelectorAll('.ofz-aurora-item');
-    const btn = document.getElementById('auroraShowMoreOfz');
-    const text = document.getElementById('auroraShowMoreText');
-    const isExpanded = btn.classList.contains('open');
+    const trigger = document.getElementById('ofzGhostTrigger');
+    const text = document.getElementById('ofzGhostText');
     
-    if (isExpanded) {
+    ofzListExpanded = !ofzListExpanded;
+    
+    if (!ofzListExpanded) {
         // Сворачиваем — показываем только первые 3
         items.forEach((item, index) => {
             if (index > 2) {
                 item.classList.add('aurora-hidden');
             }
+            // Также закрываем все подстроки
+            item.classList.remove('expanded');
         });
         text.innerText = 'ПОКАЗАТЬ ВСЕ';
-        btn.classList.remove('open');
+        trigger.classList.remove('open');
     } else {
         // Разворачиваем — показываем все с анимацией
         items.forEach((item, index) => {
@@ -9384,12 +9629,56 @@ function toggleAuroraOfzList() {
             item.style.animationDelay = `${index * 0.05}s`;
         });
         text.innerText = 'СКРЫТЬ';
-        btn.classList.add('open');
+        trigger.classList.add('open');
     }
     
     // Вибрация
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
+
+// Сворачивание/разворачивание списка ОФЗ через галочку
+let ofzListCollapsed = false;
+
+function toggleOfzListCollapse() {
+    const list = document.getElementById('ofz-aurora-list');
+    const toggle = document.getElementById('ofzCollapseToggle');
+    const ghostTrigger = document.getElementById('ofzGhostTrigger');
+    
+    ofzListCollapsed = !ofzListCollapsed;
+    
+    if (ofzListCollapsed) {
+        list.classList.add('collapsed');
+        toggle.classList.add('collapsed');
+        ghostTrigger.style.display = 'none';
+        // Закрываем все подстроки
+        document.querySelectorAll('.ofz-aurora-item.expanded').forEach(el => {
+            el.classList.remove('expanded');
+        });
+    } else {
+        list.classList.remove('collapsed');
+        toggle.classList.remove('collapsed');
+        ghostTrigger.style.display = 'flex';
+    }
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
+
+// Переключение описания эшелонов
+function toggleEchelonsInfo() {
+    const info = document.getElementById('stocksEchelonInfo');
+    const header = document.getElementById('echelonsHeader');
+    
+    info.classList.toggle('open');
+    header.classList.toggle('open');
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
     }
 }
 
@@ -9417,9 +9706,25 @@ function renderAuroraStocksTable() {
         html += `<div class="stocks-table-row ${hiddenClass}" data-row="${rowIndex}">`;
         
         cells.forEach((cell, cellIndex) => {
-            const ticker = cell.textContent.trim();
-            if (ticker) {
-                html += `<div class="stocks-cell" onclick="copyTickerNew('${ticker}')">${ticker}</div>`;
+            const cellContent = cell.querySelector('.et-cell-content');
+            if (cellContent) {
+                const ticker = cellContent.querySelector('.et-ticker')?.textContent || '';
+                const price = cellContent.querySelector('.et-price')?.textContent || '';
+                const echelonNum = cellIndex + 1;
+                
+                // Определяем изменение цены (можно взять из данных)
+                const changeClass = price.includes('+') ? 'positive' : (price.includes('-') ? 'negative' : 'neutral');
+                
+                html += `<div class="stocks-cell" onclick="openStockDetail('${ticker}', ${echelonNum})">
+                    <span class="stocks-cell-ticker">${ticker}</span>
+                    <span class="stocks-cell-change ${changeClass}">${price}</span>
+                </div>`;
+            } else if (cell.textContent.trim()) {
+                const ticker = cell.textContent.trim();
+                const echelonNum = cellIndex + 1;
+                html += `<div class="stocks-cell" onclick="openStockDetail('${ticker}', ${echelonNum})">
+                    <span class="stocks-cell-ticker">${ticker}</span>
+                </div>`;
             } else {
                 html += `<div class="stocks-cell"></div>`;
             }
@@ -9434,13 +9739,86 @@ function renderAuroraStocksTable() {
     updateStocksShowMoreButton();
 }
 
+// Открытие карточки деталей тикера
+function openStockDetail(ticker, echelon) {
+    const card = document.getElementById('stockDetailCard');
+    if (!card || !ticker) return;
+    
+    // Закрываем если уже открыта эта же карточка
+    if (card.classList.contains('open') && card.dataset.ticker === ticker) {
+        card.classList.remove('open');
+        card.dataset.ticker = '';
+        return;
+    }
+    
+    // Получаем данные о тикере (можно расширить получением из API)
+    const echelonColors = {
+        1: { bg: 'rgba(16, 185, 129, 0.15)', color: '#10B981', name: 'I Эшелон' },
+        2: { bg: 'rgba(59, 130, 246, 0.15)', color: '#3B82F6', name: 'II Эшелон' },
+        3: { bg: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B', name: 'III Эшелон' },
+        4: { bg: 'rgba(239, 68, 68, 0.15)', color: '#EF4444', name: 'IV Эшелон' }
+    };
+    
+    const echelonStyle = echelonColors[echelon] || echelonColors[1];
+    
+    card.innerHTML = `
+        <div class="stock-detail-header">
+            <span class="stock-detail-ticker">${ticker}</span>
+            <span class="stock-detail-echelon" style="background: ${echelonStyle.bg}; color: ${echelonStyle.color};">${echelonStyle.name}</span>
+        </div>
+        <div class="stock-detail-grid">
+            <div class="stock-detail-row">
+                <span class="stock-detail-label">Код (тикер)</span>
+                <div class="ofz-copy-wrapper" onclick="copyTickerNew('${ticker}')">
+                    <span class="ofz-copy-code">${ticker}</span>
+                    <svg class="ofz-copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="stock-detail-row">
+                <span class="stock-detail-label">Эшелон риска</span>
+                <span class="stock-detail-value">${echelonStyle.name}</span>
+            </div>
+        </div>
+        <div class="stock-detail-actions">
+            <button class="stock-btn stock-btn-chart" onclick="openTradingView(event, '${ticker}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                График
+            </button>
+            <button class="stock-btn stock-btn-info" onclick="showCompanyInfo('${ticker}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                О компании
+            </button>
+        </div>
+    `;
+    
+    card.dataset.ticker = ticker;
+    card.classList.add('open');
+    
+    // Прокручиваем к карточке
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
+
 // Показать/скрыть все акции
 let stocksExpanded = false;
 
 function toggleStocksTable() {
     const rows = document.querySelectorAll('.stocks-table-row');
-    const btn = document.getElementById('stocksShowMore');
-    const text = document.getElementById('stocksShowMoreText');
+    const trigger = document.getElementById('stocksGhostTrigger');
+    const text = document.getElementById('stocksGhostText');
     
     stocksExpanded = !stocksExpanded;
     
@@ -9459,7 +9837,7 @@ function toggleStocksTable() {
     });
     
     text.innerText = stocksExpanded ? 'СКРЫТЬ' : 'ПОКАЗАТЬ ВСЕ';
-    btn.classList.toggle('open', stocksExpanded);
+    trigger.classList.toggle('open', stocksExpanded);
     
     // Вибрация
     if (window.Telegram?.WebApp?.HapticFeedback) {
@@ -9469,12 +9847,12 @@ function toggleStocksTable() {
 
 function updateStocksShowMoreButton() {
     const rows = document.querySelectorAll('.stocks-table-row');
-    const btn = document.getElementById('stocksShowMore');
+    const trigger = document.getElementById('stocksGhostTrigger');
     
     if (rows.length <= 5) {
-        btn.style.display = 'none';
+        trigger.style.display = 'none';
     } else {
-        btn.style.display = 'flex';
+        trigger.style.display = 'flex';
     }
 }
 
