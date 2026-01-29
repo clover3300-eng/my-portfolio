@@ -375,123 +375,10 @@
 /* ========== END: Terminal Header V2 ========== */
 
         
-        .terminal-badge {
-            display: inline-flex;
-            align-items: center; gap: 6px; padding: 4px 10px;
-            background: var(--accent-blue); color: white; font-size: 10px; font-weight: 900;
-            border-radius: 4px; text-transform: uppercase;
-            margin-bottom: 12px; letter-spacing: 1px;
-        }
+      
+      
 
-        .market-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: #ccc; }
-        .dot-online { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; animation: pulse 2s infinite; }
-        .dot-offline { background: #e74c3c; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-
-        .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
-        .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 25px; }
-        
-        .market-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .market-item-modern {
-            background: var(--card-bg);
-            border-radius: 16px; padding: 12px 16px;
-            position: relative; overflow: hidden; box-shadow: 0 6px 15px var(--card-shadow);
-            border: 1px solid var(--border-color); display: flex;
-            flex-direction: row; align-items: center; justify-content: space-between;
-        }
-        .market-item-modern::before {
-            content: '';
-            position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-        }
-        .market-item-modern.blue::before { background: var(--accent-blue); }
-        .market-item-modern.green::before { background: var(--accent-green); }
-        .market-item-modern.orange::before { background: #f39c12; }
-        
-        .mk-left { display: flex; flex-direction: column; gap: 4px; }
-        .mk-label {
-            font-size: 14px; font-weight: 700; color: var(--text-main); letter-spacing: 0px;
-            text-transform: none; margin-bottom: 0;
-        }
-        .mk-val {
-            font-size: 16px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px;
-        }
-        .mk-dynamics {
-            font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 8px;
-        }
-        .mk-dynamics.positive { background: var(--badge-green-bg); color: var(--accent-green); }
-        .mk-dynamics.negative { background: rgba(231, 76, 60, 0.1); color: var(--accent-red); }
-        .mk-dynamics.neutral { background: rgba(0,0,0,0.05); color: var(--text-secondary); }
-        .dark-mode .mk-dynamics.neutral { background: rgba(255,255,255,0.1); }
-        
-        .rates-vertical-block {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 15px;
-            margin-bottom: 25px;
-            box-shadow: 0 6px 15px var(--card-shadow);
-            border: 1px solid var(--border-color);
-        }
-        .rv-title {
-            font-size: 11px; color: #8e8e93; font-weight: 700; text-transform: uppercase;
-            margin-bottom: 12px; letter-spacing: 0.5px;
-        }
-        .rv-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-        }
-        .rv-item {
-            display: flex; flex-direction: column; gap: 4px;
-            background: rgba(0,0,0,0.02); padding: 10px; border-radius: 12px;
-        }
-        .dark-mode .rv-item { background: rgba(255,255,255,0.03); }
-        .rv-item span { font-size: 10px; color: #8e8e93; font-weight: 600; }
-        .rv-item b { font-size: 15px; color: var(--text-main); font-weight: 800; }
-
-        .info-card {
-            background: var(--card-bg);
-            padding: 20px; border-radius: 20px; margin-bottom: 15px;
-            border: 1px solid var(--border-color); box-shadow: 0 5px 15px var(--card-shadow); 
-            position: relative; overflow: hidden; transition: transform 0.2s;
-        }
-        .info-card:active { transform: scale(0.99); }
-        .info-card.bonds { border-left: 4px solid var(--accent-blue); background: linear-gradient(to right, rgba(52, 152, 219, 0.03), var(--card-bg)); }
-        .info-card.stocks { border-left: 4px solid var(--accent-green); background: linear-gradient(to right, rgba(46, 204, 113, 0.03), var(--card-bg)); }
-
-        .info-card-header { font-size: 18px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-        .bonds .info-card-header { color: var(--accent-blue); }
-        .stocks .info-card-header { color: var(--accent-green); }
-
-        .info-card-sub-clean { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px 0; opacity: 0.7; }
-        .bonds .info-card-sub-clean { color: var(--accent-blue); }
-        .stocks .info-card-sub-clean { color: var(--accent-green); }
-        
-        .info-card-text { font-size: 13px; line-height: 1.6; color: var(--text-main); margin-bottom: 15px; opacity: 0.8; }
-        
-        .info-card-badge {
-            display: inline-flex; align-items: center; justify-content: center;
-            padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px;
-        }
-        .badge-blue { background: var(--badge-blue-bg); color: var(--accent-blue); }
-        .badge-green { background: var(--badge-green-bg); color: var(--accent-green); }
-
-        .btn-action {
-            display: flex; align-items: center; justify-content: center; width: 100%; padding: 16px; margin-top: 12px;
-            background: var(--coupon-blue-bg); color: var(--accent-blue);
-            border: 1px solid var(--accent-blue); border-radius: 16px;
-            font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s; gap: 8px;
-        }
-        .btn-action:active { opacity: 0.7; transform: scale(0.98); }
-
-        @keyframes shimmerBtn {
-    0% { box-shadow: 0 10px 25px rgba(44, 54, 76, 0.2); transform: scale(1); }
-    50% { box-shadow: 0 12px 30px rgba(44, 54, 76, 0.3); transform: scale(1.005); }
-    100% { box-shadow: 0 10px 25px rgba(44, 54, 76, 0.2); transform: scale(1); }
-}
-
+      
 .btn-graphite {
     position: relative;
     background: #2C364C; 
@@ -1262,25 +1149,8 @@ input#sumInput.size-xsmall {
         
 
         #shareContainer { background: var(--bg-color); padding: 5px 10px 20px; border-radius: 10px; }
-        .asset-list { background: var(--card-bg); border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
-        .asset-item {
-            display: grid; grid-template-columns: 85px 1fr 75px 80px; padding: 12px; 
-            border-bottom: 1px solid var(--item-border); font-size: 12px; align-items: center;
-        }
-        .asset-item:last-child { border-bottom: none; }
-        .ticker { font-weight: bold; color: var(--text-main); }
-        .asset-name { color: #8e8e93; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 5px; }
-        .qty { text-align: right; padding-right: 8px; font-weight: bold; color: var(--accent-blue); }
-        .price-total { text-align: right; color: var(--text-main); font-weight: 500; }
-        
-        .asset-yield-badge {
-            background: rgba(46, 204, 113, 0.15); color: var(--accent-green);
-            font-weight: 800; font-size: 11px; padding: 4px 8px; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; width: 100%;
-            box-sizing: border-box;
-        }
-        .asset-yield-badge.blue { background: rgba(52, 152, 219, 0.15); color: var(--accent-blue); }
-
+     
+       
         .details {
             grid-column: 1 / -1; display: none; background: rgba(0,0,0,0.02);
             padding: 12px; border-top: 1px solid var(--item-border); font-size: 11px;
@@ -1297,26 +1167,9 @@ input#sumInput.size-xsmall {
              gap: 4px; box-shadow: 0 2px 5px rgba(52, 152, 219, 0.2);
         }
 
-        .section-header-highlight {
-            margin: 25px 0 8px; padding: 12px 16px; border-radius: 16px;
-            font-weight: 800; font-size: 16px; 
-            background: var(--header-light-gradient); color: var(--text-main);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid rgba(52, 152, 219, 0.2);
-            display: flex; align-items: center; justify-content: space-between;
-        }
+       
         .section-desc-small { font-size: 11px; color: #8e8e93; margin-bottom: 12px; padding: 0 5px; line-height: 1.4; }
 
-        .section-header-styled {
-            margin: 25px 0 12px; background: linear-gradient(135deg, #ffffff, #f0f2f5);
-            padding: 14px 16px; border-radius: 16px;
-            font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: space-between;
-            color: var(--graphite-color); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid rgba(255,255,255,0.5);
-            cursor: pointer;
-        }
-        .dark-mode .section-header-styled {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            color: #f1f5f9; border-color: rgba(255,255,255,0.1);
-        }
         
         .info-expanded-block {
             display: none;
@@ -1399,18 +1252,7 @@ input#sumInput.size-xsmall {
             white-space: nowrap; border-radius: 20px; margin: 2px;
         }
         
-        .section-transition {
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            margin: 15px 0 25px; opacity: 1; position: relative;
-        }
-        .st-line { height: 1px; flex: 1; background: linear-gradient(90deg, transparent, var(--accent-blue)); }
-        .st-line.rev { background: linear-gradient(90deg, var(--accent-blue), transparent); }
-        .st-icon {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: var(--card-bg); color: var(--accent-blue);
-            border: 1px solid var(--accent-blue); display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.2); z-index: 5; font-size: 20px; line-height: 1;
-        }
+        
         
         .echelon-separator-modern {
             display: flex; justify-content: space-between; align-items: center;
@@ -1455,62 +1297,17 @@ input#sumInput.size-xsmall {
         }
         .echelon-tip.show { display: block; animation: fadeIn 0.2s ease; }
 
-        .coupon-box {
-            background: var(--card-bg); border-radius: 16px; margin-top: 10px;
-            border: 1px solid var(--accent-blue); overflow: hidden; margin-bottom: 10px;
-            position: relative; z-index: 2;
-        }
-        .coupon-header {
-            padding: 12px 14px; background: var(--coupon-blue-bg); color: var(--accent-blue);
-            font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; cursor: pointer; align-items: center;
-            position: relative;
-        }
-        .coupon-title-wrapper { display: flex; align-items: flex-start; gap: 10px; }
-        .coupon-icon-lg { font-size: 20px; line-height: 1.2; }
-        .coupon-text-col { display: flex; flex-direction: column; line-height: 1.1; }
-        .coupon-main-text { font-size: 14px; font-weight: 800; }
-        .coupon-preview-mini { font-size: 9px; opacity: 0.7; font-weight: normal; margin-top: 2px; }
-        .coupon-content { display: none; padding: 0 12px 12px; }
-        .coupon-content.active { display: block; }
         
-        .coupon-table-head {
-            display: grid; grid-template-columns: 85px 1fr 50px 70px; gap: 5px;
-            padding: 8px 0; font-size: 9px; font-weight: 800; color: #95a5a6;
-            border-bottom: 2px solid var(--item-border); margin-top: 10px; margin-bottom: 5px;
-        }
-        .coupon-row {
-            display: grid; grid-template-columns: 85px 1fr 50px 70px; gap: 5px;
-            padding: 10px 0; border-bottom: 1px solid var(--item-border); font-size: 11px; align-items: center;
-        }
-        .coupon-row:last-child { border-bottom: none; }
-        .coupon-row b { color: var(--text-main); }
+       
+        
         .arrow-icon { width: 14px; height: 14px; fill: currentColor; transition: transform 0.3s; }
         .coupon-content.active + .coupon-header .arrow-icon, 
         .coupon-header[onclick*="toggle"] .arrow-icon.rotated { transform: rotate(180deg); }
 
-        .tax-selector-ui { display: flex; background: var(--bg-color); border-radius: 10px; padding: 3px; margin: 12px 0; gap: 2px; }
-        .tax-ui-btn {
-            flex: 1; border: none; background: transparent; padding: 6px;
-            font-size: 11px; font-weight: bold; color: #8e8e93; border-radius: 8px;
-            cursor: pointer; transition: all 0.2s;
-        }
-        .tax-ui-btn.active { background: var(--card-bg); color: var(--accent-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
+       
 
-        .footer-disclaimer-important {
-            margin-top: 15px; margin-bottom: 25px; text-align: left; 
-            color: var(--text-main); 
-            background: linear-gradient(135deg, rgba(46, 204, 113, 0.05), rgba(46, 204, 113, 0.15));
-            padding: 20px; border-radius: 20px; 
-            border: 1px solid rgba(46, 204, 113, 0.2);
-            font-size: 13px; line-height: 1.6;
-            position: relative; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.1);
-        }
-        .footer-disclaimer-important::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
-            background: var(--accent-green);
-        }
-        .footer-disclaimer { text-align: center; font-size: 11px; color: #99aab5; margin-top: 30px; padding: 0 20px; }
+       
 
         .nav-wrapper {
     position: fixed; bottom: 25px; left: 0; width: 100%; 
@@ -1587,54 +1384,9 @@ input#sumInput.size-xsmall {
             box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 910;
         }
         .theme-toggle-mini svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
-
-        .list-header-row {
-            display: grid; padding: 0 16px; margin-bottom: 5px;
-            font-size: 9px; font-weight: 700; color: #95a5a6; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .list-header-row.ofz-cols {
-            grid-template-columns: 1fr 60px 60px 70px; gap: 8px; text-align: right;
-        }
-        .list-header-row.ofz-cols span:first-child { text-align: left; }
-        .list-header-row.ofz-cols span:nth-child(2), .list-header-row.ofz-cols span:nth-child(3) { text-align: center; }
         
-        .list-header-row.calc-cols {
-            /* Updated Grid for shifting right */
-            display: grid; grid-template-columns: 1fr 70px 100px; gap: 8px;
-            text-align: right; margin-bottom: 8px;
-        }
-        .list-header-row.calc-cols span:first-child { text-align: left; }
-        
-        .ofz-card-modern {
-            background: var(--card-bg); border-radius: 16px;
-            padding: 14px 16px; margin-bottom: 10px;
-            border: 1px solid var(--border-color);
-            display: grid; grid-template-columns: 1fr 60px 60px 70px; 
-            align-items: center; gap: 8px;
-            box-shadow: 0 4px 10px var(--card-shadow);
-            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-            position: relative; overflow: hidden;
-        }
-        .ofz-card-modern::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent-blue); }
-        .ofz-card-modern:active { transform: scale(0.98); }
-        .ofz-main-info { display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
-        .ofz-name-lg { font-weight: 700; font-size: 13px; color: var(--text-main); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .ofz-ticker-sm { font-size: 10px; color: #8e8e93; font-weight: 600; text-transform: uppercase; }
-        
-        .ofz-nkd-badge {
-            font-size: 12px; font-weight: 700; color: #7f8c8d; text-align: center;
-            background: rgba(0,0,0,0.04); padding: 4px 8px; border-radius: 8px;
-        }
-        .ofz-price { 
-            font-size: 12px; font-weight: 700; color: #7f8c8d; text-align: center; 
-            background: rgba(0,0,0,0.04); padding: 4px 8px; border-radius: 8px;
-        }
-        
-        .ofz-yield-badge { 
-            font-weight: 800; font-size: 13px; color: var(--accent-green); 
-            background: rgba(46, 204, 113, 0.1); padding: 6px 8px; border-radius: 10px; 
-            display: flex; align-items: center; justify-content: center; gap: 2px;
-        }
+       
+      
         .ofz-arrow { width: 10px; height: 10px; fill: currentColor; }
         
         .ofz-details-panel {
