@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -9856,7 +9857,23 @@ async function fetchPricesForMonthlyIncome() {
     renderMonthlyIncomeCards();
 }
 // ===== ФУНКЦИЯ 3: Пересчёт выплат (ИСПРАВЛЕННАЯ) =====
-allScheduledPayments.forEach(payment => {
+function recalcCustomCoupons() {
+    const resultList = document.getElementById('calc-results-list');
+    const footer = document.getElementById('calc-results-footer');
+    if (!resultList) return;
+    
+    let html = '';
+    const bondQtyMap = {};
+    let totalAmount = 0;
+    
+    // Собираем количества из полей ввода
+    monthlyIncomeBonds.forEach(bond => {
+        const input = document.getElementById(`input-${bond.t}`);
+        bondQtyMap[bond.t] = input ? (parseInt(input.value) || 0) : 0;
+    });
+
+    // Выводим все 12 строк выплат
+   allScheduledPayments.forEach(payment => {
     // --- НАЧАЛО БЛОКА ПОИСКА КОЛИЧЕСТВА ---
     
     // 1. Сначала пробуем найти количество по Тикеру (коду)
@@ -9879,7 +9896,6 @@ allScheduledPayments.forEach(payment => {
 
     const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
     totalAmount += netAmount;
-    
       html += `
     <div class="coupon-row" style="display:grid; grid-template-columns: 45px 1fr 40px 70px; gap:2px; align-items:center; margin-bottom:8px;">
         
