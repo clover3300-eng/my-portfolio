@@ -2495,7 +2495,7 @@ body.dark-mode #screen-interesting .calc-accordion.collapsed {
 #screen-interesting .calc-accordion-title {
     font-family: 'Inter', sans-serif;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-deep, #0F172A);
 }
 
@@ -2507,6 +2507,7 @@ body.dark-mode #screen-interesting .calc-accordion-title {
 #screen-interesting .calc-accordion-subtitle {
     font-family: 'Inter', sans-serif;
     font-size: 11px;
+    font-weight: 500;
     color: var(--text-slate, #64748B);
     margin-top: 3px;
 }
@@ -2724,28 +2725,30 @@ body.dark-mode #screen-interesting .future-feature-item span {
 
 /* Поле ввода суммы - крупное, выравнивание вправо */
 #screen-interesting .glass-input-wrapper {
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 16px;
     padding: 16px 20px;
     margin-bottom: 16px;
     transition: all 0.2s ease;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.015);
 }
 
 body.dark-mode #screen-interesting .glass-input-wrapper {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 #screen-interesting .glass-input-wrapper:focus-within {
     border-color: #10B981;
-    background: rgba(16, 185, 129, 0.03);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.015), 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
 #screen-interesting .glass-input-wrapper .input-label {
     font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-slate, #64748B);
@@ -2759,10 +2762,17 @@ body.dark-mode #screen-interesting .glass-input-wrapper {
     background: transparent;
     font-family: 'JetBrains Mono', monospace;
     font-size: 26px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-deep, #0F172A);
     outline: none;
     text-align: right;
+}
+
+/* Символ рубля рядом с инпутом */
+#screen-interesting .glass-input-wrapper .currency-symbol {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 26px;
+    color: #CBD5E1;
 }
 
 body.dark-mode #screen-interesting .glass-input-wrapper input {
@@ -2770,8 +2780,8 @@ body.dark-mode #screen-interesting .glass-input-wrapper input {
 }
 
 #screen-interesting .glass-input-wrapper input::placeholder {
-    color: var(--text-slate, #64748B);
-    opacity: 0.4;
+    color: #CBD5E1;
+    opacity: 0.6;
 }
 
 /* Информационный текст - синий фон */
@@ -2842,8 +2852,7 @@ body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
     display: grid;
     grid-template-columns: 1fr 80px 112px;
     gap: 8px;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 12px 12px;
     margin-bottom: 4px;
 }
 
@@ -2853,7 +2862,7 @@ body.dark-mode #screen-interesting .calc-table-header {
 
 #screen-interesting .calc-table-header span {
     font-family: 'Inter', sans-serif;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -2869,25 +2878,30 @@ body.dark-mode #screen-interesting .calc-table-header {
     text-align: center;
 }
 
-/* Строки списка облигаций */
+/* Строки списка облигаций - накладной эффект */
 #screen-interesting .calc-bond-row {
     display: grid;
     grid-template-columns: 1fr 80px 112px;
     gap: 8px;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    padding: 14px 12px;
+    margin-bottom: 6px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     align-items: center;
+    transition: all 0.2s ease;
 }
 
 #screen-interesting .calc-bond-row:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
 }
 
 body.dark-mode #screen-interesting .calc-bond-row {
-    border-bottom-color: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
 }
 
-/* Название облигации + Yield (слева) */
+/* Название облигации (Inter) + номер (Mono) */
 #screen-interesting .calc-bond-name {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
@@ -2895,10 +2909,15 @@ body.dark-mode #screen-interesting .calc-bond-row {
     color: var(--text-deep, #0F172A);
 }
 
+#screen-interesting .calc-bond-name .bond-number {
+    font-family: 'JetBrains Mono', monospace;
+}
+
 body.dark-mode #screen-interesting .calc-bond-name {
     color: var(--text-deep);
 }
 
+/* Доходность - JetBrains Mono */
 #screen-interesting .calc-bond-yield {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
@@ -2999,18 +3018,20 @@ body.dark-mode #screen-interesting .btn-reset-glass {
     border-color: rgba(255, 255, 255, 0.12);
 }
 
-/* Блок результатов */
+/* Блок результатов - вдавленный эффект */
 #screen-interesting .results-glass-container {
-    background: rgba(0, 0, 0, 0.02);
+    background: #FFFFFF;
     border-radius: 16px;
     padding: 16px;
     margin-top: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.015);
 }
 
 body.dark-mode #screen-interesting .results-glass-container {
-    background: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 #screen-interesting .results-glass-title {
@@ -3053,44 +3074,59 @@ body.dark-mode #screen-interesting .coupon-table-head {
     border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
-/* Строка выплаты с пунктирным мостиком */
+/* Строка выплаты - накладной эффект */
 #screen-interesting .coupon-result-row {
     display: grid;
     grid-template-columns: 70px 1fr 40px 70px;
     gap: 8px;
-    padding: 8px 0;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     color: var(--text-slate, #64748B);
-    /* Пунктирная линия-мостик */
-    border-bottom: 1px dotted rgba(0, 0, 0, 0.08);
 }
 
 #screen-interesting .coupon-result-row:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
 }
 
+body.dark-mode #screen-interesting .coupon-result-row {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Дата - JetBrains Mono */
 #screen-interesting .coupon-result-row .coupon-date {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: var(--text-slate, #64748B);
 }
 
+/* Название облигации - Inter + номер Mono */
 #screen-interesting .coupon-result-row .coupon-name {
     color: var(--text-deep, #0F172A);
     font-weight: 500;
+}
+
+#screen-interesting .coupon-result-row .coupon-name .bond-number {
+    font-family: 'JetBrains Mono', monospace;
 }
 
 body.dark-mode #screen-interesting .coupon-result-row .coupon-name {
     color: var(--text-deep);
 }
 
+/* Количество - JetBrains Mono */
 #screen-interesting .coupon-result-row .coupon-qty {
     text-align: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
 }
 
+/* Сумма - JetBrains Mono */
 #screen-interesting .coupon-result-row .coupon-sum {
     text-align: right;
     font-family: 'JetBrains Mono', monospace;
@@ -3103,20 +3139,33 @@ body.dark-mode #screen-interesting .coupon-result-row .coupon-sum {
     color: var(--text-deep);
 }
 
-/* Footer итогов - зелёный JetBrains Mono */
+/* Footer итогов */
 #screen-interesting .results-glass-footer {
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding-top: 14px;
     margin-top: 14px;
     border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+#screen-interesting .results-glass-footer .footer-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-slate, #64748B);
+}
+
+#screen-interesting .results-glass-footer .footer-sum {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     color: #10B981;
 }
 
 body.dark-mode #screen-interesting .results-glass-footer {
     border-top-color: rgba(255, 255, 255, 0.08);
+}
 }
 
 /* ========== END: ИНТЕРЕСНОЕ EVOLUTION DESIGN ========== */
@@ -8409,7 +8458,7 @@ body.dark-mode .stock-btn-info {
                                pattern="[0-9]*" 
                                enterkeyhint="done"
                                placeholder="Введите сумму...">
-                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 24px; color: var(--claude-text-secondary);">₽</span>
+                        <span class="currency-symbol">₽</span>
                     </div>
                 </div>
                 
