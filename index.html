@@ -9435,18 +9435,19 @@ function resetCustomTo50() {
     
     // Проверяем кэш
     if (bondDataCache[code]) {
+        console.log(`[CACHE] Данные из кэша для ${code}`);
         return bondDataCache[code];
     }
     
     try {
-        // === ИЗМЕНЕНИЕ: ДОБАВИЛИ ПРОКСИ ===
-        // Это позволяет обойти ошибку "CORS" и "Access control checks"
-        const directUrl = `https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities,marketdata`;
-        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(directUrl);
+        // ПРЯМОЙ ЗАПРОС (как было раньше)
+        const url = `https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities,marketdata`;
         
-        console.log(`[DEBUG] Запрос через прокси для ${code}...`);
+        console.log(`[NET] Запрос к MOEX: ${code}`);
+        const res = await fetch(url);
         
-        const res = await fetch(proxyUrl);
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+        
         const data = await res.json(); 
         
         const sec_cols = data.securities.columns; 
@@ -9477,7 +9478,7 @@ function resetCustomTo50() {
              }
         }
 
-        // Обновляем глобальные карты
+        // Обновляем данные для графиков (ваша старая логика)
         if (sec_row) {
             bondCouponsMap[code] = { date: sec_row[sec_cols.indexOf('NEXTCOUPON')], value: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0 };
             
@@ -9493,13 +9494,12 @@ function resetCustomTo50() {
             };
         }
 
-        // Если цена не пришла даже через прокси, ставим заглушку 100% (1000р), 
-        // чтобы калькулятор ХОТЬ ЧТО-ТО посчитал, а не выдавал нули.
-        const finalPrice = lastPrice > 0 ? (lastPrice * 10) : 1000; 
-        const finalNkd = sec_row ? (parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0) : 0;
-
+        // === ВАЖНО: Умножаем на 10 (проценты -> рубли) ===
+        // Если цены нет, ставим 0 (заглушки убрали, как вы просили)
+        const finalPrice = lastPrice > 0 ? (lastPrice * 10) : 0; 
+        
         const result = { 
-            nkd: finalNkd,
+            nkd: sec_row ? (parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0) : 0, 
             matDate: (sec_row && sec_row[sec_cols.indexOf('MATDATE')]) || '—', 
             price: finalPrice
         };
@@ -9507,13 +9507,13 @@ function resetCustomTo50() {
         // Сохраняем в кэш
         bondDataCache[code] = result;
         
-        console.log(`[DEBUG] УСПЕХ ${code}: Цена ${result.price}, НКД ${result.nkd}`);
+        console.log(`[SUCCESS] ${code}: Цена ${result.price} (из ${lastPrice}%), НКД ${result.nkd}`);
         return result;
 
     } catch (e) { 
-        console.error(`[ОШИБКА] Не удалось получить данные для: ${code}`, e);
-        // ВОЗВРАЩАЕМ ЗАГЛУШКУ, ЧТОБЫ КАЛЬКУЛЯТОР РАБОТАЛ ДАЖЕ ПРИ ОШИБКЕ СЕТИ
-        return { nkd: 0, matDate: '—', price: 1000 }; 
+        console.error(`[ERROR] Ошибка загрузки ${code}:`, e);
+        // Возвращаем нули, если сеть упала
+        return { nkd: 0, matDate: '—', price: 0 }; 
     }
 }
 
