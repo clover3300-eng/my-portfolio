@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -2066,23 +2065,89 @@ input#sumInput::placeholder {
    ИНТЕРЕСНОЕ - GLASSMORPHISM REDESIGN (Claude AI Style)
    ======================================================================== */
 
-/* Специальный фон для экрана Интересное */
 /* ============================================
    ИНТЕРЕСНОЕ - Evolution Design System
    Quiet Luxury / Evolution Terminal
+   Философия: Приборная панель из дорогого 
+   матового стекла и оптики
    ============================================ */
 
+/* === 2.1 Атмосфера и Фон === */
 #screen-interesting {
     position: relative;
-    background: linear-gradient(180deg, var(--claude-bg-base) 0%, #EDE9E6 100%);
+    background: #F3F4F6;
     min-height: 100vh;
     margin: -16px;
     padding: 0 16px 140px 16px;
     overflow: hidden;
 }
 
+/* Noise overlay для текстуры */
+#screen-interesting::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Aurora Blob - Верхний правый (Blue) */
+#screen-interesting::after {
+    content: '';
+    position: absolute;
+    top: -15%;
+    right: -20%;
+    width: 60%;
+    height: 50%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: auroraFloat1 14s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Aurora Blob - Нижний левый (Green) */
+#screen-interesting .aurora-blob-green {
+    position: absolute;
+    bottom: 10%;
+    left: -15%;
+    width: 50%;
+    height: 45%;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: auroraFloat2 12s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes auroraFloat1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-5%, 8%) scale(1.05); }
+    66% { transform: translate(3%, -5%) scale(0.98); }
+}
+
+@keyframes auroraFloat2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(8%, -6%) scale(1.08); }
+}
+
 body.dark-mode #screen-interesting {
-    background: linear-gradient(180deg, #0f172a 0%, #1a1a2e 100%);
+    background: #0f172a;
+}
+
+body.dark-mode #screen-interesting::after {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+}
+
+body.dark-mode #screen-interesting .aurora-blob-green {
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
 }
 
 /* Контейнер контента */
@@ -2102,12 +2167,18 @@ body.dark-mode #screen-interesting {
     font-size: 36px;
     font-weight: 600;
     letter-spacing: -0.06em;
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
     margin: 0;
+}
+
+body.dark-mode #screen-interesting .header h1 {
+    color: var(--text-deep);
 }
 
 /* ============================================
    Компонент 1: Курсы Валют (Aero-Prism Tiles)
+   Визуализация: Оптические призмы с внутренним 
+   свечением и эффектом Underglow
    ============================================ */
 #screen-interesting .market-tiles-grid {
     display: grid;
@@ -2120,30 +2191,42 @@ body.dark-mode #screen-interesting {
     grid-template-columns: repeat(3, 1fr);
 }
 
-/* Aero-Prism плитка */
+/* Aero-Prism плитка - призматический эффект */
 #screen-interesting .market-tile {
-    background: var(--claude-glass);
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.4) 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--claude-glass-border);
-    border-radius: 20px;
-    padding: 16px 12px;
+    border-radius: 24px;
+    padding: 18px 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     position: relative;
     overflow: hidden;
-    box-shadow: var(--claude-glass-shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+    /* Призматические границы - блик сверху/слева, тень снизу */
+    border-top: 1px solid rgba(255, 255, 255, 0.8);
+    border-left: 1px solid rgba(255, 255, 255, 0.8);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 4px 20px -4px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 #screen-interesting .market-tile:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        0 8px 32px -4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
-/* Underglow эффект - свечение снизу */
+#screen-interesting .market-tile:active {
+    transform: scale(0.98);
+}
+
+/* Underglow эффект - цветной туман снизу */
 #screen-interesting .market-tile::before {
     content: '';
     position: absolute;
@@ -2154,65 +2237,71 @@ body.dark-mode #screen-interesting {
     border-radius: 50%;
     filter: blur(20px);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
     pointer-events: none;
+    z-index: -1;
 }
 
 #screen-interesting .market-tile.positive::before {
     background: #10B981;
-    opacity: 0.12;
+    opacity: 0.15;
 }
 
 #screen-interesting .market-tile.negative::before {
     background: #EF4444;
-    opacity: 0.12;
+    opacity: 0.15;
 }
 
+/* Label - 10px uppercase */
 #screen-interesting .market-tile-label {
     font-family: 'Inter', sans-serif;
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--claude-text-secondary);
+    letter-spacing: 0.06em;
+    color: var(--text-slate, #64748B);
+    opacity: 0.8;
     text-align: center;
 }
 
+/* Value - крупное JetBrains Mono с тенью */
 #screen-interesting .market-tile-value {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
     letter-spacing: -0.02em;
     text-align: center;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
 }
 
-/* Capsule с процентом */
+/* Capsule (пилюля) с процентом и иконкой */
 #screen-interesting .market-tile-change {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 600;
-    padding: 4px 10px;
+    padding: 5px 10px;
     border-radius: 20px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 3px;
-    background: rgba(0, 0, 0, 0.04);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
 }
 
 #screen-interesting .market-tile-change.positive {
-    color: #10B981;
-    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    background: rgba(16, 185, 129, 0.12);
 }
 
 #screen-interesting .market-tile-change.negative {
-    color: #EF4444;
-    background: rgba(239, 68, 68, 0.1);
+    color: #DC2626;
+    background: rgba(239, 68, 68, 0.12);
 }
 
 #screen-interesting .market-tile-change.neutral {
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
 }
 
 /* Иконка стрелки в capsule */
@@ -2221,10 +2310,21 @@ body.dark-mode #screen-interesting {
     height: 10px;
 }
 
-/* Dark mode для плиток */
+/* Dark mode для Aero-Prism плиток */
 body.dark-mode #screen-interesting .market-tile {
-    background: rgba(30, 41, 59, 0.6);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: linear-gradient(160deg, rgba(30, 41, 59, 0.7) 0%, rgba(30, 41, 59, 0.4) 100%);
+    border-top-color: rgba(255, 255, 255, 0.12);
+    border-left-color: rgba(255, 255, 255, 0.12);
+    border-right-color: rgba(255, 255, 255, 0.05);
+    border-bottom-color: rgba(255, 255, 255, 0.02);
+    box-shadow: 
+        0 4px 20px -4px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode #screen-interesting .market-tile-value {
+    color: var(--text-deep);
+    text-shadow: none;
 }
 
 body.dark-mode #screen-interesting .market-tile-change {
@@ -2232,47 +2332,53 @@ body.dark-mode #screen-interesting .market-tile-change {
 }
 
 /* ============================================
-   Компонент 2: Вертикаль Ставок
+   Компонент 2: Вертикаль Ставок (Imprinted List)
+   Визуализация: Информация "выгравирована" на фоне.
+   Нет карточек, нет рамок - минималистичный стиль.
    ============================================ */
 #screen-interesting .rates-glass-card {
-    background: var(--claude-glass);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--claude-glass-border);
-    border-radius: 20px;
-    padding: 20px;
+    /* Убираем карточку - делаем прозрачным */
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0 12px;
     margin-bottom: 28px;
-    box-shadow: var(--claude-glass-shadow);
+    box-shadow: none;
 }
 
+/* Заголовок с иконкой */
 #screen-interesting .rates-glass-card .rv-title {
     font-family: 'Inter', sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--claude-text-secondary);
-    margin-bottom: 16px;
+    color: var(--text-slate, #64748B);
+    opacity: 0.6;
+    margin-bottom: 12px;
+    padding-left: 0;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* Иконка в заголовке */
 #screen-interesting .rates-glass-card .rv-title::before {
     content: '';
     display: inline-flex;
-    width: 18px;
-    height: 18px;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23D97757' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 20V10'/%3E%3Cpath d='M18 20V4'/%3E%3Cpath d='M6 20v-4'/%3E%3C/svg%3E");
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 20V10'/%3E%3Cpath d='M18 20V4'/%3E%3Cpath d='M6 20v-4'/%3E%3C/svg%3E");
     background-size: contain;
     background-repeat: no-repeat;
+    opacity: 0.7;
 }
 
+/* Убираем линию после заголовка */
 #screen-interesting .rates-glass-card .rv-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--claude-glass-border), transparent);
+    display: none;
 }
 
 #screen-interesting .rates-row-list {
@@ -2280,12 +2386,14 @@ body.dark-mode #screen-interesting .market-tile-change {
     flex-direction: column;
 }
 
+/* Строка ставки - Imprinted стиль */
 #screen-interesting .rate-row-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 14px 24px;
+    /* Тонкий разделитель */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 #screen-interesting .rate-row-item:last-child {
@@ -2297,46 +2405,75 @@ body.dark-mode #screen-interesting .market-tile-change {
     padding-top: 0;
 }
 
+/* Текст слева - строго под буквой "В" заголовка */
 #screen-interesting .rate-row-label {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 500;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
+    padding-left: 0;
 }
 
+/* Значение справа - симметричный отступ */
 #screen-interesting .rate-row-value {
     font-family: 'JetBrains Mono', monospace;
     font-size: 15px;
     font-weight: 600;
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
+    padding-right: 0;
 }
 
 body.dark-mode #screen-interesting .rate-row-item {
     border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
+body.dark-mode #screen-interesting .rate-row-value {
+    color: var(--text-deep);
+}
+
+body.dark-mode #screen-interesting .rates-glass-card .rv-title::before {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 20V10'/%3E%3Cpath d='M18 20V4'/%3E%3Cpath d='M6 20v-4'/%3E%3C/svg%3E");
+}
+
 /* ============================================
    Компонент 3: Калькулятор (Hero Card)
+   Визуализация: Главный герой экрана. Плотное 
+   матовое стекло, парящее над фоном.
    ============================================ */
 #screen-interesting .calc-accordion {
-    background: var(--claude-glass);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--claude-glass-border);
+    /* Hero Glass границы */
+    border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 24px;
     overflow: hidden;
     margin-bottom: 20px;
-    box-shadow: var(--claude-glass-shadow);
-    transition: box-shadow 0.5s ease, border-color 0.5s ease;
+    /* Глубокая тень - парящий эффект */
+    box-shadow: 
+        0 20px 50px -12px rgba(15, 23, 42, 0.12),
+        0 8px 20px -8px rgba(15, 23, 42, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: 
+        box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+        border-color 0.5s ease;
 }
 
+/* Свернутое состояние */
 #screen-interesting .calc-accordion.collapsed {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    box-shadow: 
+        0 8px 24px -6px rgba(15, 23, 42, 0.08),
+        0 4px 12px -4px rgba(15, 23, 42, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 body.dark-mode #screen-interesting .calc-accordion {
-    background: rgba(30, 41, 59, 0.7);
+    background: rgba(30, 41, 59, 0.85);
     border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 20px 50px -12px rgba(0, 0, 0, 0.4),
+        0 8px 20px -8px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* Header калькулятора */
@@ -2364,12 +2501,13 @@ body.dark-mode #screen-interesting .calc-accordion-header:hover {
     gap: 14px;
 }
 
-/* Иконка калькулятора - SVG */
+/* Иконка калькулятора - центрирована относительно двух строк текста */
 #screen-interesting .calc-accordion-icon {
     width: 44px;
     height: 44px;
-    background: linear-gradient(135deg, rgba(217, 119, 87, 0.15), rgba(217, 119, 87, 0.05));
-    border: 1px solid rgba(217, 119, 87, 0.2);
+    min-width: 44px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+    border: 1px solid rgba(16, 185, 129, 0.2);
     border-radius: 14px;
     display: flex;
     align-items: center;
@@ -2380,54 +2518,68 @@ body.dark-mode #screen-interesting .calc-accordion-header:hover {
 #screen-interesting .calc-accordion-icon svg {
     width: 22px;
     height: 22px;
-    color: var(--claude-accent);
+    color: #10B981;
 }
 
-/* Пульсация иконки при свернутом состоянии */
+/* Пульсация иконки ЗЕЛЕНЫМ при свернутом состоянии */
 #screen-interesting .calc-accordion.collapsed .calc-accordion-icon {
-    animation: iconPulseAccent 2s ease-in-out infinite;
+    animation: iconPulseGreen 2s ease-in-out infinite;
 }
 
-@keyframes iconPulseAccent {
+@keyframes iconPulseGreen {
     0%, 100% { 
         transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(217, 119, 87, 0);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
     }
     50% { 
         transform: scale(1.02);
-        box-shadow: 0 0 0 8px rgba(217, 119, 87, 0.1);
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.15);
     }
 }
 
 /* Дышащая рамка при свернутом состоянии */
 #screen-interesting .calc-accordion.collapsed {
-    animation: borderBreatheAccent 3s ease-in-out infinite;
+    animation: borderBreatheGreen 3s ease-in-out infinite;
 }
 
-@keyframes borderBreatheAccent {
-    0%, 100% { border-color: var(--claude-glass-border); }
-    50% { border-color: rgba(217, 119, 87, 0.25); }
+@keyframes borderBreatheGreen {
+    0%, 100% { border-color: rgba(255, 255, 255, 0.6); }
+    50% { border-color: rgba(16, 185, 129, 0.3); }
+}
+
+body.dark-mode #screen-interesting .calc-accordion.collapsed {
+    animation: borderBreatheGreenDark 3s ease-in-out infinite;
+}
+
+@keyframes borderBreatheGreenDark {
+    0%, 100% { border-color: rgba(255, 255, 255, 0.1); }
+    50% { border-color: rgba(16, 185, 129, 0.25); }
 }
 
 #screen-interesting .calc-accordion-title {
     font-family: 'Inter', sans-serif;
     font-size: 16px;
     font-weight: 600;
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
 }
 
+body.dark-mode #screen-interesting .calc-accordion-title {
+    color: var(--text-deep);
+}
+
+/* Подзаголовок - ВСЕГДА виден, даже при сворачивании */
 #screen-interesting .calc-accordion-subtitle {
     font-family: 'Inter', sans-serif;
     font-size: 11px;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
     margin-top: 3px;
 }
 
-/* Стрелка шеврон */
+/* Стрелка шеврон - поворот -90deg при сворачивании */
 #screen-interesting .calc-accordion-arrow {
     width: 24px;
     height: 24px;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -2435,7 +2587,7 @@ body.dark-mode #screen-interesting .calc-accordion-header:hover {
     transform: rotate(-90deg);
 }
 
-/* Плавное сворачивание через grid */
+/* Плавное сворачивание через grid-template-rows (Smooth Grid) */
 #screen-interesting .calc-content-wrapper {
     display: grid;
     grid-template-rows: 1fr;
@@ -2456,10 +2608,10 @@ body.dark-mode #screen-interesting .calc-accordion-header:hover {
 }
 
 /* ============================================
-   Контент калькулятора - полная переработка
+   Контент калькулятора - Evolution Design
    ============================================ */
 
-/* Поле ввода суммы */
+/* Поле ввода суммы - крупное, выравнивание вправо */
 #screen-interesting .glass-input-wrapper {
     background: rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.06);
@@ -2475,8 +2627,8 @@ body.dark-mode #screen-interesting .glass-input-wrapper {
 }
 
 #screen-interesting .glass-input-wrapper:focus-within {
-    border-color: var(--claude-accent);
-    background: rgba(217, 119, 87, 0.03);
+    border-color: #10B981;
+    background: rgba(16, 185, 129, 0.03);
 }
 
 #screen-interesting .glass-input-wrapper .input-label {
@@ -2485,7 +2637,7 @@ body.dark-mode #screen-interesting .glass-input-wrapper {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
     margin-bottom: 8px;
     display: block;
 }
@@ -2497,21 +2649,25 @@ body.dark-mode #screen-interesting .glass-input-wrapper {
     font-family: 'JetBrains Mono', monospace;
     font-size: 26px;
     font-weight: 600;
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
     outline: none;
     text-align: right;
 }
 
+body.dark-mode #screen-interesting .glass-input-wrapper input {
+    color: var(--text-deep);
+}
+
 #screen-interesting .glass-input-wrapper input::placeholder {
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
     opacity: 0.4;
 }
 
-/* Информационный текст */
+/* Информационный текст - синий фон */
 #screen-interesting .calc-info-text {
     font-family: 'Inter', sans-serif;
     font-size: 12px;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
     line-height: 1.6;
     padding: 14px 16px;
     background: rgba(59, 130, 246, 0.06);
@@ -2546,30 +2702,31 @@ body.dark-mode #screen-interesting .tax-segmented-control {
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     font-weight: 500;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
-    opacity: 0.6;
+    /* Неактивные кнопки имеют opacity: 0.5 */
+    opacity: 0.5;
 }
 
 #screen-interesting .tax-segmented-control .tax-segment:hover {
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 #screen-interesting .tax-segmented-control .tax-segment.active {
     background: white;
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     opacity: 1;
 }
 
 body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
     background: rgba(255, 255, 255, 0.12);
-    color: var(--claude-text-primary);
+    color: var(--text-deep);
 }
 
-/* Заголовки таблицы в калькуляторе */
+/* Заголовки таблицы: "Облигация" слева, "Кол-во" строго по центру */
 #screen-interesting .calc-table-header {
     display: grid;
     grid-template-columns: 1fr 80px 112px;
@@ -2589,13 +2746,14 @@ body.dark-mode #screen-interesting .calc-table-header {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
 }
 
 #screen-interesting .calc-table-header span:nth-child(2) {
     text-align: center;
 }
 
+/* Кол-во - строго по центру над кнопками +/- */
 #screen-interesting .calc-table-header span:nth-child(3) {
     text-align: center;
 }
@@ -2618,18 +2776,23 @@ body.dark-mode #screen-interesting .calc-bond-row {
     border-bottom-color: rgba(255, 255, 255, 0.05);
 }
 
+/* Название облигации + Yield (слева) */
 #screen-interesting .calc-bond-name {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 500;
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
+}
+
+body.dark-mode #screen-interesting .calc-bond-name {
+    color: var(--text-deep);
 }
 
 #screen-interesting .calc-bond-yield {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     font-weight: 500;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
     text-align: center;
 }
 
@@ -2653,7 +2816,7 @@ body.dark-mode #screen-interesting .calc-qty-controller {
     height: 32px;
     border: none;
     background: transparent;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
@@ -2665,7 +2828,7 @@ body.dark-mode #screen-interesting .calc-qty-controller {
 
 #screen-interesting .calc-qty-controller button:hover {
     background: rgba(0, 0, 0, 0.05);
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
 }
 
 #screen-interesting .calc-qty-controller button:active {
@@ -2680,12 +2843,16 @@ body.dark-mode #screen-interesting .calc-qty-controller {
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
     font-weight: 600;
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
     text-align: center;
     outline: none;
 }
 
-/* Кнопка сброса */
+body.dark-mode #screen-interesting .calc-qty-controller input {
+    color: var(--text-deep);
+}
+
+/* Кнопка сброса - ширина 112px = ширина контроллера */
 #screen-interesting .btn-reset-glass {
     width: 112px;
     padding: 10px;
@@ -2695,7 +2862,7 @@ body.dark-mode #screen-interesting .calc-qty-controller {
     font-family: 'Inter', sans-serif;
     font-size: 11px;
     font-weight: 500;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -2707,9 +2874,9 @@ body.dark-mode #screen-interesting .calc-qty-controller {
 }
 
 #screen-interesting .btn-reset-glass:hover {
-    border-color: var(--claude-accent);
-    color: var(--claude-accent);
-    background: rgba(217, 119, 87, 0.05);
+    border-color: #10B981;
+    color: #10B981;
+    background: rgba(16, 185, 129, 0.05);
 }
 
 #screen-interesting .btn-reset-glass svg {
@@ -2741,7 +2908,7 @@ body.dark-mode #screen-interesting .results-glass-container {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
     margin-bottom: 14px;
     display: flex;
     align-items: center;
@@ -2749,7 +2916,7 @@ body.dark-mode #screen-interesting .results-glass-container {
 }
 
 #screen-interesting .results-glass-title svg {
-    color: var(--claude-accent);
+    color: #10B981;
 }
 
 /* Таблица выплат */
@@ -2768,14 +2935,14 @@ body.dark-mode #screen-interesting .results-glass-container {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
 }
 
 body.dark-mode #screen-interesting .coupon-table-head {
     border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
-/* Строка выплаты */
+/* Строка выплаты с пунктирным мостиком */
 #screen-interesting .coupon-result-row {
     display: grid;
     grid-template-columns: 70px 1fr 40px 70px;
@@ -2783,8 +2950,9 @@ body.dark-mode #screen-interesting .coupon-table-head {
     padding: 8px 0;
     font-family: 'Inter', sans-serif;
     font-size: 12px;
-    color: var(--claude-text-secondary);
-    border-bottom: 1px dotted rgba(0, 0, 0, 0.04);
+    color: var(--text-slate, #64748B);
+    /* Пунктирная линия-мостик */
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.08);
 }
 
 #screen-interesting .coupon-result-row:last-child {
@@ -2794,12 +2962,16 @@ body.dark-mode #screen-interesting .coupon-table-head {
 #screen-interesting .coupon-result-row .coupon-date {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: var(--claude-text-secondary);
+    color: var(--text-slate, #64748B);
 }
 
 #screen-interesting .coupon-result-row .coupon-name {
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
     font-weight: 500;
+}
+
+body.dark-mode #screen-interesting .coupon-result-row .coupon-name {
+    color: var(--text-deep);
 }
 
 #screen-interesting .coupon-result-row .coupon-qty {
@@ -2813,10 +2985,14 @@ body.dark-mode #screen-interesting .coupon-table-head {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 600;
-    color: var(--claude-text-primary);
+    color: var(--text-deep, #0F172A);
 }
 
-/* Footer итогов */
+body.dark-mode #screen-interesting .coupon-result-row .coupon-sum {
+    color: var(--text-deep);
+}
+
+/* Footer итогов - зелёный JetBrains Mono */
 #screen-interesting .results-glass-footer {
     text-align: right;
     padding-top: 14px;
@@ -2832,7 +3008,7 @@ body.dark-mode #screen-interesting .results-glass-footer {
     border-top-color: rgba(255, 255, 255, 0.08);
 }
 
-/* ========== END: ИНТЕРЕСНОЕ GLASSMORPHISM ========== */
+/* ========== END: ИНТЕРЕСНОЕ EVOLUTION DESIGN ========== */
 
         /* ========================================================================
    ПОРТФЕЛЬ - GLASSMORPHISM REDESIGN (Claude AI Style)
@@ -7918,6 +8094,9 @@ body.dark-mode .stock-btn-info {
 </div>
 
     <div id="screen-interesting" class="screen">
+    <!-- Aurora Blob - нижний левый (Green) -->
+    <div class="aurora-blob-green"></div>
+    
     <!-- Заголовок экрана -->
     <div class="header">
         <h1>Интересное</h1>
@@ -8000,12 +8179,11 @@ body.dark-mode .stock-btn-info {
                         <line x1="16" y1="2" x2="16" y2="6"/>
                         <line x1="8" y1="2" x2="8" y2="6"/>
                         <line x1="3" y1="10" x2="21" y2="10"/>
-                        <path d="M8 14h.01"/>
-                        <path d="M12 14h.01"/>
-                        <path d="M16 14h.01"/>
-                        <path d="M8 18h.01"/>
-                        <path d="M12 18h.01"/>
-                        <path d="M16 18h.01"/>
+                        <circle cx="8" cy="14" r="1"/>
+                        <circle cx="12" cy="14" r="1"/>
+                        <circle cx="16" cy="14" r="1"/>
+                        <circle cx="8" cy="18" r="1"/>
+                        <circle cx="12" cy="18" r="1"/>
                     </svg>
                 </div>
                 <div>
@@ -8701,6 +8879,110 @@ function calculateAndShowPortfolio() {
             const el = document.getElementById(id);
             el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
         }
+
+    /* ============================================
+       6.3 Анимация Накручивания Цифр (Evolution Design)
+       При загрузке страницы цифры "накручиваются" от 0 до значения
+       ============================================ */
+    function animateCountUp(element, targetValue, duration = 800) {
+        if (!element) return;
+        
+        // Парсим целевое значение
+        const isPercentage = targetValue.includes('%');
+        const hasComma = targetValue.includes(',');
+        const hasDot = targetValue.includes('.');
+        
+        // Извлекаем числовое значение
+        let numericValue = parseFloat(targetValue.replace(/[^0-9.,\-]/g, '').replace(',', '.'));
+        if (isNaN(numericValue)) {
+            element.textContent = targetValue;
+            return;
+        }
+        
+        // Определяем количество десятичных знаков
+        let decimals = 0;
+        if (hasDot || hasComma) {
+            const parts = targetValue.replace(',', '.').split('.');
+            if (parts[1]) decimals = parts[1].replace(/[^0-9]/g, '').length;
+        }
+        
+        const startTime = performance.now();
+        const startValue = 0;
+        
+        function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Easing функция - easeOutExpo для плавного завершения
+            const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+            
+            const currentValue = startValue + (numericValue - startValue) * eased;
+            
+            // Форматируем значение
+            let formattedValue = currentValue.toFixed(decimals);
+            if (hasComma) formattedValue = formattedValue.replace('.', ',');
+            
+            // Добавляем суффикс
+            if (isPercentage) formattedValue += '%';
+            
+            element.textContent = formattedValue;
+            
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                // Устанавливаем точное конечное значение
+                element.textContent = targetValue;
+            }
+        }
+        
+        requestAnimationFrame(update);
+    }
+    
+    // Запуск анимации для экрана Интересное
+    function initInterestingAnimations() {
+        // Курсы валют
+        const marketValues = [
+            { id: 'val-imoex', target: null },
+            { id: 'val-usdrub', target: null },
+            { id: 'val-btc', target: null }
+        ];
+        
+        // Ставки
+        const rateValues = [
+            { id: 'val-inflation', target: '9.1%' },
+            { id: 'val-deposit-rate', target: '21.5%' },
+            { id: 'val-key-rate', target: '21.0%' },
+            { id: 'val-ofz10', target: null }
+        ];
+        
+        // Анимируем только значения, которые уже установлены
+        rateValues.forEach((item, index) => {
+            const el = document.getElementById(item.id);
+            if (el && el.textContent && el.textContent !== '---' && el.textContent !== '---%') {
+                const target = el.textContent;
+                el.textContent = '0%';
+                setTimeout(() => {
+                    animateCountUp(el, target, 600 + index * 100);
+                }, index * 80);
+            }
+        });
+    }
+    
+    // Наблюдатель за переключением на экран Интересное
+    const originalShowScreen = typeof showScreen === 'function' ? showScreen : null;
+    
+    // Переопределим showScreen чтобы запускать анимацию
+    if (typeof window !== 'undefined') {
+        const _originalShowScreen = window.showScreen;
+        window.showScreenWithAnimation = function(screenId) {
+            if (_originalShowScreen) _originalShowScreen(screenId);
+            
+            if (screenId === 'screen-interesting') {
+                setTimeout(initInterestingAnimations, 100);
+            }
+        };
+    }
+    
     // Новая функция для аккордеона калькулятора в "Интересное"
 function toggleCalcAccordion() {
     const accordion = document.getElementById('calcAccordion');
