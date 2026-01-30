@@ -9710,6 +9710,14 @@ function resetCustomTo50() {
             if(header) header.style.display = 'block';
         }, 100);
     });
+            // Автозапуск расчета при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    const mInput = document.getElementById('monthlySumInput');
+    if (mInput && mInput.value) {
+        // Имитируем ввод, чтобы запустить пересчет
+        mInput.dispatchEvent(new Event('input'));
+    }
+});
 }
 
         function changeQty(ticker, delta) {
