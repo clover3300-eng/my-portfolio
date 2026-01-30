@@ -8072,16 +8072,13 @@ body.dark-mode .stock-btn-info {
 
                 <!-- Блок результатов -->
                 <div class="results-glass-container">
-                    <div class="results-glass-title">
-                        <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                        </svg>
-                        Выплаты
-                    </div>
+                   <div class="results-glass-title">
+                  ГРАФИК ВЫПЛАТ
+                   </div>
                     
                     <div class="coupon-table-head" style="margin-top: 0;">
                         <span>ДАТА</span> 
-                        <span>НАЗВАНИЕ</span> 
+                        <span>ОБЛИГАЦИЯ</span> 
                         <span style="text-align:center">ШТ</span> 
                         <span style="text-align:right">СУММА</span>
                     </div>
@@ -9692,15 +9689,27 @@ function resetCustomTo50() {
         
         const mInput = document.getElementById('monthlySumInput');
         if(mInput) {
-            mInput.addEventListener('focus', () => {
-                document.getElementById('navWrapper').style.display = 'none';
-                document.querySelector('.header').style.display = 'none';
-            });
-            mInput.addEventListener('blur', () => {
-                document.getElementById('navWrapper').style.display = 'flex';
-                document.querySelector('.header').style.display = 'block';
-            });
-        }
+    mInput.addEventListener('focus', () => {
+        // Скрываем навигацию
+        const nav = document.getElementById('navWrapper');
+        if(nav) nav.style.display = 'none';
+        
+        // Скрываем заголовок экрана, чтобы больше места было
+        const header = document.querySelector('.header');
+        if(header) header.style.display = 'none';
+    });
+
+    mInput.addEventListener('blur', () => {
+        // Возвращаем всё назад с небольшой задержкой
+        setTimeout(() => {
+            const nav = document.getElementById('navWrapper');
+            if(nav) nav.style.display = 'flex';
+            
+            const header = document.querySelector('.header');
+            if(header) header.style.display = 'block';
+        }, 100);
+    });
+}
 
         function changeQty(ticker, delta) {
             const input = document.getElementById(`input-${ticker}`);
@@ -9868,13 +9877,20 @@ function recalcCustomCoupons() {
         const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
         totalAmount += netAmount;
 
-       html += `
+      html += `
     <div class="coupon-row">
         <div><b>${payment.dateStr.slice(0, 5)}</b></div>
-        <div style="color:#8e8e93">${limitName(payment.displayName)}</div>
-            <div style="text-align:center">${qty} шт.</div>
-            <div style="text-align:right"><b>${Math.round(netAmount)} ₽</b></div>
-        </div>`;
+
+        <div style="color:#8e8e93; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${limitName(payment.displayName)}
+        </div>
+
+        <div style="text-align:center">${qty}шт.</div>
+
+        <div style="text-align:right">
+            <b>${netAmount.toFixed(0)}₽</b>
+        </div>
+    </div>`;
     });
 
     resultList.innerHTML = html || '<div style="text-align:center; padding:15px; color:#aaa;">Введите количество для расчета...</div>';
