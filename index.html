@@ -2525,6 +2525,181 @@ body.dark-mode #screen-interesting .calc-accordion-title {
 }
 
 /* ============================================
+   Компонент: Инфографика (скрываемый блок)
+   Заглушка для будущих функций
+   ============================================ */
+
+#screen-interesting .infographic-section {
+    margin-top: 8px;
+    padding: 0 4px;
+    animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Главная карточка "В разработке" */
+#screen-interesting .future-idea-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.05) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+body.dark-mode #screen-interesting .future-idea-card {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.08) 100%);
+    border-color: rgba(99, 102, 241, 0.25);
+}
+
+#screen-interesting .future-idea-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(99, 102, 241, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#screen-interesting .future-idea-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: #6366F1;
+}
+
+#screen-interesting .future-idea-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-deep, #0F172A);
+    margin-bottom: 6px;
+}
+
+body.dark-mode #screen-interesting .future-idea-title {
+    color: #F1F5F9;
+}
+
+#screen-interesting .future-idea-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #64748B;
+}
+
+/* Сетка будущих функций */
+#screen-interesting .future-features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+#screen-interesting .future-feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    padding: 20px 12px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+body.dark-mode #screen-interesting .future-feature-item {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+#screen-interesting .future-feature-item:active {
+    transform: scale(0.98);
+}
+
+#screen-interesting .future-feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#screen-interesting .future-feature-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+#screen-interesting .future-feature-icon.blue {
+    background: rgba(59, 130, 246, 0.15);
+}
+#screen-interesting .future-feature-icon.blue svg {
+    stroke: #3B82F6;
+}
+
+#screen-interesting .future-feature-icon.green {
+    background: rgba(16, 185, 129, 0.15);
+}
+#screen-interesting .future-feature-icon.green svg {
+    stroke: #10B981;
+}
+
+#screen-interesting .future-feature-icon.orange {
+    background: rgba(249, 115, 22, 0.15);
+}
+#screen-interesting .future-feature-icon.orange svg {
+    stroke: #F97316;
+}
+
+#screen-interesting .future-feature-icon.purple {
+    background: rgba(139, 92, 246, 0.15);
+}
+#screen-interesting .future-feature-icon.purple svg {
+    stroke: #8B5CF6;
+}
+
+#screen-interesting .future-feature-item span {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-deep, #0F172A);
+    line-height: 1.3;
+}
+
+body.dark-mode #screen-interesting .future-feature-item span {
+    color: #E2E8F0;
+}
+
+/* Подпись "Скоро" */
+#screen-interesting .future-coming-soon {
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #94A3B8;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* ============================================
    Контент калькулятора - Evolution Design
    ============================================ */
 
@@ -8272,6 +8447,88 @@ body.dark-mode .stock-btn-info {
             </div>
         </div>
     </div>
+
+    <!-- Ghost Trigger - Смотреть далее -->
+    <div class="rebalance-ghost-trigger" id="interestingGhostTrigger" onclick="toggleInterestingMore()">
+        <div class="ghost-line"></div>
+        <div class="ghost-text" id="interestingGhostText">СМОТРЕТЬ ДАЛЕЕ</div>
+        <div class="ghost-dots">
+            <div class="ghost-dot"></div>
+            <div class="ghost-dot"></div>
+            <div class="ghost-dot"></div>
+        </div>
+    </div>
+
+    <!-- Блок Инфографика (скрыт по умолчанию) -->
+    <div class="infographic-section" id="infographicSection" style="display: none;">
+        
+        <!-- Карточка 1: Идеи для развития -->
+        <div class="future-idea-card">
+            <div class="future-idea-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4"/>
+                    <path d="M12 8h.01"/>
+                </svg>
+            </div>
+            <div class="future-idea-content">
+                <div class="future-idea-title">Раздел в разработке</div>
+                <div class="future-idea-desc">Здесь появятся интерактивные графики, аналитика портфеля и персональные рекомендации</div>
+            </div>
+        </div>
+
+        <!-- Превью будущих функций -->
+        <div class="future-features-grid">
+            <div class="future-feature-item">
+                <div class="future-feature-icon blue">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3v18h18"/>
+                        <path d="M18 17l-5-5-4 4-3-3"/>
+                    </svg>
+                </div>
+                <span>Динамика портфеля</span>
+            </div>
+            
+            <div class="future-feature-item">
+                <div class="future-feature-icon green">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2a10 10 0 0 1 10 10"/>
+                        <path d="M12 12l3-3"/>
+                    </svg>
+                </div>
+                <span>Распределение активов</span>
+            </div>
+            
+            <div class="future-feature-item">
+                <div class="future-feature-icon orange">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                </div>
+                <span>Календарь выплат</span>
+            </div>
+            
+            <div class="future-feature-item">
+                <div class="future-feature-icon purple">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span>Сравнение стратегий</span>
+            </div>
+        </div>
+
+        <!-- Подпись -->
+        <div class="future-coming-soon">
+            <span>🚀</span> Скоро в обновлениях
+        </div>
+    </div>
 </div>
     
     <div id="screen-company" class="screen">
@@ -9010,6 +9267,36 @@ function toggleCalcAccordion() {
         } else if (navigator.vibrate) {
             navigator.vibrate(5);
         }
+    }
+}
+
+// Toggle для секции "Смотреть далее" на вкладке Интересное
+function toggleInterestingMore() {
+    const trigger = document.getElementById('interestingGhostTrigger');
+    const section = document.getElementById('infographicSection');
+    const text = document.getElementById('interestingGhostText');
+    
+    if (!trigger || !section) return;
+    
+    const isOpen = trigger.classList.contains('open');
+    
+    if (isOpen) {
+        // Закрываем
+        trigger.classList.remove('open');
+        section.style.display = 'none';
+        text.textContent = 'СМОТРЕТЬ ДАЛЕЕ';
+    } else {
+        // Открываем
+        trigger.classList.add('open');
+        section.style.display = 'block';
+        text.textContent = 'СКРЫТЬ';
+    }
+    
+    // Haptic feedback
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    } else if (navigator.vibrate) {
+        navigator.vibrate(5);
     }
 }
 
