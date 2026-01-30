@@ -9707,6 +9707,17 @@ function resetCustomTo50() {
             });
         }
         
+        // Универсальная функция для открытия внешних ссылок без предупреждения Telegram
+        function openExternalLink(url) {
+            if (window.Telegram?.WebApp?.openLink) {
+                // Используем Telegram API - открывает без предупреждения
+                window.Telegram.WebApp.openLink(url);
+            } else {
+                // Fallback для браузера
+                window.open(url, '_blank');
+            }
+        }
+        
         function copyTicker(e, text) {
             e.stopPropagation();
             copyToClipboard(text);
@@ -9715,7 +9726,7 @@ function resetCustomTo50() {
         function openTradingView(e, ticker) {
             e.stopPropagation();
             const url = `https://ru.tradingview.com/chart/?symbol=MOEX:${ticker}`;
-            window.open(url, '_blank');
+            openExternalLink(url);
         }
 
         async function fetchBondData(code) {
@@ -11521,7 +11532,7 @@ function toggleOfzHelp(helpId, event) {
 // Функция прямого открытия TradingView без предупреждения
 function openTradingViewDirect(ticker) {
     const tvUrl = `https://ru.tradingview.com/chart/?symbol=MOEX%3A${ticker}`;
-    window.open(tvUrl, '_blank');
+    openExternalLink(tvUrl);
 }
 
 // ========================================================================
@@ -11977,7 +11988,7 @@ async function loadAndDisplayNews(ticker) {
         const relativeDate = getRelativeDateText(displayDate);
         
         html += `
-            <div class="event-item" onclick="window.open('${item.link}', '_blank')" style="cursor: pointer;">
+            <div class="event-item" onclick="openExternalLink('${item.link}')" style="cursor: pointer;">
                 <div class="event-date">
                     <span class="event-date-day">${displayDate.getDate()}</span>
                     <span class="event-date-month">${getMonthShort(displayDate.getMonth())}</span>
