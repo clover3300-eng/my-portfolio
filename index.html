@@ -74,16 +74,29 @@
             --accent-purple: #8B5CF6;
         }
 
-                /* ========== ОТКЛЮЧЕНИЕ ЭФФЕКТА РЕЗИНКИ ========== */
+                /* ========== ОТКЛЮЧЕНИЕ ЭФФЕКТА РЕЗИНКИ И ШТОРКИ ========== */
         html {
-            overscroll-behavior: none; /* Главная команда отключения пружины */
+            overscroll-behavior: none !important; /* Главная команда отключения пружины */
+            overscroll-behavior-y: none !important;
             height: 100%; /* Фиксируем высоту */
             -webkit-overflow-scrolling: touch; /* Для плавности на айфонах */
+            touch-action: pan-x pan-y; /* Разрешаем только горизонтальный и вертикальный скролл */
         }
         
         body {
-            overscroll-behavior: none; /* Дублируем для надежности */
+            overscroll-behavior: none !important; /* Дублируем для надежности */
+            overscroll-behavior-y: none !important;
             min-height: 100%;
+            min-height: 100dvh; /* Dynamic viewport height для мобильных */
+            position: fixed; /* Фиксируем body чтобы не было pull-to-refresh */
+            width: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Предотвращаем pull-to-refresh на всех элементах */
+        * {
+            overscroll-behavior: contain;
         }
         /* ================================================= */
 
@@ -10999,7 +11012,6 @@ function toggleEchelonColumnHighlight(echelonNum, event) {
 // Рендер таблицы эшелонов акций в Aurora стиле
 function renderAuroraStocksTable() {
     const container = document.getElementById('stocks-aurora-body');
-    console.log('renderAuroraStocksTable called, container:', container);
     if (!container) return;
     
     // Сбрасываем подсветку столбцов
@@ -11010,19 +11022,16 @@ function renderAuroraStocksTable() {
     }
     
     // Проверяем есть ли данные в echelonTableData
-    console.log('echelonTableData:', echelonTableData);
     if (typeof echelonTableData === 'undefined' || 
         !echelonTableData || 
         echelonTableData.every(col => col.length === 0)) {
         // Если данных нет, ждем загрузки
-        console.log('echelonTableData пуста, ждём...');
         setTimeout(renderAuroraStocksTable, 500);
         return;
     }
     
     let html = '';
     const maxRows = Math.max(...echelonTableData.map(col => col.length));
-    console.log('maxRows:', maxRows);
     const maxVisibleRows = 5;
     
     for (let rowIndex = 0; rowIndex < maxRows; rowIndex++) {
@@ -12565,11 +12574,54 @@ if(document.getElementById('listBonds')) {
              document.getElementById('navWrapper').style.display = 'flex';
         loadData(); 
         if(window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready(); 
-            window.Telegram.WebApp.expand();
+            const tg = window.Telegram.WebApp;
+            
+            // Сообщаем Telegram что приложение готово
+            tg.ready();
+            
+            // Раскрываем на максимальную высоту
+            tg.expand();
             
             // Отключаем свайп вниз для закрытия приложения
-             window.Telegram.WebApp.disableVerticalSwipes();
+            tg.disableVerticalSwipes();
+            
+            // Запрашиваем полноэкранный режим (Telegram Bot API 7.7+)
+            if (tg.requestFullscreen) {
+                tg.requestFullscreen();
+            }
+            
+            // Блокируем сворачивание приложения (Telegram Bot API 7.7+)
+            if (tg.lockOrientation) {
+                tg.lockOrientation();
+            }
+            
+            // Устанавливаем цвет хедера в цвет фона для бесшовности
+            if (tg.setHeaderColor) {
+                tg.setHeaderColor('#F3F4F6');
+            }
+            
+            // Устанавливаем цвет нижней панели
+            if (tg.setBackgroundColor) {
+                tg.setBackgroundColor('#F3F4F6');
+            }
+            
+            // Скрываем кнопку "Назад" в хедере Telegram если она не нужна
+            if (tg.BackButton) {
+                tg.BackButton.hide();
+            }
+            
+            // Повторный вызов expand через небольшую задержку (на случай если первый не сработал)
+            setTimeout(() => {
+                tg.expand();
+                if (tg.requestFullscreen) {
+                    tg.requestFullscreen();
+                }
+            }, 100);
+            
+            // И ещё раз для надёжности
+            setTimeout(() => {
+                tg.expand();
+            }, 500);
         }
 
         // NEW: Скрыть sticky панель при начальной загрузке если не на screen-app
