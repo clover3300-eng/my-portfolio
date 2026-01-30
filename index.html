@@ -5556,6 +5556,53 @@ body.dark-mode .tab-btn.active {
     transform: rotate(-90deg);
 }
 
+/* Элемент "открыть список" рядом с галочкой */
+.list-open-trigger {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(59, 130, 246, 0.08);
+    transition: all 0.2s ease;
+    margin-left: 8px;
+}
+
+.list-open-trigger:hover {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.list-open-trigger span {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-blue);
+}
+
+.list-open-trigger svg {
+    width: 10px;
+    height: 10px;
+    stroke: var(--accent-blue);
+    transition: transform 0.2s ease;
+}
+
+.list-open-trigger.open svg {
+    transform: rotate(180deg);
+}
+
+body.dark-mode .list-open-trigger {
+    background: rgba(56, 189, 248, 0.12);
+}
+
+body.dark-mode .list-open-trigger span,
+body.dark-mode .list-open-trigger svg {
+    color: var(--accent-blue);
+    stroke: var(--accent-blue);
+}
+
 /* Общий тултип */
 .header-tooltip {
     position: fixed;
@@ -5577,6 +5624,94 @@ body.dark-mode .tab-btn.active {
 @keyframes tooltipFadeIn {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* Раскрывающееся пояснение под заголовком (вместо всплывающего) */
+.header-dropdown-tooltip {
+    display: none;
+    background: rgba(44, 54, 76, 0.95);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    max-width: 260px;
+    line-height: 1.5;
+    animation: dropdownOpen 0.25s ease;
+    margin-top: 8px;
+    grid-column: 1 / -1;
+}
+
+.header-dropdown-tooltip.show {
+    display: block;
+}
+
+@keyframes dropdownOpen {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+body.dark-mode .header-dropdown-tooltip {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* Вопросик для НКД и Текущей купонной доходности */
+.ofz-help-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-blue);
+    font-size: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 4px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.ofz-help-icon:hover {
+    background: rgba(59, 130, 246, 0.25);
+    transform: scale(1.1);
+}
+
+body.dark-mode .ofz-help-icon {
+    background: rgba(56, 189, 248, 0.2);
+    color: var(--accent-blue);
+}
+
+/* Раскрывающаяся подсказка внутри подстроки */
+.ofz-inline-help {
+    display: none;
+    background: rgba(59, 130, 246, 0.08);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--text-slate);
+    animation: helpSlideDown 0.25s ease;
+    grid-column: 1 / -1;
+}
+
+.ofz-inline-help.show {
+    display: block;
+}
+
+@keyframes helpSlideDown {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 100px; }
+}
+
+body.dark-mode .ofz-inline-help {
+    background: rgba(56, 189, 248, 0.1);
 }
 
 /* === 9. КОНТЕНТ ВКЛАДОК === */
@@ -5676,6 +5811,13 @@ body.dark-mode .ofz-aurora-item {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* Стиль для цифр в названии ОФЗ - моношрифт */
+.ofz-aurora-name .mono-digit-span,
+.mono-digit-span {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
 }
 
 /* Доходность - по центру ЗЕЛЕНАЯ */
@@ -5978,29 +6120,48 @@ body.dark-mode .echelons-header::after {
     gap: 8px;
 }
 
-/* Иконка вопроса */
+/* Иконка вопроса - более красивая версия */
 .echelons-title::after {
-    content: '?';
+    content: none;
+}
+
+.echelons-help-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    background: rgba(44, 54, 76, 0.1);
-    font-size: 10px;
-    font-weight: 800;
-    color: var(--text-muted);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+    border: 1px solid rgba(59, 130, 246, 0.2);
     transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
-.echelons-header:hover .echelons-title::after {
-    background: rgba(44, 54, 76, 0.2);
-    color: var(--text-deep);
+.echelons-help-icon svg {
+    width: 12px;
+    height: 12px;
+    stroke: var(--accent-blue);
+    stroke-width: 2.5;
 }
 
-body.dark-mode .echelons-title::after {
-    background: rgba(255, 255, 255, 0.1);
+.echelons-header:hover .echelons-help-icon {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(139, 92, 246, 0.25));
+    transform: scale(1.1);
+}
+
+.echelons-header.open .echelons-help-icon {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.echelons-header.open .echelons-help-icon svg {
+    stroke: #EF4444;
+}
+
+body.dark-mode .echelons-help-icon {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(167, 139, 250, 0.15));
+    border-color: rgba(56, 189, 248, 0.2);
 }
 
 .echelons-toggle-icon {
@@ -6016,12 +6177,6 @@ body.dark-mode .echelons-title::after {
 
 .echelons-header.open .echelons-toggle-icon {
     transform: rotate(180deg);
-}
-
-.echelons-header.open .echelons-title::after {
-    content: '×';
-    background: rgba(239, 68, 68, 0.1);
-    color: #EF4444;
 }
 
 /* Описания эшелонов - скрытые по умолчанию */
@@ -6065,8 +6220,46 @@ body.dark-mode .echelon-info-card {
 }
 
 .echelon-info-icon {
-    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+}
+
+.echelon-info-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.echelon-info-icon.icon-e1 {
+    background: rgba(16, 185, 129, 0.15);
+}
+.echelon-info-icon.icon-e1 svg {
+    stroke: #10B981;
+}
+
+.echelon-info-icon.icon-e2 {
+    background: rgba(59, 130, 246, 0.15);
+}
+.echelon-info-icon.icon-e2 svg {
+    stroke: #3B82F6;
+}
+
+.echelon-info-icon.icon-e3 {
+    background: rgba(245, 158, 11, 0.15);
+}
+.echelon-info-icon.icon-e3 svg {
+    stroke: #F59E0B;
+}
+
+.echelon-info-icon.icon-e4 {
+    background: rgba(239, 68, 68, 0.15);
+}
+.echelon-info-icon.icon-e4 svg {
+    stroke: #EF4444;
 }
 
 .echelon-info-text {
@@ -6129,7 +6322,7 @@ body.dark-mode .echelon-info-card {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 4px;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     padding: 0 2px;
 }
 
@@ -7355,7 +7548,7 @@ body.dark-mode .stock-btn-info {
     <!-- КОНТЕНТ ВКЛАДКИ ОФЗ -->
     <div id="rebalance-tab-ofz" class="rebalance-tab-content active">
         <!-- Заголовки списка с галочкой -->
-        <div class="list-headers">
+        <div class="list-headers" id="ofzListHeaders">
             <div class="list-header-left">
                 <span class="list-header-text">ИНСТРУМЕНТ</span>
                 <div class="list-collapse-toggle" id="ofzCollapseToggle" onclick="toggleOfzListCollapse()">
@@ -7363,9 +7556,23 @@ body.dark-mode .stock-btn-info {
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
                 </div>
+                <div class="list-open-trigger" id="ofzOpenTrigger" onclick="toggleAuroraOfzList()" style="display: none;">
+                    <span>открыть список</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
             </div>
-            <span class="list-header-percent" onclick="showYieldTooltip(event)">%</span>
-            <span class="list-header-price" onclick="showPriceTooltip(event)">₽</span>
+            <span class="list-header-percent" onclick="toggleYieldDropdown(event)">%</span>
+            <span class="list-header-price" onclick="togglePriceDropdown(event)">₽</span>
+        </div>
+        <!-- Раскрывающееся пояснение для % -->
+        <div class="header-dropdown-tooltip" id="yieldDropdown">
+            <b>Простая доходность к погашению</b> — показывает, сколько процентов годовых вы получите, если будете держать облигацию до погашения.
+        </div>
+        <!-- Раскрывающееся пояснение для ₽ -->
+        <div class="header-dropdown-tooltip" id="priceDropdown">
+            <b>Цена формируется как:</b><br>Текущая цена + НКД (накопленный купонный доход)
         </div>
         
         <div id="ofz-aurora-list" class="ofz-aurora-list">
@@ -7390,33 +7597,59 @@ body.dark-mode .stock-btn-info {
             <!-- Заголовок ЭШЕЛОНЫ - красивый дизайн -->
             <div class="echelons-header" id="echelonsHeader" onclick="toggleEchelonsInfo()">
                 <span class="echelons-title">ЭШЕЛОНЫ</span>
+                <div class="echelons-help-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
             </div>
             
             <!-- Информация об эшелонах (скрыта по умолчанию) -->
             <div class="stocks-echelon-info" id="stocksEchelonInfo">
                 <div class="echelon-info-card">
-                    <div class="echelon-info-icon">💎</div>
+                    <div class="echelon-info-icon icon-e1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <polyline points="9 12 11 14 15 10"/>
+                        </svg>
+                    </div>
                     <div class="echelon-info-text">
                         <div class="echelon-info-title">I Эшелон <span class="echelon-badge e1">Надежный</span></div>
                         <div class="echelon-info-desc">Компании, которые платят дивиденды и стараются их повышать каждый год</div>
                     </div>
                 </div>
                 <div class="echelon-info-card">
-                    <div class="echelon-info-icon">📊</div>
+                    <div class="echelon-info-icon icon-e2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="20" x2="12" y2="10"/>
+                            <line x1="18" y1="20" x2="18" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                    </div>
                     <div class="echelon-info-text">
                         <div class="echelon-info-title">II Эшелон <span class="echelon-badge e2">Стабильный</span></div>
                         <div class="echelon-info-desc">Компании, которые платят дивиденды, но размер выплат может меняться</div>
                     </div>
                 </div>
                 <div class="echelon-info-card">
-                    <div class="echelon-info-icon">⚡</div>
+                    <div class="echelon-info-icon icon-e3">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                    </div>
                     <div class="echelon-info-text">
                         <div class="echelon-info-title">III Эшелон <span class="echelon-badge e3">Рисковый</span></div>
                         <div class="echelon-info-desc">Компании с потенциалом выплат, но пока не платят регулярно</div>
                     </div>
                 </div>
                 <div class="echelon-info-card">
-                    <div class="echelon-info-icon">🚀</div>
+                    <div class="echelon-info-icon icon-e4">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                    </div>
                     <div class="echelon-info-text">
                         <div class="echelon-info-title">IV Эшелон <span class="echelon-badge e4">Венчурный</span></div>
                         <div class="echelon-info-desc">Компании роста, которые реинвестируют прибыль вместо дивидендов</div>
@@ -9825,8 +10058,11 @@ function renderAuroraOfzList() {
                         <span class="ofz-detail-value">${priceFinal} ₽</span>
                     </div>
                     <div class="ofz-detail-row">
-                        <span class="ofz-detail-label">НКД</span>
+                        <span class="ofz-detail-label">НКД<span class="ofz-help-icon" onclick="toggleOfzHelp('nkdHelp-${b.t}', event)">?</span></span>
                         <span class="ofz-detail-value">${nkd} ₽</span>
+                    </div>
+                    <div class="ofz-inline-help" id="nkdHelp-${b.t}">
+                        <b>НКД</b> — накопленный купонный доход. Это часть купона, которую вы платите продавцу облигации за дни с последней выплаты до даты покупки. При получении следующего купона вы получите его целиком.
                     </div>
                     <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Итого (цена + НКД)</span>
@@ -9845,8 +10081,11 @@ function renderAuroraOfzList() {
                         <span class="ofz-detail-value">${formatDateDMY(details.nextCoupon)}</span>
                     </div>
                     <div class="ofz-detail-row">
-                        <span class="ofz-detail-label">Текущая купонная доходность</span>
+                        <span class="ofz-detail-label">Текущая купонная доходность<span class="ofz-help-icon" onclick="toggleOfzHelp('yieldHelp-${b.t}', event)">?</span></span>
                         <span class="ofz-detail-value" style="color: #10B981;">${curYield}%</span>
+                    </div>
+                    <div class="ofz-inline-help" id="yieldHelp-${b.t}">
+                        <b>Текущая купонная доходность</b> — показывает, какой процент годовых вы получаете от купонов относительно текущей цены облигации. Не учитывает выплату номинала при погашении.
                     </div>
                     <div class="ofz-detail-row">
                         <span class="ofz-detail-label">Выплат в год</span>
@@ -9881,20 +10120,24 @@ function toggleAuroraOfzDetails(ticker) {
     // Если не был открыт — открываем и прокручиваем
     if (!isExpanded) {
         item.classList.add('expanded');
-        // Прокрутка чтобы низ карточки был выше навигации
+        // Прокрутка чтобы карточка была видна между кнопкой телеграм (сверху) и навигацией (снизу)
         setTimeout(() => {
-            const details = item.querySelector('.ofz-aurora-details');
-            if (details) {
-                const navHeight = 70; // высота навигационного меню
-                const itemRect = item.getBoundingClientRect();
-                const detailsRect = details.getBoundingClientRect();
-                const viewportHeight = window.innerHeight;
-                const bottomOfCard = itemRect.top + item.offsetHeight;
-                
-                if (bottomOfCard > viewportHeight - navHeight) {
-                    const scrollBy = bottomOfCard - (viewportHeight - navHeight) + 20;
-                    window.scrollBy({ top: scrollBy, behavior: 'smooth' });
-                }
+            const navHeight = 80; // высота навигационного меню + отступ
+            const topOffset = 60; // отступ от верха (кнопка закрыть телеграм)
+            const itemRect = item.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const bottomOfCard = itemRect.top + item.offsetHeight;
+            const topOfCard = itemRect.top;
+            
+            // Если верх карточки выше зоны видимости — прокручиваем вниз
+            if (topOfCard < topOffset) {
+                const scrollBy = topOfCard - topOffset;
+                window.scrollBy({ top: scrollBy, behavior: 'smooth' });
+            }
+            // Если низ карточки ниже навигации — прокручиваем вверх
+            else if (bottomOfCard > viewportHeight - navHeight) {
+                const scrollBy = bottomOfCard - (viewportHeight - navHeight) + 20;
+                window.scrollBy({ top: scrollBy, behavior: 'smooth' });
             }
         }, 150);
     }
@@ -9953,19 +10196,18 @@ function toggleOfzListCollapse() {
     const list = document.getElementById('ofz-aurora-list');
     const toggle = document.getElementById('ofzCollapseToggle');
     const ghostTrigger = document.getElementById('ofzGhostTrigger');
+    const openTrigger = document.getElementById('ofzOpenTrigger');
     const items = document.querySelectorAll('.ofz-aurora-item');
     
     ofzListCollapsed = !ofzListCollapsed;
     
     if (ofzListCollapsed) {
-        // Показываем только 3 первые строки
-        items.forEach((item, index) => {
-            if (index > 2) {
-                item.classList.add('aurora-hidden');
-            }
-        });
+        // Сворачиваем весь список
+        list.style.display = 'none';
         toggle.classList.add('collapsed');
         ghostTrigger.style.display = 'none';
+        // Показываем элемент "открыть список"
+        if (openTrigger) openTrigger.style.display = 'flex';
         // Сбрасываем состояние списка
         ofzListExpanded = false;
         document.getElementById('ofzGhostText').innerText = 'ОТКРЫТЬ СПИСОК';
@@ -9975,6 +10217,8 @@ function toggleOfzListCollapse() {
             el.classList.remove('expanded');
         });
     } else {
+        // Разворачиваем список
+        list.style.display = 'flex';
         // Восстанавливаем - показываем 3 первые
         items.forEach((item, index) => {
             if (index <= 2) {
@@ -9985,6 +10229,8 @@ function toggleOfzListCollapse() {
         });
         toggle.classList.remove('collapsed');
         ghostTrigger.style.display = 'flex';
+        // Скрываем элемент "открыть список"
+        if (openTrigger) openTrigger.style.display = 'none';
     }
     
     // Вибрация
@@ -10096,13 +10342,31 @@ function openStockDetail(ticker, echelon, clickedCell = null) {
     let companyName = ticker;
     let companySector = '';
     
+    // Для привилегированных акций (SNGSp -> SNGS) ищем сектор базового тикера
+    const baseTicker = ticker.toLowerCase().endsWith('p') ? ticker.slice(0, -1) : ticker;
+    
     if (typeof echelonTableData !== 'undefined') {
-        const echelonIndex = echelon - 1;
-        if (echelonTableData[echelonIndex]) {
-            const found = echelonTableData[echelonIndex].find(item => item.t === ticker);
+        // Сначала ищем точное совпадение
+        for (let i = 0; i < echelonTableData.length; i++) {
+            const found = echelonTableData[i].find(item => item.t === ticker);
             if (found) {
                 companyName = found.n || ticker;
                 companySector = found.sector || '';
+                break;
+            }
+        }
+        
+        // Если сектор не найден и это привилегированная акция - ищем по базовому тикеру
+        if (!companySector && ticker !== baseTicker) {
+            for (let i = 0; i < echelonTableData.length; i++) {
+                const found = echelonTableData[i].find(item => item.t === baseTicker || item.t === baseTicker.toUpperCase());
+                if (found) {
+                    companySector = found.sector || '';
+                    if (!companyName || companyName === ticker) {
+                        companyName = found.n || ticker;
+                    }
+                    break;
+                }
             }
         }
     }
@@ -10164,7 +10428,7 @@ function openStockDetail(ticker, echelon, clickedCell = null) {
                 </svg>
                 График
             </button>
-            <button class="stock-btn stock-btn-info" onclick="goToCompanyPage('${ticker}')">
+            <button class="stock-btn stock-btn-info" onclick="goToCompanyPageFromTicker('${ticker}')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -10177,16 +10441,36 @@ function openStockDetail(ticker, echelon, clickedCell = null) {
     
     card.dataset.ticker = ticker;
     card.dataset.echelon = echelon;
+    
+    // Вставляем карточку сразу под строкой с тикером
+    if (clickedCell) {
+        const row = clickedCell.closest('.stocks-table-row');
+        if (row) {
+            // Удаляем карточку из текущего места
+            card.remove();
+            // Вставляем после строки
+            row.after(card);
+        }
+    }
+    
     card.classList.add('open');
     
-    // Прокручиваем так чтобы низ карточки был выше навигации
+    // Прокручиваем так чтобы карточка была видна между кнопкой телеграм и навигацией
     setTimeout(() => {
-        const navHeight = 70;
+        const navHeight = 80;
+        const topOffset = 60;
         const cardRect = card.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
         const bottomOfCard = cardRect.top + card.offsetHeight;
+        const topOfCard = cardRect.top;
         
-        if (bottomOfCard > viewportHeight - navHeight) {
+        // Если верх карточки выше зоны видимости — прокручиваем вниз
+        if (topOfCard < topOffset) {
+            const scrollBy = topOfCard - topOffset;
+            window.scrollBy({ top: scrollBy, behavior: 'smooth' });
+        }
+        // Если низ карточки ниже навигации — прокручиваем вверх
+        else if (bottomOfCard > viewportHeight - navHeight) {
             const scrollBy = bottomOfCard - (viewportHeight - navHeight) + 20;
             window.scrollBy({ top: scrollBy, behavior: 'smooth' });
         }
@@ -10209,7 +10493,7 @@ function closeStockDetail() {
     document.querySelectorAll('.stocks-cell.active').forEach(c => c.classList.remove('active'));
 }
 
-// Переход на страницу компании
+// Переход на страницу компании (из карточки деталей акции)
 function goToCompanyPage(ticker) {
     // Ищем данные о компании в echelonTableData
     let companyData = null;
@@ -10232,6 +10516,49 @@ function goToCompanyPage(ticker) {
     
     if (companyData && typeof openCompanyPage === 'function') {
         openCompanyPage(companyData);
+    } else {
+        showToast('Информация о компании недоступна');
+    }
+}
+
+// Переход на страницу компании как если бы в поиск ввели тикер
+function goToCompanyPageFromTicker(ticker) {
+    // Вызываем функцию поиска с тикером
+    if (typeof searchCompanyInternal === 'function') {
+        searchCompanyInternal(ticker);
+    } else if (typeof openCompanyPage === 'function') {
+        // Fallback - ищем данные и открываем страницу
+        let companyData = null;
+        
+        // Для привилегированных акций ищем и базовый тикер
+        const baseTicker = ticker.toLowerCase().endsWith('p') ? ticker.slice(0, -1).toUpperCase() : ticker;
+        
+        if (typeof echelonTableData !== 'undefined') {
+            for (let i = 0; i < echelonTableData.length; i++) {
+                let found = echelonTableData[i].find(item => item.t === ticker);
+                if (!found && ticker !== baseTicker) {
+                    found = echelonTableData[i].find(item => item.t === baseTicker);
+                }
+                if (found) {
+                    companyData = {
+                        t: ticker, // Используем оригинальный тикер
+                        n: found.n || ticker,
+                        sector: found.sector || '',
+                        target: found.target || '—',
+                        type: 'Акция',
+                        p: 0
+                    };
+                    break;
+                }
+            }
+        }
+        
+        if (companyData) {
+            openCompanyPage(companyData, ticker);
+        } else {
+            // Пробуем открыть без данных
+            openCompanyPage(null, ticker);
+        }
     } else {
         showToast('Информация о компании недоступна');
     }
@@ -10352,6 +10679,83 @@ function showYieldTooltip(event) {
             tooltip.remove();
         }
     }, 3000);
+}
+
+// Новые функции для раскрывающихся пояснений
+function toggleYieldDropdown(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('yieldDropdown');
+    const priceDropdown = document.getElementById('priceDropdown');
+    
+    // Закрываем другой dropdown
+    if (priceDropdown) priceDropdown.classList.remove('show');
+    
+    // Переключаем текущий
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+        
+        // Закрытие по клику вне
+        if (dropdown.classList.contains('show')) {
+            setTimeout(() => {
+                document.addEventListener('click', function closeDropdown(e) {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                        document.removeEventListener('click', closeDropdown);
+                    }
+                });
+            }, 100);
+        }
+    }
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
+
+function togglePriceDropdown(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('priceDropdown');
+    const yieldDropdown = document.getElementById('yieldDropdown');
+    
+    // Закрываем другой dropdown
+    if (yieldDropdown) yieldDropdown.classList.remove('show');
+    
+    // Переключаем текущий
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+        
+        // Закрытие по клику вне
+        if (dropdown.classList.contains('show')) {
+            setTimeout(() => {
+                document.addEventListener('click', function closeDropdown(e) {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                        document.removeEventListener('click', closeDropdown);
+                    }
+                });
+            }, 100);
+        }
+    }
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
+
+// Функция показа/скрытия подсказки для НКД и текущей купонной доходности
+function toggleOfzHelp(helpId, event) {
+    event.stopPropagation();
+    const help = document.getElementById(helpId);
+    if (help) {
+        help.classList.toggle('show');
+    }
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
 }
 
 // Функция прямого открытия TradingView без предупреждения
@@ -10493,6 +10897,11 @@ function showLuxuryToast(title, message) {
     // После загрузки обновляем отображение
     renderOfzList();
     draw();
+}
+
+// Функция поиска компании по тикеру (вызывается из карточки акции)
+function searchCompanyInternal(ticker) {
+    performSearch(ticker);
 }
 
         function performSearch(query) {
