@@ -9431,10 +9431,11 @@ function resetCustomTo50() {
         }
 
         async function fetchBondData(code) {
-    if (!code) return { nkd: 0, matDate: '—', price: 0 };
+    console.log(`[DEBUG] 1. Начинаю поиск данных для: ${code}`); // ЛОГ
     
-    // Проверяем кэш
+    if (!code) return { nkd: 0, matDate: '—', price: 0 };
     if (bondDataCache[code]) {
+        console.log(`[DEBUG] ${code} взят из кэша`); // ЛОГ
         return bondDataCache[code];
     }
     
@@ -9446,34 +9447,36 @@ function resetCustomTo50() {
         const sec_row = data.securities.data[0];
         
         let lastPrice = 0;
+        let priceSource = 'НЕТ'; // ЛОГ: откуда взяли цену
         
-        // 1. Ищем цену в рыночных данных (сделки сегодня)
+        // 1. Ищем цену в рыночных данных
         if (data.marketdata && data.marketdata.data.length > 0) {
              const m_cols = data.marketdata.columns;
              const m_row = data.marketdata.data[0];
              const lastIdx = m_cols.indexOf('LAST');
-             const prevIdx = m_cols.indexOf('PREVPRICE'); // На всякий случай ищем и здесь
+             const prevIdx = m_cols.indexOf('PREVPRICE');
 
              if (lastIdx !== -1 && m_row[lastIdx]) {
                 lastPrice = m_row[lastIdx];
+                priceSource = 'LAST (Сделка)';
              } 
-             // Если нет LAST, пробуем PREVPRICE из marketdata
              else if (prevIdx !== -1 && m_row[prevIdx]) {
                 lastPrice = m_row[prevIdx];
+                priceSource = 'PREVPRICE (Рынок)';
              }
         }
         
-        // 2. Если цены всё еще нет, ищем Цену Закрытия в блоке SECURITIES (самый надежный вариант для неликвида)
+        // 2. Ищем в SECURITIES
         if (!lastPrice && sec_row) {
              const prevPriceIdx = sec_cols.indexOf('PREVPRICE');
              if (prevPriceIdx !== -1 && sec_row[prevPriceIdx]) {
                  lastPrice = sec_row[prevPriceIdx];
+                 priceSource = 'PREVPRICE (Справочник)';
              }
         }
 
-        // Обновляем глобальные карты (оставляем вашу логику)
+        // Логика НКД и прочего (без изменений)
         bondCouponsMap[code] = { date: sec_row[sec_cols.indexOf('NEXTCOUPON')], value: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0 };
-        
         const couponPeriod = parseFloat(sec_row[sec_cols.indexOf('COUPONPERIOD')]) || 0;
         const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
         
@@ -9488,19 +9491,22 @@ function resetCustomTo50() {
         const result = { 
             nkd: parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0, 
             matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—', 
-            
-            // === ВАЖНОЕ ИЗМЕНЕНИЕ ===
-            // Умножаем на 10, чтобы перевести проценты в рубли (для облигаций номиналом 1000р)
             price: (lastPrice * 10) || 0 
         };
         
-        // Сохраняем в кэш
         bondDataCache[code] = result;
+
+        // === САМЫЙ ВАЖНЫЙ ЛОГ ===
+        console.log(`[DEBUG] ИТОГ ПО ${code}:`);
+        console.log(`   Источник цены: ${priceSource}`);
+        console.log(`   Цена % от биржи: ${lastPrice}`);
+        console.log(`   Цена в рублях (x10): ${result.price}`);
+        console.log(`   НКД: ${result.nkd}`);
+        console.log('--------------------------------');
         
         return result;
     } catch (e) { 
-        console.error(`Failed to fetch data for ticker: ${code}`, e);
-        // Возвращаем 0, чтобы не ломать расчеты ложными "1000"
+        console.error(`[ОШИБКА] Не удалось получить данные для: ${code}`, e);
         return { nkd: 0, matDate: '—', price: 0 }; 
     }
 }
@@ -9769,64 +9775,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function distributeMonthlyInvestment() {
-            if (isUpdatingProgrammatically) return;
+    const input = document.getElementById('monthlySumInput');
+    if (!input) return;
 
-            const sumInput = document.getElementById('monthlySumInput');
-            const totalSum = parseFloat(sumInput.value) || 0;
-            
-            // Если сумма 0 или пустая, обнуляем входы и пересчитываем низ
-            if (monthlyIncomeBonds.length === 0 || totalSum <= 0) {
-                 monthlyIncomeBonds.forEach(bond => {
-                    const input = document.getElementById(`input-${bond.t}`);
-                    if(input) input.value = 0;
-                });
-                recalcCustomCoupons(); // <--- ДОБАВЛЕНО
-                return;
-            };
+    // Очищаем от пробелов и превращаем в число
+    const totalInvestment = parseFloat(input.value.replace(/\s/g, ''));
+    
+    console.log(`[CALC] === НАЧАЛО РАСЧЕТА ===`); // ЛОГ
+    console.log(`[CALC] Введенная сумма: ${totalInvestment}`); // ЛОГ
 
-            const budgetPerBond = totalSum / monthlyIncomeBonds.length;
-            let currentTotalSpent = 0;
-            
-            let calcList = monthlyIncomeBonds.map(b => {
-                let yieldNum = parseFloat(b.y.replace(/[^\d.-]/g, '')) || 0;
-                let fullPrice = b.p + b.nkd;
-                return { ...b, yieldNum, fullPrice, qty: 0, cost: 0 };
-            });
+    if (!totalInvestment || totalInvestment <= 0) {
+        renderMonthlyIncomeCards();
+        recalcCustomCoupons();
+        return;
+    }
 
-            calcList.forEach(bond => {
-                if (bond.fullPrice > 0) {
-                    bond.qty = Math.floor(budgetPerBond / bond.fullPrice);
-                    bond.cost = bond.qty * bond.fullPrice;
-                    currentTotalSpent += bond.cost;
-                }
-            });
+    // 6 бумаг в стратегии
+    const perBondBudget = totalInvestment / 6;
+    console.log(`[CALC] Бюджет на одну бумагу: ${perBondBudget.toFixed(2)}`); // ЛОГ
 
-            let remainder = totalSum - currentTotalSpent;
-
-            if (remainder > 0) {
-                calcList.sort((a,b) => b.yieldNum - a.yieldNum);
-                
-                for (const bond of calcList) {
-                    if (bond.fullPrice > 0 && remainder >= bond.fullPrice) {
-                        const extraQty = Math.floor(remainder / bond.fullPrice);
-                        if (extraQty > 0) {
-                            bond.qty += extraQty;
-                            remainder -= extraQty * bond.fullPrice;
-                        }
-                    }
-                }
-            }
-
-            isUpdatingProgrammatically = true; 
-            calcList.forEach(bond => {
-                const input = document.getElementById(`input-${bond.t}`);
-                if(input) input.value = bond.qty;
-            });
-            isUpdatingProgrammatically = false;
-
-            recalcCustomCoupons(); // <--- ВАЖНОЕ ДОБАВЛЕНИЕ: Обновляем нижний список
+    monthlyIncomeBonds.forEach(bond => {
+        // Полная стоимость покупки = Цена + НКД
+        const fullPrice = bond.p + bond.nkd;
+        
+        let count = 0;
+        if (fullPrice > 0) {
+            count = Math.floor(perBondBudget / fullPrice);
         }
 
+        // Сохраняем кол-во в карту
+        bondQtyMap[bond.t] = count;
+
+        // === ВАЖНЫЙ ЛОГ ПО КАЖДОЙ БУМАГЕ ===
+        console.log(`[CALC] Бумага: ${bond.n}`);
+        console.log(`       Цена (тело): ${bond.p}`);
+        console.log(`       НКД: ${bond.nkd}`);
+        console.log(`       Полная цена: ${fullPrice.toFixed(2)}`);
+        console.log(`       Расчет: ${perBondBudget.toFixed(2)} / ${fullPrice.toFixed(2)} = ${count} шт.`);
+        console.log('---');
+    });
+
+    renderMonthlyIncomeCards();
+    recalcCustomCoupons();
+    console.log(`[CALC] === КОНЕЦ РАСЧЕТА ===`);
+}
         // ===== ФУНКЦИЯ 1: Отрисовка карточек =====
 function renderMonthlyIncomeCards() {
     const container = document.getElementById('calc-bonds-input-list');
