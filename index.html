@@ -9811,11 +9811,8 @@ function renderMonthlyIncomeCards() {
         html += `
         <div class="calc-bond-row">
             <div class="unified-badge-container" style="flex-direction:column; align-items:flex-start; gap: 3px;">
-                <div class="ub-name" style="width:100%">${limitName(b.n)}</div>
-                <div style="font-size:9px; color:#888; margin-top:2px; padding-left:2px;">
-                   (Цена: ${b.p.toFixed(2)} + НКД: ${b.nkd.toFixed(2)})
-                </div>
-            </div>
+    <div class="ub-name" style="width:100%">${limitName(b.n)}</div>
+    </div>
             
             <div class="ub-yield">${b.y.replace('%', '')}%</div>
             
@@ -9871,10 +9868,10 @@ function recalcCustomCoupons() {
         const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
         totalAmount += netAmount;
 
-        html += `
-        <div class="coupon-row">
-            <div><b>${payment.dateStr}</b></div>
-            <div style="color:#8e8e93">${limitName(payment.displayName)}</div>
+       html += `
+    <div class="coupon-row">
+        <div><b>${payment.dateStr.slice(0, 5)}</b></div>
+        <div style="color:#8e8e93">${limitName(payment.displayName)}</div>
             <div style="text-align:center">${qty} шт.</div>
             <div style="text-align:right"><b>${Math.round(netAmount)} ₽</b></div>
         </div>`;
