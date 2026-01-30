@@ -2784,21 +2784,21 @@ body.dark-mode #screen-interesting .glass-input-wrapper input {
     opacity: 0.6;
 }
 
-/* Информационный текст - синий фон */
+/* Информационный текст - Blue Info */
 #screen-interesting .calc-info-text {
     font-family: 'Inter', sans-serif;
     font-size: 12px;
     color: var(--text-slate, #64748B);
     line-height: 1.6;
     padding: 14px 16px;
-    background: rgba(59, 130, 246, 0.06);
+    background: rgba(59, 130, 246, 0.04);
     border-radius: 12px;
     margin-bottom: 16px;
     border-left: 3px solid rgba(59, 130, 246, 0.4);
 }
 
 body.dark-mode #screen-interesting .calc-info-text {
-    background: rgba(59, 130, 246, 0.1);
+    background: rgba(59, 130, 246, 0.08);
 }
 
 /* Сегментированный переключатель налога */
@@ -2982,17 +2982,17 @@ body.dark-mode #screen-interesting .calc-qty-controller input {
     color: var(--text-deep);
 }
 
-/* Кнопка сброса - ширина 112px = ширина контроллера */
+/* Кнопка сброса - Red Alert стиль */
 #screen-interesting .btn-reset-glass {
     width: 112px;
     padding: 10px;
-    border: 1px dashed rgba(0, 0, 0, 0.12);
-    background: transparent;
+    border: none;
+    background: rgba(239, 68, 68, 0.08);
     border-radius: 10px;
     font-family: 'Inter', sans-serif;
     font-size: 11px;
-    font-weight: 500;
-    color: var(--text-slate, #64748B);
+    font-weight: 600;
+    color: #EF4444;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -3004,34 +3004,49 @@ body.dark-mode #screen-interesting .calc-qty-controller input {
 }
 
 #screen-interesting .btn-reset-glass:hover {
-    border-color: #10B981;
-    color: #10B981;
-    background: rgba(16, 185, 129, 0.05);
+    background: rgba(239, 68, 68, 0.12);
+}
+
+#screen-interesting .btn-reset-glass:active {
+    transform: scale(0.98);
 }
 
 #screen-interesting .btn-reset-glass svg {
     width: 12px;
     height: 12px;
+    stroke: #EF4444;
 }
 
 body.dark-mode #screen-interesting .btn-reset-glass {
-    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(239, 68, 68, 0.15);
 }
 
-/* Блок результатов - вдавленный эффект */
+/* Блок результатов - тёмный градиент с inner shine */
 #screen-interesting .results-glass-container {
-    background: #FFFFFF;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
     border-radius: 16px;
     padding: 16px;
     margin-top: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Inner Shine - акцент в левом верхнем углу */
+#screen-interesting .results-glass-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    pointer-events: none;
 }
 
 body.dark-mode #screen-interesting .results-glass-container {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 #screen-interesting .results-glass-title {
@@ -3040,25 +3055,29 @@ body.dark-mode #screen-interesting .results-glass-container {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--text-slate, #64748B);
+    color: rgba(255, 255, 255, 0.6);
     margin-bottom: 14px;
     display: flex;
     align-items: center;
     gap: 8px;
+    position: relative;
+    z-index: 1;
 }
 
 #screen-interesting .results-glass-title svg {
     color: #10B981;
 }
 
-/* Таблица выплат */
+/* Таблица выплат - внутри тёмного блока */
 #screen-interesting .coupon-table-head {
     display: grid;
     grid-template-columns: 70px 1fr 40px 70px;
     gap: 8px;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
 }
 
 #screen-interesting .coupon-table-head span {
@@ -3067,47 +3086,50 @@ body.dark-mode #screen-interesting .results-glass-container {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--text-slate, #64748B);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 body.dark-mode #screen-interesting .coupon-table-head {
-    border-bottom-color: rgba(255, 255, 255, 0.08);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Строка выплаты - накладной эффект */
+/* Строка выплаты - внутри тёмного блока */
 #screen-interesting .coupon-result-row {
     display: grid;
     grid-template-columns: 70px 1fr 40px 70px;
     gap: 8px;
-    padding: 10px 12px;
-    margin-bottom: 6px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 0;
+    margin-bottom: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    /* Мостик - пунктирная линия */
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
     font-family: 'Inter', sans-serif;
     font-size: 12px;
-    color: var(--text-slate, #64748B);
+    position: relative;
+    z-index: 1;
 }
 
 #screen-interesting .coupon-result-row:last-child {
-    margin-bottom: 0;
+    border-bottom: none;
 }
 
 body.dark-mode #screen-interesting .coupon-result-row {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: transparent;
+    border-bottom-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Дата - JetBrains Mono */
+/* Дата - приглушённый белый, JetBrains Mono */
 #screen-interesting .coupon-result-row .coupon-date {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: var(--text-slate, #64748B);
+    color: rgba(255, 255, 255, 0.6);
 }
 
-/* Название облигации - Inter + номер Mono */
+/* Название облигации - чистый белый, Inter */
 #screen-interesting .coupon-result-row .coupon-name {
-    color: var(--text-deep, #0F172A);
+    color: #FFFFFF;
     font-weight: 500;
 }
 
@@ -3116,27 +3138,31 @@ body.dark-mode #screen-interesting .coupon-result-row {
 }
 
 body.dark-mode #screen-interesting .coupon-result-row .coupon-name {
-    color: var(--text-deep);
+    color: #FFFFFF;
 }
 
-/* Количество - JetBrains Mono */
+/* Количество - плашка с полупрозрачным фоном */
 #screen-interesting .coupon-result-row .coupon-qty {
     text-align: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 4px 8px;
 }
 
-/* Сумма - JetBrains Mono */
+/* Сумма - зелёный неон, JetBrains Mono Bold */
 #screen-interesting .coupon-result-row .coupon-sum {
     text-align: right;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    font-weight: 600;
-    color: var(--text-deep, #0F172A);
+    font-weight: 700;
+    color: #10B981;
 }
 
 body.dark-mode #screen-interesting .coupon-result-row .coupon-sum {
-    color: var(--text-deep);
+    color: #10B981;
 }
 
 /* Footer итогов */
@@ -3146,14 +3172,16 @@ body.dark-mode #screen-interesting .coupon-result-row .coupon-sum {
     align-items: center;
     padding-top: 14px;
     margin-top: 14px;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 1;
 }
 
 #screen-interesting .results-glass-footer .footer-label {
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     font-weight: 500;
-    color: var(--text-slate, #64748B);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 #screen-interesting .results-glass-footer .footer-sum {
@@ -3164,7 +3192,7 @@ body.dark-mode #screen-interesting .coupon-result-row .coupon-sum {
 }
 
 body.dark-mode #screen-interesting .results-glass-footer {
-    border-top-color: rgba(255, 255, 255, 0.08);
+    border-top-color: rgba(255, 255, 255, 0.1);
 }
 }
 
@@ -10511,10 +10539,6 @@ function renderMonthlyIncomeCards() {
                 <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
                 <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="0" min="0" oninput="updateMonthlySumFromQuantities()">
                 <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
-                
-                <div class="btn-row-reset" onclick="resetOne('${b.t}')">
-                    <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </div>
             </div>
         </div>`;
     });
