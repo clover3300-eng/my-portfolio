@@ -9856,27 +9856,30 @@ async function fetchPricesForMonthlyIncome() {
     renderMonthlyIncomeCards();
 }
 // ===== ФУНКЦИЯ 3: Пересчёт выплат (ИСПРАВЛЕННАЯ) =====
-function recalcCustomCoupons() {
-    const resultList = document.getElementById('calc-results-list');
-    const footer = document.getElementById('calc-results-footer');
-    if (!resultList) return;
+allScheduledPayments.forEach(payment => {
+    // --- НАЧАЛО БЛОКА ПОИСКА КОЛИЧЕСТВА ---
     
-    let html = '';
-    const bondQtyMap = {};
-    let totalAmount = 0;
+    // 1. Сначала пробуем найти количество по Тикеру (коду)
+    let qty = bondQtyMap[payment.paymentTicker];
+
+    // 2. Если по тикеру пусто (или 0), ищем "Родителя" среди 6 облигаций по Имени
+    if (!qty) {
+        // Ищем в списке monthlyIncomeBonds ту облигацию, чье имя совпадает с именем выплаты
+        const parentBond = monthlyIncomeBonds.find(b => b.n === payment.displayName);
+        if (parentBond) {
+            // Если нашли родителя, берем его количество из карты
+            qty = bondQtyMap[parentBond.t];
+        }
+    }
+
+    // Если всё равно ничего не нашли, ставим 0
+    qty = qty || 0;
     
-    // Собираем количества из полей ввода
-    monthlyIncomeBonds.forEach(bond => {
-        const input = document.getElementById(`input-${bond.t}`);
-        bondQtyMap[bond.t] = input ? (parseInt(input.value) || 0) : 0;
-    });
+    // --- КОНЕЦ БЛОКА ПОИСКА ---
 
-    // Выводим все 12 строк выплат
-    allScheduledPayments.forEach(payment => {
-        const qty = bondQtyMap[payment.paymentTicker] || 0;
-        const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
-        totalAmount += netAmount;
-
+    const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
+    totalAmount += netAmount;
+    
       html += `
     <div class="coupon-row" style="display:grid; grid-template-columns: 45px 1fr 40px 70px; gap:2px; align-items:center; margin-bottom:8px;">
         
