@@ -170,33 +170,18 @@
 
          /* Фон с цветным свечением для эффекта стекла */
         #screen-app {
-            background: linear-gradient(90deg, #F5F1EE 0%, #F9FAFC 100%);
+            background: var(--bg-base);
             margin: -16px;
             padding: 16px;
             min-height: 100vh;
             position: relative;
             z-index: 1;
-            overflow: hidden; /* Чтобы пятна не вылезали */
-        }
-
-        /* Добавляем цветные пятна на фон */
-        #screen-app::before {
-            content: '';
-            position: absolute;
-            top: -20%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            background: 
-                radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.08) 0%, transparent 40%), /* Голубое пятно */
-                radial-gradient(circle at 20% 80%, rgba(217, 119, 87, 0.06) 0%, transparent 40%); /* Оранжевое пятно */
-            z-index: -1; /* Убираем назад */
-            pointer-events: none;
+            overflow: hidden;
         }
 
         /* Фон для темной темы */
         body.dark-mode #screen-app {
-            background: linear-gradient(90deg, #1a2234 0%, #0f172a 100%);
+            background: var(--bg-base);
         }
 
         /* ========== NEW: Welcome Screen Styles ========== */
@@ -206,7 +191,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(90deg, #F5F1EE 0%, #F9FAFC 100%);
+    background: transparent;
     margin: -16px;
     padding: 60px 30px;
     text-align: center;
@@ -1658,26 +1643,21 @@ input#sumInput::placeholder {
 /* ========== BLOOMBERG/HUD COMPANY CARD DESIGN ========== */
 
 /* Динамическое свечение фона для страницы компании */
-#screen-company.company-screen-active {
+#screen-company {
     position: relative;
+    background: var(--bg-base);
+    min-height: 100vh;
+    margin: -16px;
+    padding: 16px;
 }
 
-#screen-company.company-screen-active::before {
-    content: '';
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at 30% 20%, var(--glow-color, rgba(46, 204, 113, 0.15)) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: -1;
-    animation: glowPulse 4s ease-in-out infinite;
+body.dark-mode #screen-company {
+    background: var(--bg-base);
 }
 
-@keyframes glowPulse {
-    0%, 100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
+#screen-company > *:not(.aurora-container):not(.noise-overlay) {
+    position: relative;
+    z-index: 2;
 }
 
 /* Верхняя панель навигации */
@@ -2075,85 +2055,21 @@ input#sumInput::placeholder {
 /* === 2.1 Атмосфера и Фон === */
 #screen-interesting {
     position: relative;
-    background: #F3F4F6;
+    background: var(--bg-base);
     min-height: 100vh;
     margin: -16px;
     padding: 0 16px 140px 16px;
     overflow: hidden;
 }
 
-/* Noise overlay для текстуры */
-#screen-interesting::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    opacity: 0.03;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Aurora Blob - Верхний правый (Blue) */
-#screen-interesting::after {
-    content: '';
-    position: absolute;
-    top: -15%;
-    right: -20%;
-    width: 60%;
-    height: 50%;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
-    border-radius: 50%;
-    filter: blur(40px);
-    animation: auroraFloat1 14s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Aurora Blob - Нижний левый (Green) */
-#screen-interesting .aurora-blob-green {
-    position: absolute;
-    bottom: 10%;
-    left: -15%;
-    width: 50%;
-    height: 45%;
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
-    border-radius: 50%;
-    filter: blur(40px);
-    animation: auroraFloat2 12s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 0;
-}
-
-@keyframes auroraFloat1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(-5%, 8%) scale(1.05); }
-    66% { transform: translate(3%, -5%) scale(0.98); }
-}
-
-@keyframes auroraFloat2 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(8%, -6%) scale(1.08); }
-}
-
 body.dark-mode #screen-interesting {
-    background: #0f172a;
-}
-
-body.dark-mode #screen-interesting::after {
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-}
-
-body.dark-mode #screen-interesting .aurora-blob-green {
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, transparent 70%);
+    background: var(--bg-base);
 }
 
 /* Контейнер контента */
-#screen-interesting > * {
+#screen-interesting > *:not(.aurora-container):not(.noise-overlay) {
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 /* === Заголовок экрана === */
@@ -3017,40 +2933,19 @@ body.dark-mode #screen-interesting .results-glass-footer {
 /* === Основной контейнер экрана Портфель === */
 #screen-portfolio {
     position: relative;
-    background: linear-gradient(180deg, var(--claude-bg-base) 0%, #EDE9E6 100%);
+    background: var(--bg-base);
     min-height: 100vh;
     margin: -16px;
     padding: 20px 16px 140px 16px;
 }
 
 body.dark-mode #screen-portfolio {
-    background: linear-gradient(180deg, #0f172a 0%, #1a1a2e 100%);
+    background: var(--bg-base);
 }
 
-/* Динамическое свечение фона */
-#screen-portfolio::before {
-    content: '';
-    position: fixed;
-    top: -30%;
-    left: -30%;
-    width: 160%;
-    height: 160%;
-    background: 
-        radial-gradient(circle at 25% 25%, rgba(217, 119, 87, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 75% 75%, rgba(94, 123, 163, 0.03) 0%, transparent 50%);
-    pointer-events: none;
-    z-index: 0;
-    animation: portfolioGlow 10s ease-in-out infinite;
-}
-
-@keyframes portfolioGlow {
-    0%, 100% { opacity: 0.5; transform: scale(1) rotate(0deg); }
-    50% { opacity: 0.8; transform: scale(1.02) rotate(1deg); }
-}
-
-#screen-portfolio > * {
+#screen-portfolio > *:not(.aurora-container):not(.noise-overlay) {
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 /* === Заголовок экрана === */
@@ -5511,6 +5406,83 @@ body.dark-mode .screen::after {
    AURORA REBALANCE DESIGN - НОВЫЙ ДИЗАЙН ВКЛАДКИ РЕБАЛАНСИРОВКА
    ======================================================================== */
 
+/* === УНИВЕРСАЛЬНЫЙ AURORA ФОН ДЛЯ ВСЕХ ЭКРАНОВ === */
+.screen {
+    position: relative;
+    background: var(--bg-base);
+}
+
+.screen > .aurora-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.screen > .aurora-spot {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: auroraFloat 15s ease-in-out infinite;
+}
+
+.screen > .aurora-spot.blue,
+.screen .aurora-container .aurora-spot.blue {
+    width: 400px;
+    height: 400px;
+    background: var(--aurora-blue);
+    top: -10%;
+    right: -10%;
+    animation-delay: 0s;
+}
+
+.screen > .aurora-spot.green,
+.screen .aurora-container .aurora-spot.green {
+    width: 350px;
+    height: 350px;
+    background: var(--aurora-green);
+    bottom: 20%;
+    left: -15%;
+    animation-delay: -5s;
+}
+
+.screen > .aurora-spot.orange,
+.screen .aurora-container .aurora-spot.orange {
+    width: 300px;
+    height: 300px;
+    background: var(--aurora-orange);
+    top: 40%;
+    right: 10%;
+    animation-delay: -10s;
+}
+
+.screen > .noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+}
+
+body.dark-mode .screen > .noise-overlay {
+    opacity: 0.04;
+}
+
+.screen > *:not(.aurora-container):not(.noise-overlay):not(.aurora-spot) {
+    position: relative;
+    z-index: 2;
+}
+
 /* === 1. ОСНОВНОЙ КОНТЕЙНЕР ЭКРАНА === */
 #screen-assets {
     position: relative;
@@ -7370,6 +7342,14 @@ body.dark-mode .stock-btn-info {
 <div id="toast" class="toast">Скопировано!</div>
 
     <div id="screen-home" class="screen active">
+    <!-- Aurora Background -->
+    <div class="aurora-container">
+        <div class="aurora-spot blue"></div>
+        <div class="aurora-spot green"></div>
+        <div class="aurora-spot orange"></div>
+    </div>
+    <div class="noise-overlay"></div>
+    
     <div class="welcome-screen">
         <div class="welcome-logo-block">
             <span class="welcome-supratitle">W E A L T H &nbsp; M A N A G E M E N T</span>
@@ -7395,6 +7375,14 @@ body.dark-mode .stock-btn-info {
 </div>
 
    <div id="screen-app" class="screen">
+    <!-- Aurora Background -->
+    <div class="aurora-container">
+        <div class="aurora-spot blue"></div>
+        <div class="aurora-spot green"></div>
+        <div class="aurora-spot orange"></div>
+    </div>
+    <div class="noise-overlay"></div>
+    
     <!-- Terminal Header -->
     <div class="terminal-header-v2">
         <div class="terminal-title-main">Terminal</div>
@@ -7670,6 +7658,14 @@ body.dark-mode .stock-btn-info {
 </div> <!-- Закрываем screen-app -->
 
 <div id="screen-portfolio" class="screen">
+    <!-- Aurora Background -->
+    <div class="aurora-container">
+        <div class="aurora-spot blue"></div>
+        <div class="aurora-spot green"></div>
+        <div class="aurora-spot orange"></div>
+    </div>
+    <div class="noise-overlay"></div>
+    
     <!-- Заголовок -->
     <div class="header">
         <h1>Портфель</h1>
@@ -8094,8 +8090,13 @@ body.dark-mode .stock-btn-info {
 </div>
 
     <div id="screen-interesting" class="screen">
-    <!-- Aurora Blob - нижний левый (Green) -->
-    <div class="aurora-blob-green"></div>
+    <!-- Aurora Background -->
+    <div class="aurora-container">
+        <div class="aurora-spot blue"></div>
+        <div class="aurora-spot green"></div>
+        <div class="aurora-spot orange"></div>
+    </div>
+    <div class="noise-overlay"></div>
     
     <!-- Заголовок экрана -->
     <div class="header">
@@ -8274,6 +8275,14 @@ body.dark-mode .stock-btn-info {
 </div>
     
     <div id="screen-company" class="screen">
+    <!-- Aurora Background -->
+    <div class="aurora-container">
+        <div class="aurora-spot blue"></div>
+        <div class="aurora-spot green"></div>
+        <div class="aurora-spot orange"></div>
+    </div>
+    <div class="noise-overlay"></div>
+    
     <div id="company-content"></div>
 </div>
         
