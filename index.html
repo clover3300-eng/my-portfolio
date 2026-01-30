@@ -9447,20 +9447,23 @@ function resetCustomTo50() {
         
         let lastPrice = 0;
         
+        // 1. Ищем цену в рыночных данных (сделки сегодня)
         if (data.marketdata && data.marketdata.data.length > 0) {
              const m_cols = data.marketdata.columns;
              const m_row = data.marketdata.data[0];
              const lastIdx = m_cols.indexOf('LAST');
-             const prevIdx = m_cols.indexOf('PREVPRICE');
+             const prevIdx = m_cols.indexOf('PREVPRICE'); // На всякий случай ищем и здесь
 
              if (lastIdx !== -1 && m_row[lastIdx]) {
                 lastPrice = m_row[lastIdx];
              } 
+             // Если нет LAST, пробуем PREVPRICE из marketdata
              else if (prevIdx !== -1 && m_row[prevIdx]) {
                 lastPrice = m_row[prevIdx];
              }
         }
         
+        // 2. Если цены всё еще нет, ищем Цену Закрытия в блоке SECURITIES (самый надежный вариант для неликвида)
         if (!lastPrice && sec_row) {
              const prevPriceIdx = sec_cols.indexOf('PREVPRICE');
              if (prevPriceIdx !== -1 && sec_row[prevPriceIdx]) {
@@ -9468,10 +9471,12 @@ function resetCustomTo50() {
              }
         }
 
+        // Обновляем глобальные карты (оставляем вашу логику)
         bondCouponsMap[code] = { date: sec_row[sec_cols.indexOf('NEXTCOUPON')], value: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0 };
         
         const couponPeriod = parseFloat(sec_row[sec_cols.indexOf('COUPONPERIOD')]) || 0;
         const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
+        
         bondDetailsMap[code] = {
             matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—',
             couponValue: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0,
@@ -9483,7 +9488,10 @@ function resetCustomTo50() {
         const result = { 
             nkd: parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0, 
             matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—', 
-            price: lastPrice
+            
+            // === ВАЖНОЕ ИЗМЕНЕНИЕ ===
+            // Умножаем на 10, чтобы перевести проценты в рубли (для облигаций номиналом 1000р)
+            price: (lastPrice * 10) || 0 
         };
         
         // Сохраняем в кэш
@@ -9492,6 +9500,7 @@ function resetCustomTo50() {
         return result;
     } catch (e) { 
         console.error(`Failed to fetch data for ticker: ${code}`, e);
+        // Возвращаем 0, чтобы не ломать расчеты ложными "1000"
         return { nkd: 0, matDate: '—', price: 0 }; 
     }
 }
@@ -9854,16 +9863,23 @@ async function fetchPricesForMonthlyIncome() {
     const promises = monthlyIncomeBonds.map(async (bond) => {
         try {
             const extra = await fetchBondData(bond.t);
-            bond.p = extra.price || 1000;
-            bond.nkd = extra.nkd || 0;
+            // Если данные пришли, записываем их
+            bond.p = extra.price;
+            bond.nkd = extra.nkd;
         } catch(e) {
-            console.log("Error fetching price for", bond.t);
+            console.error("Не удалось получить данные по", bond.t, e);
+            // === ЗАГЛУШКИ УБРАНЫ ===
+            // Раньше тут было: bond.p = 1000;
+            // Теперь мы просто оставляем старое значение или undefined.
+            // Если цена будет undefined, математика выдаст NaN,
+            // и пользователь увидит, что данные не загрузились, вместо ложных 1000р.
         }
     });
-    
+
     await Promise.all(promises);
+    
     renderMonthlyIncomeCards();
-    distributeMonthlyInvestment();
+    distributeMonthlyInvestment(); // Пересчет (как мы добавили ранее)
 }
 // ===== ФУНКЦИЯ 3: Пересчёт выплат (ИСПРАВЛЕННАЯ) =====
 function recalcCustomCoupons() {
