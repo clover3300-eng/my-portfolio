@@ -2847,13 +2847,13 @@ body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
     color: var(--text-deep);
 }
 
-/* Заголовки таблицы: "Облигация" слева, "Кол-во" строго по центру */
+/* Заголовки таблицы: "Облигация" слева, "Кол-во" справа */
 #screen-interesting .calc-table-header {
     display: grid;
-    grid-template-columns: 1fr 80px 112px;
+    grid-template-columns: 1fr 112px;
     gap: 8px;
-    padding: 12px 12px;
-    margin-bottom: 4px;
+    padding: 12px 0;
+    margin-bottom: 0;
 }
 
 body.dark-mode #screen-interesting .calc-table-header {
@@ -2873,40 +2873,39 @@ body.dark-mode #screen-interesting .calc-table-header {
     text-align: center;
 }
 
-/* Кол-во - строго по центру над кнопками +/- */
-#screen-interesting .calc-table-header span:nth-child(3) {
-    text-align: center;
-}
-
-/* Строки списка облигаций - накладной эффект */
+/* Строки списка облигаций - прозрачный фон */
 #screen-interesting .calc-bond-row {
     display: grid;
-    grid-template-columns: 1fr 80px 112px;
+    grid-template-columns: 1fr 112px;
     gap: 8px;
-    padding: 14px 12px;
-    margin-bottom: 6px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 16px 0;
+    margin-bottom: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     align-items: center;
     transition: all 0.2s ease;
 }
 
 #screen-interesting .calc-bond-row:last-child {
-    margin-bottom: 0;
+    border-bottom: none;
 }
 
 body.dark-mode #screen-interesting .calc-bond-row {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: transparent;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Название облигации (Inter) + номер (Mono) */
 #screen-interesting .calc-bond-name {
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 600;
     color: var(--text-deep, #0F172A);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 #screen-interesting .calc-bond-name .bond-number {
@@ -2917,37 +2916,49 @@ body.dark-mode #screen-interesting .calc-bond-name {
     color: var(--text-deep);
 }
 
-/* Доходность - JetBrains Mono */
-#screen-interesting .calc-bond-yield {
+/* Доходность - зелёная, JetBrains Mono, под названием */
+#screen-interesting .calc-bond-yield,
+#screen-interesting .ub-yield {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-slate, #64748B);
-    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #10B981;
+}
+
+/* Контейнер для названия + доходности */
+#screen-interesting .calc-bond-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 /* Контроллер количества [- N +] */
-#screen-interesting .calc-qty-controller {
+#screen-interesting .calc-qty-controller,
+#screen-interesting .qty-controls {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0;
-    background: rgba(0, 0, 0, 0.03);
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 12px;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-body.dark-mode #screen-interesting .calc-qty-controller {
+body.dark-mode #screen-interesting .calc-qty-controller,
+body.dark-mode #screen-interesting .qty-controls {
     background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
-#screen-interesting .calc-qty-controller button {
-    width: 32px;
-    height: 32px;
+#screen-interesting .calc-qty-controller button,
+#screen-interesting .qty-controls .qty-btn {
+    width: 36px;
+    height: 40px;
     border: none;
     background: transparent;
-    color: var(--text-slate, #64748B);
-    font-size: 16px;
+    color: var(--text-deep, #0F172A);
+    font-size: 18px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.15s ease;
@@ -2956,29 +2967,44 @@ body.dark-mode #screen-interesting .calc-qty-controller {
     justify-content: center;
 }
 
-#screen-interesting .calc-qty-controller button:hover {
+#screen-interesting .calc-qty-controller button:hover,
+#screen-interesting .qty-controls .qty-btn:hover {
     background: rgba(0, 0, 0, 0.05);
-    color: var(--text-deep, #0F172A);
 }
 
-#screen-interesting .calc-qty-controller button:active {
+#screen-interesting .calc-qty-controller button:active,
+#screen-interesting .qty-controls .qty-btn:active {
     transform: scale(0.95);
+    background: rgba(0, 0, 0, 0.08);
 }
 
-#screen-interesting .calc-qty-controller input {
-    width: 48px;
-    height: 32px;
+body.dark-mode #screen-interesting .qty-controls .qty-btn {
+    color: #E2E8F0;
+}
+
+#screen-interesting .calc-qty-controller input,
+#screen-interesting .qty-controls .calc-input {
+    width: 40px;
+    height: 40px;
     border: none;
     background: transparent;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     color: var(--text-deep, #0F172A);
     text-align: center;
     outline: none;
+    -moz-appearance: textfield;
 }
 
-body.dark-mode #screen-interesting .calc-qty-controller input {
+#screen-interesting .qty-controls .calc-input::-webkit-outer-spin-button,
+#screen-interesting .qty-controls .calc-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+body.dark-mode #screen-interesting .calc-qty-controller input,
+body.dark-mode #screen-interesting .qty-controls .calc-input {
     color: var(--text-deep);
 }
 
@@ -3051,15 +3077,10 @@ body.dark-mode #screen-interesting .results-glass-container {
 
 #screen-interesting .results-glass-title {
     font-family: 'Inter', sans-serif;
-    font-size: 11px;
+    font-size: 16px;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    color: #FFFFFF;
+    margin-bottom: 16px;
     position: relative;
     z-index: 1;
 }
@@ -3071,9 +3092,9 @@ body.dark-mode #screen-interesting .results-glass-container {
 /* Таблица выплат - внутри тёмного блока */
 #screen-interesting .coupon-table-head {
     display: grid;
-    grid-template-columns: 70px 1fr 40px 70px;
+    grid-template-columns: 55px 1fr 50px 70px;
     gap: 8px;
-    padding: 8px 0;
+    padding: 12px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 8px;
     position: relative;
@@ -3082,11 +3103,19 @@ body.dark-mode #screen-interesting .results-glass-container {
 
 #screen-interesting .coupon-table-head span {
     font-family: 'Inter', sans-serif;
-    font-size: 9px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     color: rgba(255, 255, 255, 0.5);
+}
+
+#screen-interesting .coupon-table-head span:nth-child(3) {
+    text-align: center;
+}
+
+#screen-interesting .coupon-table-head span:nth-child(4) {
+    text-align: right;
 }
 
 body.dark-mode #screen-interesting .coupon-table-head {
@@ -3096,19 +3125,20 @@ body.dark-mode #screen-interesting .coupon-table-head {
 /* Строка выплаты - внутри тёмного блока */
 #screen-interesting .coupon-result-row {
     display: grid;
-    grid-template-columns: 70px 1fr 40px 70px;
+    grid-template-columns: 55px 1fr 50px 70px;
     gap: 8px;
-    padding: 10px 0;
+    padding: 12px 0;
     margin-bottom: 0;
     border-radius: 0;
     background: transparent;
     border: none;
     /* Мостик - пунктирная линия */
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     position: relative;
     z-index: 1;
+    align-items: center;
 }
 
 #screen-interesting .coupon-result-row:last-child {
@@ -3117,13 +3147,13 @@ body.dark-mode #screen-interesting .coupon-table-head {
 
 body.dark-mode #screen-interesting .coupon-result-row {
     background: transparent;
-    border-bottom-color: rgba(255, 255, 255, 0.2);
+    border-bottom-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Дата - приглушённый белый, JetBrains Mono */
 #screen-interesting .coupon-result-row .coupon-date {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    font-size: 12px;
     color: rgba(255, 255, 255, 0.6);
 }
 
@@ -3131,6 +3161,7 @@ body.dark-mode #screen-interesting .coupon-result-row {
 #screen-interesting .coupon-result-row .coupon-name {
     color: #FFFFFF;
     font-weight: 500;
+    font-size: 13px;
 }
 
 #screen-interesting .coupon-result-row .coupon-name .bond-number {
@@ -3145,18 +3176,19 @@ body.dark-mode #screen-interesting .coupon-result-row .coupon-name {
 #screen-interesting .coupon-result-row .coupon-qty {
     text-align: center;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    padding: 4px 8px;
+    border-radius: 8px;
+    padding: 6px 10px;
 }
 
 /* Сумма - зелёный неон, JetBrains Mono Bold */
 #screen-interesting .coupon-result-row .coupon-sum {
     text-align: right;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     color: #10B981;
 }
@@ -3186,7 +3218,7 @@ body.dark-mode #screen-interesting .coupon-result-row .coupon-sum {
 
 #screen-interesting .results-glass-footer .footer-sum {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     color: #10B981;
 }
@@ -3194,6 +3226,14 @@ body.dark-mode #screen-interesting .coupon-result-row .coupon-sum {
 body.dark-mode #screen-interesting .results-glass-footer {
     border-top-color: rgba(255, 255, 255, 0.1);
 }
+
+/* Placeholder text внутри тёмного блока */
+#screen-interesting #calc-results-list {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.4);
+    position: relative;
+    z-index: 1;
 }
 
 /* ========== END: ИНТЕРЕСНОЕ EVOLUTION DESIGN ========== */
@@ -8505,8 +8545,7 @@ body.dark-mode .stock-btn-info {
                 <!-- Заголовки таблицы -->
                 <div class="calc-table-header">
                     <span>Облигация</span>
-                    <span>Доходность</span>
-                    <span style="text-align: center;">Кол-во</span>
+                    <span>Кол-во</span>
                 </div>
                 
                 <!-- Список облигаций для ввода -->
@@ -8523,18 +8562,16 @@ body.dark-mode .stock-btn-info {
 
                 <!-- Блок результатов -->
                 <div class="results-glass-container">
-                   <div class="results-glass-title">
-                  ГРАФИК ВЫПЛАТ
-                   </div>
+                   <div class="results-glass-title">График выплат</div>
                     
-                    <div class="coupon-table-head" style="margin-top: 0; display:grid; grid-template-columns: 45px 1fr 40px 70px; gap:2px; font-size:10px; color:#888;">
-                    <span>ДАТА</span>
-                    <span>ОБЛИГАЦИЯ</span>
-                    <span style="text-align:center">ШТ</span>
-                    <span style="text-align:right">СУММА</span>
+                    <div class="coupon-table-head">
+                        <span>Дата</span>
+                        <span>Облигация</span>
+                        <span>Шт</span>
+                        <span>Сумма</span>
                     </div>
                     
-                    <div id="calc-results-list" style="font-size:11px; color: var(--claude-text-secondary);">
+                    <div id="calc-results-list">
                         Введите количество для расчета...
                     </div>
                     
@@ -10529,11 +10566,10 @@ function renderMonthlyIncomeCards() {
     monthlyIncomeBonds.forEach(b => {
         html += `
         <div class="calc-bond-row">
-            <div class="unified-badge-container" style="flex-direction:column; align-items:flex-start; gap: 3px;">
-    <div class="ub-name" style="width:100%">${limitName(b.n)}</div>
-    </div>
-            
-            <div class="ub-yield">${b.y.replace('%', '')}%</div>
+            <div class="calc-bond-info">
+                <div class="calc-bond-name">${limitName(b.n)}</div>
+                <div class="calc-bond-yield">${b.y.replace('%', '')}%</div>
+            </div>
             
             <div class="qty-controls">
                 <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
