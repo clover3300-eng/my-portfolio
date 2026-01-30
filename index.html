@@ -9982,6 +9982,9 @@ function resetCustomTo50() {
                 updateEchelonTable();
                 renderOfzList();
                 
+                // Рендерим Aurora таблицу акций
+                renderAuroraStocksTable();
+                
                 // Не вызываем draw() при первой загрузке, чтобы был виден плейсхолдер
                 // draw() вызовется когда пользователь начнет вводить сумму
             } catch (e) { 
