@@ -8744,6 +8744,12 @@ function formatNewsDate(dateString) {
                 document.getElementById('nav-search').classList.add('active');
             }
             
+            // При переходе на экран ребалансировки - рендерим таблицу акций
+            if (screenId === 'screen-assets') {
+                renderAuroraStocksTable();
+                renderAuroraOfzList();
+            }
+            
             // Action Panel логика
             const portfolioActionPanel = document.getElementById('portfolioActionPanel');
             if (portfolioActionPanel) {
@@ -10993,6 +10999,7 @@ function toggleEchelonColumnHighlight(echelonNum, event) {
 // Рендер таблицы эшелонов акций в Aurora стиле
 function renderAuroraStocksTable() {
     const container = document.getElementById('stocks-aurora-body');
+    console.log('renderAuroraStocksTable called, container:', container);
     if (!container) return;
     
     // Сбрасываем подсветку столбцов
@@ -11002,30 +11009,34 @@ function renderAuroraStocksTable() {
         if (c) c.classList.remove('active');
     }
     
-    // Получаем данные из старой таблицы
-    const oldBody = document.getElementById('echelon-tickers-body');
-    if (!oldBody || oldBody.children.length === 0) {
-        // Если старая таблица пуста, ждем загрузки данных
+    // Проверяем есть ли данные в echelonTableData
+    console.log('echelonTableData:', echelonTableData);
+    if (typeof echelonTableData === 'undefined' || 
+        !echelonTableData || 
+        echelonTableData.every(col => col.length === 0)) {
+        // Если данных нет, ждем загрузки
+        console.log('echelonTableData пуста, ждём...');
         setTimeout(renderAuroraStocksTable, 500);
         return;
     }
     
     let html = '';
-    const rows = oldBody.querySelectorAll('tr');
+    const maxRows = Math.max(...echelonTableData.map(col => col.length));
+    console.log('maxRows:', maxRows);
     const maxVisibleRows = 5;
     
-    rows.forEach((row, rowIndex) => {
-        const cells = row.querySelectorAll('td');
+    for (let rowIndex = 0; rowIndex < maxRows; rowIndex++) {
         const hiddenClass = rowIndex >= maxVisibleRows ? 'stocks-row-hidden' : '';
         
         html += `<div class="stocks-table-row ${hiddenClass}" data-row="${rowIndex}">`;
         
-        cells.forEach((cell, cellIndex) => {
-            const cellContent = cell.querySelector('.et-cell-content');
-            if (cellContent) {
-                const ticker = cellContent.querySelector('.et-ticker')?.textContent || '';
-                const price = cellContent.querySelector('.et-price')?.textContent || '';
-                const echelonNum = cellIndex + 1;
+        for (let colIndex = 0; colIndex < 4; colIndex++) {
+            const asset = echelonTableData[colIndex][rowIndex];
+            
+            if (asset && asset.t) {
+                const ticker = asset.t;
+                const price = asset.target || '';
+                const echelonNum = colIndex + 1;
                 
                 // Определяем изменение цены
                 const changeClass = price.includes('+') ? 'positive' : (price.includes('-') ? 'negative' : 'neutral');
@@ -11034,19 +11045,13 @@ function renderAuroraStocksTable() {
                     <span class="stocks-cell-ticker">${ticker}</span>
                     <span class="stocks-cell-change ${changeClass}">${price}</span>
                 </div>`;
-            } else if (cell.textContent.trim()) {
-                const ticker = cell.textContent.trim();
-                const echelonNum = cellIndex + 1;
-                html += `<div class="stocks-cell" onclick="openStockDetail('${ticker}', ${echelonNum}, this)">
-                    <span class="stocks-cell-ticker">${ticker}</span>
-                </div>`;
             } else {
                 html += `<div class="stocks-cell"></div>`;
             }
-        });
+        }
         
         html += '</div>';
-    });
+    }
     
     container.innerHTML = html;
     
