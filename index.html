@@ -9863,6 +9863,7 @@ async function fetchPricesForMonthlyIncome() {
     
     await Promise.all(promises);
     renderMonthlyIncomeCards();
+    distributeMonthlyInvestment();
 }
 // ===== ФУНКЦИЯ 3: Пересчёт выплат (ИСПРАВЛЕННАЯ) =====
 function recalcCustomCoupons() {
