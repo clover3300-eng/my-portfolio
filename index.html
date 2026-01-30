@@ -2066,53 +2066,75 @@ input#sumInput::placeholder {
    ======================================================================== */
 
 /* Специальный фон для экрана Интересное */
+/* ============================================
+   ИНТЕРЕСНОЕ - Evolution Design System
+   Quiet Luxury / Evolution Terminal
+   ============================================ */
+
 #screen-interesting {
     position: relative;
-    background: linear-gradient(180deg, var(--claude-bg-base) 0%, #EDE9E6 100%);
+    background: #F3F4F6;
     min-height: 100vh;
     margin: -16px;
     padding: 0 16px 140px 16px;
+    overflow: hidden;
 }
 
 body.dark-mode #screen-interesting {
-    background: linear-gradient(180deg, #0f172a 0%, #1a1a2e 100%);
+    background: #0f172a;
 }
 
-/* Динамическое свечение фона */
+/* Noise overlay */
+#screen-interesting::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Aurora Blobs - живые пятна на фоне */
 #screen-interesting::before {
     content: '';
     position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(
-        circle at 30% 30%,
-        rgba(217, 119, 87, 0.02) 0%,
-        transparent 50%
-    ),
-    radial-gradient(
-        circle at 70% 70%,
-        rgba(52, 152, 219, 0.015) 0%,
-        transparent 50%
-    );
+    top: -20%;
+    right: -20%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
-    animation: breatheGlow 8s ease-in-out infinite;
+    animation: auroraFloat1 14s ease-in-out infinite;
 }
 
-@keyframes breatheGlow {
-    0%, 100% { 
-        opacity: 0.6; 
-        transform: scale(1) rotate(0deg); 
-    }
-    50% { 
-        opacity: 1; 
-        transform: scale(1.05) rotate(2deg); 
-    }
+.aurora-blob-green {
+    position: fixed;
+    bottom: -20%;
+    left: -20%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: auroraFloat2 12s ease-in-out infinite;
 }
 
-/* Контейнер контента поверх свечения */
+@keyframes auroraFloat1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-5%, 5%) scale(1.1); }
+}
+
+@keyframes auroraFloat2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(5%, -5%) scale(1.05); }
+}
+
+/* Контейнер контента поверх фона */
 #screen-interesting > * {
     position: relative;
     z-index: 1;
@@ -2133,47 +2155,9 @@ body.dark-mode #screen-interesting {
     margin: 0;
 }
 
-/* === Базовая стеклянная карточка === */
-#screen-interesting .glass-card-claude {
-    background: var(--claude-glass);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--claude-glass-border);
-    border-radius: 24px;
-    padding: 20px;
-    margin-bottom: 16px;
-    box-shadow: var(--claude-glass-shadow);
-    transition: all 0.3s ease;
-}
-
-#screen-interesting .glass-card-claude:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px -2px rgba(0, 0, 0, 0.08);
-}
-
-/* === Секция рыночных данных === */
-#screen-interesting .market-section-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--claude-text-secondary);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-#screen-interesting .market-section-title::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    background: var(--claude-accent);
-    border-radius: 50%;
-}
-
-/* Сетка рыночных плиток */
+/* ============================================
+   Компонент 1: Курсы Валют (Aero-Prism Tiles)
+   ============================================ */
 #screen-interesting .market-tiles-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -2185,139 +2169,241 @@ body.dark-mode #screen-interesting {
     grid-template-columns: repeat(3, 1fr);
 }
 
-/* Индивидуальная плитка */
+/* Aero-Prism плитка */
 #screen-interesting .market-tile {
-    background: var(--claude-glass);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--claude-glass-border);
-    border-radius: 16px;
-    padding: 16px;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.4) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 16px 12px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    transition: all 0.2s ease;
+    align-items: center;
+    gap: 6px;
     position: relative;
     overflow: hidden;
+    /* Блики как на призме */
+    border-top: 1px solid rgba(255, 255, 255, 0.8);
+    border-left: 1px solid rgba(255, 255, 255, 0.8);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+#screen-interesting .market-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Underglow эффект - свечение снизу */
 #screen-interesting .market-tile::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(90deg, var(--claude-accent), transparent);
+    bottom: -30%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    filter: blur(20px);
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
-#screen-interesting .market-tile:hover::before {
-    opacity: 1;
+#screen-interesting .market-tile.positive::before {
+    background: #10B981;
+    opacity: 0.15;
+}
+
+#screen-interesting .market-tile.negative::before {
+    background: #EF4444;
+    opacity: 0.15;
 }
 
 #screen-interesting .market-tile-label {
     font-family: 'Inter', sans-serif;
-    font-size: 10px; /* было 11px */
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--claude-text-secondary);
-    text-align: center; /* ДОБАВЛЕНО */
+    color: var(--claude-text-primary);
+    opacity: 0.8;
+    text-align: center;
 }
 
 #screen-interesting .market-tile-value {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 16px; /* было 20px */
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 800;
     color: var(--claude-text-primary);
     letter-spacing: -0.02em;
-    text-align: center; /* ДОБАВЛЕНО */
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
+/* Capsule с процентом */
 #screen-interesting .market-tile-change {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     padding: 4px 10px;
     border-radius: 20px;
     display: inline-flex;
     align-items: center;
-    justify-content: center; /* ДОБАВЛЕНО */
-    gap: 4px;
-    width: fit-content;
-    margin: 0 auto; /* ДОБАВЛЕНО - центрирует элемент */
+    justify-content: center;
+    gap: 3px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
 }
 
 #screen-interesting .market-tile-change.positive {
-    background: rgba(46, 204, 113, 0.15);
-    color: #27ae60;
+    color: #10B981;
 }
 
 #screen-interesting .market-tile-change.negative {
-    background: rgba(231, 76, 60, 0.15);
-    color: #e74c3c;
+    color: #EF4444;
 }
 
 #screen-interesting .market-tile-change.neutral {
-    background: rgba(127, 140, 141, 0.15);
     color: var(--claude-text-secondary);
 }
 
-/* === Вертикаль ставок === */
-#screen-interesting .rates-glass-card {
-    background: var(--claude-glass);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--claude-glass-border);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 20px;
+/* Иконка стрелки в capsule */
+#screen-interesting .market-tile-change .trend-arrow {
+    width: 10px;
+    height: 10px;
 }
 
-#screen-interesting .rates-glass-card .rv-title {
+/* Dark mode для плиток */
+body.dark-mode #screen-interesting .market-tile {
+    background: linear-gradient(160deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+body.dark-mode #screen-interesting .market-tile-change {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   Компонент 2: Вертикаль Ставок (Imprinted List)
+   ============================================ */
+#screen-interesting .rates-imprinted {
+    padding: 0 12px;
+    margin-bottom: 24px;
+}
+
+#screen-interesting .rates-imprinted-title {
     font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 12px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--claude-accent);
-    margin-bottom: 16px;
+    letter-spacing: 0.08em;
+    color: var(--claude-text-secondary);
+    opacity: 0.6;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-#screen-interesting .rates-glass-card .rv-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--claude-accent), transparent);
+#screen-interesting .rates-imprinted-title svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.5;
 }
 
-/* Построчный список ставок */
+#screen-interesting .rates-imprinted-list {
+    display: flex;
+    flex-direction: column;
+}
+
+#screen-interesting .rate-imprinted-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+#screen-interesting .rate-imprinted-row:last-child {
+    border-bottom: none;
+}
+
+#screen-interesting .rate-imprinted-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--claude-text-secondary);
+}
+
+#screen-interesting .rate-imprinted-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--claude-text-primary);
+}
+
+body.dark-mode #screen-interesting .rate-imprinted-row {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Legacy support для старых классов */
+#screen-interesting .rates-glass-card {
+    background: transparent;
+    backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0 12px;
+    margin-bottom: 24px;
+}
+
+#screen-interesting .rates-glass-card .rv-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--claude-text-secondary);
+    opacity: 0.6;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#screen-interesting .rates-glass-card .rv-title::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'/%3E%3C/svg%3E");
+    background-size: contain;
+    opacity: 0.5;
+}
+
+#screen-interesting .rates-glass-card .rv-title::after {
+    display: none;
+}
+
 #screen-interesting .rates-row-list {
     display: flex;
     flex-direction: column;
-    gap: 0;
 }
 
 #screen-interesting .rate-row-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 16px;
+    padding: 14px 24px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    transition: background 0.2s ease;
 }
 
 #screen-interesting .rate-row-item:last-child {
     border-bottom: none;
-}
-
-#screen-interesting .rate-row-item:hover {
-    background: rgba(255, 255, 255, 0.3);
 }
 
 #screen-interesting .rate-row-label {
@@ -2334,47 +2420,35 @@ body.dark-mode #screen-interesting {
     color: var(--claude-text-primary);
 }
 
-/* Dark mode */
 body.dark-mode #screen-interesting .rate-row-item {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
-body.dark-mode #screen-interesting .rate-row-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+/* ============================================
+   Компонент 3: Калькулятор (Hero Card)
+   ============================================ */
+#screen-interesting .calc-accordion {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.5s ease;
 }
 
-body.dark-mode #screen-interesting .rate-item-glass {
-    background: rgba(255, 255, 255, 0.05);
+#screen-interesting .calc-accordion.collapsed {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode #screen-interesting .calc-accordion {
+    background: rgba(30, 41, 59, 0.85);
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-#screen-interesting .rate-item-glass span {
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 500;
-    color: var(--claude-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-}
-
-#screen-interesting .rate-item-glass b {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--claude-text-primary);
-}
-
-/* === Аккордеон калькулятора === */
-#screen-interesting .calc-accordion {
-    background: var(--claude-glass);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--claude-glass-border);
-    border-radius: 20px;
-    overflow: hidden;
-    margin-bottom: 20px;
-}
-
+/* Header калькулятора */
 #screen-interesting .calc-accordion-header {
     display: flex;
     align-items: center;
@@ -2386,34 +2460,63 @@ body.dark-mode #screen-interesting .rate-item-glass {
 }
 
 #screen-interesting .calc-accordion-header:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.02);
 }
 
 body.dark-mode #screen-interesting .calc-accordion-header:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
 }
 
 #screen-interesting .calc-accordion-header-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 }
 
+/* Иконка калькулятора */
 #screen-interesting .calc-accordion-icon {
-    width: 40px;
-    height: 40px;
-    background: var(--claude-accent-subtle);
-    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #10B981, #059669);
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Пульсация иконки при свернутом состоянии */
+#screen-interesting .calc-accordion.collapsed .calc-accordion-icon {
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    50% { 
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+    }
+}
+
+/* Дышащая рамка при свернутом состоянии */
+#screen-interesting .calc-accordion.collapsed {
+    animation: borderBreathe 3s ease-in-out infinite;
+}
+
+@keyframes borderBreathe {
+    0%, 100% { border-color: rgba(255, 255, 255, 0.6); }
+    50% { border-color: rgba(16, 185, 129, 0.3); }
 }
 
 #screen-interesting .calc-accordion-title {
     font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 700;
     color: var(--claude-text-primary);
 }
 
@@ -2424,39 +2527,36 @@ body.dark-mode #screen-interesting .calc-accordion-header:hover {
     margin-top: 2px;
 }
 
-#screen-interesting .calc-accordion-badge {
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: linear-gradient(135deg, #34495e, #2c3e50);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-}
-
+/* Стрелка шеврон */
 #screen-interesting .calc-accordion-arrow {
     width: 24px;
     height: 24px;
     color: var(--claude-text-secondary);
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#screen-interesting .calc-accordion.open .calc-accordion-arrow {
-    transform: rotate(180deg);
+#screen-interesting .calc-accordion.collapsed .calc-accordion-arrow {
+    transform: rotate(-90deg);
+}
+
+/* Плавное сворачивание через grid */
+#screen-interesting .calc-content-wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#screen-interesting .calc-accordion.collapsed .calc-content-wrapper {
+    grid-template-rows: 0fr;
 }
 
 #screen-interesting .calc-accordion-content {
-    max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease, padding 0.4s ease;
-    padding: 0 20px;
+    padding: 0 20px 20px;
 }
 
-#screen-interesting .calc-accordion.open .calc-accordion-content {
-    max-height: 2000px;
-    padding: 0 20px 20px;
+#screen-interesting .calc-accordion.collapsed .calc-accordion-content {
+    padding: 0 20px;
 }
 
 /* Поле ввода суммы в калькуляторе */
@@ -2587,23 +2687,24 @@ body.dark-mode #screen-interesting .calc-table-header {
     text-align: center;
 }
 
-/* Кнопка сброса */
+/* Кнопка сброса - фиксированная ширина, выравнивание вправо */
 #screen-interesting .btn-reset-glass {
-    width: 100%;
-    padding: 14px;
+    width: 112px;
+    padding: 12px;
     border: 1px dashed rgba(0, 0, 0, 0.15);
     background: transparent;
-    border-radius: 14px;
+    border-radius: 12px;
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--claude-text-secondary);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     margin-top: 16px;
+    margin-left: auto;
     transition: all 0.2s ease;
 }
 
@@ -7599,12 +7700,6 @@ body.dark-mode .stock-btn-info {
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
                 </div>
-                <div class="list-open-trigger" id="ofzOpenTrigger" onclick="openOfzListFromTrigger()" style="display: none;">
-                    <span>открыть список</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                </div>
             </div>
             <span class="list-header-percent" onclick="toggleYieldDropdown(event)">%</span>
             <span class="list-header-price" onclick="togglePriceDropdown(event)">₽</span>
@@ -7749,151 +7844,171 @@ body.dark-mode .stock-btn-info {
 </div>
 
     <div id="screen-interesting" class="screen">
+    <!-- Aurora blob зеленый -->
+    <div class="aurora-blob-green"></div>
+    
     <!-- Заголовок экрана -->
     <div class="header">
         <h1>Интересное</h1>
     </div>
     
-    <!-- Секция рыночных данных -->
-    
+    <!-- Секция рыночных данных - Aero-Prism Tiles -->
     <div class="market-tiles-grid three-cols">
         <!-- IMOEX -->
-        <div class="market-tile">
+        <div class="market-tile" id="tile-imoex">
             <span class="market-tile-label">IMOEX</span>
             <span class="market-tile-value" id="val-imoex">---</span>
-            <span class="market-tile-change neutral" id="dyn-imoex">--%</span>
+            <span class="market-tile-change neutral" id="dyn-imoex">
+                <svg class="trend-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M5 12h14"/>
+                </svg>
+                --%
+            </span>
         </div>
         
         <!-- USD/RUB -->
-        <div class="market-tile">
+        <div class="market-tile" id="tile-usdrub">
             <span class="market-tile-label">USD/RUB</span>
             <span class="market-tile-value" id="val-usdrub">---</span>
-            <span class="market-tile-change neutral" id="dyn-usdrub">--%</span>
+            <span class="market-tile-change neutral" id="dyn-usdrub">
+                <svg class="trend-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M5 12h14"/>
+                </svg>
+                --%
+            </span>
         </div>
         
         <!-- BTC/USD -->
-        <div class="market-tile">
+        <div class="market-tile" id="tile-btc">
             <span class="market-tile-label">BTC/USD</span>
             <span class="market-tile-value" id="val-btc">---</span>
-            <span class="market-tile-change neutral" id="dyn-btc">--%</span>
+            <span class="market-tile-change neutral" id="dyn-btc">
+                <svg class="trend-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M5 12h14"/>
+                </svg>
+                --%
+            </span>
         </div>
     </div>
 
-    <!-- Вертикаль ставок (построчно) -->
-<div class="rates-glass-card">
-    <div class="rv-title">Вертикаль ставок</div>
-    
-    <div class="rates-row-list">
-    <div class="rate-row-item">
-        <span class="rate-row-label">Инфляция (г/г)</span>
-        <span class="rate-row-value" id="val-inflation">9.1%</span>
+    <!-- Вертикаль ставок (Imprinted List) -->
+    <div class="rates-glass-card">
+        <div class="rv-title">Вертикаль ставок</div>
+        
+        <div class="rates-row-list">
+            <div class="rate-row-item">
+                <span class="rate-row-label">Инфляция (г/г)</span>
+                <span class="rate-row-value" id="val-inflation">9.1%</span>
+            </div>
+            
+            <div class="rate-row-item">
+                <span class="rate-row-label">Макс. ставка по вкладам</span>
+                <span class="rate-row-value" id="val-deposit-rate">21.5%</span>
+            </div>
+            
+            <div class="rate-row-item">
+                <span class="rate-row-label">Ключевая ставка ЦБ</span>
+                <span class="rate-row-value" id="val-key-rate">21.0%</span>
+            </div>
+            
+            <div class="rate-row-item">
+                <span class="rate-row-label">ОФЗ 10 лет</span>
+                <span class="rate-row-value" id="val-ofz10">---%</span>
+            </div>
+        </div>
     </div>
-    
-    <div class="rate-row-item">
-        <span class="rate-row-label">Макс. ставка по вкладам</span>
-        <span class="rate-row-value" id="val-deposit-rate">21.5%</span>
-    </div>
-    
-    <div class="rate-row-item">
-        <span class="rate-row-label">Ключевая ставка ЦБ</span>
-        <span class="rate-row-value" id="val-key-rate">21.0%</span>
-    </div>
-    
-    <div class="rate-row-item">
-        <span class="rate-row-label">ОФЗ 10 лет</span>
-        <span class="rate-row-value" id="val-ofz10">---%</span>
-    </div>
-</div>
-</div>
 
-    <!-- Калькулятор ежемесячного дохода (Аккордеон) -->
+    <!-- Калькулятор ежемесячного дохода (Hero Card) -->
     <div class="calc-accordion" id="calcAccordion">
         <!-- Заголовок аккордеона -->
         <div class="calc-accordion-header" onclick="toggleCalcAccordion()">
-    <div class="calc-accordion-header-left">
-        <div class="calc-accordion-icon">📅</div>
-        <div>
-            <div class="calc-accordion-title">Ежемесячный доход</div>
-            <div class="calc-accordion-subtitle">Рассчитайте выплаты по ОФЗ</div>
-        </div>
-    </div>
-    <div style="display: flex; align-items: center;">
-        <svg class="calc-accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-    </div>
-</div>
-        
-        <!-- Контент аккордеона -->
-        <div class="calc-accordion-content">
-            <!-- Поле ввода суммы -->
-            <div class="glass-input-wrapper">
-                <span class="input-label">Сумма инвестиций</span>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <input type="number" id="monthlySumInput" value="100000" 
-                           oninput="distributeMonthlyInvestment()" 
-                           onclick="event.stopPropagation(); this.select()" 
-                           onkeyup="if(event.keyCode===13) this.blur()" 
-                           inputmode="numeric" 
-                           pattern="[0-9]*" 
-                           enterkeyhint="done"
-                           placeholder="Введите сумму...">
-                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 24px; color: var(--claude-text-secondary);">₽</span>
+            <div class="calc-accordion-header-left">
+                <div class="calc-accordion-icon">📅</div>
+                <div>
+                    <div class="calc-accordion-title">Ежемесячный доход</div>
+                    <div class="calc-accordion-subtitle">Рассчитайте выплаты по ОФЗ</div>
                 </div>
             </div>
-            
-            <!-- Информационный текст -->
-            <div class="calc-info-text">
-                Калькулятор предлагает к покупке список ОФЗ, благодаря которому Вы будете получать ежемесячно выплаты купонов.
-            </div>
-            
-            <!-- Переключатель налога -->
-            <div class="tax-segmented-control">
-                <button class="tax-segment" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
-                <button class="tax-segment active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">НДФЛ 13%</button>
-                <button class="tax-segment" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
-            </div>
-            
-            <!-- Заголовки таблицы -->
-            <div class="calc-table-header">
-                <span>Название</span>
-                <span>Доходность</span>
-                <span>Количество</span>
-            </div>
-            
-            <!-- Список облигаций для ввода -->
-            <div id="calc-bonds-input-list"></div>
-            
-            <!-- Кнопка сброса -->
-            <button class="btn-reset-glass" onclick="resetCustomCalc()">
-                <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <div style="display: flex; align-items: center;">
+                <svg class="calc-accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
-                Очистить все поля
-            </button>
-
-            <!-- Блок результатов -->
-            <div class="results-glass-container">
-                <div class="results-glass-title">
+            </div>
+        </div>
+        
+        <!-- Обертка для плавного сворачивания -->
+        <div class="calc-content-wrapper">
+            <!-- Контент аккордеона -->
+            <div class="calc-accordion-content">
+                <!-- Поле ввода суммы -->
+                <div class="glass-input-wrapper">
+                    <span class="input-label">Сумма инвестиций</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="number" id="monthlySumInput" value="100000" 
+                               oninput="distributeMonthlyInvestment()" 
+                               onclick="event.stopPropagation(); this.select()" 
+                               onkeyup="if(event.keyCode===13) this.blur()" 
+                               inputmode="numeric" 
+                               pattern="[0-9]*" 
+                               enterkeyhint="done"
+                               placeholder="Введите сумму...">
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 24px; color: var(--claude-text-secondary);">₽</span>
+                    </div>
+                </div>
+                
+                <!-- Информационный текст -->
+                <div class="calc-info-text">
+                    Калькулятор предлагает к покупке список ОФЗ, благодаря которому Вы будете получать ежемесячно выплаты купонов.
+                </div>
+                
+                <!-- Переключатель налога -->
+                <div class="tax-segmented-control">
+                    <button class="tax-segment" id="tax-custom-0" onclick="setCustomTax(0, this)">Без налога</button>
+                    <button class="tax-segment active" id="tax-custom-13" onclick="setCustomTax(0.13, this)">НДФЛ 13%</button>
+                    <button class="tax-segment" id="tax-custom-15" onclick="setCustomTax(0.15, this)">НДФЛ 15%</button>
+                </div>
+                
+                <!-- Заголовки таблицы -->
+                <div class="calc-table-header">
+                    <span>Облигация</span>
+                    <span>Доходность</span>
+                    <span style="text-align: center;">Кол-во</span>
+                </div>
+                
+                <!-- Список облигаций для ввода -->
+                <div id="calc-bonds-input-list"></div>
+                
+                <!-- Кнопка сброса -->
+                <button class="btn-reset-glass" onclick="resetCustomCalc()">
                     <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                     </svg>
-                    Выплаты
+                    Сбросить
+                </button>
+
+                <!-- Блок результатов -->
+                <div class="results-glass-container">
+                    <div class="results-glass-title">
+                        <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Выплаты
+                    </div>
+                    
+                    <div class="coupon-table-head" style="margin-top: 0;">
+                        <span>ДАТА</span> 
+                        <span>НАЗВАНИЕ</span> 
+                        <span style="text-align:center">ШТ</span> 
+                        <span style="text-align:right">СУММА</span>
+                    </div>
+                    
+                    <div id="calc-results-list" style="font-size:11px; color: var(--claude-text-secondary);">
+                        Введите количество для расчета...
+                    </div>
+                    
+                    <div id="calc-results-footer" class="results-glass-footer"></div>
                 </div>
-                
-                <div class="coupon-table-head" style="margin-top: 0;">
-                    <span>ДАТА</span> 
-                    <span>НАЗВАНИЕ</span> 
-                    <span style="text-align:center">КОЛ-ВО</span> 
-                    <span style="text-align:right">СУММА</span>
-                </div>
-                
-                <div id="calc-results-list" style="font-size:11px; color: var(--claude-text-secondary);">
-                    Введите количество для расчета...
-                </div>
-                
-                <div id="calc-results-footer" class="results-glass-footer"></div>
             </div>
         </div>
     </div>
@@ -8198,18 +8313,58 @@ function formatNewsDate(dateString) {
 }
 
         async function updateMarketData() {
-            const setDynamics = (el, change) => {
+            const setDynamics = (el, change, tileId) => {
                 el.classList.remove('positive', 'negative', 'neutral');
+                const tile = document.getElementById(tileId);
+                if (tile) {
+                    tile.classList.remove('positive', 'negative');
+                }
+                
+                // Иконка стрелки
+                let arrowSvg = '';
+                
                 if (change > 0.01) {
                     el.classList.add('positive');
-                    el.innerText = `+${change.toFixed(2)}%`;
+                    if (tile) tile.classList.add('positive');
+                    arrowSvg = `<svg class="trend-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`;
+                    el.innerHTML = `${arrowSvg}+${change.toFixed(2)}%`;
                 } else if (change < -0.01) {
                     el.classList.add('negative');
-                    el.innerText = `${change.toFixed(2)}%`;
+                    if (tile) tile.classList.add('negative');
+                    arrowSvg = `<svg class="trend-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+                    el.innerHTML = `${arrowSvg}${change.toFixed(2)}%`;
                 } else {
                     el.classList.add('neutral');
-                    el.innerText = `${Math.abs(change).toFixed(2)}%`;
+                    arrowSvg = `<svg class="trend-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>`;
+                    el.innerHTML = `${arrowSvg}${Math.abs(change).toFixed(2)}%`;
                 }
+            };
+            
+            // Анимация накрутки цифр
+            const animateValue = (el, endValue, prefix = '', suffix = '', decimals = 0) => {
+                const startValue = 0;
+                const duration = 1000;
+                const startTime = performance.now();
+                
+                const update = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    // Easing функция для плавности
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    const currentValue = startValue + (endValue - startValue) * easeOut;
+                    
+                    if (decimals > 0) {
+                        el.innerText = prefix + currentValue.toFixed(decimals).replace('.00', '') + suffix;
+                    } else {
+                        el.innerText = prefix + Math.round(currentValue).toLocaleString() + suffix;
+                    }
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    }
+                };
+                
+                requestAnimationFrame(update);
             };
             
             // Bitcoin
@@ -8217,13 +8372,14 @@ function formatNewsDate(dateString) {
                 const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
                 const data = await res.json();
                 if(data && data.lastPrice) {
-                    document.getElementById('val-btc').innerText = '$' + Math.round(parseFloat(data.lastPrice)).toLocaleString();
-                    setDynamics(document.getElementById('dyn-btc'), parseFloat(data.priceChangePercent));
+                    const btcValue = Math.round(parseFloat(data.lastPrice));
+                    animateValue(document.getElementById('val-btc'), btcValue, '$', '');
+                    setDynamics(document.getElementById('dyn-btc'), parseFloat(data.priceChangePercent), 'tile-btc');
                 }
             } catch(e) { console.log("BTC fetch error:", e); }
 
             // MOEX data
-            const fetchMoex = (url, valEl, dynEl) => {
+            const fetchMoex = (url, valEl, dynEl, tileId, suffix = '') => {
                 fetch(url)
                     .then(r => r.json())
                     .then(d => {
@@ -8255,16 +8411,18 @@ function formatNewsDate(dateString) {
                              changePercent = ((last - prev) / prev) * 100;
                         }
                         
-                        if(last) valEl.innerText = last.toFixed(2).replace('.00', '') + (url.includes('USD') ? ' ₽' : '');
-                        setDynamics(dynEl, changePercent);
+                        if(last) {
+                            animateValue(valEl, last, '', suffix, suffix ? 2 : 0);
+                        }
+                        setDynamics(dynEl, changePercent, tileId);
                     }).catch(e => {
                         console.log("MOEX error for:", valEl.id, e);
                         valEl.innerText = "---";
                     });
             };
 
-            fetchMoex('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-imoex'), document.getElementById('dyn-imoex'));
-            fetchMoex('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-usdrub'), document.getElementById('dyn-usdrub'));
+            fetchMoex('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-imoex'), document.getElementById('dyn-imoex'), 'tile-imoex', '');
+            fetchMoex('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-usdrub'), document.getElementById('dyn-usdrub'), 'tile-usdrub', ' ₽');
             
              fetch('https://iss.moex.com/iss/engines/stock/markets/bonds/securities/SU26244RMFS2.json?iss.meta=off&iss.only=securities,marketdata')
                 .then(r => r.json())
@@ -8273,7 +8431,9 @@ function formatNewsDate(dateString) {
                      if(md && md.data.length > 0) {
                          const yIdx = md.columns.indexOf('YIELD');
                          const y = md.data[0][yIdx];
-                         if(y) document.getElementById('val-ofz10').innerText = y.toFixed(2) + '%';
+                         if(y) {
+                             animateValue(document.getElementById('val-ofz10'), y, '', '%', 2);
+                         }
                      }
                 }).catch(e => console.log('OFZ fetch error'));
         }
@@ -8464,11 +8624,13 @@ function calculateAndShowPortfolio() {
 function toggleCalcAccordion() {
     const accordion = document.getElementById('calcAccordion');
     if (accordion) {
-        accordion.classList.toggle('open');
+        accordion.classList.toggle('collapsed');
         
         // Haptic feedback
         if (window.Telegram?.WebApp?.HapticFeedback) {
             window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        } else if (navigator.vibrate) {
+            navigator.vibrate(5);
         }
     }
 }
@@ -10245,13 +10407,12 @@ function toggleOfzListCollapse() {
     const list = document.getElementById('ofz-aurora-list');
     const toggle = document.getElementById('ofzCollapseToggle');
     const ghostTrigger = document.getElementById('ofzGhostTrigger');
-    const openTrigger = document.getElementById('ofzOpenTrigger');
     const items = document.querySelectorAll('.ofz-aurora-item');
     
     ofzListCollapsed = !ofzListCollapsed;
     
     if (ofzListCollapsed) {
-        // Сворачиваем - показываем только 3 первые строки + элемент "открыть список"
+        // Сворачиваем - показываем 3 первые строки + элемент "открыть список" внизу
         list.style.display = 'flex';
         items.forEach((item, index) => {
             if (index > 2) {
@@ -10261,73 +10422,42 @@ function toggleOfzListCollapse() {
             }
         });
         toggle.classList.add('collapsed');
-        ghostTrigger.style.display = 'none';
-        // Показываем элемент "открыть список"
-        if (openTrigger) openTrigger.style.display = 'flex';
-        // Сбрасываем состояние списка
-        ofzListExpanded = false;
-        document.getElementById('ofzGhostText').innerText = 'ОТКРЫТЬ СПИСОК';
+        // Показываем элемент "открыть список" внизу
+        ghostTrigger.style.display = 'flex';
         ghostTrigger.classList.remove('open');
-        if (openTrigger) openTrigger.classList.remove('open');
+        document.getElementById('ofzGhostText').innerText = 'ОТКРЫТЬ СПИСОК';
+        // Сбрасываем состояние
+        ofzListExpanded = false;
         // Закрываем все подстроки
         document.querySelectorAll('.ofz-aurora-item.expanded').forEach(el => {
             el.classList.remove('expanded');
         });
     } else {
-        // Разворачиваем список - показываем все
+        // Разворачиваем - возвращаем к состоянию "3 строки + открыть список"
         list.style.display = 'flex';
         items.forEach((item, index) => {
-            item.classList.remove('aurora-hidden');
-            // Перезапускаем анимацию
-            item.style.animation = 'none';
-            item.offsetHeight;
-            item.style.animation = `staggerIn 0.4s ease forwards`;
-            item.style.animationDelay = `${index * 0.05}s`;
+            if (index > 2) {
+                item.classList.add('aurora-hidden');
+            } else {
+                item.classList.remove('aurora-hidden');
+                // Перезапускаем анимацию
+                item.style.animation = 'none';
+                item.offsetHeight;
+                item.style.animation = `staggerIn 0.4s ease forwards`;
+                item.style.animationDelay = `${index * 0.05}s`;
+            }
         });
         toggle.classList.remove('collapsed');
-        ghostTrigger.style.display = 'none';
-        // Скрываем элемент "открыть список"
-        if (openTrigger) openTrigger.style.display = 'none';
-        // Устанавливаем состояние "развернуто"
-        ofzListExpanded = true;
+        // Показываем элемент "открыть список" внизу
+        ghostTrigger.style.display = 'flex';
+        ghostTrigger.classList.remove('open');
+        document.getElementById('ofzGhostText').innerText = 'ОТКРЫТЬ СПИСОК';
+        ofzListExpanded = false;
     }
     
     // Вибрация
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.selectionChanged();
-    }
-}
-
-// Функция для открытия списка через элемент "открыть список"
-function openOfzListFromTrigger() {
-    const list = document.getElementById('ofz-aurora-list');
-    const toggle = document.getElementById('ofzCollapseToggle');
-    const ghostTrigger = document.getElementById('ofzGhostTrigger');
-    const openTrigger = document.getElementById('ofzOpenTrigger');
-    const items = document.querySelectorAll('.ofz-aurora-item');
-    
-    // Разворачиваем весь список
-    list.style.display = 'flex';
-    items.forEach((item, index) => {
-        item.classList.remove('aurora-hidden');
-        item.style.animation = 'none';
-        item.offsetHeight;
-        item.style.animation = `staggerIn 0.4s ease forwards`;
-        item.style.animationDelay = `${index * 0.05}s`;
-    });
-    
-    toggle.classList.remove('collapsed');
-    ghostTrigger.style.display = 'none';
-    if (openTrigger) {
-        openTrigger.style.display = 'none';
-    }
-    
-    ofzListCollapsed = false;
-    ofzListExpanded = true;
-    
-    // Вибрация
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
 }
 
