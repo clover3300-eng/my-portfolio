@@ -74,29 +74,16 @@
             --accent-purple: #8B5CF6;
         }
 
-                /* ========== ОТКЛЮЧЕНИЕ ЭФФЕКТА РЕЗИНКИ И ШТОРКИ ========== */
+                /* ========== ОТКЛЮЧЕНИЕ ЭФФЕКТА РЕЗИНКИ ========== */
         html {
-            overscroll-behavior: none !important;
-            overscroll-behavior-y: none !important;
+            overscroll-behavior: none;
             height: 100%;
             -webkit-overflow-scrolling: touch;
         }
         
         body {
-            overscroll-behavior: none !important;
-            overscroll-behavior-y: none !important;
+            overscroll-behavior: none;
             min-height: 100%;
-            min-height: 100dvh;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        /* Предотвращаем pull-to-refresh только на верхнем уровне */
-        body.no-pull-refresh {
-            overscroll-behavior-y: contain;
         }
         /* ================================================= */
 
