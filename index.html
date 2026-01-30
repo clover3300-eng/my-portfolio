@@ -5553,7 +5553,7 @@ body.dark-mode .tab-btn.active {
 }
 
 .list-collapse-toggle.collapsed svg {
-    transform: rotate(-90deg);
+    /* Без поворота при сворачивании */
 }
 
 /* Элемент "открыть список" рядом с галочкой */
@@ -5637,11 +5637,11 @@ body.dark-mode .list-open-trigger svg {
     font-size: 12px;
     font-weight: 500;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-    max-width: 260px;
     line-height: 1.5;
     animation: dropdownOpen 0.25s ease;
-    margin-top: 8px;
-    grid-column: 1 / -1;
+    margin: 8px 0 12px 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .header-dropdown-tooltip.show {
@@ -6375,6 +6375,49 @@ body.dark-mode .echelon-icon-circle {
     color: #EF4444;
     border-color: #EF4444;
     box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
+
+/* Подсветка столбца эшелона при клике */
+.stocks-cell.column-highlight-1 {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.stocks-cell.column-highlight-2 {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.stocks-cell.column-highlight-3 {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.stocks-cell.column-highlight-4 {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+body.dark-mode .stocks-cell.column-highlight-1 {
+    background: rgba(16, 185, 129, 0.15);
+}
+
+body.dark-mode .stocks-cell.column-highlight-2 {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+body.dark-mode .stocks-cell.column-highlight-3 {
+    background: rgba(245, 158, 11, 0.15);
+}
+
+body.dark-mode .stocks-cell.column-highlight-4 {
+    background: rgba(239, 68, 68, 0.15);
+}
+
+/* Активный кружок эшелона */
+.echelon-icon-circle.active {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px currentColor;
 }
 
 .stocks-table-body {
@@ -7556,7 +7599,7 @@ body.dark-mode .stock-btn-info {
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
                 </div>
-                <div class="list-open-trigger" id="ofzOpenTrigger" onclick="toggleAuroraOfzList()" style="display: none;">
+                <div class="list-open-trigger" id="ofzOpenTrigger" onclick="openOfzListFromTrigger()" style="display: none;">
                     <span>открыть список</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <polyline points="6 9 12 15 18 9"/>
@@ -7660,10 +7703,10 @@ body.dark-mode .stock-btn-info {
             <!-- Таблица эшелонов -->
             <div class="stocks-aurora-table">
                 <div class="stocks-table-header">
-                    <div class="stocks-header-pill"><div class="echelon-icon-circle e1">I</div></div>
-                    <div class="stocks-header-pill"><div class="echelon-icon-circle e2">II</div></div>
-                    <div class="stocks-header-pill"><div class="echelon-icon-circle e3">III</div></div>
-                    <div class="stocks-header-pill"><div class="echelon-icon-circle e4">IV</div></div>
+                    <div class="stocks-header-pill" onclick="toggleEchelonColumnHighlight(1, event)"><div class="echelon-icon-circle e1" id="echelonCircle1">I</div></div>
+                    <div class="stocks-header-pill" onclick="toggleEchelonColumnHighlight(2, event)"><div class="echelon-icon-circle e2" id="echelonCircle2">II</div></div>
+                    <div class="stocks-header-pill" onclick="toggleEchelonColumnHighlight(3, event)"><div class="echelon-icon-circle e3" id="echelonCircle3">III</div></div>
+                    <div class="stocks-header-pill" onclick="toggleEchelonColumnHighlight(4, event)"><div class="echelon-icon-circle e4" id="echelonCircle4">IV</div></div>
                 </div>
                 <div class="stocks-table-body" id="stocks-aurora-body">
                     <!-- Динамически заполняется через JS -->
@@ -9966,13 +10009,19 @@ function switchRebalanceTab(tabName) {
     // Показываем нужный контент
     document.getElementById(`rebalance-tab-${tabName}`).classList.add('active');
     
+    // Скролл на верх страницы
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     // Вибрация
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.selectionChanged();
     }
     
-    // Если переключились на акции — рендерим таблицу
+    // Если переключились на акции — рендерим таблицу заново
     if (tabName === 'stocks') {
+        // Закрываем открытую карточку
+        closeStockDetail();
+        // Перерендериваем таблицу
         renderAuroraStocksTable();
     }
 }
@@ -10202,8 +10251,15 @@ function toggleOfzListCollapse() {
     ofzListCollapsed = !ofzListCollapsed;
     
     if (ofzListCollapsed) {
-        // Сворачиваем весь список
-        list.style.display = 'none';
+        // Сворачиваем - показываем только 3 первые строки + элемент "открыть список"
+        list.style.display = 'flex';
+        items.forEach((item, index) => {
+            if (index > 2) {
+                item.classList.add('aurora-hidden');
+            } else {
+                item.classList.remove('aurora-hidden');
+            }
+        });
         toggle.classList.add('collapsed');
         ghostTrigger.style.display = 'none';
         // Показываем элемент "открыть список"
@@ -10212,30 +10268,66 @@ function toggleOfzListCollapse() {
         ofzListExpanded = false;
         document.getElementById('ofzGhostText').innerText = 'ОТКРЫТЬ СПИСОК';
         ghostTrigger.classList.remove('open');
+        if (openTrigger) openTrigger.classList.remove('open');
         // Закрываем все подстроки
         document.querySelectorAll('.ofz-aurora-item.expanded').forEach(el => {
             el.classList.remove('expanded');
         });
     } else {
-        // Разворачиваем список
+        // Разворачиваем список - показываем все
         list.style.display = 'flex';
-        // Восстанавливаем - показываем 3 первые
         items.forEach((item, index) => {
-            if (index <= 2) {
-                item.classList.remove('aurora-hidden');
-            } else if (!ofzListExpanded) {
-                item.classList.add('aurora-hidden');
-            }
+            item.classList.remove('aurora-hidden');
+            // Перезапускаем анимацию
+            item.style.animation = 'none';
+            item.offsetHeight;
+            item.style.animation = `staggerIn 0.4s ease forwards`;
+            item.style.animationDelay = `${index * 0.05}s`;
         });
         toggle.classList.remove('collapsed');
-        ghostTrigger.style.display = 'flex';
+        ghostTrigger.style.display = 'none';
         // Скрываем элемент "открыть список"
         if (openTrigger) openTrigger.style.display = 'none';
+        // Устанавливаем состояние "развернуто"
+        ofzListExpanded = true;
     }
     
     // Вибрация
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
+
+// Функция для открытия списка через элемент "открыть список"
+function openOfzListFromTrigger() {
+    const list = document.getElementById('ofz-aurora-list');
+    const toggle = document.getElementById('ofzCollapseToggle');
+    const ghostTrigger = document.getElementById('ofzGhostTrigger');
+    const openTrigger = document.getElementById('ofzOpenTrigger');
+    const items = document.querySelectorAll('.ofz-aurora-item');
+    
+    // Разворачиваем весь список
+    list.style.display = 'flex';
+    items.forEach((item, index) => {
+        item.classList.remove('aurora-hidden');
+        item.style.animation = 'none';
+        item.offsetHeight;
+        item.style.animation = `staggerIn 0.4s ease forwards`;
+        item.style.animationDelay = `${index * 0.05}s`;
+    });
+    
+    toggle.classList.remove('collapsed');
+    ghostTrigger.style.display = 'none';
+    if (openTrigger) {
+        openTrigger.style.display = 'none';
+    }
+    
+    ofzListCollapsed = false;
+    ofzListExpanded = true;
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
 }
 
@@ -10262,10 +10354,74 @@ function toggleEchelonsInfo() {
     }
 }
 
+// Подсветка столбца эшелона при клике на кружок
+let activeEchelonColumn = null;
+
+function toggleEchelonColumnHighlight(echelonNum, event) {
+    event.stopPropagation();
+    
+    const rows = document.querySelectorAll('.stocks-table-row');
+    const circle = document.getElementById(`echelonCircle${echelonNum}`);
+    
+    // Снимаем подсветку со всех столбцов
+    for (let i = 1; i <= 4; i++) {
+        const c = document.getElementById(`echelonCircle${i}`);
+        if (c) c.classList.remove('active');
+        
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('.stocks-cell');
+            if (cells[i - 1]) {
+                cells[i - 1].classList.remove(`column-highlight-${i}`);
+            }
+        });
+    }
+    
+    // Если кликнули на тот же столбец — просто выключаем
+    if (activeEchelonColumn === echelonNum) {
+        activeEchelonColumn = null;
+        
+        // Вибрация
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.selectionChanged();
+        }
+        return;
+    }
+    
+    // Включаем подсветку нового столбца
+    activeEchelonColumn = echelonNum;
+    
+    if (circle) circle.classList.add('active');
+    
+    // Подсвечиваем только ячейки с тикерами
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('.stocks-cell');
+        const cell = cells[echelonNum - 1];
+        if (cell) {
+            // Проверяем есть ли тикер в ячейке
+            const ticker = cell.querySelector('.stocks-cell-ticker');
+            if (ticker && ticker.textContent.trim()) {
+                cell.classList.add(`column-highlight-${echelonNum}`);
+            }
+        }
+    });
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
+
 // Рендер таблицы эшелонов акций в Aurora стиле
 function renderAuroraStocksTable() {
     const container = document.getElementById('stocks-aurora-body');
     if (!container) return;
+    
+    // Сбрасываем подсветку столбцов
+    activeEchelonColumn = null;
+    for (let i = 1; i <= 4; i++) {
+        const c = document.getElementById(`echelonCircle${i}`);
+        if (c) c.classList.remove('active');
+    }
     
     // Получаем данные из старой таблицы
     const oldBody = document.getElementById('echelon-tickers-body');
@@ -10314,6 +10470,21 @@ function renderAuroraStocksTable() {
     });
     
     container.innerHTML = html;
+    
+    // Проверяем что карточка деталей существует и в правильном месте
+    let card = document.getElementById('stockDetailCard');
+    if (!card) {
+        // Создаем карточку если её нет
+        card = document.createElement('div');
+        card.className = 'stock-detail-card';
+        card.id = 'stockDetailCard';
+        const ghostTrigger = document.getElementById('stocksGhostTrigger');
+        if (ghostTrigger) {
+            ghostTrigger.before(card);
+        } else {
+            container.after(card);
+        }
+    }
     
     // Обновляем кнопку показать/скрыть
     updateStocksShowMoreButton();
@@ -10445,11 +10616,9 @@ function openStockDetail(ticker, echelon, clickedCell = null) {
     // Вставляем карточку сразу под строкой с тикером
     if (clickedCell) {
         const row = clickedCell.closest('.stocks-table-row');
-        if (row) {
-            // Удаляем карточку из текущего места
-            card.remove();
-            // Вставляем после строки
-            row.after(card);
+        if (row && row.parentNode) {
+            // Перемещаем карточку после строки (insertBefore с nextSibling)
+            row.parentNode.insertBefore(card, row.nextSibling);
         }
     }
     
@@ -10488,6 +10657,17 @@ function closeStockDetail() {
     if (card) {
         card.classList.remove('open');
         card.dataset.ticker = '';
+        
+        // Возвращаем карточку на исходное место (после таблицы)
+        const tableContainer = document.querySelector('.stocks-aurora-table');
+        if (tableContainer && card.parentNode !== tableContainer.parentNode) {
+            const ghostTrigger = document.getElementById('stocksGhostTrigger');
+            if (ghostTrigger) {
+                ghostTrigger.before(card);
+            } else {
+                tableContainer.after(card);
+            }
+        }
     }
     // Снимаем активный класс со всех ячеек
     document.querySelectorAll('.stocks-cell.active').forEach(c => c.classList.remove('active'));
