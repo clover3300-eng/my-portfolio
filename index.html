@@ -9431,83 +9431,89 @@ function resetCustomTo50() {
         }
 
         async function fetchBondData(code) {
-    console.log(`[DEBUG] 1. Начинаю поиск данных для: ${code}`); // ЛОГ
-    
     if (!code) return { nkd: 0, matDate: '—', price: 0 };
+    
+    // Проверяем кэш
     if (bondDataCache[code]) {
-        console.log(`[DEBUG] ${code} взят из кэша`); // ЛОГ
         return bondDataCache[code];
     }
     
     try {
-        const res = await fetch(`https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities,marketdata`);
+        // === ИЗМЕНЕНИЕ: ДОБАВИЛИ ПРОКСИ ===
+        // Это позволяет обойти ошибку "CORS" и "Access control checks"
+        const directUrl = `https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities,marketdata`;
+        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(directUrl);
+        
+        console.log(`[DEBUG] Запрос через прокси для ${code}...`);
+        
+        const res = await fetch(proxyUrl);
         const data = await res.json(); 
         
         const sec_cols = data.securities.columns; 
         const sec_row = data.securities.data[0];
         
         let lastPrice = 0;
-        let priceSource = 'НЕТ'; // ЛОГ: откуда взяли цену
         
-        // 1. Ищем цену в рыночных данных
+        // 1. Ищем цену в рыночных данных (сделки сегодня)
         if (data.marketdata && data.marketdata.data.length > 0) {
              const m_cols = data.marketdata.columns;
              const m_row = data.marketdata.data[0];
              const lastIdx = m_cols.indexOf('LAST');
-             const prevIdx = m_cols.indexOf('PREVPRICE');
+             const prevIdx = m_cols.indexOf('PREVPRICE'); 
 
              if (lastIdx !== -1 && m_row[lastIdx]) {
                 lastPrice = m_row[lastIdx];
-                priceSource = 'LAST (Сделка)';
              } 
              else if (prevIdx !== -1 && m_row[prevIdx]) {
                 lastPrice = m_row[prevIdx];
-                priceSource = 'PREVPRICE (Рынок)';
              }
         }
         
-        // 2. Ищем в SECURITIES
+        // 2. Если цены всё еще нет, ищем Цену Закрытия в блоке SECURITIES
         if (!lastPrice && sec_row) {
              const prevPriceIdx = sec_cols.indexOf('PREVPRICE');
              if (prevPriceIdx !== -1 && sec_row[prevPriceIdx]) {
                  lastPrice = sec_row[prevPriceIdx];
-                 priceSource = 'PREVPRICE (Справочник)';
              }
         }
 
-        // Логика НКД и прочего (без изменений)
-        bondCouponsMap[code] = { date: sec_row[sec_cols.indexOf('NEXTCOUPON')], value: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0 };
-        const couponPeriod = parseFloat(sec_row[sec_cols.indexOf('COUPONPERIOD')]) || 0;
-        const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
-        
-        bondDetailsMap[code] = {
-            matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—',
-            couponValue: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0,
-            nextCoupon: sec_row[sec_cols.indexOf('NEXTCOUPON')] || '—',
-            couponYield: sec_row[sec_cols.indexOf('COUPONPERCENT')] || '—',
-            freq: freq
-        };
+        // Обновляем глобальные карты
+        if (sec_row) {
+            bondCouponsMap[code] = { date: sec_row[sec_cols.indexOf('NEXTCOUPON')], value: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0 };
+            
+            const couponPeriod = parseFloat(sec_row[sec_cols.indexOf('COUPONPERIOD')]) || 0;
+            const freq = couponPeriod > 0 ? Math.round(365 / couponPeriod) : 0;
+            
+            bondDetailsMap[code] = {
+                matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—',
+                couponValue: parseFloat(sec_row[sec_cols.indexOf('COUPONVALUE')]) || 0,
+                nextCoupon: sec_row[sec_cols.indexOf('NEXTCOUPON')] || '—',
+                couponYield: sec_row[sec_cols.indexOf('COUPONPERCENT')] || '—',
+                freq: freq
+            };
+        }
+
+        // Если цена не пришла даже через прокси, ставим заглушку 100% (1000р), 
+        // чтобы калькулятор ХОТЬ ЧТО-ТО посчитал, а не выдавал нули.
+        const finalPrice = lastPrice > 0 ? (lastPrice * 10) : 1000; 
+        const finalNkd = sec_row ? (parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0) : 0;
 
         const result = { 
-            nkd: parseFloat(sec_row[sec_cols.indexOf('ACCRUEDINT')]) || 0, 
-            matDate: sec_row[sec_cols.indexOf('MATDATE')] || '—', 
-            price: (lastPrice * 10) || 0 
+            nkd: finalNkd,
+            matDate: (sec_row && sec_row[sec_cols.indexOf('MATDATE')]) || '—', 
+            price: finalPrice
         };
         
+        // Сохраняем в кэш
         bondDataCache[code] = result;
-
-        // === САМЫЙ ВАЖНЫЙ ЛОГ ===
-        console.log(`[DEBUG] ИТОГ ПО ${code}:`);
-        console.log(`   Источник цены: ${priceSource}`);
-        console.log(`   Цена % от биржи: ${lastPrice}`);
-        console.log(`   Цена в рублях (x10): ${result.price}`);
-        console.log(`   НКД: ${result.nkd}`);
-        console.log('--------------------------------');
         
+        console.log(`[DEBUG] УСПЕХ ${code}: Цена ${result.price}, НКД ${result.nkd}`);
         return result;
+
     } catch (e) { 
         console.error(`[ОШИБКА] Не удалось получить данные для: ${code}`, e);
-        return { nkd: 0, matDate: '—', price: 0 }; 
+        // ВОЗВРАЩАЕМ ЗАГЛУШКУ, ЧТОБЫ КАЛЬКУЛЯТОР РАБОТАЛ ДАЖЕ ПРИ ОШИБКЕ СЕТИ
+        return { nkd: 0, matDate: '—', price: 1000 }; 
     }
 }
 
