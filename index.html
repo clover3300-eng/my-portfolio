@@ -8076,11 +8076,11 @@ body.dark-mode .stock-btn-info {
                   ГРАФИК ВЫПЛАТ
                    </div>
                     
-                    <div class="coupon-table-head" style="margin-top: 0;">
-                        <span>ДАТА</span> 
-                        <span>ОБЛИГАЦИЯ</span> 
-                        <span style="text-align:center">ШТ</span> 
-                        <span style="text-align:right">СУММА</span>
+                    <div class="coupon-table-head" style="margin-top: 0; display:grid; grid-template-columns: 45px 1fr 40px 70px; gap:2px; font-size:10px; color:#888;">
+                    <span>ДАТА</span>
+                    <span>ОБЛИГАЦИЯ</span>
+                    <span style="text-align:center">ШТ</span>
+                    <span style="text-align:right">СУММА</span>
                     </div>
                     
                     <div id="calc-results-list" style="font-size:11px; color: var(--claude-text-secondary);">
@@ -9878,7 +9878,8 @@ function recalcCustomCoupons() {
         totalAmount += netAmount;
 
       html += `
-    <div class="coupon-row">
+    <div class="coupon-row" style="display:grid; grid-template-columns: 45px 1fr 40px 70px; gap:2px; align-items:center; margin-bottom:8px;">
+        
         <div><b>${payment.dateStr.slice(0, 5)}</b></div>
 
         <div style="color:#8e8e93; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
