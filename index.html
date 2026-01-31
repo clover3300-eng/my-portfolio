@@ -13225,6 +13225,8 @@ function initSwipeBack() {
         if (!target) return;
         
         prevScreen = target;
+        // Сбрасываем скролл чтобы не было скачка при финальном переключении
+        target.scrollTop = 0;
         target.style.cssText = `
             position:fixed; top:0; left:0; width:100%; height:100%;
             display:block; visibility:visible; z-index:997;
@@ -13261,83 +13263,98 @@ function initSwipeBack() {
         edgeTab.classList.remove('ready');
     }
     
-    // Бесшовный переход: подменяем состояние в одном RAF кадре
+    // Бесшовный переход: 
+    // Ключ: target уже видим (inline display:block, position:fixed, transform:0).
+    // Нужно переключить на .active БЕЗ мигания.
+    // Порядок: 1) .active добавить, 2) inline стили убрать поэтапно.
     function seamlessTransition(activeScreen, targetId) {
         const target = document.getElementById(targetId);
+        if (!target) { cleanupAll(); return; }
         
-        // Всё в одном кадре — без промежуточной перерисовки
+        // Шаг 1: target получает .active + swipe-no-anim (блокирует fadeIn)
+        // inline стили ещё на месте — экран остаётся fixed, transform:0
+        target.classList.add('swipe-no-anim', 'active');
+        
+        // Шаг 2: Старый экран — убираем (он за пределами экрана)
+        activeScreen.classList.remove('active', 'swipe-active', 'swiping');
+        activeScreen.style.cssText = '';
+        
+        // Шаг 3: Через кадр — меняем только transform и position
+        // .active уже даёт display:block, поэтому display из inline не нужен
         requestAnimationFrame(() => {
-            // 1. Убираем active + сбрасываем стили старого экрана
-            activeScreen.classList.remove('active', 'swipe-active', 'swiping');
-            activeScreen.style.cssText = '';
+            // Убираем position:fixed — экран возвращается в нормальный flow
+            // НО оставляем display:block через .active
+            target.style.position = '';
+            target.style.top = '';
+            target.style.left = '';
+            target.style.width = '';
+            target.style.height = '';
+            target.style.overflow = '';
+            target.style.visibility = '';
+            target.style.zIndex = '';
+            target.style.transform = '';
+            target.style.transition = '';
+            target.style.display = '';
             
-            // 2. Целевой экран уже виден — добавляем active БЕЗ fadeIn
-            if (target) {
-                target.classList.add('swipe-no-anim'); // Блокируем fadeIn
-                target.style.cssText = '';              // Чистим fixed позицию
-                target.classList.add('active');
-                
-                // Убираем swipe-no-anim после рендера
-                requestAnimationFrame(() => {
-                    target.classList.remove('swipe-no-anim');
-                });
-            }
-            prevScreen = null;
-            
-            // 3. Навигация и состояние
-            if (targetId === 'screen-home') {
-                document.body.classList.add('home-mode');
-                document.getElementById('navWrapper').style.display = 'flex';
-                document.getElementById('stickyPanel').style.display = 'none';
-            } else {
-                document.body.classList.remove('home-mode');
-                const stickyPanel = document.getElementById('stickyPanel');
-                if (stickyPanel) {
-                    stickyPanel.style.display = (targetId === 'screen-app') ? 'block' : 'none';
-                }
-            }
-            
-            if (targetId !== 'screen-interesting' && targetId !== 'screen-company') {
-                lastNavScreen = targetId;
-                collapseSearch(false);
-            }
-            
-            currentScreen = targetId;
-            
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('nav-search').classList.remove('active');
-            const navId = `nav-${targetId.split('-')[1]}`;
-            const navBtn = document.getElementById(navId);
-            if (navBtn) navBtn.classList.add('active');
-            if (targetId === 'screen-interesting' || targetId === 'screen-company') {
-                document.getElementById('nav-search').classList.add('active');
-            }
-            
-            if (targetId === 'screen-assets') {
-                renderAuroraStocksTable();
-                renderAuroraOfzList();
-            }
-            
-            const portfolioActionPanel = document.getElementById('portfolioActionPanel');
-            if (portfolioActionPanel) {
-                portfolioActionPanel.style.display = 
-                    (targetId === 'screen-portfolio' && isPortfolioCalculated) ? 'flex' : 'none';
-            }
-            
-            // 4. Cleanup UI
-            dimOverlay.style.cssText = 'display:none;';
-            progressBar.style.cssText = 'transform:scaleX(0); opacity:0;';
-            progressBar.classList.remove('active');
-            edgeGlow.style.opacity = '0';
-            edgeStrip.style.opacity = '0';
-            edgeTab.style.opacity = '0';
-            edgeTab.classList.remove('ready');
-            
-            window.scrollTo({ top: 0 });
-            if (window.Telegram?.WebApp?.HapticFeedback) {
-                window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-            }
+            requestAnimationFrame(() => {
+                target.classList.remove('swipe-no-anim');
+            });
         });
+        
+        prevScreen = null;
+        
+        // Навигация и состояние
+        if (targetId === 'screen-home') {
+            document.body.classList.add('home-mode');
+            document.getElementById('navWrapper').style.display = 'flex';
+            document.getElementById('stickyPanel').style.display = 'none';
+        } else {
+            document.body.classList.remove('home-mode');
+            const stickyPanel = document.getElementById('stickyPanel');
+            if (stickyPanel) {
+                stickyPanel.style.display = (targetId === 'screen-app') ? 'block' : 'none';
+            }
+        }
+        
+        if (targetId !== 'screen-interesting' && targetId !== 'screen-company') {
+            lastNavScreen = targetId;
+            collapseSearch(false);
+        }
+        
+        currentScreen = targetId;
+        
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById('nav-search').classList.remove('active');
+        const navId = `nav-${targetId.split('-')[1]}`;
+        const navBtn = document.getElementById(navId);
+        if (navBtn) navBtn.classList.add('active');
+        if (targetId === 'screen-interesting' || targetId === 'screen-company') {
+            document.getElementById('nav-search').classList.add('active');
+        }
+        
+        if (targetId === 'screen-assets') {
+            renderAuroraStocksTable();
+            renderAuroraOfzList();
+        }
+        
+        const portfolioActionPanel = document.getElementById('portfolioActionPanel');
+        if (portfolioActionPanel) {
+            portfolioActionPanel.style.display = 
+                (targetId === 'screen-portfolio' && isPortfolioCalculated) ? 'flex' : 'none';
+        }
+        
+        // Cleanup UI
+        dimOverlay.style.cssText = 'display:none;';
+        progressBar.style.cssText = 'transform:scaleX(0); opacity:0;';
+        progressBar.classList.remove('active');
+        edgeGlow.style.opacity = '0';
+        edgeStrip.style.opacity = '0';
+        edgeTab.style.opacity = '0';
+        edgeTab.classList.remove('ready');
+        
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        }
     }
 
     // ── TOUCH START ──
@@ -13506,10 +13523,25 @@ function initSwipeBack() {
             edgeGlow.style.transition = `opacity ${fadeOut}ms ease-out`;
             edgeGlow.style.opacity = '0';
             
-            // Ждём окончания анимации, потом бесшовный переход
-            setTimeout(() => {
+            // Используем transitionend вместо setTimeout — срабатывает точно когда анимация кончилась
+            let transitionDone = false;
+            function onTransitionEnd(evt) {
+                if (transitionDone) return;
+                if (evt.propertyName !== 'transform') return;
+                transitionDone = true;
+                activeScreen.removeEventListener('transitionend', onTransitionEnd);
                 seamlessTransition(activeScreen, targetId);
-            }, duration);
+            }
+            activeScreen.addEventListener('transitionend', onTransitionEnd);
+            
+            // Fallback на случай если transitionend не сработает
+            setTimeout(() => {
+                if (!transitionDone) {
+                    transitionDone = true;
+                    activeScreen.removeEventListener('transitionend', onTransitionEnd);
+                    seamlessTransition(activeScreen, targetId);
+                }
+            }, duration + 50);
             
         } else {
             // ── ОТМЕНА ──
