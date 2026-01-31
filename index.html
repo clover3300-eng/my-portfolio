@@ -13272,89 +13272,28 @@ function initSwipeBack() {
     }
     
     // Бесшовный переход:
-    // Главная проблема: fadeIn keyframe содержит translateY(10px)→translateY(0).
-    // Даже с swipe-no-anim классом, браузер может успеть начать анимацию.
-    // Решение: inline style animation:none (высший приоритет) + очистка через 500ms.
+    // Проблема: любая смена position/display вызывает перерисовку layout.
+    // Решение: полностью чистим prevScreen от inline стилей, 
+    // затем вызываем showScreen() который сам переключит экраны.
+    // fadeIn блокируем через inline animation:none на target.
     function seamlessTransition(activeScreen, targetId) {
         const target = document.getElementById(targetId);
         if (!target) { cleanupAll(); return; }
         
-        // 1. Скролл в начало
-        window.scrollTo(0, 0);
-        
-        // 2. INLINE блокировка анимации — гарантированно не пробьётся fadeIn
-        target.style.animation = 'none';
-        
-        // 3. .active даёт display:block
-        target.classList.add('active');
-        
-        // 4. Сбрасываем все inline стили кроме animation
-        target.style.position = '';
-        target.style.top = '';
-        target.style.left = '';
-        target.style.width = '';
-        target.style.height = '';
-        target.style.overflow = '';
-        target.style.display = '';
-        target.style.visibility = '';
-        target.style.zIndex = '';
-        target.style.transform = '';
-        target.style.transition = '';
-        target.style.pointerEvents = '';
-        // animation остаётся = 'none' — убираем позже
-        
-        // 5. Убираем старый экран
-        activeScreen.classList.remove('active', 'swipe-active', 'swiping');
+        // 1. Убираем swipe-классы с текущего экрана
+        activeScreen.classList.remove('swipe-active', 'swiping');
         activeScreen.style.cssText = '';
         
+        // 2. Чистим ВСЕ inline стили с prevScreen
+        if (prevScreen) {
+            prevScreen.style.cssText = '';
+        }
         prevScreen = null;
         
-        // 6. Через 500ms убираем inline animation (fadeIn уже не сработает — слишком поздно)
-        setTimeout(() => {
-            target.style.animation = '';
-        }, 500);
+        // 3. Блокируем fadeIn на target ПЕРЕД showScreen
+        target.style.animation = 'none';
         
-        // Навигация и состояние
-        if (targetId === 'screen-home') {
-            document.body.classList.add('home-mode');
-            document.getElementById('navWrapper').style.display = 'flex';
-            document.getElementById('stickyPanel').style.display = 'none';
-        } else {
-            document.body.classList.remove('home-mode');
-            const stickyPanel = document.getElementById('stickyPanel');
-            if (stickyPanel) {
-                stickyPanel.style.display = (targetId === 'screen-app') ? 'block' : 'none';
-            }
-        }
-        
-        if (targetId !== 'screen-interesting' && targetId !== 'screen-company') {
-            lastNavScreen = targetId;
-            collapseSearch(false);
-        }
-        
-        currentScreen = targetId;
-        
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        document.getElementById('nav-search').classList.remove('active');
-        const navId = `nav-${targetId.split('-')[1]}`;
-        const navBtn = document.getElementById(navId);
-        if (navBtn) navBtn.classList.add('active');
-        if (targetId === 'screen-interesting' || targetId === 'screen-company') {
-            document.getElementById('nav-search').classList.add('active');
-        }
-        
-        if (targetId === 'screen-assets') {
-            renderAuroraStocksTable();
-            renderAuroraOfzList();
-        }
-        
-        const portfolioActionPanel = document.getElementById('portfolioActionPanel');
-        if (portfolioActionPanel) {
-            portfolioActionPanel.style.display = 
-                (targetId === 'screen-portfolio' && isPortfolioCalculated) ? 'flex' : 'none';
-        }
-        
-        // Cleanup UI
+        // 4. Cleanup UI элементов
         dimOverlay.style.cssText = 'display:none;';
         progressBar.style.cssText = 'transform:scaleX(0); opacity:0;';
         progressBar.classList.remove('active');
@@ -13363,9 +13302,13 @@ function initSwipeBack() {
         edgeTab.style.opacity = '0';
         edgeTab.classList.remove('ready');
         
-        if (window.Telegram?.WebApp?.HapticFeedback) {
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-        }
+        // 5. Вызываем стандартный showScreen — он сделает всю работу
+        showScreen(targetId);
+        
+        // 6. Убираем inline animation через 500ms
+        setTimeout(() => {
+            target.style.animation = '';
+        }, 500);
     }
 
     // ── TOUCH START ──
