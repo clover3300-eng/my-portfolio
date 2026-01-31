@@ -3298,11 +3298,15 @@ body.dark-mode .portfolio-page-btn.active {
     display: flex;
     flex-direction: column;
     padding: 20px;
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
     border-radius: 20px;
     margin-bottom: 24px;
     box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.3);
     overflow: hidden;
+}
+
+body.dark-mode .portfolio-capital-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
 }
 
 .portfolio-capital-card::before {
@@ -4073,8 +4077,8 @@ body.dark-mode .portfolio-ofz-detail-row {
 /* === Заголовки таблицы эшелонов (как в Ребалансировке) === */
 .portfolio-echelons-headers {
     display: grid;
-    grid-template-columns: 1fr 100px 60px;
-    gap: 8px;
+    grid-template-columns: 1fr 110px 70px;
+    gap: 16px;
     padding: 12px 16px;
     margin-bottom: 8px;
 }
@@ -4094,6 +4098,7 @@ body.dark-mode .portfolio-ofz-detail-row {
 
 .portfolio-echelon-h-text:nth-child(3) {
     text-align: right;
+    padding-right: 6px;
 }
 
 /* Подсказка для % - убираем */
@@ -4150,6 +4155,156 @@ body.dark-mode .portfolio-ofz-detail-row {
 
 .echelons-info-content p:last-child {
     margin-bottom: 0;
+}
+
+/* === Раскрывающийся блок ЭШЕЛОНЫ (как в Ребалансировке) === */
+.echelons-explainer-card {
+    background: var(--card-glass-aurora);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border-aurora);
+    border-radius: 16px;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+.echelons-explainer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.echelons-explainer-header:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+body.dark-mode .echelons-explainer-header:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.echelons-explainer-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.echelons-explainer-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 10px;
+}
+
+.echelons-explainer-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--accent-blue);
+}
+
+.echelons-explainer-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-deep);
+}
+
+.echelons-explainer-arrow {
+    width: 20px;
+    height: 20px;
+    stroke: var(--text-slate);
+    transition: transform 0.3s ease;
+}
+
+.echelons-explainer-card.open .echelons-explainer-arrow {
+    transform: rotate(180deg);
+}
+
+.echelons-explainer-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.echelons-explainer-card.open .echelons-explainer-content {
+    max-height: 400px;
+}
+
+/* Элемент объяснения эшелона */
+.echelon-explain-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .echelon-explain-item {
+    border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+.echelon-explain-badge {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 800;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.echelon-explain-badge.e1 {
+    color: #27ae60;
+    border-color: #2ecc71;
+}
+
+.echelon-explain-badge.e2 {
+    color: #2980b9;
+    border-color: #3498db;
+}
+
+.echelon-explain-badge.e3 {
+    color: #f39c12;
+    border-color: #f1c40f;
+}
+
+.echelon-explain-badge.e4 {
+    color: #d35400;
+    border-color: #e67e22;
+}
+
+body.dark-mode .echelon-explain-badge {
+    background: rgba(30, 41, 59, 0.9);
+}
+
+.echelon-explain-text {
+    flex: 1;
+}
+
+.echelon-explain-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-deep);
+    margin-bottom: 2px;
+}
+
+.echelon-explain-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--text-slate);
+    line-height: 1.4;
 }
 
 /* === Блок Важно - Aurora Design с маркером === */
@@ -4220,8 +4375,8 @@ body.dark-mode .portfolio-ofz-detail-row {
 /* === Динамические столбцы для ОФЗ === */
 .portfolio-ofz-summary {
     display: grid;
-    grid-template-columns: 1fr 55px 50px 80px;
-    gap: 8px;
+    grid-template-columns: 1fr 60px 55px 90px;
+    gap: 16px;
     align-items: center;
 }
 
@@ -4266,8 +4421,8 @@ body.dark-mode .portfolio-ofz-detail-row {
 /* Заголовки списка ОФЗ */
 .portfolio-list-headers {
     display: grid;
-    grid-template-columns: 1fr 55px 50px 80px;
-    gap: 8px;
+    grid-template-columns: 1fr 60px 55px 90px;
+    gap: 16px;
     padding: 8px 16px;
     margin-bottom: 8px;
 }
@@ -4529,8 +4684,8 @@ body.dark-mode .portfolio-echelon-percent {
 /* Заголовки столбцов - впечатаны в фон */
 .portfolio-echelon-columns-header {
     display: grid;
-    grid-template-columns: 1fr 70px 50px 80px;
-    gap: 8px;
+    grid-template-columns: 1fr 75px 55px 90px;
+    gap: 16px;
     padding: 10px 16px;
     font-family: 'Inter', sans-serif;
     font-size: 10px;
@@ -4568,9 +4723,9 @@ body.dark-mode .portfolio-stock-wrapper {
 
 .portfolio-stock-item {
     display: grid;
-    grid-template-columns: 1fr 70px 50px 80px;
+    grid-template-columns: 1fr 75px 55px 90px;
     align-items: center;
-    gap: 8px;
+    gap: 16px;
     padding: 12px 0;
     cursor: pointer;
     transition: background 0.2s ease;
@@ -9657,27 +9812,6 @@ body.dark-mode .stock-btn-info {
             <!-- ===== КОНТЕНТ: РАСТУЩАЯ ЧАСТЬ (АКЦИИ) ===== -->
             <div id="portfolio-tab-stocks" class="portfolio-tab-content">
                 
-                <!-- Раскрывающийся блок ЭШЕЛОНЫ как в Ребалансировке -->
-                <div class="echelons-header" id="portfolioEchelonsHeader" onclick="togglePortfolioEchelonsInfo()">
-                    <span class="echelons-title">
-                        ЭШЕЛОНЫ
-                        <span class="echelons-help-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                        </span>
-                    </span>
-                </div>
-                
-                <!-- Раскрывающееся описание эшелонов -->
-                <div class="echelons-info-panel" id="portfolioEchelonsInfo">
-                    <div class="echelons-info-content">
-                        <p><strong>Эшелоны</strong> — это классификация акций по уровню надёжности и ликвидности.</p>
-                        <p>• <strong>I Эшелон</strong> — голубые фишки, самые надёжные</p>
-                        <p>• <strong>II Эшелон</strong> — стабильные компании среднего размера</p>
-                        <p>• <strong>III Эшелон</strong> — рисковые, но перспективные</p>
-                        <p>• <strong>IV Эшелон</strong> — венчурные, высокий риск/доходность</p>
-                    </div>
-                </div>
-                
                 <!-- Заголовки таблицы эшелонов -->
                 <div class="portfolio-echelons-headers">
                     <span class="portfolio-echelon-h-text">ЭШЕЛОН</span>
@@ -9688,6 +9822,55 @@ body.dark-mode .stock-btn-info {
                 <!-- Контейнер эшелонов -->
                 <div id="echelonContainerV2">
                     <!-- JS генерирует эшелоны здесь -->
+                </div>
+                
+                <!-- Раскрывающийся блок ЭШЕЛОНЫ как в Ребалансировке -->
+                <div class="echelons-explainer-card" id="portfolioEchelonsExplainer">
+                    <div class="echelons-explainer-header" onclick="togglePortfolioEchelonsInfo()">
+                        <div class="echelons-explainer-header-left">
+                            <div class="echelons-explainer-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                    <path d="M2 17l10 5 10-5"/>
+                                    <path d="M2 12l10 5 10-5"/>
+                                </svg>
+                            </div>
+                            <div class="echelons-explainer-title">Что такое эшелоны?</div>
+                        </div>
+                        <svg class="echelons-explainer-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="echelons-explainer-content" id="portfolioEchelonsInfo">
+                        <div class="echelon-explain-item">
+                            <div class="echelon-explain-badge e1">I</div>
+                            <div class="echelon-explain-text">
+                                <div class="echelon-explain-name">Надёжный</div>
+                                <div class="echelon-explain-desc">Компании, которые платят дивиденды и стараются их повышать</div>
+                            </div>
+                        </div>
+                        <div class="echelon-explain-item">
+                            <div class="echelon-explain-badge e2">II</div>
+                            <div class="echelon-explain-text">
+                                <div class="echelon-explain-name">Стабильный</div>
+                                <div class="echelon-explain-desc">Компании, которые платят дивиденды, но выплаты разнятся</div>
+                            </div>
+                        </div>
+                        <div class="echelon-explain-item">
+                            <div class="echelon-explain-badge e3">III</div>
+                            <div class="echelon-explain-text">
+                                <div class="echelon-explain-name">Рисковый</div>
+                                <div class="echelon-explain-desc">Компании, которые могут платить, но не платят</div>
+                            </div>
+                        </div>
+                        <div class="echelon-explain-item">
+                            <div class="echelon-explain-badge e4">IV</div>
+                            <div class="echelon-explain-text">
+                                <div class="echelon-explain-name">Венчурный</div>
+                                <div class="echelon-explain-desc">Компании, которые не платят дивидендов</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Блок Важно - Aurora Design -->
@@ -14655,10 +14838,6 @@ if(document.getElementById('listBonds')) {
                                                         <span class="portfolio-stock-detail-value" style="color: #10B981;">${s.target}</span>
                                                     </div>
                                                     <div class="portfolio-stock-detail-row">
-                                                        <span class="portfolio-stock-detail-label">Потенциал</span>
-                                                        <span class="portfolio-stock-detail-value" style="color: #10B981;">+${s.yieldPercent}%</span>
-                                                    </div>
-                                                    <div class="portfolio-stock-detail-row">
                                                         <span class="portfolio-stock-detail-label">Прогноз</span>
                                                         <span class="portfolio-stock-detail-value" style="font-size:10px; color:var(--text-slate);">до 36 мес.</span>
                                                     </div>
@@ -14795,11 +14974,9 @@ function togglePortfolioEchelon(card, event) {
 
 // Переключение информации об эшелонах
 function togglePortfolioEchelonsInfo() {
-    const panel = document.getElementById('portfolioEchelonsInfo');
-    const header = document.getElementById('portfolioEchelonsHeader');
-    if (panel) {
-        panel.classList.toggle('show');
-        if (header) header.classList.toggle('open');
+    const card = document.getElementById('portfolioEchelonsExplainer');
+    if (card) {
+        card.classList.toggle('open');
     }
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
