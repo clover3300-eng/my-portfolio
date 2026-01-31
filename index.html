@@ -13226,8 +13226,8 @@ function initSwipeBack() {
         
         prevScreen = target;
         
-        // position:fixed чтобы не сдвигать текущий экран в document flow
-        // overflow:hidden чтобы не было прокрутки на превью
+        // Превью = просто предыдущий экран на своём месте, без эффектов
+        // position:fixed + translateX(0) — экран стоит ровно там где будет в финале
         target.style.position = 'fixed';
         target.style.top = '0';
         target.style.left = '0';
@@ -13237,7 +13237,7 @@ function initSwipeBack() {
         target.style.visibility = 'visible';
         target.style.zIndex = '997';
         target.style.overflow = 'hidden';
-        target.style.transform = `translateX(${PARALLAX_SHIFT}px)`;
+        target.style.transform = 'translateX(0)';
         target.style.transition = 'none';
         target.style.pointerEvents = 'none';
         
@@ -13427,24 +13427,18 @@ function initSwipeBack() {
             const shift = easedProgress * SCREEN_WIDTH;
             currentShift = shift;
             
-            // Текущая страница
+            // Текущая страница уезжает вправо
             activeScreen.style.transform = `translateX(${shift}px)`;
             
-            // Предыдущая — параллакс
-            if (prevScreen) {
-                const prevShift = PARALLAX_SHIFT * (1 - easedProgress);
-                prevScreen.style.transform = `translateX(${prevShift}px)`;
-            }
-            
-            // Dim
+            // Предыдущая — стоит на месте, только dim убирается
             dimOverlay.style.opacity = String(1 - easedProgress);
             
-            // ── Edge strip — тень на грани, движется через transform ──
+            // ── Edge strip — тень на грани ──
             const stripOpacity = Math.min(easedProgress * 3, 0.7);
             edgeStrip.style.transform = `translateX(${shift - 4}px)`;
             edgeStrip.style.opacity = String(stripOpacity);
             
-            // ── Edge tab — язычок, движется через transform ──
+            // ── Edge tab — язычок ──
             const tabOpacity = Math.min(easedProgress * 2.5, 0.9);
             edgeTab.style.transform = `translate(${shift}px, -50%)`;
             edgeTab.style.opacity = String(tabOpacity);
@@ -13513,10 +13507,7 @@ function initSwipeBack() {
             activeScreen.style.transition = `transform ${duration}ms ${bezier}`;
             activeScreen.style.transform = `translateX(${SCREEN_WIDTH}px)`;
             
-            if (prevScreen) {
-                prevScreen.style.transition = `transform ${duration}ms ${bezier}`;
-                prevScreen.style.transform = 'translateX(0)';
-            }
+            // prevScreen уже на месте — не трогаем
             
             dimOverlay.style.transition = `opacity ${duration}ms ease-out`;
             dimOverlay.style.opacity = '0';
@@ -13563,8 +13554,7 @@ function initSwipeBack() {
             activeScreen.style.transform = 'translateX(0)';
             
             if (prevScreen) {
-                prevScreen.style.transition = `transform ${returnDuration}ms ${bezier}`;
-                prevScreen.style.transform = `translateX(${PARALLAX_SHIFT}px)`;
+                // prevScreen стоит на месте — просто dim вернётся
             }
             
             dimOverlay.style.transition = `opacity ${returnDuration}ms ease-out`;
