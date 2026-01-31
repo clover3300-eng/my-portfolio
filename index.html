@@ -13226,19 +13226,20 @@ function initSwipeBack() {
         
         prevScreen = target;
         
-        // Показываем экран БЕЗ position:fixed — остаётся в document flow
-        // Используем только display + transform + z-index
-        // Так при финальном переключении не будет смены layout (fixed→static)
+        // position:fixed чтобы не сдвигать текущий экран в document flow
+        // overflow:hidden чтобы не было прокрутки на превью
+        target.style.position = 'fixed';
+        target.style.top = '0';
+        target.style.left = '0';
+        target.style.width = '100%';
+        target.style.height = '100%';
         target.style.display = 'block';
         target.style.visibility = 'visible';
         target.style.zIndex = '997';
+        target.style.overflow = 'hidden';
         target.style.transform = `translateX(${PARALLAX_SHIFT}px)`;
         target.style.transition = 'none';
         target.style.pointerEvents = 'none';
-        
-        // Сбрасываем скролл страницы чтобы prevScreen показался сверху
-        // (экран в document flow, так что scrollTop на самом экране)
-        window.scrollTo(0, 0);
         
         dimOverlay.style.cssText = 'display:block; opacity:1; transition:none;';
         
@@ -13255,12 +13256,7 @@ function initSwipeBack() {
     
     function cleanupAll() {
         if (prevScreen && !prevScreen.classList.contains('active')) {
-            prevScreen.style.display = '';
-            prevScreen.style.visibility = '';
-            prevScreen.style.zIndex = '';
-            prevScreen.style.transform = '';
-            prevScreen.style.transition = '';
-            prevScreen.style.pointerEvents = '';
+            prevScreen.style.cssText = '';
         }
         prevScreen = null;
         dimOverlay.style.cssText = 'display:none;';
@@ -13276,16 +13272,28 @@ function initSwipeBack() {
     }
     
     // Бесшовный переход:
-    // prevScreen уже в document flow (без position:fixed), transform:0, display:block.
-    // Просто переключаем .active класс — никакой смены layout.
+    // prevScreen в position:fixed — нужно перевести в нормальный flow без скачка.
+    // Ключ: scrollTo(0,0) + сброс position + .active — всё синхронно в одном кадре.
     function seamlessTransition(activeScreen, targetId) {
         const target = document.getElementById(targetId);
         if (!target) { cleanupAll(); return; }
         
-        // Шаг 1: target получает .active (блокируем fadeIn)
+        // Всё в одном синхронном блоке — браузер отрисует только результат:
+        
+        // 1. Скролл в начало ДО смены позиционирования
+        window.scrollTo(0, 0);
+        
+        // 2. target получает .active + блокировка fadeIn
         target.classList.add('swipe-no-anim', 'active');
         
-        // Шаг 2: Чистим inline стили target — .active уже даёт display:block
+        // 3. Сбрасываем ВСЕ inline стили target разом
+        //    .active уже даёт display:block, а position вернётся в static
+        target.style.position = '';
+        target.style.top = '';
+        target.style.left = '';
+        target.style.width = '';
+        target.style.height = '';
+        target.style.overflow = '';
         target.style.display = '';
         target.style.visibility = '';
         target.style.zIndex = '';
@@ -13293,7 +13301,7 @@ function initSwipeBack() {
         target.style.transition = '';
         target.style.pointerEvents = '';
         
-        // Шаг 3: Убираем старый экран
+        // 4. Убираем старый экран
         activeScreen.classList.remove('active', 'swipe-active', 'swiping');
         activeScreen.style.cssText = '';
         
