@@ -13272,22 +13272,23 @@ function initSwipeBack() {
     }
     
     // Бесшовный переход:
-    // prevScreen в position:fixed — нужно перевести в нормальный flow без скачка.
-    // Ключ: scrollTo(0,0) + сброс position + .active — всё синхронно в одном кадре.
+    // Главная проблема: fadeIn keyframe содержит translateY(10px)→translateY(0).
+    // Даже с swipe-no-anim классом, браузер может успеть начать анимацию.
+    // Решение: inline style animation:none (высший приоритет) + очистка через 500ms.
     function seamlessTransition(activeScreen, targetId) {
         const target = document.getElementById(targetId);
         if (!target) { cleanupAll(); return; }
         
-        // Всё в одном синхронном блоке — браузер отрисует только результат:
-        
-        // 1. Скролл в начало ДО смены позиционирования
+        // 1. Скролл в начало
         window.scrollTo(0, 0);
         
-        // 2. target получает .active + блокировка fadeIn
-        target.classList.add('swipe-no-anim', 'active');
+        // 2. INLINE блокировка анимации — гарантированно не пробьётся fadeIn
+        target.style.animation = 'none';
         
-        // 3. Сбрасываем ВСЕ inline стили target разом
-        //    .active уже даёт display:block, а position вернётся в static
+        // 3. .active даёт display:block
+        target.classList.add('active');
+        
+        // 4. Сбрасываем все inline стили кроме animation
         target.style.position = '';
         target.style.top = '';
         target.style.left = '';
@@ -13300,17 +13301,18 @@ function initSwipeBack() {
         target.style.transform = '';
         target.style.transition = '';
         target.style.pointerEvents = '';
+        // animation остаётся = 'none' — убираем позже
         
-        // 4. Убираем старый экран
+        // 5. Убираем старый экран
         activeScreen.classList.remove('active', 'swipe-active', 'swiping');
         activeScreen.style.cssText = '';
         
         prevScreen = null;
         
-        // Убираем swipe-no-anim через кадр
-        requestAnimationFrame(() => {
-            target.classList.remove('swipe-no-anim');
-        });
+        // 6. Через 500ms убираем inline animation (fadeIn уже не сработает — слишком поздно)
+        setTimeout(() => {
+            target.style.animation = '';
+        }, 500);
         
         // Навигация и состояние
         if (targetId === 'screen-home') {
