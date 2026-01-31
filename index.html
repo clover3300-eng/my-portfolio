@@ -5179,77 +5179,104 @@ body.dark-mode .header h1 {
    ================================================================= */
 
 /* 1. Контейнер всего индикатора */
-.luxury-swipe-container {
+/* ====================================================================
+   EVOLUTION SWIPE SYSTEM — iOS-grade page transition
+   Два слоя: уходящая страница + входящая (предыдущая) снизу
+   Без resize, без layout shift, чистый GPU-transform
+   ==================================================================== */
+
+/* Все экраны — фиксированная позиция для свайпа */
+.screen {
+    transform-origin: center center;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Тень при свайпе — создаётся через box-shadow */
+.screen.swiping {
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Скрытый слой предыдущей страницы */
+.swipe-prev-layer {
     position: fixed;
     top: 0;
     left: 0;
-    bottom: 0;
-    width: 0; /* Изначально ширины нет */
-    z-index: 9; /* Под активным экраном, но над фоном */
+    width: 100%;
+    height: 100%;
+    z-index: 998;
     pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    visibility: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* 2. Линза (Стрелка) - Революционный дизайн */
-.ls-lens {
-    width: 50px;
-    height: 80px;
-    
-    /* Форма: Полуовал, выезжающий слева */
-    border-radius: 0 40px 40px 0;
-    
-    /* Материал: "Жидкое" стекло */
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    
-    /* Свечение */
-    box-shadow: 10px 0 40px rgba(255, 255, 255, 0.4), inset -2px 0 5px rgba(255,255,255,0.5);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-left: none;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    /* Изначально скрыта слева */
-    transform: translateX(-100%);
+.swipe-prev-layer.visible {
+    visibility: visible;
+}
+
+/* Затемнение поверх предыдущей страницы */
+.swipe-dim-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+    pointer-events: none;
+    opacity: 1;
+    will-change: opacity;
+    transition: none;
+}
+
+body.dark-mode .swipe-dim-overlay {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+/* Активный экран при свайпе — поверх всего */
+.screen.swipe-active {
+    position: relative;
+    z-index: 1000 !important;
+}
+
+/* Индикатор прогресса — тонкая полоска сверху */
+.swipe-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #10B981, #3B82F6);
+    z-index: 10000;
+    transform-origin: left;
+    transform: scaleX(0);
     opacity: 0;
-    transition: transform 0.1s linear, opacity 0.1s linear;
+    will-change: transform, opacity;
+    border-radius: 0 2px 2px 0;
 }
 
-/* Стрелка внутри */
-.ls-arrow {
-    color: #2C364C;
-    width: 28px;
-    height: 28px;
-    transform: scale(0.8);
-    transition: transform 0.2s ease;
+.swipe-progress-bar.active {
+    opacity: 1;
 }
 
-/* Темная тема */
-body.dark-mode .ls-lens {
-    background: rgba(30, 41, 59, 0.7);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.3);
-}
-body.dark-mode .ls-arrow { color: #FFFFFF; }
-
-/* 3. Эффект для АКТИВНОГО ЭКРАНА при свайпе */
-.screen {
-    /* Добавляем точку трансформации слева, чтобы экран поворачивался как дверь */
-    transform-origin: center left;
-    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
-    will-change: transform; /* Оптимизация производительности */
+/* Edge glow — свечение у левого края при начале свайпа */
+.swipe-edge-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 100%;
+    z-index: 10001;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+    opacity: 0;
+    will-change: opacity;
 }
 
-/* Тень, которая появляется сбоку экрана при сдвиге */
-.screen.swiping {
-    box-shadow: -20px 0 50px rgba(0,0,0,0.15);
+body.dark-mode .swipe-edge-glow {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
 }
-
         
 /* ==================================================================== */
 
@@ -8730,14 +8757,11 @@ body.dark-mode .stock-btn-info {
 </div>
 
    <!-- REVOLUTIONARY SWIPE BACK INDICATOR -->
-<div id="swipeBackIndicator" class="luxury-swipe-container">
-    <div class="ls-backdrop"></div>
-    <div class="ls-lens">
-        <svg class="ls-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M15 19l-7-7 7-7" stroke-linecap="square" stroke-linejoin="miter"/>
-        </svg>
-    </div>
-</div>
+<!-- EVOLUTION SWIPE SYSTEM -->
+<div class="swipe-prev-layer" id="swipePrevLayer"></div>
+<div class="swipe-dim-overlay" id="swipeDimOverlay" style="display:none;"></div>
+<div class="swipe-progress-bar" id="swipeProgressBar"></div>
+<div class="swipe-edge-glow" id="swipeEdgeGlow"></div>
 
    <!-- LUXURY PATTERN BACKGROUND (BRAND PAPER) -->
 <div class="luxury-depth-layer">
@@ -13113,33 +13137,93 @@ function initNotificationSwipe() {
 initNotificationSwipe();
 
    /* =================================================================
-   HEAVY 3D SWIPE + SCROLL LOCK + PARALLAX
-   ================================================================= */
-
-/* =================================================================
-   ULTIMATE SWIPE: HEAVY PHYSICS + 3D + SHEEN + PARALLAX
+   EVOLUTION SWIPE SYSTEM — iOS-grade back navigation
    ================================================================= */
 
 function initSwipeBack() {
     let startX = 0;
     let startY = 0;
     let isDragging = false;
-    let isAxisLocked = false; 
+    let isAxisLocked = false;
+    let prevScrollTop = 0;
+    let rafId = null;
     
-    const container = document.getElementById('swipeBackIndicator');
-    const lens = container.querySelector('.ls-lens');
-    const arrow = container.querySelector('.ls-arrow');
-    const depthText = document.querySelector('.luxury-pattern-container');
-    const triggerZone = 35; 
+    const dimOverlay = document.getElementById('swipeDimOverlay');
+    const progressBar = document.getElementById('swipeProgressBar');
+    const edgeGlow = document.getElementById('swipeEdgeGlow');
+    const TRIGGER_ZONE = 30;       // px от левого края
+    const THRESHOLD = 100;          // px для перехода
+    const SCREEN_WIDTH = window.innerWidth;
+    const PARALLAX_SHIFT = -80;     // px сдвиг предыдущей страницы
     
     function getBackTarget() {
         if (currentScreen === 'screen-home') return null;
         if (currentScreen === 'screen-company') return 'screen-interesting';
         if (currentScreen === 'screen-app') return 'screen-home';
-        return 'screen-app'; 
+        return 'screen-app';
+    }
+    
+    function getTargetName(id) {
+        const names = {
+            'screen-home': 'Главная',
+            'screen-app': 'Терминал',
+            'screen-portfolio': 'Портфель',
+            'screen-assets': 'Ребалансировка',
+            'screen-interesting': 'Интересное',
+            'screen-company': 'Компания'
+        };
+        return names[id] || '';
+    }
+    
+    // Клон предыдущей страницы — рендерим один раз при touchstart
+    let prevClone = null;
+    
+    function preparePrevLayer(targetId) {
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        
+        // Используем саму страницу: показываем её под текущей
+        // Вместо клонирования — показываем реальный экран под overlay
+        prevClone = target;
+        target.style.position = 'fixed';
+        target.style.top = '0';
+        target.style.left = '0';
+        target.style.width = '100%';
+        target.style.height = '100%';
+        target.style.display = 'block';
+        target.style.visibility = 'visible';
+        target.style.zIndex = '997';
+        target.style.transform = `translateX(${PARALLAX_SHIFT}px)`;
+        target.style.transition = 'none';
+        target.style.overflow = 'hidden';
+        
+        dimOverlay.style.display = 'block';
+        dimOverlay.style.opacity = '1';
+        dimOverlay.style.transition = 'none';
+    }
+    
+    function cleanupPrevLayer() {
+        if (prevClone && !prevClone.classList.contains('active')) {
+            prevClone.style.position = '';
+            prevClone.style.top = '';
+            prevClone.style.left = '';
+            prevClone.style.width = '';
+            prevClone.style.height = '';
+            prevClone.style.display = '';
+            prevClone.style.visibility = '';
+            prevClone.style.zIndex = '';
+            prevClone.style.transform = '';
+            prevClone.style.transition = '';
+            prevClone.style.overflow = '';
+        }
+        prevClone = null;
+        dimOverlay.style.display = 'none';
+        progressBar.classList.remove('active');
+        progressBar.style.transform = 'scaleX(0)';
+        edgeGlow.style.opacity = '0';
     }
 
-    // 1. TOUCH START
+    // ── TOUCH START ──
     document.addEventListener('touchstart', (e) => {
         isDragging = false;
         isAxisLocked = false;
@@ -13148,12 +13232,13 @@ function initSwipeBack() {
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         
-        if (startX <= triggerZone) {
+        if (startX <= TRIGGER_ZONE) {
             isDragging = true;
+            prevScrollTop = window.scrollY;
         }
-    }, { passive: false });
+    }, { passive: true });
 
-    // 2. TOUCH MOVE
+    // ── TOUCH MOVE ──
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
 
@@ -13162,129 +13247,194 @@ function initSwipeBack() {
         const deltaX = x - startX;
         const deltaY = Math.abs(y - startY);
 
+        // Определяем ось
         if (!isAxisLocked) {
             if (deltaY > Math.abs(deltaX)) {
                 isDragging = false;
-                return; 
-            } else if (Math.abs(deltaX) > 5) {
+                return;
+            }
+            if (Math.abs(deltaX) > 8) {
                 isAxisLocked = true;
+                
+                // Подготовка: показываем предыдущую страницу ПОД текущей
+                const targetId = getBackTarget();
+                if (targetId) {
+                    preparePrevLayer(targetId);
+                    
+                    const activeScreen = document.querySelector('.screen.active');
+                    if (activeScreen) {
+                        activeScreen.classList.add('swipe-active', 'swiping');
+                        activeScreen.style.transition = 'none';
+                    }
+                }
             }
         }
 
-        if (isAxisLocked && e.cancelable) e.preventDefault();
+        if (!isAxisLocked || deltaX <= 0) return;
+        if (e.cancelable) e.preventDefault();
 
-        const activeScreen = document.querySelector('.screen.active');
+        // Отменяем предыдущий RAF
+        if (rafId) cancelAnimationFrame(rafId);
         
-        if (activeScreen && deltaX > 0 && isAxisLocked) {
-            activeScreen.style.transition = 'none';
-            lens.style.transition = 'none';
-            if(depthText) depthText.style.transition = 'none';
-
-            // --- ФИЗИКА ---
-            let visualShift = deltaX * 0.4; // Коэф. тяжести
-            if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
-            visualShift = Math.min(visualShift, 130);
-
-            // --- 3D ПОВОРОТ + МАСШТАБИРОВАНИЕ (НОВОЕ) ---
-            const rotateY = Math.min(visualShift / 15, 8); 
-            // Уменьшаем экран до 96% по мере оттягивания
-            const scale = 1 - (visualShift / 130) * 0.04; 
+        rafId = requestAnimationFrame(() => {
+            const activeScreen = document.querySelector('.screen.active');
+            if (!activeScreen) return;
             
-            activeScreen.style.transform = `translateX(${visualShift}px) perspective(800px) rotateY(-${rotateY}deg) scale(${scale})`;
+            // ── ФИЗИКА: нелинейный свайп ──
+            const progress = Math.min(deltaX / SCREEN_WIDTH, 1);
+            const easedProgress = 1 - Math.pow(1 - progress, 2.5); // Ease-out quad
+            const shift = easedProgress * SCREEN_WIDTH;
             
-            // --- УПРАВЛЕНИЕ БЛИКОМ (НОВОЕ) ---
-            // Сдвигаем градиент блика. 0px сдвига = блик слева. 
-            // Чем больше тянем, тем дальше блик уходит вправо по экрану.
-            const sheenPos = -50 + (visualShift / 130) * 50; // от -50% до 0%
-            activeScreen.style.setProperty('--sheen-pos', `${sheenPos}%`); 
-            // Примечание: Чтобы это работало идеально, мы используем inline переменную или прямой доступ к style,
-            // но т.к. псевдо-элементы недоступны напрямую из JS, мы просто оставим CSS animation на opacity,
-            // а позицию оставим статичной или добавим логику ниже, если нужно супер-качество.
-            // *Для упрощения оставим статический красивый блик или сделаем так:*
-            // (Простой вариант без сложной JS-магии для псевдо-элемента: он просто появляется)
-
-            // --- ПАРАЛЛАКС ФОНА ---
-            if(depthText) {
-                depthText.style.transform = `rotate(-10deg) scale(1.2) translateX(${visualShift * 0.5}px)`;
+            // Текущая страница — сдвигается вправо
+            activeScreen.style.transform = `translateX(${shift}px)`;
+            
+            // Предыдущая страница — параллакс из -80px в 0
+            if (prevClone) {
+                const prevShift = PARALLAX_SHIFT * (1 - easedProgress);
+                prevClone.style.transform = `translateX(${prevShift}px)`;
             }
-
-            // --- ЛИНЗА ---
-            const lensProgress = Math.min(visualShift / 70, 1);
-            lens.style.transform = `translateX(${-100 + (lensProgress * 100)}%)`;
-            lens.style.opacity = lensProgress;
-            arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
-
-            // --- ВИБРАЦИЯ ---
-            if (visualShift > 90 && !container.dataset.vibrated) {
+            
+            // Затемнение — убираем пропорционально
+            dimOverlay.style.opacity = String(1 - easedProgress);
+            
+            // Progress bar
+            const barProgress = Math.min(deltaX / THRESHOLD, 1);
+            progressBar.classList.add('active');
+            progressBar.style.transform = `scaleX(${barProgress})`;
+            
+            // Edge glow
+            edgeGlow.style.opacity = String(Math.min(progress * 3, 0.6));
+            
+            // Haptic на пороге
+            if (deltaX > THRESHOLD && !document.body.dataset.swipeVibrated) {
                 if (window.Telegram?.WebApp?.HapticFeedback) {
                     window.Telegram.WebApp.HapticFeedback.selectionChanged();
                 }
-                container.dataset.vibrated = "true";
-                arrow.style.strokeWidth = "3"; 
-            } else if (visualShift < 90) {
-                container.dataset.vibrated = "";
-                arrow.style.strokeWidth = "2";
+                document.body.dataset.swipeVibrated = 'true';
+            } else if (deltaX < THRESHOLD) {
+                document.body.dataset.swipeVibrated = '';
             }
-        }
+        });
     }, { passive: false });
 
-    // 3. TOUCH END
+    // ── TOUCH END ──
     document.addEventListener('touchend', (e) => {
-        if (!isDragging || !isAxisLocked) return;
+        if (!isDragging || !isAxisLocked) {
+            isDragging = false;
+            isAxisLocked = false;
+            return;
+        }
         
+        if (rafId) cancelAnimationFrame(rafId);
         isDragging = false;
         isAxisLocked = false;
+        document.body.dataset.swipeVibrated = '';
 
         const activeScreen = document.querySelector('.screen.active');
         const endX = e.changedTouches[0].clientX;
         const deltaX = endX - startX;
-        const threshold = 120; 
+        
+        // Скорость свайпа
+        const velocity = deltaX / Math.max(1, e.timeStamp - performance.now() + 300);
 
-        if (activeScreen) {
-            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
-            lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            if(depthText) depthText.style.transition = 'transform 0.5s ease';
-            
-            if (deltaX > threshold) {
-                // === УСПЕХ ===
-                const targetId = getBackTarget();
-                // Вылет с поворотом и уменьшением
-                activeScreen.style.transform = `translateX(100%) perspective(800px) rotateY(-15deg) scale(0.9)`;
-                
-                lens.style.transform = `translateX(-100%)`;
-                lens.style.opacity = '0';
-
-                setTimeout(() => {
-                    resetScreenStyles(activeScreen);
-                    if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
-                    showScreen(targetId);
-                    
-                    if (window.Telegram?.WebApp?.HapticFeedback) {
-                        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-                    }
-                }, 250);
-                
-            } else {
-                // === ОТМЕНА ===
-                activeScreen.style.transform = 'translateX(0) perspective(800px) rotateY(0deg) scale(1)';
-                lens.style.transform = 'translateX(-100%)';
-                lens.style.opacity = '0';
-                if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
-            }
+        if (!activeScreen) {
+            cleanupPrevLayer();
+            return;
         }
-        container.dataset.vibrated = "";
-    });
 
-    function resetScreenStyles(screen) {
-        screen.style.transform = '';
-        screen.style.transition = '';
-        screen.classList.remove('swiping');
-    }
+        const shouldNavigate = deltaX > THRESHOLD || velocity > 0.5;
+        
+        if (shouldNavigate) {
+            // ── УСПЕХ: завершаем переход ──
+            const targetId = getBackTarget();
+            
+            // Анимируем текущую страницу за край
+            activeScreen.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1)';
+            activeScreen.style.transform = `translateX(${SCREEN_WIDTH}px)`;
+            
+            // Предыдущая страница — в нормальную позицию
+            if (prevClone) {
+                prevClone.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1)';
+                prevClone.style.transform = 'translateX(0)';
+            }
+            
+            // Dim overlay убираем
+            dimOverlay.style.transition = 'opacity 0.3s ease';
+            dimOverlay.style.opacity = '0';
+            
+            // Progress bar — заполняем до конца
+            progressBar.style.transition = 'transform 0.2s ease';
+            progressBar.style.transform = 'scaleX(1)';
+            
+            edgeGlow.style.opacity = '0';
+            
+            setTimeout(() => {
+                // Чистим стили
+                activeScreen.style.transform = '';
+                activeScreen.style.transition = '';
+                activeScreen.classList.remove('swipe-active', 'swiping');
+                
+                // Чистим предыдущий слой
+                if (prevClone) {
+                    prevClone.style.position = '';
+                    prevClone.style.top = '';
+                    prevClone.style.left = '';
+                    prevClone.style.width = '';
+                    prevClone.style.height = '';
+                    prevClone.style.display = '';
+                    prevClone.style.visibility = '';
+                    prevClone.style.zIndex = '';
+                    prevClone.style.transform = '';
+                    prevClone.style.transition = '';
+                    prevClone.style.overflow = '';
+                }
+                prevClone = null;
+                
+                dimOverlay.style.display = 'none';
+                dimOverlay.style.transition = '';
+                progressBar.classList.remove('active');
+                progressBar.style.transform = 'scaleX(0)';
+                progressBar.style.transition = '';
+                
+                // Переключаем на целевой экран
+                showScreen(targetId);
+                
+                if (window.Telegram?.WebApp?.HapticFeedback) {
+                    window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+                }
+            }, 300);
+            
+        } else {
+            // ── ОТМЕНА: возвращаем всё назад ──
+            activeScreen.style.transition = 'transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1)';
+            activeScreen.style.transform = 'translateX(0)';
+            
+            if (prevClone) {
+                prevClone.style.transition = 'transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1)';
+                prevClone.style.transform = `translateX(${PARALLAX_SHIFT}px)`;
+            }
+            
+            dimOverlay.style.transition = 'opacity 0.35s ease';
+            dimOverlay.style.opacity = '1';
+            
+            progressBar.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+            progressBar.style.transform = 'scaleX(0)';
+            progressBar.classList.remove('active');
+            
+            edgeGlow.style.transition = 'opacity 0.2s ease';
+            edgeGlow.style.opacity = '0';
+            
+            setTimeout(() => {
+                activeScreen.style.transform = '';
+                activeScreen.style.transition = '';
+                activeScreen.classList.remove('swipe-active', 'swiping');
+                cleanupPrevLayer();
+            }, 350);
+        }
+    });
 }
 
 initSwipeBack();
-
-
 
 
        
