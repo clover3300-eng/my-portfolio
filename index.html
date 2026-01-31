@@ -162,7 +162,6 @@
 
         .screen { display: none; animation: fadeIn 0.4s ease; }
         .screen.active { display: block; }
-        .screen.swipe-no-anim { animation: none !important; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -5181,12 +5180,10 @@ body.dark-mode .header h1 {
 
 /* 1. Контейнер всего индикатора */
 /* ====================================================================
-   EVOLUTION SWIPE SYSTEM — iOS-grade page transition
-   Два слоя: уходящая страница + входящая (предыдущая) снизу
-   Без resize, без layout shift, чистый GPU-transform
+   EVOLUTION SWIPE SYSTEM v4 — Snapshot-based back navigation
+   Задний экран = статичный DOM-клон → никакой перерисовки
    ==================================================================== */
 
-/* Все экраны — фиксированная позиция для свайпа */
 .screen {
     transform-origin: center center;
     will-change: transform;
@@ -5194,12 +5191,11 @@ body.dark-mode .header h1 {
     -webkit-backface-visibility: hidden;
 }
 
-/* Тень при свайпе */
 .screen.swiping {
     box-shadow: -6px 0 24px rgba(0, 0, 0, 0.15);
 }
 
-/* Скрытый слой предыдущей страницы */
+/* Контейнер снапшота — статичный клон предыдущего экрана */
 .swipe-prev-layer {
     position: fixed;
     top: 0;
@@ -5208,16 +5204,15 @@ body.dark-mode .header h1 {
     height: 100%;
     z-index: 998;
     pointer-events: none;
-    visibility: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    display: none;
+    overflow: hidden;
 }
 
 .swipe-prev-layer.visible {
-    visibility: visible;
+    display: block;
 }
 
-/* Затемнение поверх предыдущей страницы */
+/* Затемнение */
 .swipe-dim-overlay {
     position: fixed;
     top: 0;
@@ -5235,58 +5230,62 @@ body.dark-mode .swipe-dim-overlay {
     background: rgba(0, 0, 0, 0.55);
 }
 
-/* Активный экран при свайпе — поверх всего */
 .screen.swipe-active {
     position: relative;
     z-index: 1000 !important;
 }
 
-/* ── Edge Strip — тень на грани уходящей карточки ── */
+/* ── Edge Strip — тень ── */
 .swipe-edge-strip {
     position: fixed;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 6px;
     height: 100%;
     z-index: 1001;
     pointer-events: none;
     opacity: 0;
     will-change: transform, opacity;
     background: linear-gradient(90deg, 
-        rgba(0, 0, 0, 0.1) 0%, 
+        rgba(0, 0, 0, 0.12) 0%, 
         rgba(0, 0, 0, 0.02) 100%
     );
 }
 
-/* ── Edge Tab — язычок-индикатор на грани карточки ── */
+/* ── Edge Tab — материальный язычок-шторка ── */
 .swipe-edge-tab {
     position: fixed;
     top: 50%;
     left: 0;
-    width: 5px;
-    height: 40px;
+    width: 4px;
+    height: 36px;
     z-index: 1002;
     pointer-events: none;
     opacity: 0;
     will-change: transform, opacity;
-    border-radius: 0 3px 3px 0;
-    background: rgba(148, 163, 184, 0.4);
+    border-radius: 0 100px 100px 0;
+    background: rgba(160, 170, 185, 0.45);
+    transform: translate(0, -50%);
+    /* Материальность */
+    box-shadow: 1px 0 4px rgba(0,0,0,0.08);
 }
 
 body.dark-mode .swipe-edge-tab {
-    background: rgba(148, 163, 184, 0.25);
+    background: rgba(140, 155, 175, 0.35);
+    box-shadow: 1px 0 4px rgba(0,0,0,0.2);
 }
 
-/* Когда порог достигнут */
 .swipe-edge-tab.ready {
-    background: rgba(16, 185, 129, 0.6);
+    background: rgba(100, 116, 139, 0.6);
+    box-shadow: 1px 0 6px rgba(0,0,0,0.12);
 }
 
 body.dark-mode .swipe-edge-tab.ready {
-    background: rgba(16, 185, 129, 0.5);
+    background: rgba(148, 163, 184, 0.5);
+    box-shadow: 1px 0 6px rgba(0,0,0,0.25);
 }
 
-/* Индикатор прогресса — тонкая полоска сверху */
+/* Индикатор прогресса */
 .swipe-progress-bar {
     position: fixed;
     top: 0;
@@ -5306,7 +5305,7 @@ body.dark-mode .swipe-edge-tab.ready {
     opacity: 1;
 }
 
-/* Edge glow — мягкое свечение */
+/* Edge glow */
 .swipe-edge-glow {
     position: fixed;
     top: 0;
@@ -9174,39 +9173,40 @@ function formatNewsDate(dateString) {
                 function showScreen(screenId) {
             // 1. Логика для меню: если это Главная (screen-home)
             if (screenId === 'screen-home') {
-                document.body.classList.add('home-mode'); // Включаем "прозрачный" режим
-                document.getElementById('navWrapper').style.display = 'flex'; // Убеждаемся, что меню видно
-                document.getElementById('stickyPanel').style.display = 'none'; // Скрываем нижнюю панель (где кнопка "Сформировать")
+                document.body.classList.add('home-mode');
+                document.getElementById('navWrapper').style.display = 'flex';
+                document.getElementById('stickyPanel').style.display = 'none';
             } else {
-                document.body.classList.remove('home-mode'); // Выключаем "прозрачный" режим (возвращаем как было)
+                document.body.classList.remove('home-mode');
                 
-                // Управление видимостью stickyPanel как в оригинале
                 const stickyPanel = document.getElementById('stickyPanel');
                 if (stickyPanel) {
                     stickyPanel.style.display = (screenId === 'screen-app') ? 'block' : 'none';
                 }
             }
 
-            // Старая логика функции (оставляем как было)
             if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
                 lastNavScreen = screenId;
                 collapseSearch(false);
             }
             
+            // Перед переключением — снимаем снапшот текущего экрана
+            // Это нужно для свайпа: задний экран показывается как готовый статичный клон
+            if (typeof cacheScreenSnapshot === 'function' && currentScreen) {
+                cacheScreenSnapshot(currentScreen);
+            }
+            
             currentScreen = screenId;
             
-            // Показываем нужный экран
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             const targetScreen = document.getElementById(screenId);
             if(targetScreen) {
                 targetScreen.classList.add('active');
             }
             
-            // Обновляем навигацию
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById('nav-search').classList.remove('active');
             
-            // Подсветка кнопок
             const navId = `nav-${screenId.split('-')[1]}`;
             const navBtn = document.getElementById(navId);
             if (navBtn) navBtn.classList.add('active');
@@ -9215,13 +9215,11 @@ function formatNewsDate(dateString) {
                 document.getElementById('nav-search').classList.add('active');
             }
             
-            // При переходе на экран ребалансировки - рендерим таблицу акций
             if (screenId === 'screen-assets') {
                 renderAuroraStocksTable();
                 renderAuroraOfzList();
             }
             
-            // Action Panel логика
             const portfolioActionPanel = document.getElementById('portfolioActionPanel');
             if (portfolioActionPanel) {
                 if (screenId === 'screen-portfolio' && isPortfolioCalculated) {
@@ -13185,10 +13183,51 @@ function initNotificationSwipe() {
 initNotificationSwipe();
 
    /* =================================================================
-   EVOLUTION SWIPE v3 — Zero-jank iOS-grade back navigation
-   Причины дёрганья v2: fadeIn animation при .active, cssText сброс
-   Фикс: swipe-no-anim класс, requestAnimationFrame для финала
+   EVOLUTION SWIPE v4 — Snapshot-based back navigation
+   Задний экран = статичный DOM-клон, снятый при переходе.
+   Нет перерисовки, нет layout shift, нет fadeIn.
    ================================================================= */
+
+// Кеш снапшотов экранов: screenId → DOM snapshot
+const screenSnapshots = {};
+
+// Вызывается из showScreen() перед переходом
+function cacheScreenSnapshot(screenId) {
+    const screen = document.getElementById(screenId);
+    if (!screen) return;
+    
+    // Клонируем текущий видимый экран целиком
+    const clone = screen.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.classList.remove('active', 'swipe-active', 'swiping');
+    clone.style.cssText = 'display:block; position:absolute; top:0; left:0; width:100%; min-height:100%; pointer-events:none;';
+    
+    // Сохраняем computed значения input/select (клон не копирует value)
+    const origInputs = screen.querySelectorAll('input, select, textarea');
+    const cloneInputs = clone.querySelectorAll('input, select, textarea');
+    origInputs.forEach((el, i) => {
+        if (cloneInputs[i]) {
+            if (el.type === 'checkbox' || el.type === 'radio') {
+                cloneInputs[i].checked = el.checked;
+            } else {
+                cloneInputs[i].value = el.value;
+            }
+        }
+    });
+    
+    // Копируем canvas если есть
+    const origCanvases = screen.querySelectorAll('canvas');
+    const cloneCanvases = clone.querySelectorAll('canvas');
+    origCanvases.forEach((el, i) => {
+        if (cloneCanvases[i]) {
+            try {
+                cloneCanvases[i].getContext('2d').drawImage(el, 0, 0);
+            } catch(e) {}
+        }
+    });
+    
+    screenSnapshots[screenId] = clone;
+}
 
 function initSwipeBack() {
     let startX = 0;
@@ -13200,6 +13239,7 @@ function initSwipeBack() {
     let currentShift = 0;
     let wasReady = false;
     
+    const prevLayer = document.getElementById('swipePrevLayer');
     const dimOverlay = document.getElementById('swipeDimOverlay');
     const progressBar = document.getElementById('swipeProgressBar');
     const edgeGlow = document.getElementById('swipeEdgeGlow');
@@ -13209,9 +13249,6 @@ function initSwipeBack() {
     const TRIGGER_ZONE = 30;
     const THRESHOLD = 110;
     const SCREEN_WIDTH = window.innerWidth;
-    const PARALLAX_SHIFT = -80;
-    
-    let prevScreen = null;
     
     function getBackTarget() {
         if (currentScreen === 'screen-home') return null;
@@ -13221,44 +13258,36 @@ function initSwipeBack() {
     }
     
     function preparePrevLayer(targetId) {
-        const target = document.getElementById(targetId);
-        if (!target) return;
+        // Берём кешированный снапшот
+        const snapshot = screenSnapshots[targetId];
+        if (!snapshot) {
+            // Фоллбэк — создаём снапшот на лету
+            cacheScreenSnapshot(targetId);
+        }
+        const clone = (screenSnapshots[targetId] || document.createElement('div'));
         
-        prevScreen = target;
-        
-        // Превью = просто предыдущий экран на своём месте, без эффектов
-        // position:fixed + translateX(0) — экран стоит ровно там где будет в финале
-        target.style.position = 'fixed';
-        target.style.top = '0';
-        target.style.left = '0';
-        target.style.width = '100%';
-        target.style.height = '100%';
-        target.style.display = 'block';
-        target.style.visibility = 'visible';
-        target.style.zIndex = '997';
-        target.style.overflow = 'hidden';
-        target.style.transform = 'translateX(0)';
-        target.style.transition = 'none';
-        target.style.pointerEvents = 'none';
+        // Очищаем контейнер и вставляем клон
+        prevLayer.innerHTML = '';
+        prevLayer.appendChild(clone.cloneNode(true));
+        prevLayer.classList.add('visible');
         
         dimOverlay.style.cssText = 'display:block; opacity:1; transition:none;';
         
         // Edge элементы
-        edgeStrip.style.cssText = `position:fixed; top:0; left:0; width:4px; height:100%;
+        edgeStrip.style.cssText = `position:fixed; top:0; left:0; width:6px; height:100%;
             z-index:1001; pointer-events:none; opacity:0;
             transform:translateX(0); transition:none;`;
-        edgeTab.style.cssText = `position:fixed; top:50%; left:0; width:5px; height:40px;
-            z-index:1002; pointer-events:none; opacity:0; border-radius:0 3px 3px 0;
-            transform:translate(0, -50%); transition:none;`;
+        edgeTab.style.cssText = `position:fixed; top:50%; left:0; width:4px; height:36px;
+            z-index:1002; pointer-events:none; opacity:0; border-radius:0 100px 100px 0;
+            transform:translate(0, -50%); transition:none;
+            background:rgba(160,170,185,0.45); box-shadow:1px 0 4px rgba(0,0,0,0.08);`;
         edgeTab.classList.remove('ready');
         wasReady = false;
     }
     
     function cleanupAll() {
-        if (prevScreen && !prevScreen.classList.contains('active')) {
-            prevScreen.style.cssText = '';
-        }
-        prevScreen = null;
+        prevLayer.classList.remove('visible');
+        prevLayer.innerHTML = '';
         dimOverlay.style.cssText = 'display:none;';
         progressBar.classList.remove('active');
         progressBar.style.cssText = 'transform:scaleX(0); opacity:0;';
@@ -13271,29 +13300,17 @@ function initSwipeBack() {
         edgeTab.classList.remove('ready');
     }
     
-    // Бесшовный переход:
-    // Проблема: любая смена position/display вызывает перерисовку layout.
-    // Решение: полностью чистим prevScreen от inline стилей, 
-    // затем вызываем showScreen() который сам переключит экраны.
-    // fadeIn блокируем через inline animation:none на target.
     function seamlessTransition(activeScreen, targetId) {
         const target = document.getElementById(targetId);
         if (!target) { cleanupAll(); return; }
         
-        // 1. Убираем swipe-классы с текущего экрана
+        // 1. Убираем swipe-классы
         activeScreen.classList.remove('swipe-active', 'swiping');
         activeScreen.style.cssText = '';
         
-        // 2. Чистим ВСЕ inline стили с prevScreen
-        if (prevScreen) {
-            prevScreen.style.cssText = '';
-        }
-        prevScreen = null;
-        
-        // 3. Блокируем fadeIn на target ПЕРЕД showScreen
-        target.style.animation = 'none';
-        
-        // 4. Cleanup UI элементов
+        // 2. Cleanup UI
+        prevLayer.classList.remove('visible');
+        prevLayer.innerHTML = '';
         dimOverlay.style.cssText = 'display:none;';
         progressBar.style.cssText = 'transform:scaleX(0); opacity:0;';
         progressBar.classList.remove('active');
@@ -13302,10 +13319,10 @@ function initSwipeBack() {
         edgeTab.style.opacity = '0';
         edgeTab.classList.remove('ready');
         
-        // 5. Вызываем стандартный showScreen — он сделает всю работу
+        // 3. Блокируем fadeIn и вызываем showScreen
+        target.style.animation = 'none';
         showScreen(targetId);
         
-        // 6. Убираем inline animation через 500ms
         setTimeout(() => {
             target.style.animation = '';
         }, 500);
@@ -13364,7 +13381,6 @@ function initSwipeBack() {
             const activeScreen = document.querySelector('.screen.active');
             if (!activeScreen) return;
             
-            // ── Физика ──
             const progress = Math.min(deltaX / SCREEN_WIDTH, 1);
             const easedProgress = 1 - Math.pow(1 - progress, 2.5);
             const shift = easedProgress * SCREEN_WIDTH;
@@ -13373,20 +13389,22 @@ function initSwipeBack() {
             // Текущая страница уезжает вправо
             activeScreen.style.transform = `translateX(${shift}px)`;
             
-            // Предыдущая — стоит на месте, только dim убирается
+            // Dim
             dimOverlay.style.opacity = String(1 - easedProgress);
             
-            // ── Edge strip — тень на грани ──
-            const stripOpacity = Math.min(easedProgress * 3, 0.7);
-            edgeStrip.style.transform = `translateX(${shift - 4}px)`;
-            edgeStrip.style.opacity = String(stripOpacity);
+            // Edge strip
+            edgeStrip.style.transform = `translateX(${shift - 6}px)`;
+            edgeStrip.style.opacity = String(Math.min(easedProgress * 3, 0.7));
             
-            // ── Edge tab — язычок ──
-            const tabOpacity = Math.min(easedProgress * 2.5, 0.9);
-            edgeTab.style.transform = `translate(${shift}px, -50%)`;
-            edgeTab.style.opacity = String(tabOpacity);
+            // Edge tab — язычок движется с краем экрана
+            edgeTab.style.transform = `translate(${shift - 4}px, -50%)`;
+            edgeTab.style.opacity = String(Math.min(easedProgress * 2.5, 0.9));
             
-            // Порог: меняем цвет через класс
+            // Динамическая высота язычка
+            const tabH = 36 + easedProgress * 16; // 36→52px
+            edgeTab.style.height = `${tabH}px`;
+            
+            // Порог
             const isReady = deltaX > THRESHOLD;
             if (isReady && !wasReady) {
                 edgeTab.classList.add('ready');
@@ -13402,9 +13420,8 @@ function initSwipeBack() {
             }
             
             // Progress bar
-            const barProgress = Math.min(deltaX / THRESHOLD, 1);
             progressBar.classList.add('active');
-            progressBar.style.transform = `scaleX(${barProgress})`;
+            progressBar.style.transform = `scaleX(${Math.min(deltaX / THRESHOLD, 1)})`;
             
             // Edge glow
             edgeGlow.style.opacity = String(Math.min(progress * 3, 0.4));
@@ -13441,21 +13458,17 @@ function initSwipeBack() {
             // ── УСПЕХ ──
             const targetId = getBackTarget();
             
-            // Адаптивная длительность: чем быстрее свайп, тем быстрее завершение
             const remaining = SCREEN_WIDTH - currentShift;
-            const speed = Math.max(velocity * 1000, 600); // px/sec, минимум 600
+            const speed = Math.max(velocity * 1000, 600);
             const duration = Math.max(120, Math.min(320, (remaining / speed) * 1000));
-            const bezier = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'; // easeOutQuad
+            const bezier = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
             
             activeScreen.style.transition = `transform ${duration}ms ${bezier}`;
             activeScreen.style.transform = `translateX(${SCREEN_WIDTH}px)`;
             
-            // prevScreen уже на месте — не трогаем
-            
             dimOverlay.style.transition = `opacity ${duration}ms ease-out`;
             dimOverlay.style.opacity = '0';
             
-            // Edge элементы: быстро исчезают
             const fadeOut = Math.min(duration * 0.5, 150);
             edgeStrip.style.transition = `opacity ${fadeOut}ms ease-out`;
             edgeStrip.style.opacity = '0';
@@ -13468,7 +13481,6 @@ function initSwipeBack() {
             edgeGlow.style.transition = `opacity ${fadeOut}ms ease-out`;
             edgeGlow.style.opacity = '0';
             
-            // Используем transitionend вместо setTimeout — срабатывает точно когда анимация кончилась
             let transitionDone = false;
             function onTransitionEnd(evt) {
                 if (transitionDone) return;
@@ -13479,7 +13491,6 @@ function initSwipeBack() {
             }
             activeScreen.addEventListener('transitionend', onTransitionEnd);
             
-            // Fallback на случай если transitionend не сработает
             setTimeout(() => {
                 if (!transitionDone) {
                     transitionDone = true;
@@ -13495,10 +13506,6 @@ function initSwipeBack() {
             
             activeScreen.style.transition = `transform ${returnDuration}ms ${bezier}`;
             activeScreen.style.transform = 'translateX(0)';
-            
-            if (prevScreen) {
-                // prevScreen стоит на месте — просто dim вернётся
-            }
             
             dimOverlay.style.transition = `opacity ${returnDuration}ms ease-out`;
             dimOverlay.style.opacity = '1';
@@ -13527,11 +13534,6 @@ function initSwipeBack() {
 }
 
 initSwipeBack();
-
-
-       
-        
-        
     </script>
 </body>
 </html>
