@@ -3246,37 +3246,50 @@ body.dark-mode #screen-interesting .results-glass-footer {
    PORTFOLIO V2 - EVOLUTION DESIGN (как Ребалансировка)
    ================================================================= */
 
-/* === Переключатель страниц К Покупке / Активы === */
+/* === Переключатель страниц К ПОКУПКЕ / МОИ АКТИВЫ === */
 .portfolio-page-switcher {
     display: flex;
-    gap: 8px;
+    gap: 0;
     margin: 16px 0 24px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 14px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode .portfolio-page-switcher {
+    background: rgba(30, 41, 59, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .portfolio-page-btn {
     flex: 1;
-    padding: 14px 20px;
+    padding: 12px 16px;
     background: transparent;
     border: none;
     font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--text-slate);
     cursor: pointer;
-    border-radius: 100px;
+    border-radius: 10px;
     transition: all 0.3s ease;
     position: relative;
 }
 
 .portfolio-page-btn.active {
-    background: #2C364C;
-    color: white;
-    box-shadow: 0 4px 15px rgba(44, 54, 76, 0.3);
+    background: white;
+    color: var(--text-deep);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 body.dark-mode .portfolio-page-btn.active {
-    background: #38BDF8;
-    color: #0F172A;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
 }
 
 /* === Компактный блок Капитал + Прогноз (как smart-replace-card) === */
@@ -3333,25 +3346,25 @@ body.dark-mode .portfolio-page-btn.active {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(148, 163, 184, 0.8);
 }
 
 .capital-value {
     font-family: 'JetBrains Mono', monospace;
     font-size: 28px;
     font-weight: 700;
-    color: white;
+    color: #f1f5f9;
     letter-spacing: -0.02em;
 }
 
 .capital-fee-badge {
     padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(94, 123, 163, 0.2);
     border-radius: 20px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.7);
+    color: #94a3b8;
 }
 
 /* Прогресс-бар распределения */
@@ -3365,15 +3378,16 @@ body.dark-mode .portfolio-page-btn.active {
     border-radius: 3px;
     overflow: hidden;
     margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .capital-bar-stocks {
-    background: linear-gradient(90deg, #E8956A, #D97757);
+    background: linear-gradient(90deg, #f97316, #ea580c);
     transition: width 0.5s ease;
 }
 
 .capital-bar-bonds {
-    background: linear-gradient(90deg, #5E7BA3, #7B9BBF);
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
     transition: width 0.5s ease;
 }
 
@@ -3388,11 +3402,11 @@ body.dark-mode .portfolio-page-btn.active {
 }
 
 .capital-label-stocks {
-    color: #E8956A;
+    color: #f97316;
 }
 
 .capital-label-bonds {
-    color: #7B9BBF;
+    color: #3b82f6;
 }
 
 /* Разделитель */
@@ -3410,20 +3424,21 @@ body.dark-mode .portfolio-page-btn.active {
 }
 
 .forecast-icon-mini {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 12px;
     color: #10B981;
 }
 
 .forecast-icon-mini svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     stroke: currentColor;
     fill: none;
     stroke-width: 2;
@@ -3439,8 +3454,8 @@ body.dark-mode .portfolio-page-btn.active {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.5);
-    margin-bottom: 2px;
+    color: rgba(148, 163, 184, 0.8);
+    margin-bottom: 4px;
 }
 
 .forecast-row-mini {
@@ -3451,30 +3466,30 @@ body.dark-mode .portfolio-page-btn.active {
 
 .forecast-total-mini {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     color: #10B981;
 }
 
 .forecast-details-mini {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+    color: rgba(148, 163, 184, 0.9);
 }
 
 .forecast-detail-item {
     display: flex;
     align-items: center;
-    gap: 3px;
+    gap: 4px;
 }
 
 .forecast-detail-item.bonds::before {
     content: '';
     width: 6px;
     height: 6px;
-    background: #7B9BBF;
+    background: #3b82f6;
     border-radius: 50%;
 }
 
@@ -3482,7 +3497,7 @@ body.dark-mode .portfolio-page-btn.active {
     content: '';
     width: 6px;
     height: 6px;
-    background: #E8956A;
+    background: #f97316;
     border-radius: 50%;
 }
 
@@ -3695,6 +3710,70 @@ body.dark-mode .portfolio-ofz-detail-row {
     color: var(--text-deep);
 }
 
+/* Стили для копирования кода в портфеле */
+#screen-portfolio .ofz-copy-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 4px 10px;
+    background: rgba(59, 130, 246, 0.08);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+#screen-portfolio .ofz-copy-wrapper:hover {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+#screen-portfolio .ofz-copy-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-blue);
+}
+
+#screen-portfolio .ofz-copy-icon {
+    width: 14px;
+    height: 14px;
+    stroke: var(--accent-blue);
+    opacity: 0.7;
+}
+
+/* Кнопка графика в портфеле */
+#screen-portfolio .ofz-aurora-chart-btn {
+    margin-top: 12px;
+    padding: 14px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+}
+
+#screen-portfolio .ofz-aurora-chart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+}
+
+#screen-portfolio .ofz-aurora-chart-btn:active {
+    transform: scale(0.98);
+}
+
+#screen-portfolio .ofz-aurora-chart-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
 /* Заголовки списка ОФЗ */
 .portfolio-list-headers {
     display: grid;
@@ -3734,6 +3813,16 @@ body.dark-mode .portfolio-ofz-detail-row {
     margin: 20px 0;
 }
 
+/* Анимация дыхания рамки когда свернуто */
+.portfolio-coupon-card:not(.open) {
+    animation: couponBorderBreathe 3s ease-in-out infinite;
+}
+
+@keyframes couponBorderBreathe {
+    0%, 100% { border-color: rgba(94, 123, 163, 0.3); }
+    50% { border-color: rgba(59, 130, 246, 0.4); }
+}
+
 .portfolio-coupon-header {
     display: flex;
     align-items: center;
@@ -3757,12 +3846,36 @@ body.dark-mode .portfolio-ofz-detail-row {
 .portfolio-coupon-icon {
     width: 44px;
     height: 44px;
+    min-width: 44px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #5E7BA3, #7B9BBF);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+    border: 1px solid rgba(59, 130, 246, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Пульсация иконки когда свернуто */
+.portfolio-coupon-card:not(.open) .portfolio-coupon-icon {
+    animation: couponIconPulse 2s ease-in-out infinite;
+}
+
+@keyframes couponIconPulse {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+    50% { 
+        transform: scale(1.02);
+        box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.15);
+    }
+}
+
+.portfolio-coupon-icon svg {
+    width: 22px;
+    height: 22px;
+    color: #3b82f6;
 }
 
 .portfolio-coupon-title-block {
@@ -3887,6 +4000,15 @@ body.dark-mode .portfolio-ofz-detail-row {
     max-width: 280px;
 }
 
+/* === Контент страниц портфеля === */
+.portfolio-page-content {
+    display: none;
+}
+
+.portfolio-page-content.active {
+    display: block;
+}
+
 /* === Action Panel V2 === */
 .portfolio-action-panel-v2 {
     position: fixed;
@@ -3909,12 +4031,13 @@ body.dark-mode .portfolio-ofz-detail-row {
 }
 
 .portfolio-action-btn {
-    flex: 0 1 150px;
+    flex: 1;
+    max-width: 160px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 16px;
+    padding: 14px 16px;
     border: none;
     border-radius: 14px;
     font-family: 'Inter', sans-serif;
@@ -3922,6 +4045,7 @@ body.dark-mode .portfolio-ofz-detail-row {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .portfolio-action-btn.primary {
@@ -3930,10 +4054,30 @@ body.dark-mode .portfolio-ofz-detail-row {
     box-shadow: 0 4px 15px rgba(44, 54, 76, 0.3);
 }
 
+.portfolio-action-btn.primary:hover {
+    box-shadow: 0 6px 20px rgba(44, 54, 76, 0.4);
+    transform: translateY(-1px);
+}
+
+.portfolio-action-btn.primary:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 10px rgba(44, 54, 76, 0.3);
+}
+
 .portfolio-action-btn.secondary {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.9);
     color: var(--text-deep);
     border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-action-btn.secondary:hover {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.portfolio-action-btn.secondary:active {
+    transform: scale(0.97);
 }
 
 body.dark-mode .portfolio-action-btn.secondary {
@@ -3942,16 +4086,17 @@ body.dark-mode .portfolio-action-btn.secondary {
     color: white;
 }
 
+body.dark-mode .portfolio-action-btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
 .portfolio-action-btn svg {
     width: 18px;
     height: 18px;
     stroke: currentColor;
     fill: none;
     stroke-width: 2;
-}
-
-.portfolio-action-btn:active {
-    transform: scale(0.98);
+    flex-shrink: 0;
 }
 
 /* === Эшелоны в портфеле - стиль Aurora === */
@@ -8919,10 +9064,10 @@ body.dark-mode .stock-btn-info {
     <!-- Контент портфеля (скрыт до расчёта) -->
     <div id="portfolio-content" style="display:none;">
         
-        <!-- ===== ПЕРЕКЛЮЧАТЕЛЬ СТРАНИЦ: К Покупке / Активы ===== -->
+        <!-- ===== ПЕРЕКЛЮЧАТЕЛЬ СТРАНИЦ: К ПОКУПКЕ / МОИ АКТИВЫ ===== -->
         <div class="portfolio-page-switcher">
-            <button class="portfolio-page-btn active" onclick="switchPortfolioPage('buy')" data-page="buy">К покупке</button>
-            <button class="portfolio-page-btn" onclick="switchPortfolioPage('assets')" data-page="assets">Активы</button>
+            <button class="portfolio-page-btn active" onclick="switchPortfolioPage('buy')" data-page="buy">К ПОКУПКЕ</button>
+            <button class="portfolio-page-btn" onclick="switchPortfolioPage('assets')" data-page="assets">МОИ АКТИВЫ</button>
         </div>
         
         <!-- ===== СТРАНИЦА "К ПОКУПКЕ" ===== -->
@@ -9010,7 +9155,15 @@ body.dark-mode .stock-btn-info {
                 <div class="portfolio-coupon-card" id="couponBoxV2">
                     <div class="portfolio-coupon-header" onclick="this.parentElement.classList.toggle('open')">
                         <div class="portfolio-coupon-header-left">
-                            <div class="portfolio-coupon-icon">🌦️</div>
+                            <div class="portfolio-coupon-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                    <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+                                </svg>
+                            </div>
                             <div class="portfolio-coupon-title-block">
                                 <div class="portfolio-coupon-title">Купонный дождь</div>
                                 <div class="portfolio-coupon-subtitle">Ближайшие выплаты по купонам</div>
@@ -10203,6 +10356,11 @@ function calculateAndShowPortfolio() {
         
         // Синхронизируем данные в новый дизайн
         syncPortfolioDataToV2();
+        
+        // Сбрасываем на страницу "К ПОКУПКЕ"
+        switchPortfolioPage('buy');
+        // Сбрасываем на вкладку "Денежный поток"
+        switchPortfolioContentTab('bonds');
         
         showScreen('screen-portfolio');
     } catch(e) {
@@ -13861,7 +14019,17 @@ if(document.getElementById('listBonds')) {
                                 <div class="portfolio-ofz-details">
                                     <div class="portfolio-ofz-details-grid">
                                         <div class="portfolio-ofz-detail-row">
-                                            <span class="portfolio-ofz-detail-label">Цена</span>
+                                            <span class="portfolio-ofz-detail-label">Код (ISIN)</span>
+                                            <div class="ofz-copy-wrapper" onclick="event.stopPropagation(); copyTickerNew('${b.t}')">
+                                                <span class="ofz-copy-code">${b.t}</span>
+                                                <svg class="ofz-copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="portfolio-ofz-detail-row">
+                                            <span class="portfolio-ofz-detail-label">Текущая цена</span>
                                             <span class="portfolio-ofz-detail-value">${b.p} ₽</span>
                                         </div>
                                         <div class="portfolio-ofz-detail-row">
@@ -13869,14 +14037,32 @@ if(document.getElementById('listBonds')) {
                                             <span class="portfolio-ofz-detail-value">${b.nkd.toFixed(2)} ₽</span>
                                         </div>
                                         <div class="portfolio-ofz-detail-row">
+                                            <span class="portfolio-ofz-detail-label">Итого (цена + НКД)</span>
+                                            <span class="portfolio-ofz-detail-value" style="font-weight: 700;">${(b.p + b.nkd).toFixed(2)} ₽</span>
+                                        </div>
+                                        <div class="portfolio-ofz-detail-row">
                                             <span class="portfolio-ofz-detail-label">Погашение</span>
                                             <span class="portfolio-ofz-detail-value">${details.matDate}</span>
                                         </div>
                                         <div class="portfolio-ofz-detail-row">
-                                            <span class="portfolio-ofz-detail-label">Купон</span>
+                                            <span class="portfolio-ofz-detail-label">Размер купона</span>
                                             <span class="portfolio-ofz-detail-value">${details.couponValue} ₽</span>
                                         </div>
+                                        <div class="portfolio-ofz-detail-row">
+                                            <span class="portfolio-ofz-detail-label">Ближайший купон</span>
+                                            <span class="portfolio-ofz-detail-value">${details.nextCoupon || '—'}</span>
+                                        </div>
+                                        <div class="portfolio-ofz-detail-row">
+                                            <span class="portfolio-ofz-detail-label">Выплат в год</span>
+                                            <span class="portfolio-ofz-detail-value">${details.freq || 2}</span>
+                                        </div>
                                     </div>
+                                    <button class="ofz-aurora-chart-btn" onclick="event.stopPropagation(); openTradingViewDirect('${b.t}')">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                        </svg>
+                                        Открыть график
+                                    </button>
                                 </div>
                             </div>`;
                         });
@@ -13956,15 +14142,136 @@ if(document.getElementById('listBonds')) {
             renderOfzList();
         } // Закрытие функции draw
 
+/* =================================================================
+   PORTFOLIO V2 - ФУНКЦИИ ПЕРЕКЛЮЧЕНИЯ
+   ================================================================= */
+
+// Переключение страниц К ПОКУПКЕ / МОИ АКТИВЫ
+function switchPortfolioPage(page) {
+    // Обновляем кнопки
+    document.querySelectorAll('.portfolio-page-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.page === page);
+    });
+    
+    // Скрываем/показываем страницы
+    document.querySelectorAll('.portfolio-page-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    const targetPage = document.getElementById(`portfolio-page-${page}`);
+    if (targetPage) {
+        targetPage.classList.add('active');
+    }
+    
+    // Показываем action panel только на странице "К покупке"
+    const actionPanel = document.getElementById('portfolioActionPanelV2');
+    if (actionPanel) {
+        actionPanel.style.display = (page === 'buy') ? 'flex' : 'none';
+    }
+    
+    // Haptic feedback
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
+
+// Переключение вкладок Денежный поток / Растущая часть
+function switchPortfolioContentTab(tab) {
+    const switcher = document.getElementById('portfolioTabSwitcher');
+    if (!switcher) return;
+    
+    // Обновляем кнопки
+    document.querySelectorAll('#portfolioTabSwitcher .portfolio-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
+    });
+    
+    // Двигаем глайдер
+    if (tab === 'stocks') {
+        switcher.classList.add('show-stocks');
+    } else {
+        switcher.classList.remove('show-stocks');
+    }
+    
+    // Скрываем/показываем контент
+    document.querySelectorAll('.portfolio-tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    const targetTab = document.getElementById(`portfolio-tab-${tab}`);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
+    
+    // Haptic feedback
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+}
+
+// Синхронизация данных между старым и новым UI
+function syncPortfolioDataToV2() {
+    // Синхронизируем распределение из слайдера
+    const slider = document.getElementById('ratioSlider');
+    if (slider) {
+        const bondPercent = parseInt(slider.value);
+        const stockPercent = 100 - bondPercent;
+        
+        // Обновляем новый прогресс-бар
+        const stockBar = document.getElementById('bar-stock-fill-v2');
+        const bondBar = document.getElementById('bar-bond-fill-v2');
+        if (stockBar) stockBar.style.width = stockPercent + '%';
+        if (bondBar) bondBar.style.width = bondPercent + '%';
+        
+        // Обновляем лейблы
+        const stockPct = document.getElementById('srl-stock-pct-v2');
+        const bondPct = document.getElementById('srl-bond-pct-v2');
+        if (stockPct) stockPct.textContent = stockPercent + '%';
+        if (bondPct) bondPct.textContent = bondPercent + '%';
+    }
+    
+    // Синхронизируем прогноз
+    const total3y = document.getElementById('summ-total-3y');
+    if (total3y) {
+        // Обновляем компактный прогноз с процентами
+        const totalText = total3y.textContent || total3y.innerText;
+    }
+    
+    // Копируем список купонов в новый контейнер
+    const oldCouponList = document.getElementById('couponList');
+    const newCouponList = document.getElementById('couponListV2');
+    if (oldCouponList && newCouponList) {
+        newCouponList.innerHTML = oldCouponList.innerHTML;
+    }
+    
+    const oldCouponTotal = document.getElementById('couponTotalHeader');
+    const newCouponTotal = document.getElementById('couponTotalHeaderV2');
+    if (oldCouponTotal && newCouponTotal) {
+        newCouponTotal.textContent = oldCouponTotal.textContent;
+    }
+}
+
 
         async function shareAsPDF() {
-            const btn = document.getElementById('btnShare');
+            // Находим кнопку - может быть как старая btnShare, так и новая portfolio-action-btn
+            let btn = document.getElementById('btnShare');
+            if (!btn) {
+                btn = document.querySelector('.portfolio-action-btn.primary');
+            }
             const container = document.getElementById('shareContainer');
             const brand = document.getElementById('shareBrand'); 
             const dateEl = document.getElementById('shareDate');
+            
+            if (!btn || !container) {
+                console.error('Required elements not found for PDF');
+                return;
+            }
+            
             const originalText = btn.innerHTML;
-            btn.innerText = "⏳ Генерация PDF..."; btn.disabled = true; 
-            brand.style.display = 'block'; dateEl.innerText = new Date().toLocaleString();
+            btn.innerHTML = "⏳ Генерация..."; 
+            btn.disabled = true; 
+            if (brand) brand.style.display = 'block'; 
+            if (dateEl) dateEl.innerText = new Date().toLocaleString();
+            
             try {
                 const canvas = await html2canvas(container, { backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), scale: 2, logging: false, useCORS: true });
                 const imgData = canvas.toDataURL('image/png');
@@ -13976,15 +14283,15 @@ if(document.getElementById('listBonds')) {
                     const file = new File([pdfBlob], "Madame_Solomina_Portfolio.pdf", { type: "application/pdf" });
                     if (navigator.canShare({ files: [file] })) {
                         await navigator.share({ files: [file], title: 'Мой портфель', text: 'Расчет от Madame Solomi\'na' });
-                        btn.innerHTML = originalText; btn.disabled = false; brand.style.display = 'none'; return;
+                        btn.innerHTML = originalText; btn.disabled = false; if (brand) brand.style.display = 'none'; return;
                     }
                 }
                 doc.save('Solomina_Portfolio.pdf');
-                setTimeout(() => { btn.innerHTML = `✅ Файл скачан`; setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000); }, 500);
+                setTimeout(() => { btn.innerHTML = `✅ Скачан`; setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000); }, 500);
             } catch(e) {
                 console.error(e); alert("Не удалось открыть меню отправки. Файл будет скачан.");
                 btn.innerHTML = originalText; btn.disabled = false;
-            } finally { brand.style.display = 'none'; }
+            } finally { if (brand) brand.style.display = 'none'; }
         }
     function resetAndGoToTerminal() {
     // Сбрасываем поле ввода суммы
