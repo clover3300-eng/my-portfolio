@@ -3292,12 +3292,12 @@ body.dark-mode .portfolio-page-btn.active {
     color: white;
 }
 
-/* === Компактный блок Капитал + Прогноз (как smart-replace-card) === */
+/* === Компактный блок Капитал + Прогноз (Evolution Design) === */
 .portfolio-capital-card {
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 24px;
     background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
     border-radius: 20px;
     margin-bottom: 24px;
@@ -3309,6 +3309,17 @@ body.dark-mode .portfolio-capital-card {
     background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
 }
 
+/* Декоративная линия сверху */
+.portfolio-capital-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 24px;
+    right: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+
 .portfolio-capital-card::before {
     content: '';
     position: absolute;
@@ -3318,7 +3329,7 @@ body.dark-mode .portfolio-capital-card {
     height: 100%;
     background: radial-gradient(
         circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.08) 0%,
         transparent 50%
     );
     opacity: 0;
@@ -3330,79 +3341,97 @@ body.dark-mode .portfolio-capital-card {
     opacity: 1;
 }
 
-/* Верхняя часть: Капитал + Комиссия */
+/* Верхняя часть: Капитал */
 .capital-top-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .capital-main {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 }
 
 .capital-label {
     font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #94A3B8;
+    letter-spacing: 0.12em;
+    color: rgba(148, 163, 184, 0.7);
 }
 
 .capital-value {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 700;
     color: #FFFFFF;
     letter-spacing: -0.02em;
-    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    line-height: 1;
 }
 
 .capital-fee-badge {
-    padding: 4px 8px;
-    background: rgba(148, 163, 184, 0.15);
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    color: #94A3B8;
-}
-
-.capital-fee-badge span {
     font-family: 'JetBrains Mono', monospace;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(148, 163, 184, 0.8);
 }
 
 /* Прогресс-бар распределения - ОБЛИГАЦИИ СЛЕВА, АКЦИИ СПРАВА */
 .capital-distribution {
-    margin-bottom: 12px;
+    margin-bottom: 20px;
 }
 
 .capital-bar {
     display: flex;
-    height: 6px;
-    border-radius: 3px;
+    height: 8px;
+    border-radius: 4px;
     overflow: hidden;
-    margin-bottom: 10px;
-    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.06);
 }
 
-/* Облигации СЛЕВА - приглушённый холодный оттенок */
+/* Облигации СЛЕВА */
 .capital-bar-bonds {
     background: linear-gradient(90deg, #5E7BA3, #7B9BBF);
-    transition: width 0.5s ease;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     order: 1;
+    position: relative;
 }
 
-/* Акции СПРАВА - тёплый терракотовый */
+.capital-bar-bonds::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+}
+
+/* Акции СПРАВА */
 .capital-bar-stocks {
     background: linear-gradient(90deg, #D97757, #E8956A);
-    transition: width 0.5s ease;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     order: 2;
+    position: relative;
+}
+
+.capital-bar-stocks::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
 }
 
 .capital-labels {
@@ -3414,69 +3443,73 @@ body.dark-mode .portfolio-capital-card {
 .capital-label-item {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 
 .capital-label-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
 }
 
 .capital-label-dot.bonds {
-    background: #5E7BA3;
+    background: linear-gradient(135deg, #5E7BA3, #7B9BBF);
 }
 
 .capital-label-dot.stocks {
-    background: #D97757;
+    background: linear-gradient(135deg, #D97757, #E8956A);
 }
 
 .capital-label-text {
     font-family: 'Inter', sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: #64748B;
+    letter-spacing: 0.05em;
+    color: rgba(148, 163, 184, 0.6);
 }
 
 .capital-label-pct {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
-    color: #E2E8F0;
+    color: #F1F5F9;
 }
 
 /* Разделитель */
 .capital-divider {
     height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 12px 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    margin: 16px 0;
 }
 
-/* Прогноз - новая структура */
+/* Прогноз - Evolution Design */
 .capital-forecast {
     display: flex;
     align-items: flex-start;
-    gap: 14px;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(16, 185, 129, 0.06);
+    border: 1px solid rgba(16, 185, 129, 0.12);
+    border-radius: 14px;
 }
 
 .forecast-icon-mini {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(16, 185, 129, 0.15);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
     border: 1px solid rgba(16, 185, 129, 0.25);
     border-radius: 12px;
     color: #10B981;
 }
 
 .forecast-icon-mini svg {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     stroke: currentColor;
     fill: none;
     stroke-width: 2;
@@ -3491,41 +3524,41 @@ body.dark-mode .portfolio-capital-card {
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #64748B;
-    margin-bottom: 6px;
+    letter-spacing: 0.1em;
+    color: rgba(16, 185, 129, 0.6);
+    margin-bottom: 8px;
 }
 
 /* Главная строка с суммой и процентом */
 .forecast-main-row {
     display: flex;
     align-items: baseline;
-    gap: 8px;
-    margin-bottom: 8px;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .forecast-total-mini {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     color: #10B981;
+    letter-spacing: -0.01em;
 }
 
 .forecast-percent-change {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     color: #10B981;
-    padding: 2px 6px;
+    padding: 3px 8px;
     background: rgba(16, 185, 129, 0.15);
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 /* Детализация под прогнозом */
 .forecast-details-mini {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    gap: 16px;
 }
 
 .forecast-detail-item {
@@ -3534,13 +3567,13 @@ body.dark-mode .portfolio-capital-card {
     gap: 6px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: #94A3B8;
+    color: rgba(148, 163, 184, 0.8);
 }
 
 .forecast-detail-item .detail-dot {
     width: 6px;
     height: 6px;
-    border-radius: 50%;
+    border-radius: 2px;
 }
 
 .forecast-detail-item .detail-dot.bonds {
@@ -4385,10 +4418,17 @@ body.dark-mode .echelon-explain-badge {
     font-size: 13px;
     font-weight: 600;
     color: var(--text-deep);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
+    /* Полное отображение названия */
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.3;
+}
+
+/* Цифры в названии ОФЗ - моноширинный шрифт */
+.portfolio-ofz-name .ofz-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 .portfolio-ofz-yield {
@@ -4442,6 +4482,64 @@ body.dark-mode .echelon-explain-badge {
 
 .portfolio-list-header-text.right {
     text-align: right;
+}
+
+.portfolio-list-header-text.clickable {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.portfolio-list-header-text.clickable:hover {
+    color: var(--accent-blue);
+}
+
+/* Подсказка для % (Простая доходность) */
+.yield-help-tooltip {
+    display: none;
+    margin: 0 16px 16px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    animation: fadeInSlide 0.3s ease;
+}
+
+.yield-help-tooltip.show {
+    display: block;
+}
+
+.yield-help-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #F1F5F9;
+    margin-bottom: 6px;
+}
+
+.yield-help-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: rgba(148, 163, 184, 0.9);
+    line-height: 1.5;
+}
+
+/* Подсказка для % эшелонов */
+.echelon-percent-tooltip {
+    display: none;
+    margin: 0 16px 16px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: rgba(148, 163, 184, 0.9);
+    line-height: 1.5;
+    animation: fadeInSlide 0.3s ease;
+}
+
+.echelon-percent-tooltip.show {
+    display: block;
 }
 
 /* === Action Panel V2 === */
@@ -9750,9 +9848,17 @@ body.dark-mode .stock-btn-info {
                 <!-- Заголовки списка -->
                 <div class="portfolio-list-headers">
                     <span class="portfolio-list-header-text">ОБЛИГАЦИЯ</span>
-                    <span class="portfolio-list-header-text center">%</span>
+                    <span class="portfolio-list-header-text center clickable" onclick="toggleYieldHelp()">%</span>
                     <span class="portfolio-list-header-text right">ШТ</span>
                     <span class="portfolio-list-header-text right">РАСХОДЫ</span>
+                </div>
+                
+                <!-- Подсказка для % (Простая доходность) -->
+                <div class="yield-help-tooltip" id="yieldHelpTooltip">
+                    <div class="yield-help-title">Простая доходность к погашению</div>
+                    <div class="yield-help-text">
+                        Показывает годовую доходность, которую вы получите, если будете держать облигацию до погашения. Учитывает купонные выплаты и разницу между текущей ценой и номиналом.
+                    </div>
                 </div>
                 
                 <!-- Список ОФЗ -->
@@ -9816,7 +9922,12 @@ body.dark-mode .stock-btn-info {
                 <div class="portfolio-echelons-headers">
                     <span class="portfolio-echelon-h-text">ЭШЕЛОН</span>
                     <span class="portfolio-echelon-h-text">РАСХОДЫ</span>
-                    <span class="portfolio-echelon-h-text">%</span>
+                    <span class="portfolio-echelon-h-text clickable" onclick="toggleEchelonPercentHelp()">%</span>
+                </div>
+                
+                <!-- Подсказка для % эшелонов -->
+                <div class="echelon-percent-tooltip" id="echelonPercentTooltip">
+                    Указан процент распределения средств на эшелон от суммы, что выделена на покупку Акций.
                 </div>
                 
                 <!-- Контейнер эшелонов -->
@@ -10030,68 +10141,6 @@ body.dark-mode .stock-btn-info {
     <!-- КОНТЕНТ ВКЛАДКИ АКЦИИ -->
     <div id="rebalance-tab-stocks" class="rebalance-tab-content">
         <div class="stocks-aurora-container">
-            <!-- Заголовок ЭШЕЛОНЫ - красивый дизайн -->
-            <div class="echelons-header" id="echelonsHeader" onclick="toggleEchelonsInfo()">
-                <span class="echelons-title">ЭШЕЛОНЫ</span>
-                <div class="echelons-help-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                    </svg>
-                </div>
-            </div>
-            
-            <!-- Информация об эшелонах (скрыта по умолчанию) -->
-            <div class="stocks-echelon-info" id="stocksEchelonInfo">
-                <div class="echelon-info-card">
-                    <div class="echelon-info-icon icon-e1">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                            <polyline points="9 12 11 14 15 10"/>
-                        </svg>
-                    </div>
-                    <div class="echelon-info-text">
-                        <div class="echelon-info-title">I Эшелон <span class="echelon-badge e1">Надежный</span></div>
-                        <div class="echelon-info-desc">Компании, которые платят дивиденды и стараются их повышать каждый год</div>
-                    </div>
-                </div>
-                <div class="echelon-info-card">
-                    <div class="echelon-info-icon icon-e2">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="20" x2="12" y2="10"/>
-                            <line x1="18" y1="20" x2="18" y2="4"/>
-                            <line x1="6" y1="20" x2="6" y2="14"/>
-                        </svg>
-                    </div>
-                    <div class="echelon-info-text">
-                        <div class="echelon-info-title">II Эшелон <span class="echelon-badge e2">Стабильный</span></div>
-                        <div class="echelon-info-desc">Компании, которые платят дивиденды, но размер выплат может меняться</div>
-                    </div>
-                </div>
-                <div class="echelon-info-card">
-                    <div class="echelon-info-icon icon-e3">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                        </svg>
-                    </div>
-                    <div class="echelon-info-text">
-                        <div class="echelon-info-title">III Эшелон <span class="echelon-badge e3">Рисковый</span></div>
-                        <div class="echelon-info-desc">Компании с потенциалом выплат, но пока не платят регулярно</div>
-                    </div>
-                </div>
-                <div class="echelon-info-card">
-                    <div class="echelon-info-icon icon-e4">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                        </svg>
-                    </div>
-                    <div class="echelon-info-text">
-                        <div class="echelon-info-title">IV Эшелон <span class="echelon-badge e4">Венчурный</span></div>
-                        <div class="echelon-info-desc">Компании роста, которые реинвестируют прибыль вместо дивидендов</div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Таблица эшелонов -->
             <div class="stocks-aurora-table">
@@ -14698,10 +14747,13 @@ if(document.getElementById('listBonds')) {
                             const qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0;
                             const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—' };
                             
+                            // Форматируем название с цифрами в моноширинном стиле
+                            const formattedName = b.n.replace(/(\d+)/g, '<span class="ofz-number">$1</span>');
+                            
                             bondsHtmlV2 += `
                             <div class="portfolio-ofz-item" onclick="this.classList.toggle('expanded')">
                                 <div class="portfolio-ofz-summary">
-                                    <div class="portfolio-ofz-name">${limitName(b.n)}</div>
+                                    <div class="portfolio-ofz-name">${formattedName}</div>
                                     <div class="portfolio-ofz-yield">${b.y}</div>
                                     <div class="portfolio-ofz-qty">${qty}</div>
                                     <div class="portfolio-ofz-sum">${Math.round(qty * b.p).toLocaleString()} ₽</div>
@@ -14977,6 +15029,28 @@ function togglePortfolioEchelonsInfo() {
     const card = document.getElementById('portfolioEchelonsExplainer');
     if (card) {
         card.classList.toggle('open');
+    }
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
+
+// Переключение подсказки для % в ОФЗ
+function toggleYieldHelp() {
+    const tooltip = document.getElementById('yieldHelpTooltip');
+    if (tooltip) {
+        tooltip.classList.toggle('show');
+    }
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
+
+// Переключение подсказки для % в эшелонах
+function toggleEchelonPercentHelp() {
+    const tooltip = document.getElementById('echelonPercentTooltip');
+    if (tooltip) {
+        tooltip.classList.toggle('show');
     }
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
