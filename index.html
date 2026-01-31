@@ -13225,17 +13225,24 @@ function initSwipeBack() {
         if (!target) return;
         
         prevScreen = target;
-        // Сбрасываем скролл чтобы не было скачка при финальном переключении
-        target.scrollTop = 0;
-        target.style.cssText = `
-            position:fixed; top:0; left:0; width:100%; height:100%;
-            display:block; visibility:visible; z-index:997;
-            overflow:hidden; transform:translateX(${PARALLAX_SHIFT}px); transition:none;
-        `;
+        
+        // Показываем экран БЕЗ position:fixed — остаётся в document flow
+        // Используем только display + transform + z-index
+        // Так при финальном переключении не будет смены layout (fixed→static)
+        target.style.display = 'block';
+        target.style.visibility = 'visible';
+        target.style.zIndex = '997';
+        target.style.transform = `translateX(${PARALLAX_SHIFT}px)`;
+        target.style.transition = 'none';
+        target.style.pointerEvents = 'none';
+        
+        // Сбрасываем скролл страницы чтобы prevScreen показался сверху
+        // (экран в document flow, так что scrollTop на самом экране)
+        window.scrollTo(0, 0);
         
         dimOverlay.style.cssText = 'display:block; opacity:1; transition:none;';
         
-        // Сбрасываем edge элементы
+        // Edge элементы
         edgeStrip.style.cssText = `position:fixed; top:0; left:0; width:4px; height:100%;
             z-index:1001; pointer-events:none; opacity:0;
             transform:translateX(0); transition:none;`;
@@ -13248,7 +13255,12 @@ function initSwipeBack() {
     
     function cleanupAll() {
         if (prevScreen && !prevScreen.classList.contains('active')) {
-            prevScreen.style.cssText = '';
+            prevScreen.style.display = '';
+            prevScreen.style.visibility = '';
+            prevScreen.style.zIndex = '';
+            prevScreen.style.transform = '';
+            prevScreen.style.transition = '';
+            prevScreen.style.pointerEvents = '';
         }
         prevScreen = null;
         dimOverlay.style.cssText = 'display:none;';
@@ -13263,45 +13275,34 @@ function initSwipeBack() {
         edgeTab.classList.remove('ready');
     }
     
-    // Бесшовный переход: 
-    // Ключ: target уже видим (inline display:block, position:fixed, transform:0).
-    // Нужно переключить на .active БЕЗ мигания.
-    // Порядок: 1) .active добавить, 2) inline стили убрать поэтапно.
+    // Бесшовный переход:
+    // prevScreen уже в document flow (без position:fixed), transform:0, display:block.
+    // Просто переключаем .active класс — никакой смены layout.
     function seamlessTransition(activeScreen, targetId) {
         const target = document.getElementById(targetId);
         if (!target) { cleanupAll(); return; }
         
-        // Шаг 1: target получает .active + swipe-no-anim (блокирует fadeIn)
-        // inline стили ещё на месте — экран остаётся fixed, transform:0
+        // Шаг 1: target получает .active (блокируем fadeIn)
         target.classList.add('swipe-no-anim', 'active');
         
-        // Шаг 2: Старый экран — убираем (он за пределами экрана)
+        // Шаг 2: Чистим inline стили target — .active уже даёт display:block
+        target.style.display = '';
+        target.style.visibility = '';
+        target.style.zIndex = '';
+        target.style.transform = '';
+        target.style.transition = '';
+        target.style.pointerEvents = '';
+        
+        // Шаг 3: Убираем старый экран
         activeScreen.classList.remove('active', 'swipe-active', 'swiping');
         activeScreen.style.cssText = '';
         
-        // Шаг 3: Через кадр — меняем только transform и position
-        // .active уже даёт display:block, поэтому display из inline не нужен
-        requestAnimationFrame(() => {
-            // Убираем position:fixed — экран возвращается в нормальный flow
-            // НО оставляем display:block через .active
-            target.style.position = '';
-            target.style.top = '';
-            target.style.left = '';
-            target.style.width = '';
-            target.style.height = '';
-            target.style.overflow = '';
-            target.style.visibility = '';
-            target.style.zIndex = '';
-            target.style.transform = '';
-            target.style.transition = '';
-            target.style.display = '';
-            
-            requestAnimationFrame(() => {
-                target.classList.remove('swipe-no-anim');
-            });
-        });
-        
         prevScreen = null;
+        
+        // Убираем swipe-no-anim через кадр
+        requestAnimationFrame(() => {
+            target.classList.remove('swipe-no-anim');
+        });
         
         // Навигация и состояние
         if (targetId === 'screen-home') {
