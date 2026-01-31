@@ -5179,149 +5179,77 @@ body.dark-mode .header h1 {
    ================================================================= */
 
 /* 1. Контейнер всего индикатора */
-/* ====================================================================
-   EVOLUTION SWIPE SYSTEM v4 — Snapshot-based back navigation
-   Задний экран = статичный DOM-клон → никакой перерисовки
-   ==================================================================== */
+.luxury-swipe-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 0; /* Изначально ширины нет */
+    z-index: 9; /* Под активным экраном, но над фоном */
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
 
+/* 2. Линза (Стрелка) - Революционный дизайн */
+.ls-lens {
+    width: 50px;
+    height: 80px;
+    
+    /* Форма: Полуовал, выезжающий слева */
+    border-radius: 0 40px 40px 0;
+    
+    /* Материал: "Жидкое" стекло */
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    
+    /* Свечение */
+    box-shadow: 10px 0 40px rgba(255, 255, 255, 0.4), inset -2px 0 5px rgba(255,255,255,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-left: none;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Изначально скрыта слева */
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: transform 0.1s linear, opacity 0.1s linear;
+}
+
+/* Стрелка внутри */
+.ls-arrow {
+    color: #2C364C;
+    width: 28px;
+    height: 28px;
+    transform: scale(0.8);
+    transition: transform 0.2s ease;
+}
+
+/* Темная тема */
+body.dark-mode .ls-lens {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.3);
+}
+body.dark-mode .ls-arrow { color: #FFFFFF; }
+
+/* 3. Эффект для АКТИВНОГО ЭКРАНА при свайпе */
 .screen {
-    transform-origin: center center;
-    will-change: transform;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    /* Добавляем точку трансформации слева, чтобы экран поворачивался как дверь */
+    transform-origin: center left;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+    will-change: transform; /* Оптимизация производительности */
 }
 
+/* Тень, которая появляется сбоку экрана при сдвиге */
 .screen.swiping {
-    box-shadow: -6px 0 24px rgba(0, 0, 0, 0.15);
+    box-shadow: -20px 0 50px rgba(0,0,0,0.15);
 }
 
-/* Контейнер снапшота — статичный клон предыдущего экрана */
-.swipe-prev-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 998;
-    pointer-events: none;
-    display: none;
-    overflow: hidden;
-}
-
-.swipe-prev-layer.visible {
-    display: block;
-}
-
-/* Затемнение */
-.swipe-dim-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.35);
-    z-index: 999;
-    pointer-events: none;
-    opacity: 1;
-    will-change: opacity;
-}
-
-body.dark-mode .swipe-dim-overlay {
-    background: rgba(0, 0, 0, 0.55);
-}
-
-.screen.swipe-active {
-    position: relative;
-    z-index: 1000 !important;
-}
-
-/* ── Edge Strip — тень ── */
-.swipe-edge-strip {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 6px;
-    height: 100%;
-    z-index: 1001;
-    pointer-events: none;
-    opacity: 0;
-    will-change: transform, opacity;
-    background: linear-gradient(90deg, 
-        rgba(0, 0, 0, 0.12) 0%, 
-        rgba(0, 0, 0, 0.02) 100%
-    );
-}
-
-/* ── Edge Tab — материальный язычок-шторка ── */
-.swipe-edge-tab {
-    position: fixed;
-    top: 50%;
-    left: 0;
-    width: 4px;
-    height: 36px;
-    z-index: 1002;
-    pointer-events: none;
-    opacity: 0;
-    will-change: transform, opacity;
-    border-radius: 0 100px 100px 0;
-    background: rgba(160, 170, 185, 0.45);
-    transform: translate(0, -50%);
-    /* Материальность */
-    box-shadow: 1px 0 4px rgba(0,0,0,0.08);
-}
-
-body.dark-mode .swipe-edge-tab {
-    background: rgba(140, 155, 175, 0.35);
-    box-shadow: 1px 0 4px rgba(0,0,0,0.2);
-}
-
-.swipe-edge-tab.ready {
-    background: rgba(100, 116, 139, 0.6);
-    box-shadow: 1px 0 6px rgba(0,0,0,0.12);
-}
-
-body.dark-mode .swipe-edge-tab.ready {
-    background: rgba(148, 163, 184, 0.5);
-    box-shadow: 1px 0 6px rgba(0,0,0,0.25);
-}
-
-/* Индикатор прогресса */
-.swipe-progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, #10B981, #3B82F6);
-    z-index: 10000;
-    transform-origin: left;
-    transform: scaleX(0);
-    opacity: 0;
-    will-change: transform, opacity;
-    border-radius: 0 2px 2px 0;
-}
-
-.swipe-progress-bar.active {
-    opacity: 1;
-}
-
-/* Edge glow */
-.swipe-edge-glow {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 40px;
-    height: 100%;
-    z-index: 10001;
-    pointer-events: none;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0%, transparent 100%);
-    opacity: 0;
-    will-change: opacity;
-}
-
-body.dark-mode .swipe-edge-glow {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
-}
         
 /* ==================================================================== */
 
@@ -8802,13 +8730,14 @@ body.dark-mode .stock-btn-info {
 </div>
 
    <!-- REVOLUTIONARY SWIPE BACK INDICATOR -->
-<!-- EVOLUTION SWIPE SYSTEM -->
-<div class="swipe-prev-layer" id="swipePrevLayer"></div>
-<div class="swipe-dim-overlay" id="swipeDimOverlay" style="display:none;"></div>
-<div class="swipe-edge-strip" id="swipeEdgeStrip"></div>
-<div class="swipe-edge-tab" id="swipeEdgeTab"></div>
-<div class="swipe-progress-bar" id="swipeProgressBar"></div>
-<div class="swipe-edge-glow" id="swipeEdgeGlow"></div>
+<div id="swipeBackIndicator" class="luxury-swipe-container">
+    <div class="ls-backdrop"></div>
+    <div class="ls-lens">
+        <svg class="ls-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 19l-7-7 7-7" stroke-linecap="square" stroke-linejoin="miter"/>
+        </svg>
+    </div>
+</div>
 
    <!-- LUXURY PATTERN BACKGROUND (BRAND PAPER) -->
 <div class="luxury-depth-layer">
@@ -9173,40 +9102,39 @@ function formatNewsDate(dateString) {
                 function showScreen(screenId) {
             // 1. Логика для меню: если это Главная (screen-home)
             if (screenId === 'screen-home') {
-                document.body.classList.add('home-mode');
-                document.getElementById('navWrapper').style.display = 'flex';
-                document.getElementById('stickyPanel').style.display = 'none';
+                document.body.classList.add('home-mode'); // Включаем "прозрачный" режим
+                document.getElementById('navWrapper').style.display = 'flex'; // Убеждаемся, что меню видно
+                document.getElementById('stickyPanel').style.display = 'none'; // Скрываем нижнюю панель (где кнопка "Сформировать")
             } else {
-                document.body.classList.remove('home-mode');
+                document.body.classList.remove('home-mode'); // Выключаем "прозрачный" режим (возвращаем как было)
                 
+                // Управление видимостью stickyPanel как в оригинале
                 const stickyPanel = document.getElementById('stickyPanel');
                 if (stickyPanel) {
                     stickyPanel.style.display = (screenId === 'screen-app') ? 'block' : 'none';
                 }
             }
 
+            // Старая логика функции (оставляем как было)
             if(screenId !== 'screen-interesting' && screenId !== 'screen-company') {
                 lastNavScreen = screenId;
                 collapseSearch(false);
             }
             
-            // Перед переключением — снимаем снапшот текущего экрана
-            // Это нужно для свайпа: задний экран показывается как готовый статичный клон
-            if (typeof cacheScreenSnapshot === 'function' && currentScreen) {
-                cacheScreenSnapshot(currentScreen);
-            }
-            
             currentScreen = screenId;
             
+            // Показываем нужный экран
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             const targetScreen = document.getElementById(screenId);
             if(targetScreen) {
                 targetScreen.classList.add('active');
             }
             
+            // Обновляем навигацию
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById('nav-search').classList.remove('active');
             
+            // Подсветка кнопок
             const navId = `nav-${screenId.split('-')[1]}`;
             const navBtn = document.getElementById(navId);
             if (navBtn) navBtn.classList.add('active');
@@ -9215,11 +9143,13 @@ function formatNewsDate(dateString) {
                 document.getElementById('nav-search').classList.add('active');
             }
             
+            // При переходе на экран ребалансировки - рендерим таблицу акций
             if (screenId === 'screen-assets') {
                 renderAuroraStocksTable();
                 renderAuroraOfzList();
             }
             
+            // Action Panel логика
             const portfolioActionPanel = document.getElementById('portfolioActionPanel');
             if (portfolioActionPanel) {
                 if (screenId === 'screen-portfolio' && isPortfolioCalculated) {
@@ -13183,168 +13113,47 @@ function initNotificationSwipe() {
 initNotificationSwipe();
 
    /* =================================================================
-   EVOLUTION SWIPE v4 — Snapshot-based back navigation
-   Задний экран = статичный DOM-клон, снятый при переходе.
-   Нет перерисовки, нет layout shift, нет fadeIn.
+   HEAVY 3D SWIPE + SCROLL LOCK + PARALLAX
    ================================================================= */
 
-// Кеш снапшотов экранов: screenId → DOM snapshot
-const screenSnapshots = {};
-
-// Вызывается из showScreen() перед переходом
-function cacheScreenSnapshot(screenId) {
-    const screen = document.getElementById(screenId);
-    if (!screen) return;
-    
-    // Клонируем текущий видимый экран целиком
-    const clone = screen.cloneNode(true);
-    clone.removeAttribute('id');
-    clone.classList.remove('active', 'swipe-active', 'swiping');
-    clone.style.cssText = 'display:block; position:absolute; top:0; left:0; width:100%; min-height:100%; pointer-events:none;';
-    
-    // Сохраняем computed значения input/select (клон не копирует value)
-    const origInputs = screen.querySelectorAll('input, select, textarea');
-    const cloneInputs = clone.querySelectorAll('input, select, textarea');
-    origInputs.forEach((el, i) => {
-        if (cloneInputs[i]) {
-            if (el.type === 'checkbox' || el.type === 'radio') {
-                cloneInputs[i].checked = el.checked;
-            } else {
-                cloneInputs[i].value = el.value;
-            }
-        }
-    });
-    
-    // Копируем canvas если есть
-    const origCanvases = screen.querySelectorAll('canvas');
-    const cloneCanvases = clone.querySelectorAll('canvas');
-    origCanvases.forEach((el, i) => {
-        if (cloneCanvases[i]) {
-            try {
-                cloneCanvases[i].getContext('2d').drawImage(el, 0, 0);
-            } catch(e) {}
-        }
-    });
-    
-    screenSnapshots[screenId] = clone;
-}
+/* =================================================================
+   ULTIMATE SWIPE: HEAVY PHYSICS + 3D + SHEEN + PARALLAX
+   ================================================================= */
 
 function initSwipeBack() {
     let startX = 0;
     let startY = 0;
-    let startTime = 0;
     let isDragging = false;
-    let isAxisLocked = false;
-    let rafId = null;
-    let currentShift = 0;
-    let wasReady = false;
+    let isAxisLocked = false; 
     
-    const prevLayer = document.getElementById('swipePrevLayer');
-    const dimOverlay = document.getElementById('swipeDimOverlay');
-    const progressBar = document.getElementById('swipeProgressBar');
-    const edgeGlow = document.getElementById('swipeEdgeGlow');
-    const edgeStrip = document.getElementById('swipeEdgeStrip');
-    const edgeTab = document.getElementById('swipeEdgeTab');
-    
-    const TRIGGER_ZONE = 30;
-    const THRESHOLD = 110;
-    const SCREEN_WIDTH = window.innerWidth;
+    const container = document.getElementById('swipeBackIndicator');
+    const lens = container.querySelector('.ls-lens');
+    const arrow = container.querySelector('.ls-arrow');
+    const depthText = document.querySelector('.luxury-pattern-container');
+    const triggerZone = 35; 
     
     function getBackTarget() {
         if (currentScreen === 'screen-home') return null;
         if (currentScreen === 'screen-company') return 'screen-interesting';
         if (currentScreen === 'screen-app') return 'screen-home';
-        return 'screen-app';
-    }
-    
-    function preparePrevLayer(targetId) {
-        // Берём кешированный снапшот
-        const snapshot = screenSnapshots[targetId];
-        if (!snapshot) {
-            // Фоллбэк — создаём снапшот на лету
-            cacheScreenSnapshot(targetId);
-        }
-        const clone = (screenSnapshots[targetId] || document.createElement('div'));
-        
-        // Очищаем контейнер и вставляем клон
-        prevLayer.innerHTML = '';
-        prevLayer.appendChild(clone.cloneNode(true));
-        prevLayer.classList.add('visible');
-        
-        dimOverlay.style.cssText = 'display:block; opacity:1; transition:none;';
-        
-        // Edge элементы
-        edgeStrip.style.cssText = `position:fixed; top:0; left:0; width:6px; height:100%;
-            z-index:1001; pointer-events:none; opacity:0;
-            transform:translateX(0); transition:none;`;
-        edgeTab.style.cssText = `position:fixed; top:50%; left:0; width:4px; height:36px;
-            z-index:1002; pointer-events:none; opacity:0; border-radius:0 100px 100px 0;
-            transform:translate(0, -50%); transition:none;
-            background:rgba(160,170,185,0.45); box-shadow:1px 0 4px rgba(0,0,0,0.08);`;
-        edgeTab.classList.remove('ready');
-        wasReady = false;
-    }
-    
-    function cleanupAll() {
-        prevLayer.classList.remove('visible');
-        prevLayer.innerHTML = '';
-        dimOverlay.style.cssText = 'display:none;';
-        progressBar.classList.remove('active');
-        progressBar.style.cssText = 'transform:scaleX(0); opacity:0;';
-        edgeGlow.style.opacity = '0';
-        edgeGlow.style.transition = '';
-        edgeStrip.style.opacity = '0';
-        edgeStrip.style.transition = '';
-        edgeTab.style.opacity = '0';
-        edgeTab.style.transition = '';
-        edgeTab.classList.remove('ready');
-    }
-    
-    function seamlessTransition(activeScreen, targetId) {
-        const target = document.getElementById(targetId);
-        if (!target) { cleanupAll(); return; }
-        
-        // 1. Убираем swipe-классы
-        activeScreen.classList.remove('swipe-active', 'swiping');
-        activeScreen.style.cssText = '';
-        
-        // 2. Cleanup UI
-        prevLayer.classList.remove('visible');
-        prevLayer.innerHTML = '';
-        dimOverlay.style.cssText = 'display:none;';
-        progressBar.style.cssText = 'transform:scaleX(0); opacity:0;';
-        progressBar.classList.remove('active');
-        edgeGlow.style.opacity = '0';
-        edgeStrip.style.opacity = '0';
-        edgeTab.style.opacity = '0';
-        edgeTab.classList.remove('ready');
-        
-        // 3. Блокируем fadeIn и вызываем showScreen
-        target.style.animation = 'none';
-        showScreen(targetId);
-        
-        setTimeout(() => {
-            target.style.animation = '';
-        }, 500);
+        return 'screen-app'; 
     }
 
-    // ── TOUCH START ──
+    // 1. TOUCH START
     document.addEventListener('touchstart', (e) => {
         isDragging = false;
         isAxisLocked = false;
-        currentShift = 0;
         if (!getBackTarget()) return;
 
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
-        startTime = Date.now();
         
-        if (startX <= TRIGGER_ZONE) {
+        if (startX <= triggerZone) {
             isDragging = true;
         }
-    }, { passive: true });
+    }, { passive: false });
 
-    // ── TOUCH MOVE ──
+    // 2. TOUCH MOVE
     document.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
 
@@ -13356,184 +13165,131 @@ function initSwipeBack() {
         if (!isAxisLocked) {
             if (deltaY > Math.abs(deltaX)) {
                 isDragging = false;
-                return;
-            }
-            if (Math.abs(deltaX) > 8) {
+                return; 
+            } else if (Math.abs(deltaX) > 5) {
                 isAxisLocked = true;
-                const targetId = getBackTarget();
-                if (targetId) {
-                    preparePrevLayer(targetId);
-                    const activeScreen = document.querySelector('.screen.active');
-                    if (activeScreen) {
-                        activeScreen.classList.add('swipe-active', 'swiping');
-                        activeScreen.style.transition = 'none';
-                    }
-                }
             }
         }
 
-        if (!isAxisLocked || deltaX <= 0) return;
-        if (e.cancelable) e.preventDefault();
+        if (isAxisLocked && e.cancelable) e.preventDefault();
 
-        if (rafId) cancelAnimationFrame(rafId);
+        const activeScreen = document.querySelector('.screen.active');
         
-        rafId = requestAnimationFrame(() => {
-            const activeScreen = document.querySelector('.screen.active');
-            if (!activeScreen) return;
+        if (activeScreen && deltaX > 0 && isAxisLocked) {
+            activeScreen.style.transition = 'none';
+            lens.style.transition = 'none';
+            if(depthText) depthText.style.transition = 'none';
+
+            // --- ФИЗИКА ---
+            let visualShift = deltaX * 0.4; // Коэф. тяжести
+            if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
+            visualShift = Math.min(visualShift, 130);
+
+            // --- 3D ПОВОРОТ + МАСШТАБИРОВАНИЕ (НОВОЕ) ---
+            const rotateY = Math.min(visualShift / 15, 8); 
+            // Уменьшаем экран до 96% по мере оттягивания
+            const scale = 1 - (visualShift / 130) * 0.04; 
             
-            const progress = Math.min(deltaX / SCREEN_WIDTH, 1);
-            const easedProgress = 1 - Math.pow(1 - progress, 2.5);
-            const shift = easedProgress * SCREEN_WIDTH;
-            currentShift = shift;
+            activeScreen.style.transform = `translateX(${visualShift}px) perspective(800px) rotateY(-${rotateY}deg) scale(${scale})`;
             
-            // Текущая страница уезжает вправо
-            activeScreen.style.transform = `translateX(${shift}px)`;
-            
-            // Dim
-            dimOverlay.style.opacity = String(1 - easedProgress);
-            
-            // Edge strip
-            edgeStrip.style.transform = `translateX(${shift - 6}px)`;
-            edgeStrip.style.opacity = String(Math.min(easedProgress * 3, 0.7));
-            
-            // Edge tab — язычок движется с краем экрана
-            edgeTab.style.transform = `translate(${shift - 4}px, -50%)`;
-            edgeTab.style.opacity = String(Math.min(easedProgress * 2.5, 0.9));
-            
-            // Динамическая высота язычка
-            const tabH = 36 + easedProgress * 16; // 36→52px
-            edgeTab.style.height = `${tabH}px`;
-            
-            // Порог
-            const isReady = deltaX > THRESHOLD;
-            if (isReady && !wasReady) {
-                edgeTab.classList.add('ready');
-                wasReady = true;
+            // --- УПРАВЛЕНИЕ БЛИКОМ (НОВОЕ) ---
+            // Сдвигаем градиент блика. 0px сдвига = блик слева. 
+            // Чем больше тянем, тем дальше блик уходит вправо по экрану.
+            const sheenPos = -50 + (visualShift / 130) * 50; // от -50% до 0%
+            activeScreen.style.setProperty('--sheen-pos', `${sheenPos}%`); 
+            // Примечание: Чтобы это работало идеально, мы используем inline переменную или прямой доступ к style,
+            // но т.к. псевдо-элементы недоступны напрямую из JS, мы просто оставим CSS animation на opacity,
+            // а позицию оставим статичной или добавим логику ниже, если нужно супер-качество.
+            // *Для упрощения оставим статический красивый блик или сделаем так:*
+            // (Простой вариант без сложной JS-магии для псевдо-элемента: он просто появляется)
+
+            // --- ПАРАЛЛАКС ФОНА ---
+            if(depthText) {
+                depthText.style.transform = `rotate(-10deg) scale(1.2) translateX(${visualShift * 0.5}px)`;
+            }
+
+            // --- ЛИНЗА ---
+            const lensProgress = Math.min(visualShift / 70, 1);
+            lens.style.transform = `translateX(${-100 + (lensProgress * 100)}%)`;
+            lens.style.opacity = lensProgress;
+            arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
+
+            // --- ВИБРАЦИЯ ---
+            if (visualShift > 90 && !container.dataset.vibrated) {
                 if (window.Telegram?.WebApp?.HapticFeedback) {
                     window.Telegram.WebApp.HapticFeedback.selectionChanged();
                 }
-                document.body.dataset.swipeVibrated = 'true';
-            } else if (!isReady && wasReady) {
-                edgeTab.classList.remove('ready');
-                wasReady = false;
-                document.body.dataset.swipeVibrated = '';
+                container.dataset.vibrated = "true";
+                arrow.style.strokeWidth = "3"; 
+            } else if (visualShift < 90) {
+                container.dataset.vibrated = "";
+                arrow.style.strokeWidth = "2";
             }
-            
-            // Progress bar
-            progressBar.classList.add('active');
-            progressBar.style.transform = `scaleX(${Math.min(deltaX / THRESHOLD, 1)})`;
-            
-            // Edge glow
-            edgeGlow.style.opacity = String(Math.min(progress * 3, 0.4));
-        });
+        }
     }, { passive: false });
 
-    // ── TOUCH END ──
+    // 3. TOUCH END
     document.addEventListener('touchend', (e) => {
-        if (!isDragging || !isAxisLocked) {
-            isDragging = false;
-            isAxisLocked = false;
-            return;
-        }
+        if (!isDragging || !isAxisLocked) return;
         
-        if (rafId) cancelAnimationFrame(rafId);
         isDragging = false;
         isAxisLocked = false;
-        document.body.dataset.swipeVibrated = '';
 
         const activeScreen = document.querySelector('.screen.active');
         const endX = e.changedTouches[0].clientX;
         const deltaX = endX - startX;
-        const elapsed = Date.now() - startTime;
-        const velocity = deltaX / Math.max(elapsed, 1);
+        const threshold = 120; 
 
-        if (!activeScreen) {
-            cleanupAll();
-            return;
-        }
+        if (activeScreen) {
+            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            if(depthText) depthText.style.transition = 'transform 0.5s ease';
+            
+            if (deltaX > threshold) {
+                // === УСПЕХ ===
+                const targetId = getBackTarget();
+                // Вылет с поворотом и уменьшением
+                activeScreen.style.transform = `translateX(100%) perspective(800px) rotateY(-15deg) scale(0.9)`;
+                
+                lens.style.transform = `translateX(-100%)`;
+                lens.style.opacity = '0';
 
-        const shouldNavigate = deltaX > THRESHOLD || (velocity > 0.6 && deltaX > 40);
-        
-        if (shouldNavigate) {
-            // ── УСПЕХ ──
-            const targetId = getBackTarget();
-            
-            const remaining = SCREEN_WIDTH - currentShift;
-            const speed = Math.max(velocity * 1000, 600);
-            const duration = Math.max(120, Math.min(320, (remaining / speed) * 1000));
-            const bezier = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            
-            activeScreen.style.transition = `transform ${duration}ms ${bezier}`;
-            activeScreen.style.transform = `translateX(${SCREEN_WIDTH}px)`;
-            
-            dimOverlay.style.transition = `opacity ${duration}ms ease-out`;
-            dimOverlay.style.opacity = '0';
-            
-            const fadeOut = Math.min(duration * 0.5, 150);
-            edgeStrip.style.transition = `opacity ${fadeOut}ms ease-out`;
-            edgeStrip.style.opacity = '0';
-            edgeTab.style.transition = `opacity ${fadeOut}ms ease-out`;
-            edgeTab.style.opacity = '0';
-            
-            progressBar.style.transition = `transform ${fadeOut}ms ease-out`;
-            progressBar.style.transform = 'scaleX(1)';
-            
-            edgeGlow.style.transition = `opacity ${fadeOut}ms ease-out`;
-            edgeGlow.style.opacity = '0';
-            
-            let transitionDone = false;
-            function onTransitionEnd(evt) {
-                if (transitionDone) return;
-                if (evt.propertyName !== 'transform') return;
-                transitionDone = true;
-                activeScreen.removeEventListener('transitionend', onTransitionEnd);
-                seamlessTransition(activeScreen, targetId);
+                setTimeout(() => {
+                    resetScreenStyles(activeScreen);
+                    if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
+                    showScreen(targetId);
+                    
+                    if (window.Telegram?.WebApp?.HapticFeedback) {
+                        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+                    }
+                }, 250);
+                
+            } else {
+                // === ОТМЕНА ===
+                activeScreen.style.transform = 'translateX(0) perspective(800px) rotateY(0deg) scale(1)';
+                lens.style.transform = 'translateX(-100%)';
+                lens.style.opacity = '0';
+                if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
             }
-            activeScreen.addEventListener('transitionend', onTransitionEnd);
-            
-            setTimeout(() => {
-                if (!transitionDone) {
-                    transitionDone = true;
-                    activeScreen.removeEventListener('transitionend', onTransitionEnd);
-                    seamlessTransition(activeScreen, targetId);
-                }
-            }, duration + 50);
-            
-        } else {
-            // ── ОТМЕНА ──
-            const returnDuration = Math.max(180, Math.min(350, currentShift * 1.2));
-            const bezier = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            
-            activeScreen.style.transition = `transform ${returnDuration}ms ${bezier}`;
-            activeScreen.style.transform = 'translateX(0)';
-            
-            dimOverlay.style.transition = `opacity ${returnDuration}ms ease-out`;
-            dimOverlay.style.opacity = '1';
-            
-            const fadeOut = Math.min(returnDuration * 0.5, 150);
-            edgeStrip.style.transition = `opacity ${fadeOut}ms ease-out`;
-            edgeStrip.style.opacity = '0';
-            edgeTab.style.transition = `opacity ${fadeOut}ms ease-out`;
-            edgeTab.style.opacity = '0';
-            
-            progressBar.style.transition = `transform ${fadeOut}ms ease-out, opacity ${fadeOut}ms ease-out`;
-            progressBar.style.transform = 'scaleX(0)';
-            progressBar.classList.remove('active');
-            
-            edgeGlow.style.transition = `opacity ${fadeOut}ms ease-out`;
-            edgeGlow.style.opacity = '0';
-            
-            setTimeout(() => {
-                activeScreen.style.transform = '';
-                activeScreen.style.transition = '';
-                activeScreen.classList.remove('swipe-active', 'swiping');
-                cleanupAll();
-            }, returnDuration + 20);
         }
+        container.dataset.vibrated = "";
     });
+
+    function resetScreenStyles(screen) {
+        screen.style.transform = '';
+        screen.style.transition = '';
+        screen.classList.remove('swiping');
+    }
 }
 
 initSwipeBack();
+
+
+
+
+       
+        
+        
     </script>
 </body>
 </html>
