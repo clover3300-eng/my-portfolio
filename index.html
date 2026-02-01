@@ -14706,28 +14706,29 @@ if(document.getElementById('listBonds')) {
     const bondSumItems = document.querySelectorAll('#listBondsV2 .portfolio-ofz-sum');
 
     if(bondsTotalRow) {
-        let totalVisibleSum = 0;
+    let totalVisibleSum = 0;
+    
+    // Складываем все строки расходов
+    bondSumItems.forEach(el => {
+        const val = parseInt(el.innerText.replace(/\D/g, ''), 10) || 0;
+        totalVisibleSum += val;
+    });
+
+    // Выводим сумму
+    bondsTotalRow.innerText = totalVisibleSum.toLocaleString() + ' ₽';
+
+    // Считаем процент от БЮДЖЕТА НА ОБЛИГАЦИИ
+    if(bondsPercentBadge && typeof bondBudget !== 'undefined' && bondBudget > 0) {
+        const percent = (totalVisibleSum / bondBudget) * 100;
         
-        // Складываем все строки расходов
-        bondSumItems.forEach(el => {
-            const val = parseInt(el.innerText.replace(/\D/g, ''), 10) || 0;
-            totalVisibleSum += val;
-        });
-
-        // Выводим сумму
-        bondsTotalRow.innerText = totalVisibleSum.toLocaleString() + ' ₽';
-
-        // 2. Считаем процент ОТ БЮДЖЕТА НА ОБЛИГАЦИИ
-        // bondBudget — это переменная, где хранится сумма, выделенная ползунком чисто под ОФЗ
-        if(bondsPercentBadge && typeof bondBudget !== 'undefined' && bondBudget > 0) {
-            
-            // Формула: (Реально набрали / Выделенный бюджет на ОФЗ) * 100
-            const budgetPercent = (totalVisibleSum / bondBudget) * 100;
-            
-            // Округляем (обычно будет 99% или 100%, так как мы стараемся потратить всё)
-            bondsPercentBadge.innerText = budgetPercent.toFixed(1) + '%';
+        // Логика красивого отображения 100%
+        if (percent > 99.9 && percent < 100.1) {
+             bondsPercentBadge.innerText = '100%';
+        } else {
+             bondsPercentBadge.innerText = percent.toFixed(1) + '%';
         }
     }
+}
             
             if(document.getElementById('couponList')) {
                 rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
@@ -15168,15 +15169,20 @@ const totalStocksRow = document.getElementById('echelonsTotalSum');
 const totalStocksPctBadge = document.querySelector('.portfolio-echelons-total-row .total-percent');
 
 if(totalStocksRow) {
-    // 1. Выводим общую сумму акций
+    // Выводим сумму
     totalStocksRow.innerText = Math.round(grandTotalStocks).toLocaleString() + ' ₽';
 
-    // 2. Считаем процент от БЮДЖЕТА НА АКЦИИ
+    // Считаем процент
     if(totalStocksPctBadge && typeof stockBudget !== 'undefined' && stockBudget > 0) {
-        const realStockPercent = (grandTotalStocks / stockBudget) * 100;
-        totalStocksPctBadge.innerText = realStockPercent.toFixed(1) + '%';
-    }
-}
+        const percent = (grandTotalStocks / stockBudget) * 100;
+        
+        // Если больше 99.9%, но меньше 100% (из-за копеек), ставим 100%
+        // Иначе показываем 1 знак после запятой
+        if (percent > 99.9 && percent < 100.1) {
+             totalStocksPctBadge.innerText = '100%';
+        } else {
+             totalStocksPctBadge.innerText = percent.toFixed(1) + '%';
+        }
 // =============================
                 }
             }
