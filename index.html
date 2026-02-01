@@ -14665,30 +14665,25 @@ if(document.getElementById('listBonds')) {
     if(badgeBonds) badgeBonds.innerText = Math.round(bondBudget).toLocaleString() + ' ₽';
 }
           
-// === ОБНОВЛЕНИЕ ИТОГО ОФЗ (Сумма значений из 4-го столбца) ===
+// === ОБНОВЛЕНИЕ ИТОГО ОФЗ (Точная сумма визуального списка) ===
     const bondsTotalRow = document.getElementById('bondsTotalSum');
     
-    // Получаем все элементы с суммами (4-й столбец) внутри списка
-    const sumElements = document.querySelectorAll('#listBonds .list-item-sum');
+    // ВАЖНО: Ищем внутри #listBondsV2 (это и есть ваш список Денежного потока)
+    // Класс .portfolio-ofz-sum — это 4-й столбец с расходами
+    const bondSumItems = document.querySelectorAll('#listBondsV2 .portfolio-ofz-sum');
 
     if(bondsTotalRow) {
-        let totalSum = 0;
+        let totalVisibleSum = 0;
         
-        sumElements.forEach(el => {
-            // 1. Берем текст ячейки (например "14 500 ₽")
-            const text = el.innerText;
-            
-            // 2. Оставляем ТОЛЬКО цифры (удаляем пробелы, ₽, запятые и т.д.)
-            // \D означает "всё, что не цифра"
-            const cleanText = text.replace(/\D/g, '');
-            
-            // 3. Превращаем в число и плюсуем
-            // (|| 0 нужно на случай, если вдруг строка пустая)
-            totalSum += parseInt(cleanText, 10) || 0;
+        bondSumItems.forEach(el => {
+            // Берем текст ячейки (например "124 614 ₽")
+            // Удаляем всё, кроме цифр (пробелы, знак рубля)
+            const val = parseInt(el.innerText.replace(/\D/g, ''), 10) || 0;
+            totalVisibleSum += val;
         });
 
-        // Выводим готовую сумму
-        bondsTotalRow.innerText = totalSum.toLocaleString() + ' ₽';
+        // Выводим сумму
+        bondsTotalRow.innerText = totalVisibleSum.toLocaleString() + ' ₽';
     }
             
             if(document.getElementById('couponList')) {
