@@ -14665,25 +14665,21 @@ if(document.getElementById('listBonds')) {
     if(badgeBonds) badgeBonds.innerText = Math.round(bondBudget).toLocaleString() + ' ₽';
 }
           
-        // === ОБНОВЛЕНИЕ ИТОГО ОФЗ (Сумма по столбцу расходов в Портфеле) ===
+        // === ОБНОВЛЕНИЕ ИТОГО ОФЗ (Точный математический расчет) ===
     const bondsTotalRow = document.getElementById('bondsTotalSum');
-    
-    // Ищем все ячейки с суммами внутри списка облигаций
-    // (класс .list-item-sum — это ваш 4-й столбец)
-    const bondSumItems = document.querySelectorAll('#listBonds .list-item-sum');
 
-    if(bondsTotalRow) {
-        let totalPortfolioExpense = 0;
+    if(bondsTotalRow && typeof bonds !== 'undefined' && Array.isArray(bonds)) {
         
-        bondSumItems.forEach(el => {
-            // Берем текст (например "14 500 ₽")
-            // Удаляем всё кроме цифр (пробелы, знак рубля) и превращаем в число
-            const val = parseInt(el.innerText.replace(/[^\d]/g, ''), 10) || 0;
-            totalPortfolioExpense += val;
-        });
+        // Считаем сумму, точно повторяя логику округления в строках
+        const exactSum = bonds.reduce((acc, b) => {
+            // В строке у вас написано: Math.round(b.qty * b.p)
+            // Значит и здесь мы должны сначала округлить результат умножения, а потом прибавить
+            const rowSum = Math.round(b.qty * b.p); 
+            return acc + rowSum;
+        }, 0);
 
-        // Выводим итоговую сумму
-        bondsTotalRow.innerText = totalPortfolioExpense.toLocaleString() + ' ₽';
+        // Выводим результат
+        bondsTotalRow.innerText = exactSum.toLocaleString() + ' ₽';
     }
             
             if(document.getElementById('couponList')) {
