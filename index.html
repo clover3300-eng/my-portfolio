@@ -14665,24 +14665,30 @@ if(document.getElementById('listBonds')) {
     if(badgeBonds) badgeBonds.innerText = Math.round(bondBudget).toLocaleString() + ' ₽';
 }
           
-    // === ОБНОВЛЕНИЕ ИТОГО ОФЗ (Исправленный расчет) ===
+// === ОБНОВЛЕНИЕ ИТОГО ОФЗ (Сумма значений из 4-го столбца) ===
     const bondsTotalRow = document.getElementById('bondsTotalSum');
+    
+    // Получаем все элементы с суммами (4-й столбец) внутри списка
+    const sumElements = document.querySelectorAll('#listBonds .list-item-sum');
 
-    if(bondsTotalRow && typeof bonds !== 'undefined' && Array.isArray(bonds)) {
+    if(bondsTotalRow) {
+        let totalSum = 0;
         
-        const exactSum = bonds.reduce((acc, b) => {
-            // 1. Превращаем цену "945,50" в нормальное число 945.50
-            // String(b.p) — на случай, если там вообще не строка
-            const price = parseFloat(String(b.p).replace(',', '.')) || 0;
+        sumElements.forEach(el => {
+            // 1. Берем текст ячейки (например "14 500 ₽")
+            const text = el.innerText;
             
-            // 2. Берем количество (если вдруг там мусор, берем 0)
-            const qty = parseFloat(b.qty) || 0;
+            // 2. Оставляем ТОЛЬКО цифры (удаляем пробелы, ₽, запятые и т.д.)
+            // \D означает "всё, что не цифра"
+            const cleanText = text.replace(/\D/g, '');
+            
+            // 3. Превращаем в число и плюсуем
+            // (|| 0 нужно на случай, если вдруг строка пустая)
+            totalSum += parseInt(cleanText, 10) || 0;
+        });
 
-            // 3. Умножаем и округляем (как в строках таблицы)
-            return acc + Math.round(qty * price);
-        }, 0);
-
-        bondsTotalRow.innerText = exactSum.toLocaleString() + ' ₽';
+        // Выводим готовую сумму
+        bondsTotalRow.innerText = totalSum.toLocaleString() + ' ₽';
     }
             
             if(document.getElementById('couponList')) {
