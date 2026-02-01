@@ -15064,6 +15064,7 @@ if(totalRow) {
                 const echelonContainerV2 = document.getElementById('echelonContainerV2');
                 if (echelonContainerV2) {
                     let echelonsHtmlV2 = '';
+                    let grandTotalStocks = 0;
                     // Новые названия эшелонов
                     const echelonNames = ['НАДЁЖНЫЙ', 'СТАБИЛЬНЫЙ', 'РИСКОВЫЙ', 'ВЕНЧУРНЫЙ'];
                     // Римские цифры
@@ -15086,6 +15087,7 @@ if(totalRow) {
 
                         // === ВСТАВИТЬ ЭТОТ БЛОК (Подсчет суммы эшелона) ===
                         const echelonTotalSum = stocksInEchelon.reduce((acc, item) => acc + item.sum, 0);
+                        grandTotalStocks += echelonTotalSum;
                         // ==================================================
                         
                         echelonsHtmlV2 += `
@@ -15161,6 +15163,21 @@ if(totalRow) {
                     });
                     
                     echelonContainerV2.innerHTML = echelonsHtmlV2;
+                    // === ВСТАВЛЯЕМ СЮДА (ШАГ 3) ===
+const totalStocksRow = document.getElementById('echelonsTotalSum');
+const totalStocksPctBadge = document.querySelector('.portfolio-echelons-total-row .total-percent');
+
+if(totalStocksRow) {
+    // 1. Выводим общую сумму акций
+    totalStocksRow.innerText = Math.round(grandTotalStocks).toLocaleString() + ' ₽';
+
+    // 2. Считаем процент от БЮДЖЕТА НА АКЦИИ
+    if(totalStocksPctBadge && typeof stockBudget !== 'undefined' && stockBudget > 0) {
+        const realStockPercent = (grandTotalStocks / stockBudget) * 100;
+        totalStocksPctBadge.innerText = Math.round(realStockPercent) + '%';
+    }
+}
+// =============================
                 }
             }
             
