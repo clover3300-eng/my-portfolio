@@ -9405,46 +9405,49 @@ body.dark-mode .stock-btn-info {
 .dark-mode .custom-done-btn { background: #38BDF8; color: #0F172A; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.2); }
           /* ==================================================================== */
 
-    /* === Строка ИТОГО (Финал) === */
+   /* === Строка ИТОГО (Обновленный дизайн Smart Replace) === */
 .portfolio-echelons-total-row {
     display: grid;
-    /* НАСТРОЙКА ШИРИНЫ КОЛОНОК:
-       1fr   - занимает все свободное место слева (Название)
-       110px - ширина под колонку Суммы (как в таблице выше)
-       60px  - ширина под колонку % (как в таблице выше)
-    */
     grid-template-columns: 1fr 110px 60px; 
-    gap: 8px; /* Расстояние между колонками */
-    
+    gap: 8px;
     padding: 12px 16px;
-    margin-top: 12px;
+    
+    /* 1. ДОБАВИЛ ВОЗДУХ (35px отступ сверху) */
+    margin-top: 35px; 
     margin-bottom: 25px;
+    
     background: var(--card-bg);
     border-radius: 16px;
-    border: 1px solid var(--accent-blue);
+    
+    /* 2. ЦВЕТ РАМКИ (Цвет из градиента Умной замены) */
+    border: 1px solid #1e293b; 
+    
     align-items: center;
-    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.15);
+    box-shadow: 0 8px 20px rgba(30, 41, 59, 0.1); /* Тень стала строже */
 }
 
-/* Левая часть (Иконка + Текст) */
+/* Левая часть */
 .total-left {
     display: flex;
     align-items: center;
     gap: 10px;
-    overflow: hidden; /* Защита от переполнения */
+    overflow: hidden;
 }
 
 .total-icon {
-    min-width: 32px; /* Фиксируем размер, чтобы не сжимался */
+    min-width: 32px; 
     width: 32px; 
     height: 32px;
     border-radius: 8px;
-    background: var(--accent-blue);
+    
+    /* 3. ФОН ИКОНКИ (Градиент Умной замены) */
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    
     display: flex; 
     align-items: center; 
     justify-content: center;
     color: white;
-    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.3);
 }
 
 .total-icon svg { 
@@ -9459,13 +9462,13 @@ body.dark-mode .stock-btn-info {
     color: var(--text-main);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    white-space: nowrap; /* ЗАПРЕТ ПЕРЕНОСА СТРОКИ */
+    white-space: nowrap;
 }
 
 /* Колонка Суммы */
 .total-value-col {
-    text-align: right; /* Выравнивание по правому краю, как в таблице */
-    padding-right: 5px; /* Небольшой отступ, чтобы цифры не липли к краю */
+    text-align: right;
+    padding-right: 5px;
 }
 
 .total-sum {
@@ -9478,24 +9481,29 @@ body.dark-mode .stock-btn-info {
 
 /* Колонка Процентов */
 .total-percent-col {
-    text-align: right; /* Выравнивание по правому краю */
+    text-align: right;
 }
 
 .total-percent {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 700;
-    color: var(--accent-blue);
-    background: rgba(52, 152, 219, 0.1);
+    
+    /* 4. БЕЙДЖ ПРОЦЕНТА (Градиент Умной замены) */
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white; /* Текст стал белым */
+    
     padding: 4px 6px;
     border-radius: 6px;
     display: inline-block;
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.2);
 }
 
 /* Темная тема */
 body.dark-mode .portfolio-echelons-total-row {
     background: rgba(30, 41, 59, 0.6);
-    border-color: rgba(56, 189, 248, 0.3);
+    /* В темной теме рамку делаем чуть светлее, чтобы была видна, но в том же тоне */
+    border-color: #334155; 
 }
         /* ==================================================================== */
         
