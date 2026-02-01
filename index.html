@@ -9924,6 +9924,25 @@ body.dark-mode .portfolio-echelons-total-row {
                 <div class="portfolio-ofz-list" id="listBondsV2">
                     <!-- JS генерирует список здесь -->
                 </div>
+
+                <div class="portfolio-echelons-total-row" id="bondsTotalRow">
+    <div class="total-left">
+        <div class="total-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6H5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h8l-5 5 5 5H5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h13"/>
+            </svg>
+        </div>
+        <span class="total-label">Итого ОФЗ</span>
+    </div>
+    
+    <div class="total-value-col">
+        <span class="total-sum" id="bondsTotalSum">0 ₽</span>
+    </div>
+
+    <div class="total-percent-col">
+        <span class="total-percent">100%</span>
+    </div>
+</div>
                 
                 <!-- Купонный дождь -->
                 <div class="portfolio-coupon-card" id="couponBoxV2">
@@ -14645,6 +14664,12 @@ if(document.getElementById('listBonds')) {
     const badgeBonds = document.getElementById('badge-bonds-sum');
     if(badgeBonds) badgeBonds.innerText = Math.round(bondBudget).toLocaleString() + ' ₽';
 }
+          
+        // === ОБНОВЛЕНИЕ ИТОГО ОФЗ (ВАШ НОВЫЙ БЛОК) ===
+    const bondsTotalRow = document.getElementById('bondsTotalSum');
+    if(bondsTotalRow) {
+        bondsTotalRow.innerText = Math.round(bondBudget).toLocaleString() + ' ₽';
+    }
             
             if(document.getElementById('couponList')) {
                 rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
