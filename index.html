@@ -3292,22 +3292,34 @@ body.dark-mode .portfolio-page-btn.active {
     color: white;
 }
 
-/* === КАРТОЧКА КАПИТАЛА - PREMIUM DARK DESIGN === */
+/* === Компактный блок Капитал + Прогноз (Evolution Design) === */
 .portfolio-capital-card {
     position: relative;
     display: flex;
     flex-direction: column;
     padding: 24px;
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
     border-radius: 20px;
-    margin-bottom: 20px;
-    box-shadow: 
-        0 25px 50px -12px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(255, 255, 255, 0.05);
+    margin-bottom: 24px;
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.3);
     overflow: hidden;
 }
 
-/* Spotlight эффект */
+body.dark-mode .portfolio-capital-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+}
+
+/* Декоративная линия сверху */
+.portfolio-capital-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 24px;
+    right: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+
 .portfolio-capital-card::before {
     content: '';
     position: absolute;
@@ -3321,27 +3333,26 @@ body.dark-mode .portfolio-page-btn.active {
         transparent 50%
     );
     opacity: 0;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.3s ease;
     pointer-events: none;
-    z-index: 1;
 }
 
 .portfolio-capital-card:hover::before {
     opacity: 1;
 }
 
-/* Верхняя секция: Капитал */
-.capital-top-section {
+/* Верхняя часть: Капитал */
+.capital-top-row {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 24px;
-    position: relative;
-    z-index: 2;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.capital-main-block {
-    flex: 1;
+.capital-main {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 .capital-label {
@@ -3349,52 +3360,49 @@ body.dark-mode .portfolio-page-btn.active {
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: rgba(148, 163, 184, 0.6);
-    margin-bottom: 8px;
+    letter-spacing: 0.12em;
+    color: rgba(148, 163, 184, 0.7);
 }
 
 .capital-value {
     font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(24px, 7vw, 36px);
-    font-weight: 800;
+    font-size: 32px;
+    font-weight: 700;
     color: #FFFFFF;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     line-height: 1;
-    white-space: nowrap;
 }
 
 .capital-fee-badge {
-    padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
-    color: rgba(148, 163, 184, 0.9);
-    white-space: nowrap;
+    color: rgba(148, 163, 184, 0.8);
 }
 
-/* Прогресс-бар распределения */
+/* Прогресс-бар распределения - ОБЛИГАЦИИ СЛЕВА, АКЦИИ СПРАВА */
 .capital-distribution {
-    margin-bottom: 24px;
-    position: relative;
-    z-index: 2;
+    margin-bottom: 20px;
 }
 
 .capital-bar {
     display: flex;
-    height: 10px;
-    border-radius: 5px;
+    height: 8px;
+    border-radius: 4px;
     overflow: hidden;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     background: rgba(255, 255, 255, 0.06);
 }
 
+/* Облигации СЛЕВА */
 .capital-bar-bonds {
     background: linear-gradient(90deg, #5E7BA3, #7B9BBF);
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    order: 1;
     position: relative;
 }
 
@@ -3405,12 +3413,14 @@ body.dark-mode .portfolio-page-btn.active {
     left: 0;
     right: 0;
     height: 50%;
-    background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 100%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
 }
 
+/* Акции СПРАВА */
 .capital-bar-stocks {
     background: linear-gradient(90deg, #D97757, #E8956A);
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    order: 2;
     position: relative;
 }
 
@@ -3421,7 +3431,7 @@ body.dark-mode .portfolio-page-btn.active {
     left: 0;
     right: 0;
     height: 50%;
-    background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 100%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
 }
 
 .capital-labels {
@@ -3433,14 +3443,13 @@ body.dark-mode .portfolio-page-btn.active {
 .capital-label-item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .capital-label-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
 }
 
 .capital-label-dot.bonds {
@@ -3453,65 +3462,61 @@ body.dark-mode .portfolio-page-btn.active {
 
 .capital-label-text {
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(148, 163, 184, 0.5);
+    letter-spacing: 0.05em;
+    color: rgba(148, 163, 184, 0.6);
 }
 
 .capital-label-pct {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    color: #F8FAFC;
+    color: #F1F5F9;
 }
 
 /* Разделитель */
 .capital-divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 2;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    margin: 16px 0;
 }
 
-/* Секция прогноза */
+/* Прогноз - Evolution Design */
 .capital-forecast {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 16px;
-    padding: 18px 20px;
-    background: rgba(16, 185, 129, 0.08);
-    border: 1px solid rgba(16, 185, 129, 0.15);
-    border-radius: 16px;
-    position: relative;
-    z-index: 2;
-}
-
-.forecast-icon-mini {
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.1));
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 16px;
+    background: rgba(16, 185, 129, 0.06);
+    border: 1px solid rgba(16, 185, 129, 0.12);
     border-radius: 14px;
 }
 
+.forecast-icon-mini {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 12px;
+    color: #10B981;
+}
+
 .forecast-icon-mini svg {
-    width: 24px;
-    height: 24px;
-    stroke: #10B981;
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
     fill: none;
     stroke-width: 2;
 }
 
 .forecast-content-mini {
     flex: 1;
-    min-width: 0;
 }
 
 .forecast-title-mini {
@@ -3519,43 +3524,41 @@ body.dark-mode .portfolio-page-btn.active {
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: rgba(16, 185, 129, 0.7);
-    margin-bottom: 6px;
+    letter-spacing: 0.1em;
+    color: rgba(16, 185, 129, 0.6);
+    margin-bottom: 8px;
 }
 
+/* Главная строка с суммой и процентом */
 .forecast-main-row {
     display: flex;
     align-items: baseline;
-    gap: 12px;
-    flex-wrap: nowrap;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .forecast-total-mini {
     font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(18px, 5vw, 24px);
-    font-weight: 800;
+    font-size: 22px;
+    font-weight: 700;
     color: #10B981;
-    letter-spacing: -0.02em;
-    white-space: nowrap;
+    letter-spacing: -0.01em;
 }
 
 .forecast-percent-change {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: #10B981;
-    padding: 4px 10px;
-    background: rgba(16, 185, 129, 0.2);
-    border-radius: 8px;
-    white-space: nowrap;
+    padding: 3px 8px;
+    background: rgba(16, 185, 129, 0.15);
+    border-radius: 6px;
 }
 
-/* Детализация прогноза */
+/* Детализация под прогнозом */
 .forecast-details-mini {
     display: flex;
-    gap: 20px;
-    margin-top: 10px;
+    gap: 16px;
 }
 
 .forecast-detail-item {
@@ -3565,7 +3568,6 @@ body.dark-mode .portfolio-page-btn.active {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: rgba(148, 163, 184, 0.8);
-    white-space: nowrap;
 }
 
 .forecast-detail-item .detail-dot {
@@ -3580,67 +3582,6 @@ body.dark-mode .portfolio-page-btn.active {
 
 .forecast-detail-item .detail-dot.stocks {
     background: #D97757;
-}
-
-/* === КНОПКИ ДЕЙСТВИЙ === */
-.portfolio-actions-row {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-}
-
-.portfolio-action-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 14px 20px;
-    border: none;
-    border-radius: 14px;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.portfolio-action-btn svg {
-    width: 18px;
-    height: 18px;
-}
-
-.portfolio-action-btn.secondary {
-    background: var(--card-glass-aurora);
-    border: 1px solid var(--card-border-aurora);
-    color: var(--text-deep);
-}
-
-.portfolio-action-btn.secondary:hover {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-.portfolio-action-btn.secondary:active {
-    transform: scale(0.98);
-}
-
-.portfolio-action-btn.primary {
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    color: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.portfolio-action-btn.primary:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-}
-
-.portfolio-action-btn.primary:active {
-    transform: scale(0.98);
-}
-
-body.dark-mode .portfolio-action-btn.secondary {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .forecast-detail-item .detail-label {
@@ -4166,11 +4107,11 @@ body.dark-mode .portfolio-ofz-detail-row {
     display: block;
 }
 
-/* === Заголовки таблицы эшелонов === */
+/* === Заголовки таблицы эшелонов (как в Ребалансировке) === */
 .portfolio-echelons-headers {
     display: grid;
-    grid-template-columns: 1fr 100px 55px;
-    gap: 12px;
+    grid-template-columns: 1fr 110px 70px;
+    gap: 16px;
     padding: 12px 16px;
     margin-bottom: 8px;
 }
@@ -4189,7 +4130,8 @@ body.dark-mode .portfolio-ofz-detail-row {
 }
 
 .portfolio-echelon-h-text:nth-child(3) {
-    text-align: center;
+    text-align: right;
+    padding-right: 6px;
 }
 
 /* Подсказка для % - убираем */
@@ -4248,20 +4190,15 @@ body.dark-mode .portfolio-ofz-detail-row {
     margin-bottom: 0;
 }
 
-/* === Раскрывающийся блок ЭШЕЛОНЫ (визуально отделён) === */
+/* === Раскрывающийся блок ЭШЕЛОНЫ (как в Ребалансировке) === */
 .echelons-explainer-card {
     background: var(--card-glass-aurora);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px dashed rgba(100, 116, 139, 0.3);
+    border: 1px solid var(--card-border-aurora);
     border-radius: 16px;
-    margin: 28px 0 20px;
+    margin: 20px 0;
     overflow: hidden;
-    opacity: 0.85;
-}
-
-.echelons-explainer-card:hover {
-    opacity: 1;
 }
 
 .echelons-explainer-header {
@@ -4471,19 +4408,20 @@ body.dark-mode .echelon-explain-badge {
 /* === Динамические столбцы для ОФЗ === */
 .portfolio-ofz-summary {
     display: grid;
-    grid-template-columns: minmax(120px, 1fr) 50px 45px 75px;
-    gap: 10px;
+    grid-template-columns: 1fr 60px 55px 90px;
+    gap: 16px;
     align-items: center;
 }
 
 .portfolio-ofz-name {
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--text-deep);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /* Полное отображение названия */
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.3;
 }
 
 /* Цифры в названии ОФЗ - моноширинный шрифт */
@@ -4523,8 +4461,8 @@ body.dark-mode .echelon-explain-badge {
 /* Заголовки списка ОФЗ */
 .portfolio-list-headers {
     display: grid;
-    grid-template-columns: minmax(120px, 1fr) 50px 45px 75px;
-    gap: 10px;
+    grid-template-columns: 1fr 60px 55px 90px;
+    gap: 16px;
     padding: 8px 16px;
     margin-bottom: 8px;
 }
@@ -4602,103 +4540,6 @@ body.dark-mode .echelon-explain-badge {
 
 .echelon-percent-tooltip.show {
     display: block;
-}
-
-/* Кнопка помощи ? в подстроках */
-.portfolio-ofz-detail-label-with-help {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.detail-help-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: rgba(100, 116, 139, 0.2);
-    font-family: 'Inter', sans-serif;
-    font-size: 9px;
-    font-weight: 700;
-    color: var(--text-slate);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.detail-help-btn:hover {
-    background: rgba(100, 116, 139, 0.3);
-    color: var(--text-deep);
-}
-
-/* Модальное окно подсказки */
-.ofz-help-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.ofz-help-modal.show {
-    display: flex;
-}
-
-.ofz-help-content {
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    border-radius: 16px;
-    padding: 24px;
-    max-width: 320px;
-    width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    animation: modalSlideIn 0.3s ease;
-}
-
-@keyframes modalSlideIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.ofz-help-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: #F1F5F9;
-    margin-bottom: 10px;
-}
-
-.ofz-help-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    color: rgba(148, 163, 184, 0.9);
-    line-height: 1.6;
-    margin-bottom: 16px;
-}
-
-.ofz-help-close {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    border-radius: 10px;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: #F1F5F9;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.ofz-help-close:hover {
-    background: rgba(255, 255, 255, 0.15);
 }
 
 /* === Action Panel V2 === */
@@ -4814,10 +4655,9 @@ body.dark-mode .portfolio-echelon-card {
 }
 
 .portfolio-echelon-header {
-    display: grid;
-    grid-template-columns: 1fr 100px 55px auto;
-    gap: 12px;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 14px 16px;
     cursor: pointer;
     transition: background 0.2s ease;
@@ -4939,11 +4779,11 @@ body.dark-mode .portfolio-echelon-percent {
     max-height: 2000px;
 }
 
-/* Заголовки столбцов внутри эшелона */
+/* Заголовки столбцов - впечатаны в фон */
 .portfolio-echelon-columns-header {
     display: grid;
-    grid-template-columns: 1fr 65px 45px 75px;
-    gap: 10px;
+    grid-template-columns: 1fr 75px 55px 90px;
+    gap: 16px;
     padding: 10px 16px;
     font-family: 'Inter', sans-serif;
     font-size: 10px;
@@ -4953,10 +4793,13 @@ body.dark-mode .portfolio-echelon-percent {
     color: var(--text-slate);
 }
 
-.portfolio-echelon-columns-header span:nth-child(2),
+.portfolio-echelon-columns-header span:nth-child(2) {
+    text-align: center;
+}
+
 .portfolio-echelon-columns-header span:nth-child(3),
 .portfolio-echelon-columns-header span:nth-child(4) {
-    text-align: center;
+    text-align: right;
 }
 
 .portfolio-echelon-list {
@@ -4978,9 +4821,9 @@ body.dark-mode .portfolio-stock-wrapper {
 
 .portfolio-stock-item {
     display: grid;
-    grid-template-columns: 1fr 65px 45px 75px;
+    grid-template-columns: 1fr 75px 55px 90px;
     align-items: center;
-    gap: 10px;
+    gap: 16px;
     padding: 12px 0;
     cursor: pointer;
     transition: background 0.2s ease;
@@ -5014,7 +4857,7 @@ body.dark-mode .portfolio-stock-item:hover {
     font-size: 12px;
     font-weight: 500;
     color: var(--text-slate);
-    text-align: center;
+    text-align: right;
     white-space: nowrap;
 }
 
@@ -5023,7 +4866,7 @@ body.dark-mode .portfolio-stock-item:hover {
     font-size: 12px;
     font-weight: 700;
     color: var(--text-deep);
-    text-align: center;
+    text-align: right;
     white-space: nowrap;
 }
 
@@ -8973,13 +8816,6 @@ body.dark-mode .stocks-cell.column-highlight-4 {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    max-height: 180px;
-    overflow: hidden;
-    transition: max-height 0.4s ease;
-}
-
-.stocks-table-body.expanded {
-    max-height: 2000px;
 }
 
 .stocks-table-row {
@@ -8996,39 +8832,6 @@ body.dark-mode .stocks-cell.column-highlight-4 {
 .stocks-table-row:nth-child(4) { animation-delay: 0.25s; }
 .stocks-table-row:nth-child(5) { animation-delay: 0.3s; }
 .stocks-table-row:nth-child(6) { animation-delay: 0.35s; }
-
-/* Кнопка показать ещё */
-.stocks-show-more-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 16px;
-    padding: 12px 24px;
-    background: var(--card-glass-aurora);
-    border: 1px solid var(--card-border-aurora);
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-deep);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.stocks-show-more-btn:hover {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-.stocks-show-more-btn svg {
-    width: 16px;
-    height: 16px;
-    transition: transform 0.3s ease;
-}
-
-.stocks-show-more-btn.expanded svg {
-    transform: rotate(180deg);
-}
 
 /* Ячейка тикера - минималистичный стиль */
 .stocks-cell {
@@ -9962,16 +9765,18 @@ body.dark-mode .stock-btn-info {
             
             <!-- ===== КОМПАКТНАЯ КАРТОЧКА КАПИТАЛА + ПРОГНОЗ ===== -->
             <div class="portfolio-capital-card" id="shareContainer">
-                <!-- Верхняя секция: Капитал -->
-                <div class="capital-top-section">
-                    <div class="capital-main-block">
+                <!-- Верхняя часть: Капитал -->
+                <div class="capital-top-row">
+                    <div class="capital-main">
                         <div class="capital-label">Текущий капитал</div>
                         <div class="capital-value" id="summ-invested">0 ₽</div>
                     </div>
-                    <div class="capital-fee-badge" id="summ-fee">0.00%</div>
+                    <div class="capital-fee-badge">
+                        <span id="summ-fee">0.00%</span>
+                    </div>
                 </div>
                 
-                <!-- Прогресс-бар распределения -->
+                <!-- Прогресс-бар распределения: Облигации слева, Акции справа -->
                 <div class="capital-distribution">
                     <div class="capital-bar">
                         <div class="capital-bar-bonds" id="bar-bond-fill-v2" style="width: 50%;"></div>
@@ -9994,12 +9799,11 @@ body.dark-mode .stock-btn-info {
                 <!-- Разделитель -->
                 <div class="capital-divider"></div>
                 
-                <!-- Секция прогноза -->
+                <!-- Прогноз с детализацией -->
                 <div class="capital-forecast">
                     <div class="forecast-icon-mini">
                         <svg viewBox="0 0 24 24">
-                            <path d="M23 6l-9.5 9.5-5-5L1 18"/>
-                            <path d="M17 6h6v6"/>
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
                         </svg>
                     </div>
                     <div class="forecast-content-mini">
@@ -10011,13 +9815,13 @@ body.dark-mode .stock-btn-info {
                         <div class="forecast-details-mini">
                             <div class="forecast-detail-item">
                                 <span class="detail-dot bonds"></span>
-                                <span>Купоны:</span>
-                                <span id="summ-bond-income-mini">+0 ₽</span>
+                                <span class="detail-label">Купоны:</span>
+                                <span class="detail-value" id="summ-bond-income-mini">+0 ₽</span>
                             </div>
                             <div class="forecast-detail-item">
                                 <span class="detail-dot stocks"></span>
-                                <span>Рост:</span>
-                                <span id="summ-stock-growth-mini">+0 ₽</span>
+                                <span class="detail-label">Рост:</span>
+                                <span class="detail-value" id="summ-stock-growth-mini">+0 ₽</span>
                             </div>
                         </div>
                     </div>
@@ -10028,24 +9832,6 @@ body.dark-mode .stock-btn-info {
                     <h2 style="margin: 0; color: #D97757; font-size: 18px;">Madame Solomi'na Portfolio</h2>
                     <div id="shareDate" style="font-size: 10px; color: #888;"></div>
                 </div>
-            </div>
-            
-            <!-- КНОПКИ ДЕЙСТВИЙ - встроены в карточку -->
-            <div class="portfolio-actions-row">
-                <button class="portfolio-action-btn secondary" onclick="newCalculationWithHaptic()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-                    </svg>
-                    Новый расчёт
-                </button>
-                <button class="portfolio-action-btn primary" onclick="shareWithHaptic()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                        <polyline points="16 6 12 2 8 6"/>
-                        <line x1="12" y1="2" x2="12" y2="15"/>
-                    </svg>
-                    Поделиться
-                </button>
             </div>
             
             <!-- ===== ПЕРЕКЛЮЧАТЕЛЬ ДЕНЕЖНЫЙ ПОТОК / РАСТУЩАЯ ЧАСТЬ ===== -->
@@ -10236,9 +10022,27 @@ body.dark-mode .stock-btn-info {
         </div>
     </div>
     
+    <!-- ===== ACTION PANEL (Sticky внизу) ===== -->
+    <div class="portfolio-action-panel-v2" id="portfolioActionPanelV2" style="display: none;">
+        <button class="portfolio-action-btn secondary" onclick="newCalculationWithHaptic()">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+            </svg>
+            Новый расчёт
+        </button>
+        <button class="portfolio-action-btn primary" onclick="shareWithHaptic()">
+            <svg viewBox="0 0 24 24">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <polyline points="16 6 12 2 8 6"/>
+                <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+            Поделиться
+        </button>
+    </div>
+    
     <!-- Старые элементы для совместимости (скрытые) -->
     <div style="display:none;">
-        <div id="portfolioActionPanelV2"></div>
         <div class="stm-bar-container">
             <div class="stm-bar-bonds" id="bar-bond-fill" style="width: 50%;"></div>
             <div class="stm-bar-stocks" id="bar-stock-fill" style="width: 50%;"></div>
@@ -10349,12 +10153,6 @@ body.dark-mode .stock-btn-info {
                 <div class="stocks-table-body" id="stocks-aurora-body">
                     <!-- Динамически заполняется через JS -->
                 </div>
-                <button class="stocks-show-more-btn" id="stocksShowMoreBtn" onclick="toggleStocksExpand()">
-                    <span id="stocksShowMoreText">Показать всё</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                </button>
             </div>
             
             <!-- Карточка деталей тикера -->
@@ -14977,22 +14775,12 @@ if(document.getElementById('listBonds')) {
                                             <span class="portfolio-ofz-detail-value">${b.p} ₽</span>
                                         </div>
                                         <div class="portfolio-ofz-detail-row">
-                                            <div class="portfolio-ofz-detail-label-with-help">
-                                                <span>НКД</span>
-                                                <span class="detail-help-btn" onclick="event.stopPropagation(); toggleOfzHelp('nkd')">?</span>
-                                            </div>
+                                            <span class="portfolio-ofz-detail-label">НКД</span>
                                             <span class="portfolio-ofz-detail-value">${b.nkd.toFixed(2)} ₽</span>
                                         </div>
                                         <div class="portfolio-ofz-detail-row">
                                             <span class="portfolio-ofz-detail-label">Итого (цена + НКД)</span>
                                             <span class="portfolio-ofz-detail-value" style="font-weight: 700;">${(b.p + b.nkd).toFixed(2)} ₽</span>
-                                        </div>
-                                        <div class="portfolio-ofz-detail-row">
-                                            <div class="portfolio-ofz-detail-label-with-help">
-                                                <span>Купонная доходность</span>
-                                                <span class="detail-help-btn" onclick="event.stopPropagation(); toggleOfzHelp('coupon-yield')">?</span>
-                                            </div>
-                                            <span class="portfolio-ofz-detail-value" style="color: var(--accent-green);">${((details.couponValue * (details.freq || 2) / b.p) * 100).toFixed(2)}%</span>
                                         </div>
                                         <div class="portfolio-ofz-detail-row">
                                             <span class="portfolio-ofz-detail-label">Погашение</span>
@@ -15063,11 +14851,13 @@ if(document.getElementById('listBonds')) {
                                     <div class="portfolio-echelon-number ${echelonClasses[idx]}">${romanNumerals[idx]}</div>
                                     <div class="portfolio-echelon-title">${echelonNames[idx]}</div>
                                 </div>
-                                <span class="portfolio-echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
-                                <span class="portfolio-echelon-percent">${percent}%</span>
-                                <svg class="portfolio-echelon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="6 9 12 15 18 9"/>
-                                </svg>
+                                <div class="portfolio-echelon-header-right">
+                                    <span class="portfolio-echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
+                                    <span class="portfolio-echelon-percent">${percent}%</span>
+                                    <svg class="portfolio-echelon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 12 15 18 9"/>
+                                    </svg>
+                                </div>
                             </div>
                             <div class="portfolio-echelon-content">
                                 <div class="portfolio-echelon-columns-header">
@@ -15732,71 +15522,12 @@ function initSwipeBack() {
 
 initSwipeBack();
 
-// Функция показа подсказки для ОФЗ
-function toggleOfzHelp(type) {
-    const modal = document.getElementById('ofzHelpModal');
-    const title = document.getElementById('ofzHelpTitle');
-    const text = document.getElementById('ofzHelpText');
-    
-    const helps = {
-        'nkd': {
-            title: 'Что такое НКД?',
-            text: 'Накопленный купонный доход (НКД) — это часть купона, которую вы платите продавцу при покупке облигации. НКД накапливается каждый день с момента последней выплаты купона. При следующей выплате вы получите полный купон и "вернёте" уплаченный НКД.'
-        },
-        'coupon-yield': {
-            title: 'Купонная доходность',
-            text: 'Текущая купонная доходность показывает, какой процент годового дохода вы получите от купонов относительно текущей цены облигации. Рассчитывается как: (размер купона × выплат в год) / текущая цена × 100%.'
-        }
-    };
-    
-    const help = helps[type];
-    if (help && modal) {
-        title.textContent = help.title;
-        text.textContent = help.text;
-        modal.classList.add('show');
-        if (window.Telegram?.WebApp?.HapticFeedback) {
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-        }
-    }
-}
 
-function closeOfzHelp() {
-    const modal = document.getElementById('ofzHelpModal');
-    if (modal) {
-        modal.classList.remove('show');
-    }
-}
-
-// Функция для раскрытия/скрытия таблицы акций в Ребалансировке
-function toggleStocksExpand() {
-    const body = document.getElementById('stocks-aurora-body');
-    const btn = document.getElementById('stocksShowMoreBtn');
-    const text = document.getElementById('stocksShowMoreText');
-    
-    if (body && btn && text) {
-        body.classList.toggle('expanded');
-        btn.classList.toggle('expanded');
-        text.textContent = body.classList.contains('expanded') ? 'Свернуть' : 'Показать всё';
-        
-        if (window.Telegram?.WebApp?.HapticFeedback) {
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-        }
-    }
-}
 
 
        
         
         
     </script>
-    
-    <!-- Модальное окно подсказки для ОФЗ -->
-    <div class="ofz-help-modal" id="ofzHelpModal" onclick="closeOfzHelp()">
-        <div class="ofz-help-content" onclick="event.stopPropagation()">
-            <div class="ofz-help-title" id="ofzHelpTitle">Заголовок</div>
-            <div class="ofz-help-text" id="ofzHelpText">Текст</div>
-            <button class="ofz-help-close" onclick="closeOfzHelp()">Понятно</button>
-        </div>
-    </div>
 </body>
 </html>
