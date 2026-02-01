@@ -9529,68 +9529,68 @@ body.dark-mode .portfolio-echelons-total-row {
 }
 
 /* Затемнение фона (Backdrop) */
+/* --- СТИЛИ ДЛЯ ШТОРКИ (Вставить в основной CSS) --- */
+
+/* Фон шторки */
 .info-modal-backdrop {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px); /* Сильный блюр "Luxury" */
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 9999;
+    backdrop-filter: blur(4px); /* Размытие фона */
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 99999; /* Очень большой слой, чтобы быть поверх всего */
+    
+    /* Скрыто по умолчанию */
     opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
+    visibility: hidden; /* Важно: hidden, чтобы не мешало кликать */
+    transition: all 0.3s ease;
+    
+    /* Выравнивание */
     display: flex;
-    align-items: flex-end; /* Прижимаем к низу */
+    align-items: flex-end;
     justify-content: center;
 }
 
+/* Активное состояние (когда открыто) */
 .info-modal-backdrop.active {
-    opacity: 1 !important;
-    pointer-events: all !important;
+    opacity: 1;
+    visibility: visible;
 }
 
-/* Карточка модального окна */
+/* Сама белая/темная карточка */
 .info-modal-content {
     width: 100%;
-    max-width: 500px;
-    /* Цвет фона адаптируется под тему */
-    background: var(--card-bg); 
+    max-width: 500px; /* Ограничение для планшетов */
+    background: #1c1c1e; /* Темный фон */
     border-radius: 24px 24px 0 0;
-    padding: 24px 20px 40px 20px; /* Снизу отступ больше под safe area */
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
-    border-top: 1px solid var(--border-color);
+    padding: 24px;
+    padding-bottom: 40px; /* Отступ снизу для телефонов */
+    
+    transform: translateY(100%); /* Спрятано внизу */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    max-height: 85vh; /* Не больше 85% высоты экрана */
+    overflow-y: auto; /* Прокрутка если текст длинный */
+    color: white;
 }
 
+/* Когда активно - карточка выезжает */
 .info-modal-backdrop.active .info-modal-content {
-    transform: translateY(0) !important;
+    transform: translateY(0);
 }
 
-/* Заголовок модалки */
-.info-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-}
-.info-modal-header h3 {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--text-main);
-}
+/* Кнопка закрытия */
 .close-modal-btn {
-    background: rgba(0,0,0,0.05);
+    background: none;
     border: none;
-    width: 32px; height: 32px; border-radius: 50%;
-    color: var(--text-secondary);
-    font-size: 20px;
+    color: #888;
+    font-size: 28px;
+    padding: 0;
     cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
 }
-
 /* Карточки внутри */
 .info-card {
     background: rgba(0,0,0,0.03);
