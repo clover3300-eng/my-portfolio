@@ -9404,6 +9404,85 @@ body.dark-mode .stock-btn-info {
 .dark-mode .custom-value-stocks { color: #94A3B8; }
 .dark-mode .custom-done-btn { background: #38BDF8; color: #0F172A; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.2); }
           /* ==================================================================== */
+
+        /* === Строка ИТОГО в портфеле === */
+.portfolio-echelons-total-row {
+    display: grid;
+    /* Сетка 1fr 110px 70px совпадает с заголовками таблицы */
+    grid-template-columns: 1fr 110px 70px;
+    gap: 16px;
+    padding: 16px;
+    margin-top: 12px;
+    margin-bottom: 25px; /* Отступ до блока "Что такое эшелоны" */
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--accent-blue); /* Синяя рамка для акцента */
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.15); /* Красивая тень */
+}
+
+/* Левая часть с иконкой */
+.total-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.total-icon {
+    width: 32px; 
+    height: 32px;
+    border-radius: 10px;
+    background: var(--accent-blue);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+.total-icon svg { 
+    width: 18px; 
+    height: 18px; 
+}
+
+.total-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Сумма по центру */
+.total-sum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-main);
+    text-align: center;
+}
+
+/* Проценты справа */
+.total-percent {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-blue);
+    background: rgba(52, 152, 219, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-align: right;
+    width: fit-content;
+    justify-self: end; /* Прижать к правому краю колонки */
+}
+
+/* Темная тема */
+body.dark-mode .portfolio-echelons-total-row {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(56, 189, 248, 0.3);
+}
+        /* ==================================================================== */
         
     </style>
 </head>
@@ -9935,6 +10014,20 @@ body.dark-mode .stock-btn-info {
                 <div id="echelonContainerV2">
                     <!-- JS генерирует эшелоны здесь -->
                 </div>
+
+                <div class="portfolio-echelons-total-row">
+        <div class="total-left">
+            <div class="total-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+            </div>
+            <span class="total-label">Итого акции</span>
+        </div>
+        <span class="total-sum" id="echelonsTotalSum">0 ₽</span>
+        <span class="total-percent">100%</span>
+    </div>
+    <div class="echelons-explainer-card" id="portfolioEchelonsExplainer">
                 
                 <!-- Раскрывающийся блок ЭШЕЛОНЫ как в Ребалансировке -->
                 <div class="echelons-explainer-card" id="portfolioEchelonsExplainer">
@@ -14744,6 +14837,12 @@ if(document.getElementById('listBonds')) {
                badgeStocks.innerText = Math.round(stockBudget).toLocaleString() + ' ₽';
                badgeStocks.style.display = 'flex'; // Принудительно
               }
+                // === ОБНОВЛЕНИЕ ИТОГО ПО ЭШЕЛОНАМ ===
+const totalRow = document.getElementById('echelonsTotalSum');
+if(totalRow) {
+    // stockBudget - это переменная, в которой хранится общая сумма на акции
+    totalRow.innerText = Math.round(stockBudget).toLocaleString() + ' ₽';
+}
 
                 // 2. Обновляем все остальные цифры
                 const valStocks = document.getElementById('valStocks');
