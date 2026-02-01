@@ -9695,63 +9695,7 @@ body.dark-mode .portfolio-echelons-total-row {
     font-size: 13px;
     line-height: 1.4;
     color: var(--text-secondary, #aaa); /* Серый цвет описания */
-
 }
-    <style>
-    /* 1. Гарантируем, что шторка поверх ВСЕГО */
-    #rebalance-info-modal {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        z-index: 2147483647 !important; /* Максимально возможный z-index */
-        
-        display: flex !important;
-        align-items: flex-end !important;
-        justify-content: center !important;
-        
-        /* Скрыто по умолчанию */
-        opacity: 0;
-        pointer-events: none;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(5px);
-        transition: opacity 0.3s ease;
-    }
-
-    /* 2. Когда добавляется класс active - ПОКАЗАТЬ */
-    #rebalance-info-modal.active {
-        opacity: 1 !important;
-        pointer-events: all !important;
-    }
-
-    /* 3. Стили самой карточки */
-    #rebalance-info-modal .info-modal-content {
-        width: 100%;
-        max-width: 500px;
-        background: #1c1c1e; /* Темный фон, чтобы видно было текст */
-        color: #fff;
-        border-radius: 24px 24px 0 0;
-        padding: 24px;
-        padding-bottom: 40px; /* Отступ под iPhone Home Bar */
-        
-        transform: translateY(100%);
-        transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        max-height: 85vh;
-        overflow-y: auto;
-    }
-
-    /* Выезжание карточки */
-    #rebalance-info-modal.active .info-modal-content {
-        transform: translateY(0) !important;
-    }
-    
-    /* Дополнительно: фикс цвета текста для списка */
-    .echelon-explain-name { color: #fff !important; font-weight: bold; font-size: 15px; }
-    .echelon-explain-desc { color: #aaa !important; font-size: 13px; }
-    .info-modal-header h3 { color: #fff !important; margin: 0; }
-    .close-modal-btn { color: #888 !important; background: transparent; border: none; font-size: 28px; }
-</style>
          /* ==================================================================== */
         
     </style>
