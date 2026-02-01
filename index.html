@@ -13598,6 +13598,15 @@ function toggleStocksTable() {
     
     text.innerText = stocksExpanded ? 'СКРЫТЬ' : 'ОТКРЫТЬ СПИСОК';
     trigger.classList.toggle('open', stocksExpanded);
+
+    // === НОВОЕ: ПРОКРУТКА К НАЧАЛУ ПРИ СКРЫТИИ ===
+    if (!stocksExpanded) {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Плавная прокрутка
+        });
+    }
+    // ===========================================
     
     // Вибрация
     if (window.Telegram?.WebApp?.HapticFeedback) {
