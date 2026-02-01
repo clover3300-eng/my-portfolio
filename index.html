@@ -14725,7 +14725,7 @@ if(document.getElementById('listBonds')) {
             const budgetPercent = (totalVisibleSum / bondBudget) * 100;
             
             // Округляем (обычно будет 99% или 100%, так как мы стараемся потратить всё)
-            bondsPercentBadge.innerText = Math.round(budgetPercent) + '%';
+            bondsPercentBadge.innerText = budgetPercent.toFixed(1) + '%';
         }
     }
             
@@ -15174,7 +15174,7 @@ if(totalStocksRow) {
     // 2. Считаем процент от БЮДЖЕТА НА АКЦИИ
     if(totalStocksPctBadge && typeof stockBudget !== 'undefined' && stockBudget > 0) {
         const realStockPercent = (grandTotalStocks / stockBudget) * 100;
-        totalStocksPctBadge.innerText = Math.round(realStockPercent) + '%';
+        totalStocksPctBadge.innerText = realStockPercent.toFixed(1) + '%';
     }
 }
 // =============================
