@@ -13270,6 +13270,7 @@ function switchRebalanceTab(tabName) {
         // Перерендериваем таблицу
         renderAuroraStocksTable();
     }
+    updateInfoBtnState(tab);
 }
 
 // Инициализация Spotlight эффекта для карточки "Умная замена"
@@ -16009,6 +16010,32 @@ function initSwipeBack() {
 }
 
 initSwipeBack();
+
+    // Логика кнопки Info
+function toggleRebalanceInfo(show) {
+    const modal = document.getElementById('rebalance-info-modal');
+    if (show) {
+        modal.classList.add('active');
+        // Вибрация
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        }
+    } else {
+        modal.classList.remove('active');
+    }
+}
+
+// Функция управления видимостью кнопки
+function updateInfoBtnState(tabName) {
+    const btn = document.getElementById('stocksInfoBtn');
+    if (!btn) return;
+    
+    if (tabName === 'stocks') {
+        btn.classList.add('visible');
+    } else {
+        btn.classList.remove('visible');
+    }
+}
 
 
 
