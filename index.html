@@ -9533,54 +9533,62 @@ body.dark-mode .portfolio-echelons-total-row {
 
 /* Фон шторки */
 .info-modal-backdrop {
+    /* Фиксируем относительно окна браузера */
     position: fixed;
-    top: 0; 
+    top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px); /* Размытие фона */
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 99999; /* Очень большой слой, чтобы быть поверх всего */
+    width: 100vw; /* На всю ширину окна */
+    height: 100vh; /* На всю высоту окна */
+    z-index: 999999; /* Самый высокий слой */
     
     /* Скрыто по умолчанию */
+    display: none; 
     opacity: 0;
-    visibility: hidden; /* Важно: hidden, чтобы не мешало кликать */
-    transition: all 0.3s ease;
     
-    /* Выравнивание */
-    display: flex;
-    align-items: flex-end;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    
+    /* Выравнивание содержимого */
+    align-items: flex-end; /* Прижать к низу */
     justify-content: center;
+    
+    transition: opacity 0.3s ease;
 }
 
 /* Активное состояние (когда открыто) */
 .info-modal-backdrop.active {
     opacity: 1;
-    visibility: visible;
 }
 
 /* Сама белая/темная карточка */
 .info-modal-content {
     width: 100%;
-    max-width: 500px; /* Ограничение для планшетов */
-    background: #1c1c1e; /* Темный фон */
+    max-width: 500px;
+    background: #1c1c1e;
     border-radius: 24px 24px 0 0;
     padding: 24px;
-    padding-bottom: 40px; /* Отступ снизу для телефонов */
+    padding-bottom: 40px; /* Safe area снизу */
     
-    transform: translateY(100%); /* Спрятано внизу */
+    /* Начальное положение - сдвинуто вниз */
+    transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     
-    max-height: 85vh; /* Не больше 85% высоты экрана */
-    overflow-y: auto; /* Прокрутка если текст длинный */
+    max-height: 85vh;
+    overflow-y: auto;
     color: white;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 /* Когда активно - карточка выезжает */
 .info-modal-backdrop.active .info-modal-content {
     transform: translateY(0);
 }
+    * Фиксы для текста внутри */
+.echelon-explain-name { color: white !important; }
+.echelon-explain-desc { color: #aaa !important; }
+.info-modal-header h3 { color: white !important; margin: 0; }
+.close-modal-btn { background: none; border: none; font-size: 28px; color: #888; cursor: pointer;}
 
 /* Кнопка закрытия */
 .close-modal-btn {
