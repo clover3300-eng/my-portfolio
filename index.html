@@ -14705,19 +14705,33 @@ if(document.getElementById('listBonds')) {
     // 1. Берем видимые суммы из списка (как мы уже сделали, это работает верно)
     const bondSumItems = document.querySelectorAll('#listBondsV2 .portfolio-ofz-sum');
 
-    if (bondsTotalRow && typeof bondBudget !== 'undefined') {
-                let factBondSum = 0;
-                // Собираем сумму из отрисованного списка
-                document.querySelectorAll('#listBondsV2 .portfolio-ofz-sum').forEach(el => {
-                    factBondSum += parseInt(el.innerText.replace(/\D/g, ''), 10) || 0;
-                });
+    if(bondsTotalRow) {
+        let totalVisibleSum = 0;
+        
+        // Складываем все строки расходов
+        bondSumItems.forEach(el => {
+            const val = parseInt(el.innerText.replace(/\D/g, ''), 10) || 0;
+            totalVisibleSum += val;
+        });
 
-                bondsTotalRow.innerText = factBondSum.toLocaleString() + ' ₽';
-                
-                if (bondBudget > 0) {
-                     bondsPct.innerText = ((factBondSum / bondBudget) * 100).toFixed(1) + '%';
-                }
+        // Выводим сумму
+        bondsTotalRow.innerText = totalVisibleSum.toLocaleString() + ' ₽';
+
+        // 2. Считаем процент ОТ БЮДЖЕТА НА ОБЛИГАЦИИ
+        if(bondsPercentBadge && typeof bondBudget !== 'undefined' && bondBudget > 0) {
+            
+            const percent = (totalVisibleSum / bondBudget) * 100;
+            
+            // Логика красивого отображения 100%
+            // Если процент между 99.9 и 100.1 (погрешность на копейки), пишем 100%
+            if (percent > 99.9 && percent < 100.1) {
+                 bondsPercentBadge.innerText = '100%';
+            } else {
+                 // Иначе показываем 1 знак после запятой (например, 99.8%)
+                 bondsPercentBadge.innerText = percent.toFixed(1) + '%';
             }
+        }
+    }
             
             if(document.getElementById('couponList')) {
                 rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
@@ -15157,20 +15171,23 @@ if(totalRow) {
 const totalStocksRow = document.getElementById('echelonsTotalSum');
 const totalStocksPctBadge = document.querySelector('.portfolio-echelons-total-row .total-percent');
 
-if (totalStocksRow && typeof stockBudget !== 'undefined') {
-                let factStockSum = 0;
-                // Собираем точную сумму из отрисованных карточек
-                document.querySelectorAll('#echelonContainerV2 .portfolio-stock-sum').forEach(el => {
-                    factStockSum += parseInt(el.innerText.replace(/\D/g, ''), 10) || 0;
-                });
-                
-                totalStocksRow.innerText = factStockSum.toLocaleString() + ' ₽';
-                
-                if (stockBudget > 0) {
-                    // Честный процент с одним знаком после запятой (без округления до 100%)
-                    totalStocksPct.innerText = ((factStockSum / stockBudget) * 100).toFixed(1) + '%';
-                }
-            }
+if(totalStocksRow) {
+    // Выводим сумму
+    totalStocksRow.innerText = Math.round(grandTotalStocks).toLocaleString() + ' ₽';
+
+    // Считаем процент
+    if(totalStocksPctBadge && typeof stockBudget !== 'undefined' && stockBudget > 0) {
+        const percent = (grandTotalStocks / stockBudget) * 100;
+        
+        // Если больше 99.9%, но меньше 100% (из-за копеек), ставим 100%
+        // Иначе показываем 1 знак после запятой
+        if (percent > 99.9 && percent < 100.1) {
+             totalStocksPctBadge.innerText = '100%';
+        } else {
+             totalStocksPctBadge.innerText = percent.toFixed(1) + '%';
+        }
+    }
+}
 // =============================
                 }
             }
