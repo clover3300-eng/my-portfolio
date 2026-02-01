@@ -14705,19 +14705,29 @@ if(document.getElementById('listBonds')) {
     // 1. Берем видимые суммы из списка (как мы уже сделали, это работает верно)
     const bondSumItems = document.querySelectorAll('#listBondsV2 .portfolio-ofz-sum');
 
-    // Считаем процент от БЮДЖЕТА НА ОБЛИГАЦИИ
-    if(bondsPercentBadge && typeof bondBudget !== 'undefined' && bondBudget > 0) {
-        const percent = (totalVisibleSum / bondBudget) * 100;
+    if(bondsTotalRow) {
+        let totalVisibleSum = 0;
         
-        // Логика красивого отображения 100%
-        if (percent > 99.9 && percent < 100.1) {
-             bondsPercentBadge.innerText = '100%';
-        } else {
-             bondsPercentBadge.innerText = percent.toFixed(1) + '%';
+        // Складываем все строки расходов
+        bondSumItems.forEach(el => {
+            const val = parseInt(el.innerText.replace(/\D/g, ''), 10) || 0;
+            totalVisibleSum += val;
+        });
+
+        // Выводим сумму
+        bondsTotalRow.innerText = totalVisibleSum.toLocaleString() + ' ₽';
+
+        // 2. Считаем процент ОТ БЮДЖЕТА НА ОБЛИГАЦИИ
+        // bondBudget — это переменная, где хранится сумма, выделенная ползунком чисто под ОФЗ
+        if(bondsPercentBadge && typeof bondBudget !== 'undefined' && bondBudget > 0) {
+            
+            // Формула: (Реально набрали / Выделенный бюджет на ОФЗ) * 100
+            const budgetPercent = (totalVisibleSum / bondBudget) * 100;
+            
+            // Округляем (обычно будет 99% или 100%, так как мы стараемся потратить всё)
+            bondsPercentBadge.innerText = budgetPercent.toFixed(1) + '%';
         }
     }
-          }
-
             
             if(document.getElementById('couponList')) {
                 rainData.sort((a,b) => new Date(a.date) - new Date(b.date));
