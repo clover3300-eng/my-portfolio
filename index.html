@@ -10957,6 +10957,59 @@ body.dark-mode .portfolio-echelons-total-row {
     </div>
 </div>
 
+      <div id="rebalance-info-modal" class="info-modal-backdrop" onclick="toggleRebalanceInfo(false)">
+    <div class="info-modal-content" onclick="event.stopPropagation()">
+        
+        <div class="info-modal-header">
+            <h3>Стратегия Эшелонов</h3>
+            <button class="close-modal-btn" onclick="toggleRebalanceInfo(false)">×</button>
+        </div>
+
+        <div class="info-scroll-area">
+            
+            <div class="echelon-explain-list">
+                
+                <div class="echelon-explain-item">
+                    <div class="echelon-explain-badge e1">I</div>
+                    <div class="echelon-explain-text">
+                        <div class="echelon-explain-name">Надёжный</div>
+                        <div class="echelon-explain-desc">Компании, которые платят дивиденды и стараются их повышать</div>
+                    </div>
+                </div>
+
+                <div class="echelon-explain-item">
+                    <div class="echelon-explain-badge e2">II</div>
+                    <div class="echelon-explain-text">
+                        <div class="echelon-explain-name">Стабильный</div>
+                        <div class="echelon-explain-desc">Компании, которые платят дивиденды, но выплаты разнятся</div>
+                    </div>
+                </div>
+
+                <div class="echelon-explain-item">
+                    <div class="echelon-explain-badge e3">III</div>
+                    <div class="echelon-explain-text">
+                        <div class="echelon-explain-name">Рисковый</div>
+                        <div class="echelon-explain-desc">Компании, которые могут платить, но не платят</div>
+                    </div>
+                </div>
+
+                <div class="echelon-explain-item">
+                    <div class="echelon-explain-badge e4">IV</div>
+                    <div class="echelon-explain-text">
+                        <div class="echelon-explain-name">Венчурный</div>
+                        <div class="echelon-explain-desc">Компании, которые не платят дивидендов</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="info-warning">
+                💡 <b>Ребалансировка</b> помогает поддерживать баланс между этими группами, продавая дорогие активы и докупая дешевые.
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -16044,57 +16097,6 @@ function updateInfoBtnState(tabName) {
         
         
     </script>
-    <div id="rebalance-info-modal" class="info-modal-backdrop" onclick="toggleRebalanceInfo(false)">
-    <div class="info-modal-content" onclick="event.stopPropagation()">
-        
-        <div class="info-modal-header">
-            <h3>Стратегия Эшелонов</h3>
-            <button class="close-modal-btn" onclick="toggleRebalanceInfo(false)">×</button>
-        </div>
-
-        <div class="info-scroll-area">
-            
-            <div class="echelon-explain-list">
-                
-                <div class="echelon-explain-item">
-                    <div class="echelon-explain-badge e1">I</div>
-                    <div class="echelon-explain-text">
-                        <div class="echelon-explain-name">Надёжный</div>
-                        <div class="echelon-explain-desc">Компании, которые платят дивиденды и стараются их повышать</div>
-                    </div>
-                </div>
-
-                <div class="echelon-explain-item">
-                    <div class="echelon-explain-badge e2">II</div>
-                    <div class="echelon-explain-text">
-                        <div class="echelon-explain-name">Стабильный</div>
-                        <div class="echelon-explain-desc">Компании, которые платят дивиденды, но выплаты разнятся</div>
-                    </div>
-                </div>
-
-                <div class="echelon-explain-item">
-                    <div class="echelon-explain-badge e3">III</div>
-                    <div class="echelon-explain-text">
-                        <div class="echelon-explain-name">Рисковый</div>
-                        <div class="echelon-explain-desc">Компании, которые могут платить, но не платят</div>
-                    </div>
-                </div>
-
-                <div class="echelon-explain-item">
-                    <div class="echelon-explain-badge e4">IV</div>
-                    <div class="echelon-explain-text">
-                        <div class="echelon-explain-name">Венчурный</div>
-                        <div class="echelon-explain-desc">Компании, которые не платят дивидендов</div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="info-warning">
-                💡 <b>Ребалансировка</b> помогает поддерживать баланс между этими группами, продавая дорогие активы и докупая дешевые.
-            </div>
-        </div>
-    </div>
-</div>
+  
 </body>
 </html>
