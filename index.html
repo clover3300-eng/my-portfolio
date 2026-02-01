@@ -16074,45 +16074,101 @@ initSwipeBack();
 
     // Логика кнопки Info
 /* --- Исправленная логика открытия --- */
+// === УМНАЯ ФУНКЦИЯ ОТКРЫТИЯ ШТОРКИ ===
 function toggleRebalanceInfo(show) {
-    const modal = document.getElementById('rebalance-info-modal');
-    
+    let modal = document.getElementById('rebalance-info-modal');
+
+    // 1. Если шторки нет в коде - создаем её на лету
     if (!modal) {
-        console.error("Модальное окно не найдено!");
-        return;
-    }
-
-    // === МАГИЯ ЗДЕСЬ ===
-    // Если мы открываем окно, мы принудительно переносим его в корень body,
-    // чтобы никакие родительские трансформации (swipes) не мешали ему.
-    if (show && modal.parentNode !== document.body) {
-        document.body.appendChild(modal);
-    }
-    // ===================
-
-    if (show) {
-        // Сначала делаем видимым (display/visibility)
-        modal.style.display = 'flex';
+        modal = document.createElement('div');
+        modal.id = 'rebalance-info-modal';
         
-        // Даем браузеру 10мс на отрисовку, потом запускаем анимацию прозрачности
-        requestAnimationFrame(() => {
-            modal.classList.add('active');
+        // Вставляем ВАШ контент внутрь
+        modal.innerHTML = `
+            <div class="info-modal-content" onclick="event.stopPropagation()">
+                <div class="info-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                    <h3 style="margin:0; color:#fff; font-size:20px; font-weight:800; font-family:'Inter', sans-serif;">Стратегия Эшелонов</h3>
+                    <button onclick="toggleRebalanceInfo(false)" style="background:none; border:none; color:#888; font-size:28px; cursor:pointer;">×</button>
+                </div>
+                <div class="info-scroll-area">
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        ${createEchelonItem('I', 'Надёжный', 'Компании, которые платят дивиденды и стараются их повышать')}
+                        ${createEchelonItem('II', 'Стабильный', 'Компании, которые платят дивиденды, но выплаты разнятся')}
+                        ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят')}
+                        ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов')}
+                    </div>
+                    <div style="margin-top:24px; padding:16px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:16px; color:#fff; font-size:12px;">
+                        💡 <b>Ребалансировка</b> помогает поддерживать баланс, продавая дорогие активы и докупая дешевые.
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Применяем стили программно (чтобы точно работало)
+        Object.assign(modal.style, {
+            position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+            zIndex: '9999999', display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+            background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(5px)', webkitBackdropFilter: 'blur(5px)',
+            opacity: '0', transition: 'opacity 0.3s ease', pointerEvents: 'none'
         });
+
+        // Добавляем на страницу
+        document.body.appendChild(modal);
+        
+        // Добавляем стили для контента (карточки)
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .info-modal-content {
+                width: 100%; max-width: 500px; background: #1c1c1e; border-radius: 24px 24px 0 0;
+                padding: 24px; padding-bottom: 40px; transform: translateY(100%);
+                transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); color: #fff;
+                border-top: 1px solid rgba(255,255,255,0.1); max-height: 85vh; overflow-y: auto;
+            }
+            .info-modal-backdrop-active .info-modal-content { transform: translateY(0); }
+            /* Стили для ваших иконок 28px */
+            .echelon-badge {
+                width: 28px; height: 28px; min-width: 28px; border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                background: #fff; color: #000; font-weight: 800; font-size: 12px;
+                font-family: 'JetBrains Mono', monospace; margin-top: 2px;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // 2. Логика Открытия / Закрытия
+    const content = modal.querySelector('.info-modal-content');
+    
+    if (show) {
+        modal.style.display = 'flex';
+        // Небольшая задержка, чтобы браузер увидел display:flex перед анимацией
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            modal.style.pointerEvents = 'all';
+            modal.classList.add('info-modal-backdrop-active');
+        }, 10);
 
         if (window.Telegram?.WebApp?.HapticFeedback) {
             window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
         }
     } else {
-        // Убираем класс активности
-        modal.classList.remove('active');
-        
-        // Ждем пока пройдет анимация (0.3s) и скрываем полностью
-        setTimeout(() => {
-            if (!modal.classList.contains('active')) {
-                modal.style.display = 'none';
-            }
-        }, 300);
+        modal.style.opacity = '0';
+        modal.style.pointerEvents = 'none';
+        modal.classList.remove('info-modal-backdrop-active');
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
+}
+
+// Вспомогательная функция для генерации HTML одной строки
+function createEchelonItem(num, title, desc) {
+    return `
+    <div style="display:flex; gap:14px; padding:12px; background:rgba(255,255,255,0.05); border-radius:16px;">
+        <div class="echelon-badge">${num}</div>
+        <div>
+            <div style="font-weight:700; font-size:15px; margin-bottom:4px; color:#fff;">${title}</div>
+            <div style="font-size:13px; color:#aaa; line-height:1.4;">${desc}</div>
+        </div>
+    </div>`;
 }
 // Функция управления видимостью кнопки
 function updateInfoBtnState(tabName) {
