@@ -9405,105 +9405,60 @@ body.dark-mode .stock-btn-info {
 .dark-mode .custom-done-btn { background: #38BDF8; color: #0F172A; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.2); }
           /* ==================================================================== */
 
-   /* === Строка ИТОГО (Обновленный дизайн Smart Replace) === */
+   /* === Строка ИТОГО (Фон как у эшелонов + меньше отступ) === */
 .portfolio-echelons-total-row {
     display: grid;
     grid-template-columns: 1fr 110px 60px; 
     gap: 8px;
     padding: 12px 16px;
     
-    /* 1. ДОБАВИЛ ВОЗДУХ (35px отступ сверху) */
-    margin-top: 35px; 
+    /* 1. УМЕНЬШИЛ ОТСТУП (было 35px -> стало 20px) */
+    margin-top: 20px; 
     margin-bottom: 25px;
     
-    background: var(--card-bg);
-    border-radius: 16px;
+    /* 2. ФОН КАК У ЭШЕЛОНОВ (Стеклянный эффект) */
+    background: var(--card-glass-aurora);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     
-    /* 2. ЦВЕТ РАМКИ (Цвет из градиента Умной замены) */
+    /* Рамка Smart Replace (темно-синяя) */
     border: 1px solid #1e293b; 
     
     align-items: center;
-    box-shadow: 0 8px 20px rgba(30, 41, 59, 0.1); /* Тень стала строже */
+    box-shadow: 0 8px 20px rgba(30, 41, 59, 0.1);
 }
 
-/* Левая часть */
-.total-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    overflow: hidden;
-}
-
+/* ... (Внутренние элементы остаются без изменений, но убедитесь, что они есть) ... */
+.total-left { display: flex; align-items: center; gap: 10px; overflow: hidden; }
 .total-icon {
-    min-width: 32px; 
-    width: 32px; 
-    height: 32px;
-    border-radius: 8px;
-    
-    /* 3. ФОН ИКОНКИ (Градиент Умной замены) */
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    color: white;
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.3);
+    min-width: 32px; width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); /* Фон иконки */
+    display: flex; align-items: center; justify-content: center;
+    color: white; box-shadow: 0 4px 10px rgba(15, 23, 42, 0.3);
 }
-
-.total-icon svg { 
-    width: 18px; 
-    height: 18px; 
-}
-
+.total-icon svg { width: 18px; height: 18px; }
 .total-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--text-main);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 800;
+    color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px;
     white-space: nowrap;
 }
-
-/* Колонка Суммы */
-.total-value-col {
-    text-align: right;
-    padding-right: 5px;
-}
-
+.total-value-col { text-align: right; padding-right: 5px; }
 .total-sum {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--text-main);
-    display: block;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    font-weight: 800; color: var(--text-main); display: block;
 }
-
-/* Колонка Процентов */
-.total-percent-col {
-    text-align: right;
-}
-
+.total-percent-col { text-align: right; }
 .total-percent {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    
-    /* 4. БЕЙДЖ ПРОЦЕНТА (Градиент Умной замены) */
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    color: white; /* Текст стал белым */
-    
-    padding: 4px 6px;
-    border-radius: 6px;
-    display: inline-block;
-    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.2);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); /* Фон процента */
+    color: white; padding: 4px 6px; border-radius: 6px;
+    display: inline-block; box-shadow: 0 2px 5px rgba(15, 23, 42, 0.2);
 }
 
 /* Темная тема */
 body.dark-mode .portfolio-echelons-total-row {
-    background: rgba(30, 41, 59, 0.6);
-    /* В темной теме рамку делаем чуть светлее, чтобы была видна, но в том же тоне */
-    border-color: #334155; 
+    /* Фон автоматически подтянется из переменной var(--card-glass-aurora) для темной темы */
+    border-color: #334155; /* Светлее, чтобы рамка была видна на темном фоне */
 }
         /* ==================================================================== */
         
