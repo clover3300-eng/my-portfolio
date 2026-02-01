@@ -16065,19 +16065,47 @@ function initSwipeBack() {
 initSwipeBack();
 
     // Логика кнопки Info
+/* --- Исправленная логика открытия --- */
 function toggleRebalanceInfo(show) {
     const modal = document.getElementById('rebalance-info-modal');
+    
+    if (!modal) {
+        console.error("Модальное окно не найдено!");
+        return;
+    }
+
+    // === МАГИЯ ЗДЕСЬ ===
+    // Если мы открываем окно, мы принудительно переносим его в корень body,
+    // чтобы никакие родительские трансформации (swipes) не мешали ему.
+    if (show && modal.parentNode !== document.body) {
+        document.body.appendChild(modal);
+    }
+    // ===================
+
     if (show) {
-        modal.classList.add('active');
-        // Вибрация
+        // Сначала делаем видимым (display/visibility)
+        modal.style.display = 'flex';
+        
+        // Даем браузеру 10мс на отрисовку, потом запускаем анимацию прозрачности
+        requestAnimationFrame(() => {
+            modal.classList.add('active');
+        });
+
         if (window.Telegram?.WebApp?.HapticFeedback) {
             window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
         }
     } else {
+        // Убираем класс активности
         modal.classList.remove('active');
+        
+        // Ждем пока пройдет анимация (0.3s) и скрываем полностью
+        setTimeout(() => {
+            if (!modal.classList.contains('active')) {
+                modal.style.display = 'none';
+            }
+        }, 300);
     }
 }
-
 // Функция управления видимостью кнопки
 function updateInfoBtnState(tabName) {
     const btn = document.getElementById('stocksInfoBtn');
