@@ -9405,33 +9405,40 @@ body.dark-mode .stock-btn-info {
 .dark-mode .custom-done-btn { background: #38BDF8; color: #0F172A; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.2); }
           /* ==================================================================== */
 
-      /* === Строка ИТОГО в портфеле === */
+    /* === Строка ИТОГО (Финал) === */
 .portfolio-echelons-total-row {
     display: grid;
-    /* Сетка 1fr 110px 70px совпадает с заголовками таблицы */
-    grid-template-columns: 1fr 110px 70px;
-    gap: 16px;
-    padding: 16px;
+    /* НАСТРОЙКА ШИРИНЫ КОЛОНОК:
+       1fr   - занимает все свободное место слева (Название)
+       110px - ширина под колонку Суммы (как в таблице выше)
+       60px  - ширина под колонку % (как в таблице выше)
+    */
+    grid-template-columns: 1fr 110px 60px; 
+    gap: 8px; /* Расстояние между колонками */
+    
+    padding: 12px 16px;
     margin-top: 12px;
-    margin-bottom: 25px; /* Отступ до блока "Что такое эшелоны" */
+    margin-bottom: 25px;
     background: var(--card-bg);
     border-radius: 16px;
-    border: 1px solid var(--accent-blue); /* Синяя рамка для акцента */
+    border: 1px solid var(--accent-blue);
     align-items: center;
-    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.15); /* Красивая тень */
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.15);
 }
 
-/* Левая часть с иконкой */
+/* Левая часть (Иконка + Текст) */
 .total-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    overflow: hidden; /* Защита от переполнения */
 }
 
 .total-icon {
+    min-width: 32px; /* Фиксируем размер, чтобы не сжимался */
     width: 32px; 
     height: 32px;
-    border-radius: 10px;
+    border-radius: 8px;
     background: var(--accent-blue);
     display: flex; 
     align-items: center; 
@@ -9452,29 +9459,37 @@ body.dark-mode .stock-btn-info {
     color: var(--text-main);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    white-space: nowrap; /* ЗАПРЕТ ПЕРЕНОСА СТРОКИ */
 }
 
-/* Сумма по центру */
+/* Колонка Суммы */
+.total-value-col {
+    text-align: right; /* Выравнивание по правому краю, как в таблице */
+    padding-right: 5px; /* Небольшой отступ, чтобы цифры не липли к краю */
+}
+
 .total-sum {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 800;
     color: var(--text-main);
-    text-align: center;
+    display: block;
 }
 
-/* Проценты справа */
+/* Колонка Процентов */
+.total-percent-col {
+    text-align: right; /* Выравнивание по правому краю */
+}
+
 .total-percent {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 700;
     color: var(--accent-blue);
     background: rgba(52, 152, 219, 0.1);
-    padding: 4px 8px;
+    padding: 4px 6px;
     border-radius: 6px;
-    text-align: right;
-    width: fit-content;
-    justify-self: end; /* Прижать к правому краю колонки */
+    display: inline-block;
 }
 
 /* Темная тема */
@@ -10016,17 +10031,23 @@ body.dark-mode .portfolio-echelons-total-row {
                 </div>
 
                <div class="portfolio-echelons-total-row">
-        <div class="total-left">
-            <div class="total-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                </svg>
-            </div>
-            <span class="total-label">Итого акции</span>
+    <div class="total-left">
+        <div class="total-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6H5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h8l-5 5 5 5H5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h13"/>
+            </svg>
         </div>
+        <span class="total-label">Итого акции</span>
+    </div>
+    
+    <div class="total-value-col">
         <span class="total-sum" id="echelonsTotalSum">0 ₽</span>
+    </div>
+
+    <div class="total-percent-col">
         <span class="total-percent">100%</span>
     </div>
+</div>
                 
   
                 
