@@ -14718,14 +14718,18 @@ if(document.getElementById('listBonds')) {
         bondsTotalRow.innerText = totalVisibleSum.toLocaleString() + ' ₽';
 
         // 2. Считаем процент ОТ БЮДЖЕТА НА ОБЛИГАЦИИ
-        // bondBudget — это переменная, где хранится сумма, выделенная ползунком чисто под ОФЗ
         if(bondsPercentBadge && typeof bondBudget !== 'undefined' && bondBudget > 0) {
             
-            // Формула: (Реально набрали / Выделенный бюджет на ОФЗ) * 100
-            const budgetPercent = (totalVisibleSum / bondBudget) * 100;
+            const percent = (totalVisibleSum / bondBudget) * 100;
             
-            // Округляем (обычно будет 99% или 100%, так как мы стараемся потратить всё)
-            bondsPercentBadge.innerText = budgetPercent.toFixed(1) + '%';
+            // Логика красивого отображения 100%
+            // Если процент между 99.9 и 100.1 (погрешность на копейки), пишем 100%
+            if (percent > 99.9 && percent < 100.1) {
+                 bondsPercentBadge.innerText = '100%';
+            } else {
+                 // Иначе показываем 1 знак после запятой (например, 99.8%)
+                 bondsPercentBadge.innerText = percent.toFixed(1) + '%';
+            }
         }
     }
             
