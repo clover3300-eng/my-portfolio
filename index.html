@@ -14665,20 +14665,23 @@ if(document.getElementById('listBonds')) {
     if(badgeBonds) badgeBonds.innerText = Math.round(bondBudget).toLocaleString() + ' ₽';
 }
           
-        // === ОБНОВЛЕНИЕ ИТОГО ОФЗ (Точный математический расчет) ===
+    // === ОБНОВЛЕНИЕ ИТОГО ОФЗ (Исправленный расчет) ===
     const bondsTotalRow = document.getElementById('bondsTotalSum');
 
     if(bondsTotalRow && typeof bonds !== 'undefined' && Array.isArray(bonds)) {
         
-        // Считаем сумму, точно повторяя логику округления в строках
         const exactSum = bonds.reduce((acc, b) => {
-            // В строке у вас написано: Math.round(b.qty * b.p)
-            // Значит и здесь мы должны сначала округлить результат умножения, а потом прибавить
-            const rowSum = Math.round(b.qty * b.p); 
-            return acc + rowSum;
+            // 1. Превращаем цену "945,50" в нормальное число 945.50
+            // String(b.p) — на случай, если там вообще не строка
+            const price = parseFloat(String(b.p).replace(',', '.')) || 0;
+            
+            // 2. Берем количество (если вдруг там мусор, берем 0)
+            const qty = parseFloat(b.qty) || 0;
+
+            // 3. Умножаем и округляем (как в строках таблицы)
+            return acc + Math.round(qty * price);
         }, 0);
 
-        // Выводим результат
         bondsTotalRow.innerText = exactSum.toLocaleString() + ' ₽';
     }
             
