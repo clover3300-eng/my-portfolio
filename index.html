@@ -14665,10 +14665,25 @@ if(document.getElementById('listBonds')) {
     if(badgeBonds) badgeBonds.innerText = Math.round(bondBudget).toLocaleString() + ' ₽';
 }
           
-        // === ОБНОВЛЕНИЕ ИТОГО ОФЗ (ВАШ НОВЫЙ БЛОК) ===
+        // === ОБНОВЛЕНИЕ ИТОГО ОФЗ (Сумма по столбцу расходов в Портфеле) ===
     const bondsTotalRow = document.getElementById('bondsTotalSum');
+    
+    // Ищем все ячейки с суммами внутри списка облигаций
+    // (класс .list-item-sum — это ваш 4-й столбец)
+    const bondSumItems = document.querySelectorAll('#listBonds .list-item-sum');
+
     if(bondsTotalRow) {
-        bondsTotalRow.innerText = Math.round(bondBudget).toLocaleString() + ' ₽';
+        let totalPortfolioExpense = 0;
+        
+        bondSumItems.forEach(el => {
+            // Берем текст (например "14 500 ₽")
+            // Удаляем всё кроме цифр (пробелы, знак рубля) и превращаем в число
+            const val = parseInt(el.innerText.replace(/[^\d]/g, ''), 10) || 0;
+            totalPortfolioExpense += val;
+        });
+
+        // Выводим итоговую сумму
+        bondsTotalRow.innerText = totalPortfolioExpense.toLocaleString() + ' ₽';
     }
             
             if(document.getElementById('couponList')) {
