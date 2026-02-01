@@ -15168,13 +15168,20 @@ const totalStocksRow = document.getElementById('echelonsTotalSum');
 const totalStocksPctBadge = document.querySelector('.portfolio-echelons-total-row .total-percent');
 
 if(totalStocksRow) {
-    // 1. Выводим общую сумму акций
+    // Выводим сумму
     totalStocksRow.innerText = Math.round(grandTotalStocks).toLocaleString() + ' ₽';
 
-    // 2. Считаем процент от БЮДЖЕТА НА АКЦИИ
+    // Считаем процент
     if(totalStocksPctBadge && typeof stockBudget !== 'undefined' && stockBudget > 0) {
-        const realStockPercent = (grandTotalStocks / stockBudget) * 100;
-        totalStocksPctBadge.innerText = realStockPercent.toFixed(1) + '%';
+        const percent = (grandTotalStocks / stockBudget) * 100;
+        
+        // Если больше 99.9%, но меньше 100% (из-за копеек), ставим 100%
+        // Иначе показываем 1 знак после запятой
+        if (percent > 99.9 && percent < 100.1) {
+             totalStocksPctBadge.innerText = '100%';
+        } else {
+             totalStocksPctBadge.innerText = percent.toFixed(1) + '%';
+        }
     }
 }
 // =============================
