@@ -13267,7 +13267,7 @@ function renderAuroraStocksTable() {
     
     let html = '';
     const maxRows = Math.max(...echelonTableData.map(col => col.length));
-    const maxVisibleRows = 5;
+    const maxVisibleRows = 3;
     
     for (let rowIndex = 0; rowIndex < maxRows; rowIndex++) {
         const hiddenClass = rowIndex >= maxVisibleRows ? 'stocks-row-hidden' : '';
