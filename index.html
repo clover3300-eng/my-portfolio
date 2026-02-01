@@ -9462,6 +9462,39 @@ body.dark-mode .portfolio-echelons-total-row {
     border-color: #334155; /* Светлее, чтобы рамка была видна на темном фоне */
 }
         /* ==================================================================== */
+
+        /* === Итоговая строка внутри Эшелона === */
+.portfolio-echelon-total-line {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Прижимаем всё вправо */
+    gap: 12px; /* Расстояние между словом ИТОГО и цифрой */
+    
+    padding: 12px 16px; /* Такой же отступ как у строк, чтобы выровняться */
+    margin-top: 4px;
+    
+    /* Линия в стиле дизайна */
+    border-top: 1px solid var(--item-border);
+}
+
+.echelon-total-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.echelon-total-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; /* Чуть крупнее обычных цифр */
+    font-weight: 700;
+    color: var(--text-main);
+    text-align: right;
+    /* Мин. ширина не нужна, если выравнивание справа, но можно добавить для страховки */
+}
+         /* ==================================================================== */
         
     </style>
 </head>
@@ -15050,6 +15083,10 @@ if(totalRow) {
                         });
                         
                         const percent = Math.round(e.weight * 100);
+
+                        // === ВСТАВИТЬ ЭТОТ БЛОК (Подсчет суммы эшелона) ===
+                        const echelonTotalSum = stocksInEchelon.reduce((acc, item) => acc + item.sum, 0);
+                        // ==================================================
                         
                         echelonsHtmlV2 += `
                         <div class="portfolio-echelon-card" onclick="togglePortfolioEchelon(this, event)">
@@ -15115,6 +15152,10 @@ if(totalRow) {
                                         </div>
                                     `).join('')}
                                 </div>
+                                <div class="portfolio-echelon-total-line">
+                               <span class="echelon-total-label">ИТОГО</span>
+                               <span class="echelon-total-value">${Math.round(echelonTotalSum).toLocaleString()} ₽</span>
+                              </div>
                             </div>
                         </div>`;
                     });
