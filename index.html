@@ -16020,12 +16020,7 @@ function initSwipeBack() {
 
 initSwipeBack();
 
-    // Логика кнопки Info
-/* --- Исправленная логика открытия --- */
-// === УМНАЯ ФУНКЦИЯ ОТКРЫТИЯ ШТОРКИ ===
-/* === ФИНАЛЬНАЯ ВЕРСИЯ: ЦВЕТНЫЕ ИКОНКИ 28px === */
-/* === ФИНАЛ: ТОЛЬКО ЦВЕТНЫЕ КРУЖКИ === */
-/* === ФИНАЛ: ЦЕНТРИРОВАНИЕ ИКОНОК === */
+ /* === ФИНАЛ: ВЫРАВНИВАНИЕ ПО ВЕРХУ (Как было) === */
 function toggleRebalanceInfo(show) {
     let modal = document.getElementById('rebalance-info-modal');
 
@@ -16083,6 +16078,7 @@ function toggleRebalanceInfo(show) {
                 font-size: 12px !important; font-weight: 800 !important;
                 border: 1.5px solid !important; 
                 box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+                margin-top: 2px !important; /* Чуть сдвигаем вниз, чтобы ровно с текстом */
             }
             .modal-badge.e1 { color: #10B981 !important; border-color: #10B981 !important; }
             .modal-badge.e2 { color: #3B82F6 !important; border-color: #3B82F6 !important; }
@@ -16110,14 +16106,14 @@ function toggleRebalanceInfo(show) {
     }
 }
 
-// Генератор строки (ТУТ МЫ ИЗМЕНИЛИ ВЫРАВНИВАНИЕ)
+// Генератор строки (ВЕРНУЛИ align-items: flex-start)
 function createEchelonItem(num, title, desc, colorClass) {
     return `
-    <div style="display:flex; gap:14px; padding:12px; background:rgba(255,255,255,0.05); border-radius:16px; align-items: center; border: 1px solid rgba(255,255,255,0.05);">
+    <div style="display:flex; gap:14px; padding:12px; background:rgba(255,255,255,0.05); border-radius:16px; align-items: flex-start; border: 1px solid rgba(255,255,255,0.05);">
         <div class="modal-badge ${colorClass}">${num}</div>
         <div>
-            <div style="font-weight:700; font-size:15px; margin-bottom:2px; color:#fff;">${title}</div>
-            <div style="font-size:13px; color:#aaa; line-height:1.3;">${desc}</div>
+            <div style="font-weight:700; font-size:15px; margin-bottom:4px; color:#fff;">${title}</div>
+            <div style="font-size:13px; color:#aaa; line-height:1.4;">${desc}</div>
         </div>
     </div>`;
 }
