@@ -9789,28 +9789,40 @@ body.dark-mode .portfolio-echelons-total-row {
 .info-rebalance-block b { color: #60A5FA !important; }
 
 /* 3. Подсказка "%" (Растягиваем как строку) */
+/* === ПОДСКАЗКА ДЛЯ % (ФИНАЛ) === */
 #echelonPercentTooltip {
-    display: none;
+    /* Скрываем по умолчанию */
+    display: none; 
     
-    /* Растягиваем на 100% и добавляем отступы как у строк таблицы */
+    /* РАЗМЕРЫ: На всю ширину */
     width: 100% !important;
     box-sizing: border-box !important;
     
-    background: rgba(255, 255, 255, 0.05) !important; /* Цвет как у строк */
-    border-radius: 12px !important; /* Скругление как у строк */
+    /* ЦВЕТА И РАМКИ */
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
     
-    padding: 16px 16px !important;
-    margin: 12px 0 !important; /* Отступ сверху и снизу */
-    
+    /* ТЕКСТ */
+    padding: 16px !important;
+    margin: 12px 0 !important;
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    line-height: 1.5;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
     color: #aaa !important;
     text-align: left !important;
     
-    border: 1px solid rgba(255,255,255,0.05) !important;
+    /* АНИМАЦИЯ */
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
 }
-#echelonPercentTooltip.show { display: block !important; animation: fadeIn 0.3s ease; }
+
+#echelonPercentTooltip.show {
+    display: block !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
         /* ==================================================================== */
 
     </style>
@@ -16080,14 +16092,22 @@ initSwipeBack();
  /* === ФИНАЛ: ВЫРАВНИВАНИЕ ПО ВЕРХУ (Как было) === */
 /* === ФИНАЛ: ВАШ ДИЗАЙН AURORA === */
 /* === ФИНАЛЬНАЯ ВЕРСИЯ ФУНКЦИИ (ИСПРАВЛЕННАЯ) === */
+/* === ФИНАЛЬНАЯ ВЕРСИЯ: Стили вшиты в код (Гарантия работы) === */
 function toggleEchelonGuide(show, context = 'rebalance') {
+    // 1. УДАЛЯЕМ старую шторку, чтобы она перерисовалась заново
+    let oldModal = document.getElementById('rebalance-info-modal');
+    if (oldModal && show) {
+        oldModal.remove(); 
+        oldModal = null;
+    }
+
     let modal = document.getElementById('rebalance-info-modal');
 
-    // Если модалки нет, создаем её
+    // 2. Создаем новую
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'rebalance-info-modal';
-        // Вставляем HTML каркас
+        
         modal.innerHTML = `
             <div class="info-modal-content" onclick="event.stopPropagation()">
                 <div class="info-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
@@ -16101,11 +16121,12 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                         ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят', 'e3')}
                         ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов', 'e4')}
                     </div>
+                    
                     <div id="info-dynamic-footer"></div>
                 </div>
             </div>
         `;
-        // Стили самой шторки (backdrop)
+
         Object.assign(modal.style, {
             position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
             zIndex: '9999999', display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
@@ -16114,7 +16135,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         });
         document.body.appendChild(modal);
         
-        // Добавляем базовые стили контента, если их нет
+        // Базовые стили для кружочков (их оставляем в CSS, так как они повторяются)
         if (!document.getElementById('base-modal-styles')) {
             const style = document.createElement('style');
             style.id = 'base-modal-styles';
@@ -16131,39 +16152,41 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         }
     }
 
-    // ЛОГИКА СМЕНЫ КОНТЕНТА ВНИЗУ
+    // 3. ВСТАВЛЯЕМ КОНТЕНТ (СТИЛИ ПРЯМО ЗДЕСЬ)
     const footer = document.getElementById('info-dynamic-footer');
     if (footer) {
         if (context === 'portfolio') {
-            // Вставляем блок ВАЖНО (с классом portfolio-important-aurora)
+            // === ВАРИАНТ 1: ПОРТФЕЛЬ (Aurora - Прозрачный с зеленой полоской) ===
+            // Стили background: transparent и border-left прописаны прямо тут!
             footer.innerHTML = `
-                <div class="portfolio-important-aurora">
-                    <div class="important-aurora-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <div style="margin-top: 24px; display: flex; gap: 16px; align-items: flex-start; padding: 12px 0 12px 20px; border-left: 4px solid #2E8B57; background: transparent;">
+                    <div style="color: #2E8B57; width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 2px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 100%; height: 100%;">
                             <circle cx="12" cy="12" r="10"/>
                             <line x1="12" y1="8" x2="12" y2="12"/>
                             <line x1="12" y1="16" x2="12.01" y2="16"/>
                         </svg>
                     </div>
-                    <div class="important-aurora-content">
-                        <div class="important-aurora-title">Важно знать</div>
-                        <div class="important-aurora-text">
+                    <div style="flex: 1;">
+                        <div style="color: #2E8B57; font-weight: 700; font-size: 13px; text-transform: uppercase; margin-bottom: 4px; font-family: 'Inter', sans-serif;">Важно знать</div>
+                        <div style="color: #aaa; font-size: 13px; line-height: 1.5; font-family: 'Inter', sans-serif;">
                             В Растущей части <span style="color:#fff; font-weight:600;">70% средств</span> мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс надёжности и доходности.
                         </div>
                     </div>
                 </div>
             `;
         } else {
-            // Вставляем блок РЕБАЛАНСИРОВКА (с классом info-rebalance-block)
+            // === ВАРИАНТ 2: РЕБАЛАНСИРОВКА (Синий блок с рамкой) ===
+            // Стили рамки и фона прописаны прямо тут!
             footer.innerHTML = `
-                <div class="info-rebalance-block">
-                    💡 <b>Ребалансировка</b> помогает поддерживать баланс между группами, продавая дорогие активы и докупая дешевые.
+                <div style="margin-top: 24px; padding: 16px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 16px; color: #fff; font-size: 12px; line-height: 1.5; font-family: 'JetBrains Mono', monospace;">
+                    💡 <b style="color: #60A5FA;">Ребалансировка</b> помогает поддерживать баланс между группами, продавая дорогие активы и докупая дешевые.
                 </div>
             `;
         }
     }
 
-    // Открытие
+    // 4. ПОКАЗЫВАЕМ
     if (show) {
         modal.style.display = 'flex';
         setTimeout(() => {
