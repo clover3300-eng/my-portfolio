@@ -16092,6 +16092,7 @@ initSwipeBack();
 
 /* === ФИНАЛ: ВАШИ СТИЛИ (Aurora Yellow + Marker) === */
 /* === ФИНАЛ: Стиль "Golden Aurora" (Гармоничный Янтарный) === */
+/* === ФИНАЛ: Контрастный стиль (Чтобы маркер горел) === */
 function toggleEchelonGuide(show, context = 'rebalance') {
     let oldModal = document.getElementById('rebalance-info-modal');
     if (oldModal && show) oldModal.remove(); 
@@ -16144,7 +16145,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         }
     }
 
-    // === НАСТРОЙКА НИЖНЕГО БЛОКА ===
+    // === НИЖНИЙ БЛОК (КОНТРАСТНЫЙ) ===
     const footer = document.getElementById('info-dynamic-footer');
     if (footer) {
         if (context === 'portfolio') {
@@ -16155,22 +16156,21 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                     display: flex;
                     gap: 14px;
                     padding: 18px;
-                    /* === ГАРМОНИЧНЫЙ ФОН (Градиент) === */
-                    /* Слева легкий янтарный оттенок, справа уходит в прозрачность */
-                    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.01) 100%);
-                    
-                    /* Тонкая рамка */
-                    border: 1px solid rgba(245, 158, 11, 0.15);
+                    /* Темный фон для контраста */
+                    background: rgba(20, 20, 20, 0.6);
+                    /* Яркая желтая рамка + Свечение */
+                    border: 1px solid #FACC15;
+                    box-shadow: 0 4px 15px rgba(250, 204, 21, 0.15); 
                     border-radius: 16px;
                 ">
                     <div style="
                         width: 40px; height: 40px; min-width: 40px;
                         display: flex; align-items: center; justify-content: center;
-                        background: rgba(245, 158, 11, 0.1); /* Прозрачный фон иконки */
-                        border: 1px solid rgba(245, 158, 11, 0.2);
+                        background: rgba(250, 204, 21, 0.1);
+                        border: 1px solid rgba(250, 204, 21, 0.4);
                         border-radius: 12px;
                     ">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" style="width: 20px; height: 20px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#FACC15" stroke-width="2" style="width: 20px; height: 20px;">
                              <circle cx="12" cy="12" r="10"/>
                              <line x1="12" y1="8" x2="12" y2="12"/>
                              <line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -16181,8 +16181,8 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                         <div style="
                             font-family: 'Inter', sans-serif;
                             font-size: 14px;
-                            font-weight: 700;
-                            color: #F59E0B; /* Янтарный заголовок */
+                            font-weight: 800;
+                            color: #FACC15; /* Ярко-желтый заголовок */
                             margin-bottom: 6px;
                             text-transform: uppercase;
                             letter-spacing: 0.5px;
@@ -16191,20 +16191,22 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                         <div style="
                             font-family: 'Inter', sans-serif;
                             font-size: 13px;
-                            color: #ccc; /* Светло-серый текст */
+                            color: #ddd;
                             line-height: 1.5;
                         ">
                             В Растущей части 
                             <span style="
-                                background: linear-gradient(120deg, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.25) 100%);
+                                /* Градиент от яркого желтого к прозрачному */
+                                background: linear-gradient(120deg, rgba(250, 204, 21, 0.8) 0%, rgba(250, 204, 21, 0.6) 100%);
                                 background-repeat: no-repeat;
-                                background-size: 100% 40%;
-                                background-position: 0 85%;
-                                padding: 0 2px;
-                                font-weight: 700;
+                                background-size: 100% 40%; /* Нижняя часть */
+                                background-position: 0 90%;
+                                padding: 0 4px;
                                 color: #fff;
+                                font-weight: 700;
+                                text-shadow: 0 1px 2px rgba(0,0,0,0.5); /* Тень для читаемости */
                             ">70% средств</span> 
-                            мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс.
+                            мы держим в первых двух Эшелонах — они обеспечивают баланс.
                         </div>
                     </div>
                 </div>
