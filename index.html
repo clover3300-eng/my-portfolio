@@ -9630,16 +9630,7 @@ body.dark-mode .portfolio-echelons-total-row {
     line-height: 1.5;
 }
 
-.info-warning {
-    margin-top: 24px;
-    padding: 16px;
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 16px;
-    color: var(--text-main);
-    font-size: 12px;
-    line-height: 1.6;
-}
+
         /* --- Стили для контента внутри модалки --- */
 
 /* Контейнер списка */
@@ -9707,34 +9698,80 @@ body.dark-mode .portfolio-echelons-total-row {
          /* ==================================================================== */
 
     /* === НИЖНИЕ БЛОКИ В ШТОРКЕ === */
-/* =========================================
-   ИСПРАВЛЕНИЯ: ШТОРКА И ПОДСКАЗКИ
-   ========================================= */
 
-/* 1. Блок "ВАЖНО" (Зеленый в Портфеле) - Делаем прозрачным */
+/* ==============================================
+   ФИНАЛЬНЫЕ СТИЛИ ДЛЯ НИЖНИХ БЛОКОВ (FIX)
+   ============================================== */
+
+/* 1. Блок "ВАЖНО" (Зеленый) - Делаем прозрачным */
 .portfolio-important-aurora {
-    background: transparent !important; /* Прозрачный фон */
+    /* Принудительно убираем фон */
+    background: transparent !important;
+    background-color: transparent !important;
+    
+    /* Убираем все границы, кроме левой */
     border: none !important;
-    border-left: 4px solid #2E8B57 !important; /* Только зеленая полоска */
+    border-left: 4px solid #2E8B57 !important;
+    
+    /* Убираем радиус слева */
     border-radius: 0 !important;
-    padding: 10px 0 10px 20px !important;
-    margin-top: 24px;
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
+    
+    /* Отступы */
+    padding: 12px 0 12px 20px !important;
+    margin-top: 24px !important;
+    
+    display: flex !important;
+    gap: 16px !important;
+    align-items: flex-start !important;
 }
+
+/* Элементы внутри блока "Важно" */
 .important-aurora-icon {
     color: #2E8B57 !important;
-    width: 24px; height: 24px;
-    display: flex; align-items: center; justify-content: center;
+    width: 24px; 
+    height: 24px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    margin-top: 2px;
 }
 .important-aurora-title {
     color: #2E8B57 !important;
-    font-weight: 700; font-size: 13px; text-transform: uppercase; margin-bottom: 4px;
+    font-weight: 700; 
+    font-size: 13px; 
+    text-transform: uppercase; 
+    margin-bottom: 4px;
+    font-family: 'Inter', sans-serif !important;
 }
 .important-aurora-text {
     color: #aaa !important; /* Серый текст */
-    font-size: 13px; line-height: 1.5;
+    font-size: 13px !important; 
+    line-height: 1.5 !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+
+/* 2. Блок "РЕБАЛАНСИРОВКА" (Синий) - Возвращаем рамку */
+.info-rebalance-block {
+    margin-top: 24px !important;
+    padding: 16px !important;
+    
+    /* Фон и РАМКА */
+    background: rgba(59, 130, 246, 0.1) !important;
+    border: 1px solid rgba(59, 130, 246, 0.3) !important; /* Явная рамка */
+    border-radius: 16px !important;
+    
+    /* Текст */
+    color: #fff !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Жирный текст внутри синего блока */
+.info-rebalance-block b {
+    color: #60A5FA !important;
+    font-weight: 700 !important;
 }
 
 /* 2. Блок "РЕБАЛАНСИРОВКА" (Синий) - Возвращаем его */
@@ -16046,11 +16083,11 @@ initSwipeBack();
 function toggleEchelonGuide(show, context = 'rebalance') {
     let modal = document.getElementById('rebalance-info-modal');
 
-    // 1. Если шторки нет - создаем каркас
+    // Если модалки нет, создаем её
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'rebalance-info-modal';
-        
+        // Вставляем HTML каркас
         modal.innerHTML = `
             <div class="info-modal-content" onclick="event.stopPropagation()">
                 <div class="info-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
@@ -16064,12 +16101,11 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                         ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят', 'e3')}
                         ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов', 'e4')}
                     </div>
-                    
                     <div id="info-dynamic-footer"></div>
                 </div>
             </div>
         `;
-
+        // Стили самой шторки (backdrop)
         Object.assign(modal.style, {
             position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
             zIndex: '9999999', display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
@@ -16078,7 +16114,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         });
         document.body.appendChild(modal);
         
-        // Вставляем базовые стили
+        // Добавляем базовые стили контента, если их нет
         if (!document.getElementById('base-modal-styles')) {
             const style = document.createElement('style');
             style.id = 'base-modal-styles';
@@ -16095,11 +16131,11 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         }
     }
 
-    // 2. ЗАПОЛНЯЕМ НИЖНИЙ БЛОК (САМАЯ ВАЖНАЯ ЧАСТЬ)
+    // ЛОГИКА СМЕНЫ КОНТЕНТА ВНИЗУ
     const footer = document.getElementById('info-dynamic-footer');
     if (footer) {
         if (context === 'portfolio') {
-            // === ВАРИАНТ 1: ПОРТФЕЛЬ (Зеленый Aurora) ===
+            // Вставляем блок ВАЖНО (с классом portfolio-important-aurora)
             footer.innerHTML = `
                 <div class="portfolio-important-aurora">
                     <div class="important-aurora-icon">
@@ -16118,8 +16154,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                 </div>
             `;
         } else {
-            // === ВАРИАНТ 2: РЕБАЛАНСИРОВКА (Синий блок) ===
-            // Вот он, который пропадал!
+            // Вставляем блок РЕБАЛАНСИРОВКА (с классом info-rebalance-block)
             footer.innerHTML = `
                 <div class="info-rebalance-block">
                     💡 <b>Ребалансировка</b> помогает поддерживать баланс между группами, продавая дорогие активы и докупая дешевые.
@@ -16128,7 +16163,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         }
     }
 
-    // 3. ОТКРЫТИЕ
+    // Открытие
     if (show) {
         modal.style.display = 'flex';
         setTimeout(() => {
