@@ -15108,29 +15108,16 @@ if(document.getElementById('listBonds')) {
                 const c = colors[echelonIndex];
                 
                 eHtml += `
-                <div class="echelon-header-new" onclick="toggleEchelonTip(event, '${tipId}')">
-                    <div class="echelon-header-left">
-                        <div class="echelon-number e${echelonNum}">${echelonLabel}</div>
-                        <!-- ПЛАШКА С НАЗВАНИЕМ -->
-                        <span class="echelon-title-new" style="
-                            background: ${c.bg}; 
-                            color: ${c.txt}; 
-                            padding: 4px 10px; 
-                            border-radius: 8px; 
-                            font-family: 'Inter', sans-serif !important; 
-                            font-size: 10px; 
-                            font-weight: 800; 
-                            text-transform: uppercase; 
-                            letter-spacing: 0.5px;
-                        ">
-                            ${e.title}
-                        </span>
-                    </div>
-                    <div class="echelon-header-right">
-                        <span class="echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
-                        <span class="echelon-percent-badge">${Math.round(e.weight*100)}%</span>
-                    </div>
-                </div>
+    <div class="echelon-header-new" onclick="toggleEchelonTip(event, '${tipId}')">
+        <div class="echelon-header-left">
+            <div class="echelon-number e${echelonNum}">${echelonLabel}</div>
+            <span class="echelon-title-new" style="color: var(--text-slate); font-family: 'Inter', sans-serif !important; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; background: transparent; padding: 0;"> ${e.title} </span>
+        </div>
+        <div class="echelon-header-right">
+            <span class="echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
+            <span class="echelon-percent-badge" style="color: var(--text-slate); font-family: 'Inter', sans-serif !important; font-size: 10px; font-weight: 700; background: transparent; padding: 0; letter-spacing: 0.08em;">${Math.round(e.weight*100)}%</span>
+        </div>
+    </div>
                 
                 <div class="echelon-info-tooltip" id="${tipId}">${e.info}</div>
                 
