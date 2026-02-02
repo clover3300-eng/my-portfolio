@@ -16023,15 +16023,14 @@ initSwipeBack();
     // Логика кнопки Info
 /* --- Исправленная логика открытия --- */
 // === УМНАЯ ФУНКЦИЯ ОТКРЫТИЯ ШТОРКИ ===
+/* === ФИНАЛЬНАЯ ВЕРСИЯ: ЦВЕТНЫЕ ИКОНКИ 28px === */
 function toggleRebalanceInfo(show) {
     let modal = document.getElementById('rebalance-info-modal');
 
-    // 1. Если шторки нет в коде - создаем её на лету
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'rebalance-info-modal';
         
-        // Вставляем ВАШ контент внутрь
         modal.innerHTML = `
             <div class="info-modal-content" onclick="event.stopPropagation()">
                 <div class="info-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
@@ -16040,10 +16039,10 @@ function toggleRebalanceInfo(show) {
                 </div>
                 <div class="info-scroll-area">
                     <div style="display:flex; flex-direction:column; gap:12px;">
-                        ${createEchelonItem('I', 'Надёжный', 'Компании, которые платят дивиденды и стараются их повышать')}
-                        ${createEchelonItem('II', 'Стабильный', 'Компании, которые платят дивиденды, но выплаты разнятся')}
-                        ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят')}
-                        ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов')}
+                        ${createEchelonItem('I', 'Надёжный', 'Компании, которые платят дивиденды и стараются их повышать', 'e1')}
+                        ${createEchelonItem('II', 'Стабильный', 'Компании, которые платят дивиденды, но выплаты разнятся', 'e2')}
+                        ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят', 'e3')}
+                        ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов', 'e4')}
                     </div>
                     <div style="margin-top:24px; padding:16px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:16px; color:#fff; font-size:12px;">
                         💡 <b>Ребалансировка</b> помогает поддерживать баланс, продавая дорогие активы и докупая дешевые.
@@ -16052,7 +16051,6 @@ function toggleRebalanceInfo(show) {
             </div>
         `;
 
-        // Применяем стили программно (чтобы точно работало)
         Object.assign(modal.style, {
             position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
             zIndex: '9999999', display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
@@ -16060,10 +16058,8 @@ function toggleRebalanceInfo(show) {
             opacity: '0', transition: 'opacity 0.3s ease', pointerEvents: 'none'
         });
 
-        // Добавляем на страницу
         document.body.appendChild(modal);
         
-        // Добавляем стили для контента (карточки)
         const style = document.createElement('style');
         style.innerHTML = `
             .info-modal-content {
@@ -16073,38 +16069,56 @@ function toggleRebalanceInfo(show) {
                 border-top: 1px solid rgba(255,255,255,0.1); max-height: 85vh; overflow-y: auto;
             }
             .info-modal-backdrop-active .info-modal-content { transform: translateY(0); }
-            /* Стили для ваших иконок 28px */
-            .echelon-badge {
-                width: 28px; height: 28px; min-width: 28px; border-radius: 50%;
+
+            /* === БАЗОВЫЙ СТИЛЬ ИКОНКИ === */
+            .echelon-badge-color {
+                width: 28px; height: 28px; min-width: 28px;
+                border-radius: 50%;
                 display: flex; align-items: center; justify-content: center;
-                background: #fff; color: #000; font-weight: 800; font-size: 12px;
-                font-family: 'JetBrains Mono', monospace; margin-top: 2px;
+                background: #fff; /* Белый фон */
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 12px;
+                font-weight: 800;
+                margin-top: 2px;
+                border: 1.5px solid transparent; /* Подготовка под цветную рамку */
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
+
+            /* === ЦВЕТА === */
+            .echelon-badge-color.e1 { color: #10B981; border-color: #10B981; } /* Зеленый */
+            .echelon-badge-color.e2 { color: #3B82F6; border-color: #3B82F6; } /* Синий */
+            .echelon-badge-color.e3 { color: #F59E0B; border-color: #F59E0B; } /* Оранжевый */
+            .echelon-badge-color.e4 { color: #EF4444; border-color: #EF4444; } /* Красный */
         `;
         document.head.appendChild(style);
     }
 
-    // 2. Логика Открытия / Закрытия
-    const content = modal.querySelector('.info-modal-content');
-    
     if (show) {
         modal.style.display = 'flex';
-        // Небольшая задержка, чтобы браузер увидел display:flex перед анимацией
         setTimeout(() => {
             modal.style.opacity = '1';
             modal.style.pointerEvents = 'all';
             modal.classList.add('info-modal-backdrop-active');
         }, 10);
-
-        if (window.Telegram?.WebApp?.HapticFeedback) {
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-        }
+        if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
     } else {
         modal.style.opacity = '0';
         modal.style.pointerEvents = 'none';
         modal.classList.remove('info-modal-backdrop-active');
         setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
+}
+
+// Теперь функция принимает 4-й параметр: colorClass
+function createEchelonItem(num, title, desc, colorClass) {
+    return `
+    <div style="display:flex; gap:14px; padding:12px; background:rgba(255,255,255,0.05); border-radius:16px; align-items: flex-start;">
+        <div class="echelon-badge-color ${colorClass}">${num}</div>
+        <div>
+            <div style="font-weight:700; font-size:15px; margin-bottom:4px; color:#fff;">${title}</div>
+            <div style="font-size:13px; color:#aaa; line-height:1.4;">${desc}</div>
+        </div>
+    </div>`;
 }
 
 // Вспомогательная функция для генерации HTML одной строки
