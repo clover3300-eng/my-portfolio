@@ -16024,10 +16024,11 @@ initSwipeBack();
 /* --- Исправленная логика открытия --- */
 // === УМНАЯ ФУНКЦИЯ ОТКРЫТИЯ ШТОРКИ ===
 /* === ФИНАЛЬНАЯ ВЕРСИЯ: ЦВЕТНЫЕ ИКОНКИ 28px === */
-/* === ИСПРАВЛЕННАЯ ФУНКЦИЯ (Римские цифры + Эмодзи) === */
+/* === ФИНАЛ: ТОЛЬКО ЦВЕТНЫЕ КРУЖКИ === */
 function toggleRebalanceInfo(show) {
     let modal = document.getElementById('rebalance-info-modal');
 
+    // Если окна нет - создаем его
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'rebalance-info-modal';
@@ -16042,13 +16043,10 @@ function toggleRebalanceInfo(show) {
                 <div class="info-scroll-area">
                     <div style="display:flex; flex-direction:column; gap:12px;">
                         
-                        ${createEchelonItem('I', 'Надёжный', 'Компании, которые платят дивиденды и стараются их повышать', 'e1', '🛡️')}
-                        
-                        ${createEchelonItem('II', 'Стабильный', 'Компании, которые платят дивиденды, но выплаты разнятся', 'e2', '📈')}
-                        
-                        ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят', 'e3', '🚀')}
-                        
-                        ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов', 'e4', '⚡')}
+                        ${createEchelonItem('I', 'Надёжный', 'Компании, которые платят дивиденды и стараются их повышать', 'e1')}
+                        ${createEchelonItem('II', 'Стабильный', 'Компании, которые платят дивиденды, но выплаты разнятся', 'e2')}
+                        ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят', 'e3')}
+                        ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов', 'e4')}
 
                     </div>
                     <div style="margin-top:24px; padding:16px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:16px; color:#fff; font-size:12px;">
@@ -16058,9 +16056,9 @@ function toggleRebalanceInfo(show) {
             </div>
         `;
 
-        // Стили контейнера
+        // Стили подложки (фона)
         Object.assign(modal.style, {
-            position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+            position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
             zIndex: '9999999', display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
             background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(5px)', webkitBackdropFilter: 'blur(5px)',
             opacity: '0', transition: 'opacity 0.3s ease', pointerEvents: 'none'
@@ -16068,9 +16066,10 @@ function toggleRebalanceInfo(show) {
 
         document.body.appendChild(modal);
         
-        // СТИЛИ (Прописываем !important чтобы точно работало)
+        // Вставляем стили
         const style = document.createElement('style');
         style.innerHTML = `
+            /* Стили самого окна */
             .info-modal-content {
                 width: 100%; max-width: 500px; background: #1c1c1e; border-radius: 24px 24px 0 0;
                 padding: 24px; padding-bottom: 40px; transform: translateY(100%);
@@ -16079,35 +16078,38 @@ function toggleRebalanceInfo(show) {
             }
             .info-modal-backdrop-active .info-modal-content { transform: translateY(0); }
 
-            /* Стиль кружочка с римской цифрой */
-            .echelon-badge-fixed {
-                width: 32px !important; 
-                height: 32px !important; 
-                min-width: 32px !important;
+            /* --- СТИЛИ КРУЖКОВ (ОЧЕНЬ ВАЖНО) --- */
+            .modal-badge {
+                /* Принудительные размеры */
+                width: 28px !important; 
+                height: 28px !important; 
+                min-width: 28px !important; /* Чтобы не сжимало */
+                
+                /* Форма круга */
                 border-radius: 50% !important;
+                
+                /* Центрирование цифры */
                 display: flex !important; 
                 align-items: center !important; 
                 justify-content: center !important;
-                background: #fff !important; 
+                
+                /* Внешний вид */
+                background: #ffffff !important; 
                 font-family: 'JetBrains Mono', monospace !important;
-                font-size: 13px !important;
+                font-size: 12px !important;
                 font-weight: 800 !important;
-                border: 2px solid transparent; /* Рамка */
-                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-                position: relative;
+                
+                /* Рамка и тень */
+                border: 1.5px solid !important; 
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+                margin-top: 2px !important;
             }
 
-            /* Цвета для рамок и текста */
-            .echelon-badge-fixed.e1 { color: #10B981 !important; border-color: #10B981 !important; }
-            .echelon-badge-fixed.e2 { color: #3B82F6 !important; border-color: #3B82F6 !important; }
-            .echelon-badge-fixed.e3 { color: #F59E0B !important; border-color: #F59E0B !important; }
-            .echelon-badge-fixed.e4 { color: #EF4444 !important; border-color: #EF4444 !important; }
-            
-            /* Стиль для эмодзи (маленький значок рядом) */
-            .emoji-icon {
-                font-size: 20px;
-                margin-right: 4px;
-            }
+            /* Цвета (border-color берет текущий цвет текста) */
+            .modal-badge.e1 { color: #10B981 !important; border-color: #10B981 !important; } /* Зеленый */
+            .modal-badge.e2 { color: #3B82F6 !important; border-color: #3B82F6 !important; } /* Синий */
+            .modal-badge.e3 { color: #F59E0B !important; border-color: #F59E0B !important; } /* Оранжевый */
+            .modal-badge.e4 { color: #EF4444 !important; border-color: #EF4444 !important; } /* Красный */
         `;
         document.head.appendChild(style);
     }
@@ -16115,12 +16117,16 @@ function toggleRebalanceInfo(show) {
     // Анимация открытия
     if (show) {
         modal.style.display = 'flex';
+        // Маленькая задержка для плавности
         setTimeout(() => {
             modal.style.opacity = '1';
             modal.style.pointerEvents = 'all';
             modal.classList.add('info-modal-backdrop-active');
         }, 10);
-        if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        }
     } else {
         modal.style.opacity = '0';
         modal.style.pointerEvents = 'none';
@@ -16129,25 +16135,12 @@ function toggleRebalanceInfo(show) {
     }
 }
 
-// Генератор HTML строки
-function createEchelonItem(num, title, desc, colorClass, emoji) {
-    return `
-    <div style="display:flex; gap:16px; padding:14px; background:rgba(255,255,255,0.05); border-radius:18px; align-items: flex-start; border: 1px solid rgba(255,255,255,0.05);">
-        <div class="echelon-badge-fixed ${colorClass}">${num}</div>
-        
-        <div>
-            <div style="font-weight:700; font-size:15px; margin-bottom:4px; color:#fff; display:flex; align-items:center; gap:6px;">
-                <span>${emoji}</span> <span>${title}</span> </div>
-            <div style="font-size:13px; color:#aaa; line-height:1.4;">${desc}</div>
-        </div>
-    </div>`;
-}
-
-// Теперь функция принимает 4-й параметр: colorClass
+// Генератор строки HTML (Без эмодзи)
 function createEchelonItem(num, title, desc, colorClass) {
     return `
-    <div style="display:flex; gap:14px; padding:12px; background:rgba(255,255,255,0.05); border-radius:16px; align-items: flex-start;">
-        <div class="echelon-badge-color ${colorClass}">${num}</div>
+    <div style="display:flex; gap:14px; padding:12px; background:rgba(255,255,255,0.05); border-radius:16px; align-items: flex-start; border: 1px solid rgba(255,255,255,0.05);">
+        <div class="modal-badge ${colorClass}">${num}</div>
+        
         <div>
             <div style="font-weight:700; font-size:15px; margin-bottom:4px; color:#fff;">${title}</div>
             <div style="font-size:13px; color:#aaa; line-height:1.4;">${desc}</div>
@@ -16155,17 +16148,9 @@ function createEchelonItem(num, title, desc, colorClass) {
     </div>`;
 }
 
-// Вспомогательная функция для генерации HTML одной строки
-function createEchelonItem(num, title, desc) {
-    return `
-    <div style="display:flex; gap:14px; padding:12px; background:rgba(255,255,255,0.05); border-radius:16px;">
-        <div class="echelon-badge">${num}</div>
-        <div>
-            <div style="font-weight:700; font-size:15px; margin-bottom:4px; color:#fff;">${title}</div>
-            <div style="font-size:13px; color:#aaa; line-height:1.4;">${desc}</div>
-        </div>
-    </div>`;
-}
+
+
+
 // Функция управления видимостью кнопки
 function updateInfoBtnState(tabName) {
     const btn = document.getElementById('stocksInfoBtn');
