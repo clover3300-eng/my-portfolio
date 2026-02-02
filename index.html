@@ -16089,14 +16089,10 @@ function initSwipeBack() {
 
 initSwipeBack();
 
- /* === ФИНАЛ: ВЫРАВНИВАНИЕ ПО ВЕРХУ (Как было) === */
-/* === ФИНАЛ: ВАШ ДИЗАЙН AURORA === */
-/* === ФИНАЛЬНАЯ ВЕРСИЯ ФУНКЦИИ (ИСПРАВЛЕННАЯ) === */
-/* === ФИНАЛЬНАЯ ВЕРСИЯ: Стили вшиты в код (Гарантия работы) === */
-/* === ФИНАЛ: Aurora с маркером + Удаление текста в ребалансировке === */
-/* === ФИНАЛ: Желтый стиль (Thin Warning) + Маркер === */
+
+/* === ФИНАЛ: ВАШИ СТИЛИ (Aurora Yellow + Marker) === */
 function toggleEchelonGuide(show, context = 'rebalance') {
-    // 1. Удаляем старую шторку (для обновления стилей)
+    // 1. Удаляем старую шторку для чистого обновления
     let oldModal = document.getElementById('rebalance-info-modal');
     if (oldModal && show) {
         oldModal.remove(); 
@@ -16109,7 +16105,6 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         modal = document.createElement('div');
         modal.id = 'rebalance-info-modal';
         
-        // HTML Каркас
         modal.innerHTML = `
             <div class="info-modal-content" onclick="event.stopPropagation()">
                 <div class="info-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
@@ -16129,7 +16124,6 @@ function toggleEchelonGuide(show, context = 'rebalance') {
             </div>
         `;
 
-        // Стили подложки
         Object.assign(modal.style, {
             position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
             zIndex: '9999999', display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
@@ -16155,41 +16149,71 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         }
     }
 
-    // 3. НАСТРОЙКА НИЖНЕГО БЛОКА
+    // 3. НАСТРОЙКА НИЖНЕГО БЛОКА (AURORA YELLOW)
     const footer = document.getElementById('info-dynamic-footer');
     if (footer) {
         if (context === 'portfolio') {
-            // === ВАРИАНТ 1: ПОРТФЕЛЬ (ЖЕЛТЫЙ / WARNING STYLE) ===
+            // === ПОРТФЕЛЬ: ВАШИ СТИЛИ (AURORA YELLOW) ===
             footer.style.display = 'block';
             footer.innerHTML = `
                 <div style="
                     margin-top: 24px;
-                    /* Тонкая желтая линия и легкий фон */
-                    border: 1px solid rgba(250, 204, 21, 0.3);
-                    background: rgba(250, 204, 21, 0.05);
+                    display: flex;
+                    gap: 14px;
+                    padding: 18px;
+                    /* Желтый фон (glass) */
+                    background: rgba(251, 191, 36, 0.05); 
+                    /* Желтая рамка */
+                    border: 1px solid rgba(251, 191, 36, 0.2);
                     border-radius: 16px;
-                    padding: 16px;
-                    display: flex; gap: 14px; align-items: flex-start;
+                    backdrop-filter: blur(10px);
                 ">
-                    <div style="color: #FACC15; width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 2px;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 100%; height: 100%;">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                            <line x1="12" y1="9" x2="12" y2="13"/>
-                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    <div style="
+                        width: 40px; height: 40px; min-width: 40px;
+                        display: flex; align-items: center; justify-content: center;
+                        background: rgba(251, 191, 36, 0.15);
+                        border: 1px solid rgba(251, 191, 36, 0.25);
+                        border-radius: 12px;
+                    ">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" style="width: 20px; height: 20px;">
+                             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                             <line x1="12" y1="9" x2="12" y2="13"/>
+                             <line x1="12" y1="17" x2="12.01" y2="17"/>
                         </svg>
                     </div>
+
                     <div style="flex: 1;">
-                        <div style="color: #FACC15; font-weight: 800; font-size: 13px; text-transform: uppercase; margin-bottom: 6px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;">Важно знать</div>
-                        <div style="color: #ddd; font-size: 13px; line-height: 1.5; font-family: 'Inter', sans-serif;">
+                        <div style="
+                            font-family: 'Inter', sans-serif;
+                            font-size: 14px;
+                            font-weight: 700;
+                            color: #fff; /* Белый заголовок на темном фоне */
+                            margin-bottom: 6px;
+                        ">ВАЖНО ЗНАТЬ</div>
+
+                        <div style="
+                            font-family: 'Inter', sans-serif;
+                            font-size: 13px;
+                            color: #ccc;
+                            line-height: 1.5;
+                        ">
                             В Растущей части 
-                            <span style="background: rgba(250, 204, 21, 0.2); color: #FACC15; padding: 2px 6px; border-radius: 4px; font-weight: 600;">70% средств</span> 
-                            мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс.
+                            <span style="
+                                background: linear-gradient(120deg, rgba(251, 191, 36, 0.3) 0%, rgba(251, 191, 36, 0.3) 100%);
+                                background-repeat: no-repeat;
+                                background-size: 100% 40%;
+                                background-position: 0 85%;
+                                padding: 0 2px;
+                                font-weight: 700;
+                                color: #fff;
+                            ">70% средств</span> 
+                            мы держим в первых двух Эшелонах.
                         </div>
                     </div>
                 </div>
             `;
         } else {
-            // === ВАРИАНТ 2: РЕБАЛАНСИРОВКА (Скрыто) ===
+            // === РЕБАЛАНСИРОВКА: ПУСТО (Удалено) ===
             footer.innerHTML = '';
             footer.style.display = 'none';
         }
