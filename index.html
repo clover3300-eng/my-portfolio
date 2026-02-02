@@ -9705,6 +9705,78 @@ body.dark-mode .portfolio-echelons-total-row {
     color: var(--text-secondary, #aaa); /* Серый цвет описания */
 }
          /* ==================================================================== */
+
+    /* === НИЖНИЕ БЛОКИ В ШТОРКЕ === */
+
+/* 1. Блок "Aurora" (Зеленый / Портфель) */
+.portfolio-important-aurora {
+    background: linear-gradient(135deg, rgba(46, 139, 87, 0.08), rgba(46, 139, 87, 0.03));
+    border: 1px solid rgba(46, 139, 87, 0.15);
+    border-left: 4px solid #2E8B57;
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.important-aurora-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: #2E8B57;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.important-aurora-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+}
+
+.important-aurora-content {
+    flex: 1;
+}
+
+.important-aurora-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2E8B57;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.important-aurora-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary, #aaa); /* Цвет текста */
+}
+.important-aurora-text .highlight-marker {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* 2. Блок "Ребалансировка" (Синий / Обычный) */
+.info-rebalance-block {
+    margin-top: 24px;
+    padding: 16px;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 16px;
+    color: #fff;
+    font-size: 12px;
+    line-height: 1.5;
+    font-family: 'JetBrains Mono', monospace;
+}
+.info-rebalance-block b {
+    color: #60A5FA;
+}
+         /* ==================================================================== */
         
     </style>
 </head>
@@ -10239,12 +10311,22 @@ body.dark-mode .portfolio-echelons-total-row {
             <!-- ===== КОНТЕНТ: РАСТУЩАЯ ЧАСТЬ (АКЦИИ) ===== -->
             <div id="portfolio-tab-stocks" class="portfolio-tab-content">
                 
-                <!-- Заголовки таблицы эшелонов -->
-                <div class="portfolio-echelons-headers">
-                    <span class="portfolio-echelon-h-text">ЭШЕЛОН</span>
-                    <span class="portfolio-echelon-h-text">ВЫДЕЛИТЬ</span>
-                    <span class="portfolio-echelon-h-text clickable" onclick="toggleEchelonPercentHelp()">%</span>
-                </div>
+               <div class="portfolio-echelons-headers">
+    
+    <span class="portfolio-echelon-h-text" style="display: flex; align-items: center; gap: 6px;">
+        ЭШЕЛОН
+        <button onclick="toggleEchelonGuide(true, 'portfolio')" style="background: rgba(255,255,255,0.15); border: none; color: var(--text-secondary, #aaa); width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: all 0.2s;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        </button>
+    </span>
+
+    <span class="portfolio-echelon-h-text">ВЫДЕЛИТЬ</span>
+    <span class="portfolio-echelon-h-text clickable" onclick="toggleEchelonPercentHelp()">%</span>
+</div>
                 
                 <!-- Подсказка для % эшелонов -->
                 <div class="echelon-percent-tooltip" id="echelonPercentTooltip">
@@ -15485,29 +15567,28 @@ function toggleYieldHelp() {
     }
 }
 
-// Переключение подсказки для % в эшелонах
-function toggleEchelonPercentHelp() {
-    const tooltip = document.getElementById('echelonPercentTooltip');
-    if (tooltip) {
-        tooltip.classList.toggle('show');
-    }
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-    }
-}
-
-// Переключение подсказки для %
+/* --- Правильная функция для % Эшелонов --- */
 function toggleEchelonPercentHelp(event) {
-    event.stopPropagation();
-    const help = document.getElementById('echelonPercentHelp');
-    if (help) {
-        help.classList.toggle('show');
+    // Если передали событие (клик), останавливаем его всплытие, 
+    // чтобы не срабатывали другие клики на странице (если они есть)
+    if (event) event.stopPropagation();
+
+    // Мы ищем элемент именно с ID "echelonPercentTooltip", как в вашем HTML
+    const tooltip = document.getElementById('echelonPercentTooltip');
+    
+    if (tooltip) {
+        // Переключаем класс (убедитесь, что в CSS есть .echelon-percent-tooltip.show)
+        tooltip.classList.toggle('show');
+    } else {
+        console.error('Ошибка: Не найден блок с id="echelonPercentTooltip"');
     }
+
+    // Вибрация
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
 }
-
+    
 // Открыть информацию о компании
 function openCompanyInfo(ticker) {
     // Открываем на SmartLab
@@ -15962,31 +16043,31 @@ function initSwipeBack() {
 initSwipeBack();
 
  /* === ФИНАЛ: ВЫРАВНИВАНИЕ ПО ВЕРХУ (Как было) === */
-function toggleRebalanceInfo(show) {
+/* === ФИНАЛ: ВАШ ДИЗАЙН AURORA === */
+function toggleEchelonGuide(show, context = 'rebalance') {
     let modal = document.getElementById('rebalance-info-modal');
 
+    // 1. Создание шторки
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'rebalance-info-modal';
         
+        // Очищенный HTML (футер пустой, мы его заполним ниже)
         modal.innerHTML = `
             <div class="info-modal-content" onclick="event.stopPropagation()">
                 <div class="info-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
                     <h3 style="margin:0; color:#fff; font-size:20px; font-weight:800; font-family:'Inter', sans-serif;">Стратегия Эшелонов</h3>
-                    <button onclick="toggleRebalanceInfo(false)" style="background:none; border:none; color:#888; font-size:28px; cursor:pointer;">×</button>
+                    <button onclick="toggleEchelonGuide(false)" style="background:none; border:none; color:#888; font-size:28px; cursor:pointer;">×</button>
                 </div>
                 <div class="info-scroll-area">
                     <div style="display:flex; flex-direction:column; gap:12px;">
-                        
                         ${createEchelonItem('I', 'Надёжный', 'Компании, которые платят дивиденды и стараются их повышать', 'e1')}
                         ${createEchelonItem('II', 'Стабильный', 'Компании, которые платят дивиденды, но выплаты разнятся', 'e2')}
                         ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят', 'e3')}
                         ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов', 'e4')}
-
                     </div>
-                    <div style="margin-top:24px; padding:16px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:16px; color:#fff; font-size:12px;">
-                        💡 <b>Ребалансировка</b> помогает поддерживать баланс, продавая дорогие активы и докупая дешевые.
-                    </div>
+                    
+                    <div id="info-dynamic-footer"></div>
                 </div>
             </div>
         `;
@@ -15997,38 +16078,58 @@ function toggleRebalanceInfo(show) {
             background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(5px)', webkitBackdropFilter: 'blur(5px)',
             opacity: '0', transition: 'opacity 0.3s ease', pointerEvents: 'none'
         });
-
         document.body.appendChild(modal);
         
-        const style = document.createElement('style');
-        style.innerHTML = `
-            .info-modal-content {
-                width: 100%; max-width: 500px; background: #1c1c1e; border-radius: 24px 24px 0 0;
-                padding: 24px; padding-bottom: 40px; transform: translateY(100%);
-                transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); color: #fff;
-                border-top: 1px solid rgba(255,255,255,0.1); max-height: 85vh; overflow-y: auto;
-            }
-            .info-modal-backdrop-active .info-modal-content { transform: translateY(0); }
-
-            .modal-badge {
-                width: 28px !important; height: 28px !important; min-width: 28px !important;
-                border-radius: 50% !important;
-                display: flex !important; align-items: center !important; justify-content: center !important;
-                background: #ffffff !important; 
-                font-family: 'JetBrains Mono', monospace !important;
-                font-size: 12px !important; font-weight: 800 !important;
-                border: 1.5px solid !important; 
-                box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
-                margin-top: 2px !important; /* Чуть сдвигаем вниз, чтобы ровно с текстом */
-            }
-            .modal-badge.e1 { color: #10B981 !important; border-color: #10B981 !important; }
-            .modal-badge.e2 { color: #3B82F6 !important; border-color: #3B82F6 !important; }
-            .modal-badge.e3 { color: #F59E0B !important; border-color: #F59E0B !important; }
-            .modal-badge.e4 { color: #EF4444 !important; border-color: #EF4444 !important; }
-        `;
-        document.head.appendChild(style);
+        // Вставляем базовые стили (если их нет)
+        if (!document.getElementById('base-modal-styles')) {
+            const style = document.createElement('style');
+            style.id = 'base-modal-styles';
+            style.innerHTML = `
+                .info-modal-content { width: 100%; max-width: 500px; background: #1c1c1e; border-radius: 24px 24px 0 0; padding: 24px; padding-bottom: 40px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); color: #fff; border-top: 1px solid rgba(255,255,255,0.1); max-height: 85vh; overflow-y: auto; }
+                .info-modal-backdrop-active .info-modal-content { transform: translateY(0); }
+                .modal-badge { width: 28px !important; height: 28px !important; min-width: 28px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; background: #ffffff !important; font-family: 'JetBrains Mono', monospace !important; font-size: 12px !important; font-weight: 800 !important; border: 1.5px solid !important; box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; margin-top: 2px !important; }
+                .modal-badge.e1 { color: #10B981 !important; border-color: #10B981 !important; }
+                .modal-badge.e2 { color: #3B82F6 !important; border-color: #3B82F6 !important; }
+                .modal-badge.e3 { color: #F59E0B !important; border-color: #F59E0B !important; }
+                .modal-badge.e4 { color: #EF4444 !important; border-color: #EF4444 !important; }
+            `;
+            document.head.appendChild(style);
+        }
     }
 
+    // 2. Логика смены контента
+    const footer = document.getElementById('info-dynamic-footer');
+    if (footer) {
+        if (context === 'portfolio') {
+            // === ВАШ AURORA БЛОК ===
+            footer.innerHTML = `
+                <div class="portfolio-important-aurora">
+                    <div class="important-aurora-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    <div class="important-aurora-content">
+                        <div class="important-aurora-title">Важно знать</div>
+                        <div class="important-aurora-text">
+                            В Растущей части <span class="highlight-marker">70% средств</span> мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс надёжности и потенциальной доходности.
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            // === ОБЫЧНЫЙ СИНИЙ БЛОК ===
+            footer.innerHTML = `
+                <div class="info-rebalance-block">
+                    💡 <b>Ребалансировка</b> помогает поддерживать баланс между группами, продавая дорогие активы и докупая дешевые.
+                </div>
+            `;
+        }
+    }
+
+    // 3. Открытие
     if (show) {
         modal.style.display = 'flex';
         setTimeout(() => {
@@ -16036,9 +16137,7 @@ function toggleRebalanceInfo(show) {
             modal.style.pointerEvents = 'all';
             modal.classList.add('info-modal-backdrop-active');
         }, 10);
-        if (window.Telegram?.WebApp?.HapticFeedback) {
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-        }
+        if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
     } else {
         modal.style.opacity = '0';
         modal.style.pointerEvents = 'none';
@@ -16046,7 +16145,6 @@ function toggleRebalanceInfo(show) {
         setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
 }
-
 // Генератор строки (ВЕРНУЛИ align-items: flex-start)
 function createEchelonItem(num, title, desc, colorClass) {
     return `
