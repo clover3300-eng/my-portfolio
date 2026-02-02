@@ -16094,8 +16094,9 @@ initSwipeBack();
 /* === ФИНАЛЬНАЯ ВЕРСИЯ ФУНКЦИИ (ИСПРАВЛЕННАЯ) === */
 /* === ФИНАЛЬНАЯ ВЕРСИЯ: Стили вшиты в код (Гарантия работы) === */
 /* === ФИНАЛ: Aurora с маркером + Удаление текста в ребалансировке === */
+/* === ФИНАЛ: Желтый стиль (Thin Warning) + Маркер === */
 function toggleEchelonGuide(show, context = 'rebalance') {
-    // 1. Удаляем старую версию шторки (чтобы обновились стили)
+    // 1. Удаляем старую шторку (для обновления стилей)
     let oldModal = document.getElementById('rebalance-info-modal');
     if (oldModal && show) {
         oldModal.remove(); 
@@ -16137,7 +16138,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         });
         document.body.appendChild(modal);
 
-        // Вставляем базовые стили для кружочков (если их нет)
+        // Базовые стили кружков
         if (!document.getElementById('base-modal-styles')) {
             const style = document.createElement('style');
             style.id = 'base-modal-styles';
@@ -16158,40 +16159,37 @@ function toggleEchelonGuide(show, context = 'rebalance') {
     const footer = document.getElementById('info-dynamic-footer');
     if (footer) {
         if (context === 'portfolio') {
-            // === ВАРИАНТ 1: ПОРТФЕЛЬ (Aurora Full Style) ===
-            // Зеленый градиент + Маркер для текста
+            // === ВАРИАНТ 1: ПОРТФЕЛЬ (ЖЕЛТЫЙ / WARNING STYLE) ===
             footer.style.display = 'block';
             footer.innerHTML = `
                 <div style="
                     margin-top: 24px;
-                    /* Градиентный фон Aurora */
-                    background: linear-gradient(135deg, rgba(46, 139, 87, 0.15), rgba(46, 139, 87, 0.05));
-                    border: 1px solid rgba(46, 139, 87, 0.2);
-                    border-left: 4px solid #2E8B57;
+                    /* Тонкая желтая линия и легкий фон */
+                    border: 1px solid rgba(250, 204, 21, 0.3);
+                    background: rgba(250, 204, 21, 0.05);
                     border-radius: 16px;
                     padding: 16px;
                     display: flex; gap: 14px; align-items: flex-start;
                 ">
-                    <div style="color: #2E8B57; width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 2px;">
+                    <div style="color: #FACC15; width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 2px;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 100%; height: 100%;">
-                            <circle cx="12" cy="12" r="10"/>
-                            <line x1="12" y1="8" x2="12" y2="12"/>
-                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
                         </svg>
                     </div>
                     <div style="flex: 1;">
-                        <div style="color: #2E8B57; font-weight: 800; font-size: 13px; text-transform: uppercase; margin-bottom: 6px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;">Важно знать</div>
-                        <div style="color: #ccc; font-size: 13px; line-height: 1.5; font-family: 'Inter', sans-serif;">
+                        <div style="color: #FACC15; font-weight: 800; font-size: 13px; text-transform: uppercase; margin-bottom: 6px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;">Важно знать</div>
+                        <div style="color: #ddd; font-size: 13px; line-height: 1.5; font-family: 'Inter', sans-serif;">
                             В Растущей части 
-                            <span style="background: #2E8B57; color: #fff; padding: 2px 6px; border-radius: 6px; font-weight: 600; box-shadow: 0 2px 4px rgba(46,139,87,0.3);">70% средств</span> 
+                            <span style="background: rgba(250, 204, 21, 0.2); color: #FACC15; padding: 2px 6px; border-radius: 4px; font-weight: 600;">70% средств</span> 
                             мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс.
                         </div>
                     </div>
                 </div>
             `;
         } else {
-            // === ВАРИАНТ 2: РЕБАЛАНСИРОВКА ===
-            // Полностью скрываем блок
+            // === ВАРИАНТ 2: РЕБАЛАНСИРОВКА (Скрыто) ===
             footer.innerHTML = '';
             footer.style.display = 'none';
         }
