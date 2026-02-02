@@ -9718,7 +9718,7 @@ body.dark-mode .portfolio-echelons-total-row {
     border-left: 4px solid #2E8B57 !important; 
     
     border-radius: 0 !important; /* Убираем скругление слева из-за полоски */
-    padding: 16px 20px; /* Чуть меньше отступы для аккуратности */
+    padding: 16px 20px !important; /* Чуть меньше отступы для аккуратности */
     padding-left: 24px;
     margin-top: 24px;
     display: flex;
@@ -9727,36 +9727,23 @@ body.dark-mode .portfolio-echelons-total-row {
 }
 
 /* Иконка */
+/* Цвет иконки */
 .important-aurora-icon {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    color: #2E8B57;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2px; /* Выравнивание по первой строке текста */
+    color: #2E8B57 !important;
+    margin-top: 2px;
 }
 
 .important-aurora-content {
     flex: 1;
 }
 
-.important-aurora-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: #2E8B57;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+important-aurora-title {
+    color: #2E8B57 !important;
     margin-bottom: 6px;
 }
 
 .important-aurora-text {
-    font-family: 'Inter', sans-serif; /* Ваш шрифт */
-    font-size: 13px;
-    line-height: 1.5;
-    color: #aaa; /* Цвет текста как в остальном интерфейсе */
+    color: #aaa !important; 
 }
 
 .important-aurora-text .highlight-marker {
@@ -9781,27 +9768,28 @@ body.dark-mode .portfolio-echelons-total-row {
 }
          /* ==================================================================== */
 
-    /* === Подсказка для процента (Стиль как в Ребалансировке) === */
+    /* === ПОДСКАЗКА ДЛЯ % (Стиль как в Ребалансировке) === */
 #echelonPercentTooltip {
     display: none; /* Скрыто по умолчанию */
     
-    /* Стили как у блоков в ребалансировке */
-    width: 100%; /* На всю ширину */
-    box-sizing: border-box; /* Важно: чтобы padding не вылезал за границы */
+    /* Растягиваем на всю ширину */
+    width: 100% !important;
+    box-sizing: border-box !important; /* Чтобы padding не ломал ширину */
     
-    background: rgba(255, 255, 255, 0.05); /* Темно-серый полупрозрачный фон */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая рамка */
-    border-radius: 12px; /* Скругление */
+    /* Темный фон и рамка как у инфо-блоков */
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
     
-    padding: 16px;
+    padding: 16px !important;
     margin-top: 12px;
     margin-bottom: 12px;
     
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     line-height: 1.5;
-    color: #aaa; /* Серый текст */
-    text-align: left; /* Текст слева, как в блоках информации */
+    color: #aaa !important; /* Серый текст */
+    text-align: left !important;
     
     /* Анимация */
     opacity: 0;
@@ -9809,11 +9797,11 @@ body.dark-mode .portfolio-echelons-total-row {
     transition: all 0.3s ease;
 }
 
-/* Класс для отображения */
+/* Класс для показа */
 #echelonPercentTooltip.show {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
+    display: block !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
         /* ==================================================================== */
 
@@ -10538,7 +10526,7 @@ body.dark-mode .portfolio-echelons-total-row {
    <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
     <h1>Ребалансировка</h1>
     
-    <button id="stocksInfoBtn" class="info-trigger-btn" onclick="toggleRebalanceInfo(true)">
+    <button id="stocksInfoBtn" class="info-trigger-btn" onclick="toggleEchelonGuide(true, 'rebalance')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="12" y1="16" x2="12" y2="12"></line>
