@@ -16092,145 +16092,178 @@ initSwipeBack();
 
 /* === ФИНАЛ: ВАШИ СТИЛИ (Aurora Yellow + Marker) === */
 /* === ФИНАЛ: Стиль "Silver Aurora" (Серебряное стекло) === */
-function toggleEchelonGuide(show, context = 'rebalance') {
-    let oldModal = document.getElementById('rebalance-info-modal');
-    if (oldModal && show) oldModal.remove(); 
+ /* === FINAL: "Silver Aurora" Style === */
+        function toggleEchelonGuide(show, context = 'rebalance') {
+            let oldModal = document.getElementById('rebalance-info-modal');
+            if (oldModal && show) oldModal.remove(); 
 
-    let modal = document.getElementById('rebalance-info-modal');
+            let modal = document.getElementById('rebalance-info-modal');
 
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'rebalance-info-modal';
-        
-        modal.innerHTML = `
-            <div class="info-modal-content" onclick="event.stopPropagation()">
-                <div class="info-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-                    <h3 style="margin:0; color:#fff; font-size:20px; font-weight:800; font-family:'Inter', sans-serif;">Стратегия Эшелонов</h3>
-                    <button onclick="toggleEchelonGuide(false)" style="background:none; border:none; color:#888; font-size:28px; cursor:pointer;">×</button>
-                </div>
-                <div class="info-scroll-area">
-                    <div style="display:flex; flex-direction:column; gap:12px;">
-                        ${createEchelonItem('I', 'Надёжный', 'Компании, которые платят дивиденды и стараются их повышать', 'e1')}
-                        ${createEchelonItem('II', 'Стабильный', 'Компании, которые платят дивиденды, но выплаты разнятся', 'e2')}
-                        ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят', 'e3')}
-                        ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов', 'e4')}
-                    </div>
-                    
-                    <div id="info-dynamic-footer"></div>
-                </div>
-            </div>
-        `;
-
-        Object.assign(modal.style, {
-            position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
-            zIndex: '9999999', display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-            background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(5px)', webkitBackdropFilter: 'blur(5px)',
-            opacity: '0', transition: 'opacity 0.3s ease', pointerEvents: 'none'
-        });
-        document.body.appendChild(modal);
-
-        if (!document.getElementById('base-modal-styles')) {
-            const style = document.createElement('style');
-            style.id = 'base-modal-styles';
-            style.innerHTML = `
-                .info-modal-content { width: 100%; max-width: 500px; background: #1c1c1e; border-radius: 24px 24px 0 0; padding: 24px; padding-bottom: 40px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); color: #fff; border-top: 1px solid rgba(255,255,255,0.1); max-height: 85vh; overflow-y: auto; }
-                .info-modal-backdrop-active .info-modal-content { transform: translateY(0); }
-                .modal-badge { width: 28px !important; height: 28px !important; min-width: 28px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; background: #ffffff !important; font-family: 'JetBrains Mono', monospace !important; font-size: 12px !important; font-weight: 800 !important; border: 1.5px solid !important; box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; margin-top: 2px !important; }
-                .modal-badge.e1 { color: #10B981 !important; border-color: #10B981 !important; }
-                .modal-badge.e2 { color: #3B82F6 !important; border-color: #3B82F6 !important; }
-                .modal-badge.e3 { color: #F59E0B !important; border-color: #F59E0B !important; }
-                .modal-badge.e4 { color: #EF4444 !important; border-color: #EF4444 !important; }
-            `;
-            document.head.appendChild(style);
-        }
-    }
-
-    // === НИЖНИЙ БЛОК (SILVER AURORA) ===
-    const footer = document.getElementById('info-dynamic-footer');
-    if (footer) {
-        if (context === 'portfolio') {
-            footer.style.display = 'block';
-            footer.innerHTML = `
-                <div style="
-                    margin-top: 24px;
-                    display: flex;
-                    gap: 14px;
-                    padding: 18px;
-                    /* Серебристый фон (Glass) */
-                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-                    backdrop-filter: blur(10px);
-                    -webkit-backdrop-filter: blur(10px);
-                    /* Серебристая рамка */
-                    border: 1px solid rgba(255, 255, 255, 0.15);
-                    border-radius: 16px;
-                ">
-                    <div style="
-                        width: 40px; height: 40px; min-width: 40px;
-                        display: flex; align-items: center; justify-content: center;
-                        background: rgba(255, 255, 255, 0.1);
-                        border: 1px solid rgba(255, 255, 255, 0.2);
-                        border-radius: 12px;
-                    ">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#E5E7EB" stroke-width="2" style="width: 20px; height: 20px;">
-                             <circle cx="12" cy="12" r="10"/>
-                             <line x1="12" y1="8" x2="12" y2="12"/>
-                             <line x1="12" y1="16" x2="12.01" y2="16"/>
-                        </svg>
-                    </div>
-
-                    <div style="flex: 1;">
-                        <div style="
-                            font-family: 'Inter', sans-serif;
-                            font-size: 14px;
-                            font-weight: 700;
-                            color: #E5E7EB; /* Светлое серебро */
-                            margin-bottom: 6px;
-                            /* text-transform: uppercase; если нужно */
-                        ">Важно знать</div>
-
-                        <div style="
-                            font-family: 'Inter', sans-serif;
-                            font-size: 13px;
-                            color: #aaa; /* Серый текст */
-                            line-height: 1.5;
-                        ">
-                            В Растущей части 
-                            <span style="
-                                background: linear-gradient(120deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.25) 100%);
-                                background-repeat: no-repeat;
-                                background-size: 100% 40%;
-                                background-position: 0 85%;
-                                padding: 0 2px;
-                                font-weight: 700;
-                                color: #fff;
-                            ">70% средств</span> 
-                            мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс.
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'rebalance-info-modal';
+                
+                modal.innerHTML = `
+                    <div class="info-modal-content" onclick="event.stopPropagation()">
+                        <div class="info-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                            <h3 style="margin:0; color:#fff; font-size:20px; font-weight:800; font-family:'Inter', sans-serif;">Стратегия Эшелонов</h3>
+                            <button onclick="toggleEchelonGuide(false)" style="background:none; border:none; color:#888; font-size:28px; cursor:pointer;">×</button>
+                        </div>
+                        <div class="info-scroll-area">
+                            <div style="display:flex; flex-direction:column; gap:12px;">
+                                ${createEchelonItem('I', 'Надёжный', 'Компании, которые платят дивиденды и стараются их повышать', 'e1')}
+                                ${createEchelonItem('II', 'Стабильный', 'Компании, которые платят дивиденды, но выплаты разнятся', 'e2')}
+                                ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят', 'e3')}
+                                ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов', 'e4')}
+                            </div>
+                            
+                            <!-- Bottom Block -->
+                            <div id="info-dynamic-footer"></div>
                         </div>
                     </div>
-                </div>
-            `;
-        } else {
-            // === РЕБАЛАНСИРОВКА: СКРЫТО ===
-            footer.innerHTML = '';
-            footer.style.display = 'none';
-        }
-    }
+                `;
 
-    if (show) {
-        modal.style.display = 'flex';
-        setTimeout(() => {
-            modal.style.opacity = '1';
-            modal.style.pointerEvents = 'all';
-            modal.classList.add('info-modal-backdrop-active');
-        }, 10);
-        if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-    } else {
-        modal.style.opacity = '0';
-        modal.style.pointerEvents = 'none';
-        modal.classList.remove('info-modal-backdrop-active');
-        setTimeout(() => { modal.style.display = 'none'; }, 300);
-    }
-}
+                // Backdrop styles
+                Object.assign(modal.style, {
+                    position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+                    zIndex: '9999999', display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+                    background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(5px)', webkitBackdropFilter: 'blur(5px)',
+                    opacity: '0', transition: 'opacity 0.3s ease', pointerEvents: 'none'
+                });
+                document.body.appendChild(modal);
+
+                // CSS styles injection
+                if (!document.getElementById('base-modal-styles')) {
+                    const style = document.createElement('style');
+                    style.id = 'base-modal-styles';
+                    style.innerHTML = `
+                        .info-modal-content { width: 100%; max-width: 500px; background: #1c1c1e; border-radius: 24px 24px 0 0; padding: 24px; padding-bottom: 40px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); color: #fff; border-top: 1px solid rgba(255,255,255,0.1); max-height: 85vh; overflow-y: auto; box-sizing: border-box; }
+                        .info-modal-backdrop-active .info-modal-content { transform: translateY(0); }
+                        .modal-badge { width: 28px !important; height: 28px !important; min-width: 28px !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; background: #ffffff !important; font-family: 'JetBrains Mono', monospace !important; font-size: 12px !important; font-weight: 800 !important; border: 1.5px solid !important; box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important; margin-top: 2px !important; }
+                        .modal-badge.e1 { color: #10B981 !important; border-color: #10B981 !important; }
+                        .modal-badge.e2 { color: #3B82F6 !important; border-color: #3B82F6 !important; }
+                        .modal-badge.e3 { color: #F59E0B !important; border-color: #F59E0B !important; }
+                        .modal-badge.e4 { color: #EF4444 !important; border-color: #EF4444 !important; }
+                        
+                        /* Aurora Animation */
+                        @keyframes aurora-shift {
+                            0% { background-position: 0% 50%; }
+                            50% { background-position: 100% 50%; }
+                            100% { background-position: 0% 50%; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+
+            // === BOTTOM BLOCK (LIGHT AURORA / ICE) ===
+            const footer = document.getElementById('info-dynamic-footer');
+            if (footer) {
+                if (context === 'portfolio') {
+                    footer.style.display = 'block';
+                    footer.innerHTML = `
+                        <div style="
+                            margin-top: 24px;
+                            display: flex;
+                            gap: 16px;
+                            padding: 20px;
+                            /* LIGHT AURORA: Mint -> Ice Blue -> Pale Violet */
+                            background: linear-gradient(125deg, #F0FDF4 0%, #E0F2FE 45%, #F5F3FF 100%);
+                            background-size: 200% 200%;
+                            animation: aurora-shift 8s ease infinite;
+                            
+                            border-radius: 20px;
+                            border: 1px solid rgba(255, 255, 255, 0.8);
+                            /* Soft cyan glow for 'icy' feel */
+                            box-shadow: 0 10px 30px -5px rgba(56, 189, 248, 0.25), inset 0 0 20px rgba(255,255,255,0.6);
+                            position: relative;
+                            overflow: hidden;
+                        ">
+                             <!-- Subtle moving mesh overlay -->
+                             <div style="
+                                position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+                                background: radial-gradient(circle, rgba(52, 211, 153, 0.15) 0%, rgba(167, 139, 250, 0.1) 50%, transparent 80%);
+                                pointer-events: none;
+                                filter: blur(30px);
+                            "></div>
+
+                            <div style="
+                                width: 44px; height: 44px; min-width: 44px;
+                                display: flex; align-items: center; justify-content: center;
+                                /* Glassy White Circle */
+                                background: rgba(255, 255, 255, 0.7);
+                                backdrop-filter: blur(4px);
+                                border: 1px solid rgba(255, 255, 255, 0.9);
+                                border-radius: 50%;
+                                box-shadow: 0 4px 15px rgba(14, 165, 233, 0.1);
+                                position: relative; z-index: 1;
+                            ">
+                                <!-- Deep Teal/Aurora Green Icon -->
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2" style="width: 20px; height: 20px;">
+                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                                </svg>
+                            </div>
+
+                            <div style="flex: 1; position: relative; z-index: 1;">
+                                <div style="
+                                    font-family: 'Inter', sans-serif;
+                                    font-size: 12px;
+                                    font-weight: 800;
+                                    /* Gradient Title: Teal to Indigo to match Aurora */
+                                    background: linear-gradient(90deg, #0d9488, #4f46e5);
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                    margin-bottom: 6px;
+                                    letter-spacing: 0.08em;
+                                    text-transform: uppercase;
+                                ">
+                                    ВАЖНО ЗНАТЬ
+                                </div>
+
+                                <div style="
+                                    font-family: 'Inter', sans-serif;
+                                    font-size: 14px;
+                                    /* Slate 700 for high readability on light bg */
+                                    color: #334155;
+                                    line-height: 1.5;
+                                    font-weight: 500;
+                                ">
+                                    В Растущей части 
+                                    <span style="
+                                        color: #0f766e;
+                                        font-weight: 800;
+                                        /* Subtle frosty highlight */
+                                        background: rgba(255,255,255,0.6);
+                                        border: 1px solid rgba(255,255,255,0.8);
+                                        padding: 0 6px;
+                                        border-radius: 6px;
+                                        box-shadow: 0 2px 8px rgba(45, 212, 191, 0.15);
+                                    ">70% средств</span> 
+                                    мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс.
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    footer.innerHTML = '';
+                    footer.style.display = 'none';
+                }
+            }
+
+            if (show) {
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.style.opacity = '1';
+                    modal.style.pointerEvents = 'all';
+                    modal.classList.add('info-modal-backdrop-active');
+                }, 10);
+            } else {
+                modal.style.opacity = '0';
+                modal.style.pointerEvents = 'none';
+                modal.classList.remove('info-modal-backdrop-active');
+                setTimeout(() => { modal.style.display = 'none'; }, 300);
+            }
+        }
     
 // Генератор строки (ВЕРНУЛИ align-items: flex-start)
 function createEchelonItem(num, title, desc, colorClass) {
