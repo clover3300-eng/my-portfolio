@@ -9825,76 +9825,6 @@ body.dark-mode .portfolio-echelons-total-row {
 }
         /* ==================================================================== */
 
-    /* Контейнер кнопок внутри карточки */
-.capital-embedded-actions {
-    display: flex;
-    gap: 12px; /* Расстояние между кнопками */
-    margin-top: 20px; /* Отступ от прогноза */
-    padding-top: 16px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкий разделитель */
-}
-
-/* Общий стиль кнопок */
-.cap-btn {
-    flex: 1; /* Кнопки занимают равную ширину */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px;
-    border-radius: 12px;
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.cap-btn:active {
-    transform: scale(0.97);
-}
-
-.cap-btn svg {
-    width: 16px;
-    height: 16px;
-}
-
-/* Стиль кнопки "Новый расчет" (Прозрачное стекло) */
-.cap-btn.glass-secondary {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.cap-btn.glass-secondary:hover {
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
-}
-
-/* Стиль кнопки "Поделиться" (Aurora Green Glow) */
-.cap-btn.glass-primary {
-    /* Градиент в стиле блока прогноза */
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
-    border: 1px solid rgba(16, 185, 129, 0.3); /* Зеленая рамка */
-    color: #2ecc71; /* Ярко-зеленый текст */
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
-}
-
-.cap-btn.glass-primary:hover {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.1));
-    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
-    
-}
-    /* Можно просто добавить этот стиль, чтобы гарантированно скрыть старую панель */
-#portfolioActionPanelV2 {
-    display: none !important;
-}
-         /* ==================================================================== */
-
     </style>
 </head>
 <body onclick="hideAllTips(event)">
@@ -10324,30 +10254,6 @@ body.dark-mode .portfolio-echelons-total-row {
                     <div id="shareDate" style="font-size: 10px; color: #888;"></div>
                 </div>
             </div>
-            <div class="capital-forecast">
-        </div>
-
-    <div class="capital-embedded-actions" data-html2canvas-ignore="true">
-        
-        <button class="cap-btn glass-secondary" onclick="newCalculationWithHaptic()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                <path d="M3 3v5h5"/>
-            </svg>
-            <span>Новый расчёт</span>
-        </button>
-
-        <button class="cap-btn glass-primary" onclick="shareWithHaptic()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                <polyline points="16 6 12 2 8 6"/>
-                <line x1="12" y1="2" x2="12" y2="15"/>
-            </svg>
-            <span>Поделиться</span>
-        </button>
-        
-    </div>
-    </div>
             
             <!-- ===== ПЕРЕКЛЮЧАТЕЛЬ ДЕНЕЖНЫЙ ПОТОК / РАСТУЩАЯ ЧАСТЬ ===== -->
             <div class="portfolio-content-tabs">
@@ -10587,7 +10493,24 @@ body.dark-mode .portfolio-echelons-total-row {
         </div>
     </div>
     
-    
+    <!-- ===== ACTION PANEL (Sticky внизу) ===== -->
+    <div class="portfolio-action-panel-v2" id="portfolioActionPanelV2" style="display: none;">
+        <button class="portfolio-action-btn secondary" onclick="newCalculationWithHaptic()">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+            </svg>
+            Новый расчёт
+        </button>
+        <button class="portfolio-action-btn primary" onclick="shareWithHaptic()">
+            <svg viewBox="0 0 24 24">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <polyline points="16 6 12 2 8 6"/>
+                <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+            Поделиться
+        </button>
+    </div>
     
     <!-- Старые элементы для совместимости (скрытые) -->
     <div style="display:none;">
