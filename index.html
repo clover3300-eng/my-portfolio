@@ -16091,8 +16091,9 @@ initSwipeBack();
 
 
 /* === ФИНАЛ: ВАШИ СТИЛИ (Aurora Yellow + Marker) === */
+/* === ФИНАЛ: ВАШИ РОДНЫЕ СТИЛИ (CSS Variables + SVG) === */
 function toggleEchelonGuide(show, context = 'rebalance') {
-    // 1. Удаляем старую шторку для чистого обновления
+    // 1. Сброс старой шторки
     let oldModal = document.getElementById('rebalance-info-modal');
     if (oldModal && show) {
         oldModal.remove(); 
@@ -16100,7 +16101,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
 
     let modal = document.getElementById('rebalance-info-modal');
 
-    // 2. Создаем новую
+    // 2. Создание новой
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'rebalance-info-modal';
@@ -16132,7 +16133,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         });
         document.body.appendChild(modal);
 
-        // Базовые стили кружков
+        // Базовые стили (кружочки)
         if (!document.getElementById('base-modal-styles')) {
             const style = document.createElement('style');
             style.id = 'base-modal-styles';
@@ -16149,11 +16150,11 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         }
     }
 
-    // 3. НАСТРОЙКА НИЖНЕГО БЛОКА (AURORA YELLOW)
+    // 3. ВСТАВКА ВАШИХ СТИЛЕЙ
     const footer = document.getElementById('info-dynamic-footer');
     if (footer) {
         if (context === 'portfolio') {
-            // === ПОРТФЕЛЬ: ВАШИ СТИЛИ (AURORA YELLOW) ===
+            // === ИСПОЛЬЗУЕМ ВАШИ ПЕРЕМЕННЫЕ И СТИЛИ ===
             footer.style.display = 'block';
             footer.innerHTML = `
                 <div style="
@@ -16161,12 +16162,13 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                     display: flex;
                     gap: 14px;
                     padding: 18px;
-                    /* Желтый фон (glass) */
-                    background: rgba(251, 191, 36, 0.05); 
+                    /* Ваши переменные */
+                    background: var(--card-glass-aurora, rgba(251, 191, 36, 0.05)); 
+                    backdrop-filter: blur(16px);
+                    -webkit-backdrop-filter: blur(16px);
                     /* Желтая рамка */
                     border: 1px solid rgba(251, 191, 36, 0.2);
                     border-radius: 16px;
-                    backdrop-filter: blur(10px);
                 ">
                     <div style="
                         width: 40px; height: 40px; min-width: 40px;
@@ -16176,9 +16178,9 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                         border-radius: 12px;
                     ">
                         <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" style="width: 20px; height: 20px;">
-                             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                             <line x1="12" y1="9" x2="12" y2="13"/>
-                             <line x1="12" y1="17" x2="12.01" y2="17"/>
+                             <circle cx="12" cy="12" r="10"/>
+                             <line x1="12" y1="8" x2="12" y2="12"/>
+                             <line x1="12" y1="16" x2="12.01" y2="16"/>
                         </svg>
                     </div>
 
@@ -16187,14 +16189,15 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                             font-family: 'Inter', sans-serif;
                             font-size: 14px;
                             font-weight: 700;
-                            color: #fff; /* Белый заголовок на темном фоне */
+                            color: var(--text-deep, #fff); /* Ваша переменная */
                             margin-bottom: 6px;
-                        ">ВАЖНО ЗНАТЬ</div>
+                            text-transform: none; /* Убрал uppercase если он не нужен, или верните если нужен */
+                        ">Важно знать</div>
 
                         <div style="
                             font-family: 'Inter', sans-serif;
                             font-size: 13px;
-                            color: #ccc;
+                            color: var(--text-slate, #aaa); /* Ваша переменная */
                             line-height: 1.5;
                         ">
                             В Растущей части 
@@ -16205,15 +16208,15 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                                 background-position: 0 85%;
                                 padding: 0 2px;
                                 font-weight: 700;
-                                color: #fff;
+                                color: var(--text-deep, #fff);
                             ">70% средств</span> 
-                            мы держим в первых двух Эшелонах.
+                            мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс надёжности и доходности.
                         </div>
                     </div>
                 </div>
             `;
         } else {
-            // === РЕБАЛАНСИРОВКА: ПУСТО (Удалено) ===
+            // === РЕБАЛАНСИРОВКА: СКРЫТО ===
             footer.innerHTML = '';
             footer.style.display = 'none';
         }
