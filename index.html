@@ -9707,102 +9707,73 @@ body.dark-mode .portfolio-echelons-total-row {
          /* ==================================================================== */
 
     /* === НИЖНИЕ БЛОКИ В ШТОРКЕ === */
+/* =========================================
+   ИСПРАВЛЕНИЯ: ШТОРКА И ПОДСКАЗКИ
+   ========================================= */
 
-/* 1. Блок "Aurora" (Зеленый / Портфель) */
+/* 1. Блок "ВАЖНО" (Зеленый в Портфеле) - Делаем прозрачным */
 .portfolio-important-aurora {
-    /* Фон делаем прозрачным, чтобы совпадал с цветом шторки */
-    background: transparent !important; 
-    border: none !important; 
-    
-    /* Оставляем только фирменную зеленую полоску слева */
-    border-left: 4px solid #2E8B57 !important; 
-    
-    border-radius: 0 !important; /* Убираем скругление слева из-за полоски */
-    padding: 16px 20px !important; /* Чуть меньше отступы для аккуратности */
-    padding-left: 24px;
+    background: transparent !important; /* Прозрачный фон */
+    border: none !important;
+    border-left: 4px solid #2E8B57 !important; /* Только зеленая полоска */
+    border-radius: 0 !important;
+    padding: 10px 0 10px 20px !important;
     margin-top: 24px;
     display: flex;
     gap: 16px;
     align-items: flex-start;
 }
-
-/* Иконка */
-/* Цвет иконки */
 .important-aurora-icon {
     color: #2E8B57 !important;
-    margin-top: 2px;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
 }
-
-.important-aurora-content {
-    flex: 1;
-}
-
-important-aurora-title {
+.important-aurora-title {
     color: #2E8B57 !important;
-    margin-bottom: 6px;
+    font-weight: 700; font-size: 13px; text-transform: uppercase; margin-bottom: 4px;
 }
-
 .important-aurora-text {
-    color: #aaa !important; 
+    color: #aaa !important; /* Серый текст */
+    font-size: 13px; line-height: 1.5;
 }
 
-.important-aurora-text .highlight-marker {
-    color: #fff;
-    font-weight: 600;
-}
-
-/* 2. Блок "Ребалансировка" (Синий / Обычный) */
+/* 2. Блок "РЕБАЛАНСИРОВКА" (Синий) - Возвращаем его */
 .info-rebalance-block {
-    margin-top: 24px;
-    padding: 16px;
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 16px;
-    color: #fff;
-    font-size: 12px;
-    line-height: 1.5;
-    font-family: 'JetBrains Mono', monospace;
-}
-.info-rebalance-block b {
-    color: #60A5FA;
-}
-         /* ==================================================================== */
-
-    /* === ПОДСКАЗКА ДЛЯ % (Стиль как в Ребалансировке) === */
-#echelonPercentTooltip {
-    display: none; /* Скрыто по умолчанию */
-    
-    /* Растягиваем на всю ширину */
-    width: 100% !important;
-    box-sizing: border-box !important; /* Чтобы padding не ломал ширину */
-    
-    /* Темный фон и рамка как у инфо-блоков */
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 12px !important;
-    
+    margin-top: 24px !important;
     padding: 16px !important;
-    margin-top: 12px;
-    margin-bottom: 12px;
+    background: rgba(59, 130, 246, 0.1) !important; /* Синий фон */
+    border: 1px solid rgba(59, 130, 246, 0.2) !important;
+    border-radius: 16px !important;
+    color: #fff !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+}
+.info-rebalance-block b { color: #60A5FA !important; }
+
+/* 3. Подсказка "%" (Растягиваем как строку) */
+#echelonPercentTooltip {
+    display: none;
+    
+    /* Растягиваем на 100% и добавляем отступы как у строк таблицы */
+    width: 100% !important;
+    box-sizing: border-box !important;
+    
+    background: rgba(255, 255, 255, 0.05) !important; /* Цвет как у строк */
+    border-radius: 12px !important; /* Скругление как у строк */
+    
+    padding: 16px 16px !important;
+    margin: 12px 0 !important; /* Отступ сверху и снизу */
     
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     line-height: 1.5;
-    color: #aaa !important; /* Серый текст */
+    color: #aaa !important;
     text-align: left !important;
     
-    /* Анимация */
-    opacity: 0;
-    transform: translateY(-5px);
-    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.05) !important;
 }
-
-/* Класс для показа */
-#echelonPercentTooltip.show {
-    display: block !important;
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-}
+#echelonPercentTooltip.show { display: block !important; animation: fadeIn 0.3s ease; }
         /* ==================================================================== */
 
     </style>
