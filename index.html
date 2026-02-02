@@ -16042,15 +16042,15 @@ initSwipeBack();
 
  /* === ФИНАЛ: ВЫРАВНИВАНИЕ ПО ВЕРХУ (Как было) === */
 /* === ФИНАЛ: ВАШ ДИЗАЙН AURORA === */
+/* === ФИНАЛЬНАЯ ВЕРСИЯ ФУНКЦИИ (ИСПРАВЛЕННАЯ) === */
 function toggleEchelonGuide(show, context = 'rebalance') {
     let modal = document.getElementById('rebalance-info-modal');
 
-    // 1. Создание шторки
+    // 1. Если шторки нет - создаем каркас
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'rebalance-info-modal';
         
-        // Очищенный HTML (футер пустой, мы его заполним ниже)
         modal.innerHTML = `
             <div class="info-modal-content" onclick="event.stopPropagation()">
                 <div class="info-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
@@ -16078,7 +16078,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         });
         document.body.appendChild(modal);
         
-        // Вставляем базовые стили (если их нет)
+        // Вставляем базовые стили
         if (!document.getElementById('base-modal-styles')) {
             const style = document.createElement('style');
             style.id = 'base-modal-styles';
@@ -16095,11 +16095,11 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         }
     }
 
-    // 2. Логика смены контента
+    // 2. ЗАПОЛНЯЕМ НИЖНИЙ БЛОК (САМАЯ ВАЖНАЯ ЧАСТЬ)
     const footer = document.getElementById('info-dynamic-footer');
     if (footer) {
         if (context === 'portfolio') {
-            // === ВАШ AURORA БЛОК ===
+            // === ВАРИАНТ 1: ПОРТФЕЛЬ (Зеленый Aurora) ===
             footer.innerHTML = `
                 <div class="portfolio-important-aurora">
                     <div class="important-aurora-icon">
@@ -16112,13 +16112,14 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                     <div class="important-aurora-content">
                         <div class="important-aurora-title">Важно знать</div>
                         <div class="important-aurora-text">
-                            В Растущей части <span class="highlight-marker">70% средств</span> мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс надёжности и потенциальной доходности.
+                            В Растущей части <span style="color:#fff; font-weight:600;">70% средств</span> мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс надёжности и доходности.
                         </div>
                     </div>
                 </div>
             `;
         } else {
-            // === ОБЫЧНЫЙ СИНИЙ БЛОК ===
+            // === ВАРИАНТ 2: РЕБАЛАНСИРОВКА (Синий блок) ===
+            // Вот он, который пропадал!
             footer.innerHTML = `
                 <div class="info-rebalance-block">
                     💡 <b>Ребалансировка</b> помогает поддерживать баланс между группами, продавая дорогие активы и докупая дешевые.
@@ -16127,7 +16128,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         }
     }
 
-    // 3. Открытие
+    // 3. ОТКРЫТИЕ
     if (show) {
         modal.style.display = 'flex';
         setTimeout(() => {
@@ -16143,6 +16144,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
 }
+    
 // Генератор строки (ВЕРНУЛИ align-items: flex-start)
 function createEchelonItem(num, title, desc, colorClass) {
     return `
