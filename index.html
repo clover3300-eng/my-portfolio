@@ -16091,17 +16091,13 @@ initSwipeBack();
 
 
 /* === ФИНАЛ: ВАШИ СТИЛИ (Aurora Yellow + Marker) === */
-/* === ФИНАЛ: ВАШИ РОДНЫЕ СТИЛИ (CSS Variables + SVG) === */
+/* === ФИНАЛ: Стиль "Golden Aurora" (Гармоничный Янтарный) === */
 function toggleEchelonGuide(show, context = 'rebalance') {
-    // 1. Сброс старой шторки
     let oldModal = document.getElementById('rebalance-info-modal');
-    if (oldModal && show) {
-        oldModal.remove(); 
-    }
+    if (oldModal && show) oldModal.remove(); 
 
     let modal = document.getElementById('rebalance-info-modal');
 
-    // 2. Создание новой
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'rebalance-info-modal';
@@ -16119,7 +16115,6 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                         ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят', 'e3')}
                         ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов', 'e4')}
                     </div>
-                    
                     <div id="info-dynamic-footer"></div>
                 </div>
             </div>
@@ -16133,7 +16128,6 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         });
         document.body.appendChild(modal);
 
-        // Базовые стили (кружочки)
         if (!document.getElementById('base-modal-styles')) {
             const style = document.createElement('style');
             style.id = 'base-modal-styles';
@@ -16150,11 +16144,10 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         }
     }
 
-    // 3. ВСТАВКА ВАШИХ СТИЛЕЙ
+    // === НАСТРОЙКА НИЖНЕГО БЛОКА ===
     const footer = document.getElementById('info-dynamic-footer');
     if (footer) {
         if (context === 'portfolio') {
-            // === ИСПОЛЬЗУЕМ ВАШИ ПЕРЕМЕННЫЕ И СТИЛИ ===
             footer.style.display = 'block';
             footer.innerHTML = `
                 <div style="
@@ -16162,19 +16155,19 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                     display: flex;
                     gap: 14px;
                     padding: 18px;
-                    /* Ваши переменные */
-                    background: var(--card-glass-aurora, rgba(251, 191, 36, 0.05)); 
-                    backdrop-filter: blur(16px);
-                    -webkit-backdrop-filter: blur(16px);
-                    /* Желтая рамка */
-                    border: 1px solid rgba(251, 191, 36, 0.2);
+                    /* === ГАРМОНИЧНЫЙ ФОН (Градиент) === */
+                    /* Слева легкий янтарный оттенок, справа уходит в прозрачность */
+                    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.01) 100%);
+                    
+                    /* Тонкая рамка */
+                    border: 1px solid rgba(245, 158, 11, 0.15);
                     border-radius: 16px;
                 ">
                     <div style="
                         width: 40px; height: 40px; min-width: 40px;
                         display: flex; align-items: center; justify-content: center;
-                        background: rgba(251, 191, 36, 0.15);
-                        border: 1px solid rgba(251, 191, 36, 0.25);
+                        background: rgba(245, 158, 11, 0.1); /* Прозрачный фон иконки */
+                        border: 1px solid rgba(245, 158, 11, 0.2);
                         border-radius: 12px;
                     ">
                         <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" style="width: 20px; height: 20px;">
@@ -16189,40 +16182,39 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                             font-family: 'Inter', sans-serif;
                             font-size: 14px;
                             font-weight: 700;
-                            color: var(--text-deep, #fff); /* Ваша переменная */
+                            color: #F59E0B; /* Янтарный заголовок */
                             margin-bottom: 6px;
-                            text-transform: none; /* Убрал uppercase если он не нужен, или верните если нужен */
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
                         ">Важно знать</div>
 
                         <div style="
                             font-family: 'Inter', sans-serif;
                             font-size: 13px;
-                            color: var(--text-slate, #aaa); /* Ваша переменная */
+                            color: #ccc; /* Светло-серый текст */
                             line-height: 1.5;
                         ">
                             В Растущей части 
                             <span style="
-                                background: linear-gradient(120deg, rgba(251, 191, 36, 0.3) 0%, rgba(251, 191, 36, 0.3) 100%);
+                                background: linear-gradient(120deg, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.25) 100%);
                                 background-repeat: no-repeat;
                                 background-size: 100% 40%;
                                 background-position: 0 85%;
                                 padding: 0 2px;
                                 font-weight: 700;
-                                color: var(--text-deep, #fff);
+                                color: #fff;
                             ">70% средств</span> 
-                            мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс надёжности и доходности.
+                            мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс.
                         </div>
                     </div>
                 </div>
             `;
         } else {
-            // === РЕБАЛАНСИРОВКА: СКРЫТО ===
             footer.innerHTML = '';
             footer.style.display = 'none';
         }
     }
 
-    // 4. Открытие
     if (show) {
         modal.style.display = 'flex';
         setTimeout(() => {
