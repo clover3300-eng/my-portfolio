@@ -16093,12 +16093,12 @@ initSwipeBack();
 /* === ФИНАЛ: ВАШ ДИЗАЙН AURORA === */
 /* === ФИНАЛЬНАЯ ВЕРСИЯ ФУНКЦИИ (ИСПРАВЛЕННАЯ) === */
 /* === ФИНАЛЬНАЯ ВЕРСИЯ: Стили вшиты в код (Гарантия работы) === */
+/* === ФИНАЛ: Aurora с маркером + Удаление текста в ребалансировке === */
 function toggleEchelonGuide(show, context = 'rebalance') {
-    // 1. УДАЛЯЕМ старую шторку, чтобы она перерисовалась заново
+    // 1. Удаляем старую версию шторки (чтобы обновились стили)
     let oldModal = document.getElementById('rebalance-info-modal');
     if (oldModal && show) {
         oldModal.remove(); 
-        oldModal = null;
     }
 
     let modal = document.getElementById('rebalance-info-modal');
@@ -16108,6 +16108,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         modal = document.createElement('div');
         modal.id = 'rebalance-info-modal';
         
+        // HTML Каркас
         modal.innerHTML = `
             <div class="info-modal-content" onclick="event.stopPropagation()">
                 <div class="info-modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
@@ -16127,6 +16128,7 @@ function toggleEchelonGuide(show, context = 'rebalance') {
             </div>
         `;
 
+        // Стили подложки
         Object.assign(modal.style, {
             position: 'fixed', top: '0', left: '0', width: '100vw', height: '100vh',
             zIndex: '9999999', display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
@@ -16134,8 +16136,8 @@ function toggleEchelonGuide(show, context = 'rebalance') {
             opacity: '0', transition: 'opacity 0.3s ease', pointerEvents: 'none'
         });
         document.body.appendChild(modal);
-        
-        // Базовые стили для кружочков (их оставляем в CSS, так как они повторяются)
+
+        // Вставляем базовые стили для кружочков (если их нет)
         if (!document.getElementById('base-modal-styles')) {
             const style = document.createElement('style');
             style.id = 'base-modal-styles';
@@ -16152,14 +16154,24 @@ function toggleEchelonGuide(show, context = 'rebalance') {
         }
     }
 
-    // 3. ВСТАВЛЯЕМ КОНТЕНТ (СТИЛИ ПРЯМО ЗДЕСЬ)
+    // 3. НАСТРОЙКА НИЖНЕГО БЛОКА
     const footer = document.getElementById('info-dynamic-footer');
     if (footer) {
         if (context === 'portfolio') {
-            // === ВАРИАНТ 1: ПОРТФЕЛЬ (Aurora - Прозрачный с зеленой полоской) ===
-            // Стили background: transparent и border-left прописаны прямо тут!
+            // === ВАРИАНТ 1: ПОРТФЕЛЬ (Aurora Full Style) ===
+            // Зеленый градиент + Маркер для текста
+            footer.style.display = 'block';
             footer.innerHTML = `
-                <div style="margin-top: 24px; display: flex; gap: 16px; align-items: flex-start; padding: 12px 0 12px 20px; border-left: 4px solid #2E8B57; background: transparent;">
+                <div style="
+                    margin-top: 24px;
+                    /* Градиентный фон Aurora */
+                    background: linear-gradient(135deg, rgba(46, 139, 87, 0.15), rgba(46, 139, 87, 0.05));
+                    border: 1px solid rgba(46, 139, 87, 0.2);
+                    border-left: 4px solid #2E8B57;
+                    border-radius: 16px;
+                    padding: 16px;
+                    display: flex; gap: 14px; align-items: flex-start;
+                ">
                     <div style="color: #2E8B57; width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 2px;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 100%; height: 100%;">
                             <circle cx="12" cy="12" r="10"/>
@@ -16168,25 +16180,24 @@ function toggleEchelonGuide(show, context = 'rebalance') {
                         </svg>
                     </div>
                     <div style="flex: 1;">
-                        <div style="color: #2E8B57; font-weight: 700; font-size: 13px; text-transform: uppercase; margin-bottom: 4px; font-family: 'Inter', sans-serif;">Важно знать</div>
-                        <div style="color: #aaa; font-size: 13px; line-height: 1.5; font-family: 'Inter', sans-serif;">
-                            В Растущей части <span style="color:#fff; font-weight:600;">70% средств</span> мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс надёжности и доходности.
+                        <div style="color: #2E8B57; font-weight: 800; font-size: 13px; text-transform: uppercase; margin-bottom: 6px; font-family: 'Inter', sans-serif; letter-spacing: 0.5px;">Важно знать</div>
+                        <div style="color: #ccc; font-size: 13px; line-height: 1.5; font-family: 'Inter', sans-serif;">
+                            В Растущей части 
+                            <span style="background: #2E8B57; color: #fff; padding: 2px 6px; border-radius: 6px; font-weight: 600; box-shadow: 0 2px 4px rgba(46,139,87,0.3);">70% средств</span> 
+                            мы держим в первых двух Эшелонах — они обеспечивают оптимальный баланс.
                         </div>
                     </div>
                 </div>
             `;
         } else {
-            // === ВАРИАНТ 2: РЕБАЛАНСИРОВКА (Синий блок с рамкой) ===
-            // Стили рамки и фона прописаны прямо тут!
-            footer.innerHTML = `
-                <div style="margin-top: 24px; padding: 16px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 16px; color: #fff; font-size: 12px; line-height: 1.5; font-family: 'JetBrains Mono', monospace;">
-                    💡 <b style="color: #60A5FA;">Ребалансировка</b> помогает поддерживать баланс между группами, продавая дорогие активы и докупая дешевые.
-                </div>
-            `;
+            // === ВАРИАНТ 2: РЕБАЛАНСИРОВКА ===
+            // Полностью скрываем блок
+            footer.innerHTML = '';
+            footer.style.display = 'none';
         }
     }
 
-    // 4. ПОКАЗЫВАЕМ
+    // 4. Открытие
     if (show) {
         modal.style.display = 'flex';
         setTimeout(() => {
