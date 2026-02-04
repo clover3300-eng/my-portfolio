@@ -9947,123 +9947,120 @@ body.dark-mode .portfolio-echelons-total-row {
 }
         /* ==================================================================== */
 
-/* === КОМПАКТНЫЙ РЕЖИМ ДЛЯ КАРТОЧКИ ПОРТФЕЛЯ (EVOLUTION V2) === */
+/* === ГАРАНТИРОВАННОЕ УМЕНЬШЕНИЕ (EVOLUTION V3) === */
 
-/* 1. Сам темный блок (Карточка) */
-.portfolio-capital-card {
-    padding: 16px 20px !important; /* Уменьшили с 24px */
-    border-radius: 24px !important;
-    margin-bottom: 20px !important;
-    box-shadow: 0 15px 40px -10px rgba(15, 23, 42, 0.4) !important; /* Более глубокая тень */
+/* 1. Сжимаем саму карточку (через ID для силы) */
+#shareContainer.portfolio-capital-card {
+    padding: 14px 16px !important; /* Еще компактнее */
+    min-height: auto !important;
+    margin-bottom: 15px !important;
 }
 
-/* 2. Верхняя часть (Капитал) */
-.capital-top-row {
-    margin-bottom: 10px !important; /* Подтянули контент вверх (было 20px) */
+/* 2. Верхняя часть (Цифры капитала) */
+#shareContainer .capital-top-row {
+    margin-bottom: 8px !important; /* Убрали лишний воздух */
     align-items: center !important;
 }
 
-.capital-value {
-    font-size: 28px !important; /* Чуть аккуратнее (было 32px) */
-    letter-spacing: -0.5px !important;
+#shareContainer .capital-value {
+    font-size: 26px !important; /* Аккуратный размер */
+    margin-top: 2px !important;
 }
 
-.capital-fee-badge {
-    padding: 4px 8px !important;
-    font-size: 10px !important;
-    border-radius: 6px !important;
-}
-
-/* 3. Линия распределения (Тонкая и изящная) */
-.capital-distribution {
-    margin-bottom: 12px !important; /* Отступ до разделителя */
-}
-
-.capital-bar {
-    height: 3px !important; /* Сделали тонкую линию (было 8px) */
-    border-radius: 2px !important;
-    margin-bottom: 8px !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-}
-
-.capital-label-text {
-    font-size: 9px !important; /* Уменьшили подписи */
-    letter-spacing: 0.5px !important;
-    opacity: 0.5 !important;
-}
-
-.capital-label-pct {
-    font-size: 11px !important;
-}
-
-/* 4. Разделитель */
-.capital-divider {
-    margin: 8px 0 !important; /* Сжали пространство вокруг линии */
-    opacity: 0.15 !important;
-}
-
-/* 5. Блок Прогноза (Компактный) */
-.capital-forecast {
-    padding: 10px 12px !important; /* Уменьшили внутренние отступы (было 16px) */
-    border-radius: 14px !important;
-    gap: 12px !important;
-    background: rgba(16, 185, 129, 0.08) !important; /* Более легкий фон */
-    border: 1px solid rgba(16, 185, 129, 0.1) !important;
-    align-items: center !important; /* Центровка по вертикали */
-}
-
-/* Иконка прогноза - делаем маленькой и аккуратной */
-.forecast-icon-mini {
-    width: 32px !important; /* Было 44px */
-    height: 32px !important;
-    min-width: 32px !important;
-    border-radius: 10px !important;
-}
-
-.forecast-icon-mini svg {
-    width: 16px !important;
-    height: 16px !important;
-}
-
-/* Текст прогноза */
-.forecast-title-mini {
+#shareContainer .capital-label {
     font-size: 9px !important;
-    margin-bottom: 2px !important;
-    opacity: 0.8;
+    opacity: 0.6 !important;
 }
 
-/* Строка с суммой прогноза */
-.forecast-main-row {
-    margin-bottom: 0 !important; /* Убираем лишний отступ */
-}
-
-.forecast-total-mini {
-    font-size: 15px !important; /* Было 17px */
-}
-
-.forecast-percent-change {
-    font-size: 11px !important;
+#shareContainer .capital-fee-badge {
     padding: 2px 6px !important;
+    font-size: 9px !important;
 }
 
-/* Детали (купоны/рост) - скрываем для чистоты ИЛИ делаем в строку */
-/* Вариант А: Скрыть детали для максимальной компактности (раскомментируйте, если хотите): */
-/* .forecast-details-mini { display: none !important; } */
+/* 3. Линия распределения (Ультра-тонкая) */
+#shareContainer .capital-distribution {
+    margin-bottom: 8px !important;
+}
 
-/* Вариант Б: Оставить, но сделать очень компактно (по умолчанию): */
-.forecast-details-mini {
-    display: flex !important;
-    flex-direction: row !important; /* В одну строку */
-    gap: 12px !important;
+#shareContainer .capital-bar {
+    height: 2px !important; /* Тонкая "лазерная" линия */
+    border-radius: 1px !important;
+    margin-bottom: 6px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+#shareContainer .capital-label-text {
+    display: none !important; /* Скрываем слова "ОФЗ" и "Акции", оставляем точки */
+}
+
+#shareContainer .capital-label-pct {
+    font-size: 10px !important;
+    opacity: 0.8 !important;
+}
+
+#shareContainer .capital-labels {
     margin-top: 4px !important;
 }
 
-.forecast-detail-item .detail-label {
-    font-size: 9px !important;
+/* 4. Разделитель */
+#shareContainer .capital-divider {
+    display: none !important; /* Убираем линию-разделитель совсем */
 }
 
-.forecast-detail-item .detail-value {
-    font-size: 9px !important;
+/* 5. Блок Прогноза (Мини-футер) */
+#shareContainer .capital-forecast {
+    margin-top: 4px !important;
+    padding: 8px 10px !important; /* Очень компактно */
+    background: rgba(255, 255, 255, 0.03) !important; /* Едва заметный фон */
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 10px !important;
+    flex-direction: row !important; /* В одну строку */
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+/* Скрываем большую иконку прогноза */
+#shareContainer .forecast-icon-mini {
+    display: none !important;
+}
+
+/* Компактный текст прогноза */
+#shareContainer .forecast-content-mini {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+}
+
+#shareContainer .forecast-title-mini {
+    display: none !important; /* Скрываем заголовок "Прогноз через 3 года" */
+}
+
+#shareContainer .forecast-main-row {
+    margin-bottom: 0 !important;
+    gap: 8px !important;
+}
+
+#shareContainer .forecast-total-mini {
+    font-size: 13px !important;
+    color: var(--text-secondary) !important; /* Серый цвет для "Прогноз:" */
+}
+/* Добавляем слово "Прогноз" перед суммой через CSS */
+#shareContainer .forecast-total-mini::before {
+    content: 'Прогноз 3г: ';
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+#shareContainer .forecast-percent-change {
+    font-size: 11px !important;
+    padding: 2px 6px !important;
+    background: transparent !important; /* Убираем фон у процентов */
+}
+
+#shareContainer .forecast-details-mini {
+    display: none !important; /* Скрываем детали (купоны/рост) для чистоты */
 }
 
     
