@@ -16583,13 +16583,29 @@ function updateInfoBtnState(tabName) {
 
     /* --- ГЛАВНАЯ СТРОКА (ИТОГО) --- */
     div#shareContainer .forecast-main-row {
-        display: flex !important;
-        justify-content: space-between !important;
+        display: grid !important;
+        /* Три колонки: [Текст] [Процент] [.......Пусто.......] [Сумма] */
+        grid-template-columns: auto auto 1fr !important; 
         align-items: center !important;
+        gap: 8px !important;
         width: 100% !important;
-        margin-bottom: 8px !important; /* Отступ до деталей */
+        
+        /* Линия подчеркивания */
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.15) !important;
         padding-bottom: 8px !important;
-        border-bottom: 1px dashed rgba(16, 185, 129, 0.2) !important; /* Зеленая пунктирная линия */
+        margin-bottom: 8px !important;
+        
+        /* Убираем старые флекс-отступы */
+        justify-content: initial !important; 
+    }
+
+      div#shareContainer .forecast-main-row::before {
+        content: "Прогноз";
+        grid-column: 1 !important;
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        color: rgba(255,255,255,0.6);
+        font-weight: 500;
     }
 
     /* Надпись "Прогноз" слева */
@@ -16604,48 +16620,73 @@ function updateInfoBtnState(tabName) {
 
     /* Сумма справа */
     div#shareContainer .forecast-total-mini {
+        grid-column: 3 !important;
+        justify-self: end !important; /* Принудительно вправо */
+        
         font-family: 'JetBrains Mono', monospace !important;
         font-size: 15px !important;
         font-weight: 700 !important;
         color: #ffffff !important;
         text-align: right !important;
-        display: block !important;
-        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: auto !important;
     }
 
     /* Проценты скрываем отсюда, они дублируют смысл */
-    div#shareContainer .forecast-percent-change { display: none !important; }
+    div#shareContainer .forecast-percent-change {
+        display: inline-flex !important;
+        grid-column: 2 !important;
+        
+        background: rgba(74, 222, 128, 0.15) !important; /* Полупрозрачный зеленый фон */
+        color: #4ade80 !important; /* Яркий текст */
+        font-size: 10px !important;
+        font-weight: 600 !important;
+        padding: 2px 6px !important;
+        border-radius: 6px !important;
+        height: auto !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+    }
 
     /* --- ДЕТАЛИ (КУПОНЫ, РОСТ) --- */
-    div#shareContainer .forecast-details-mini {
+div#shareContainer .forecast-details-mini {
         display: flex !important;
         flex-direction: column !important;
         width: 100% !important;
-        padding: 0 !important; /* Убираем любые внутренние отступы */
+        padding: 0 !important;
         margin: 0 !important;
+        gap: 6px !important; /* Равномерный отступ */
     }
 
     /* 3. Гарантируем, что они по разным краям */
     div#shareContainer .forecast-detail-item {
-        display: flex !important;
-        justify-content: space-between !important;
+        display: grid !important;
+        /* Две колонки: [Текст слева] [Цифра справа] */
+        grid-template-columns: 1fr auto !important; 
+        align-items: center !important;
         width: 100% !important;
-        margin-bottom: 4px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: 16px !important; /* Фиксируем минимальную высоту строки */
     }
 
     /* 2. Подписи (Купоны, Рост) */
     div#shareContainer .detail-label {
+        text-align: left !important;
         color: rgba(255, 255, 255, 0.5) !important;
-        text-align: left !important; /* Строго слева */
-        width: auto !important;
+        font-size: 11px !important;
+        white-space: nowrap !important;
     }
 
-/* 1. Цифры в деталях (Купоны, Рост) */
+    /* Правая часть (Цифры) */
     div#shareContainer .detail-value {
-        color: #4ade80 !important; /* Яркий зеленый цвет (Neon Green) */
+        text-align: right !important;
+        color: #4ade80 !important; /* Ярко-зеленый */
         font-family: 'JetBrains Mono', monospace !important;
         font-weight: 500 !important;
-        text-align: right !important; /* Строго справа */
+        font-size: 11px !important;
+        white-space: nowrap !important;
     }
 
     /* 5. Выравниваем заголовок "Прогноз" так же, как и детали */
@@ -16653,10 +16694,7 @@ function updateInfoBtnState(tabName) {
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
-      div#shareContainer .forecast-total-mini::before {
-        margin-left: 0 !important; 
-        padding-left: 0 !important;
-    }
+      div#shareContainer .forecast-total-mini::before { content: none !important; }
 </style>
 </body>
 </html>
