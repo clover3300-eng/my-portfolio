@@ -4111,73 +4111,68 @@ body.dark-mode .portfolio-ofz-detail-row {
 /* === Заголовки таблицы эшелонов (как в Ребалансировке) === */
 .portfolio-echelons-headers {
     display: grid;
-    /* Сетка: Резина | 115px под сумму | 60px под процент */
+    /* 1fr | 115px | 60px */
     grid-template-columns: 1fr 115px 60px; 
-    
-    /* Выравнивание */
     align-items: center; 
     
-    /* ОТСТУПЫ (как в Денежном потоке) */
-    padding: 0 16px;       /* Боковые отступы как у списка */
-    margin-top: 24px;      /* Отступ сверху от переключателя (было тесно) */
-    margin-bottom: 12px;   /* Отступ снизу до первого элемента списка */
-    
-    /* Высота самой строки заголовков */
-    height: 20px; 
+    /* Отступы */
+    padding: 0 16px;       
+    margin-top: 24px;      
+    margin-bottom: 12px;   
+    height: 24px; 
 }
 
-/* === ОБЩИЙ СТИЛЬ ТЕКСТА (Для всех колонок) === */
+/* === 2. ОБЩИЙ СТИЛЬ ТЕКСТА (ИСПРАВЛЕН ЦВЕТ) === */
 .portfolio-echelon-h-text {
-    font-family: 'Inter', sans-serif; /* Обычный шрифт, не Monospace! */
-    font-size: 11px;                  /* Размер как у подписей */
-    font-weight: 600;                 /* Средняя жирность */
-    letter-spacing: 0.05em;           /* Чуть разряженные буквы */
-    text-transform: uppercase;        /* ЗАГЛАВНЫЕ БУКВЫ */
+    font-family: 'Inter', sans-serif; 
+    font-size: 11px;
+    font-weight: 600;              
+    letter-spacing: 0.05em;        
+    text-transform: uppercase;     
     
-    /* ЦВЕТ: Тот самый серый (rgba white 0.4 или var(--text-secondary)) */
-    color: rgba(255, 255, 255, 0.4);
+    /* ВАЖНО: Меняем цвет на переменную темы */
+    color: var(--text-secondary, #9ca3af); /* Если переменной нет, будет красивый серый #9ca3af */
     
-    /* Убираем лишние стили кнопок по умолчанию */
+    /* Сброс стилей */
     background: transparent;
     border: none;
-    cursor: default;
     padding: 0;
-}
-
-/* === НАСТРОЙКА 1-Й КОЛОНКИ (ЭШЕЛОН + ?) === */
-.portfolio-echelon-h-text:nth-child(1) {
+    
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Прижимаем влево */
-    gap: 6px; /* Отступ до знака вопроса */
+    height: 100%;
+}
+/* === 3. НАСТРОЙКИ СТОЛБЦОВ === */
+
+/* ЭШЕЛОН + ? */
+.portfolio-echelon-h-text:nth-child(1) {
+    justify-content: flex-start; 
+    gap: 6px;                    
+    padding-left: 4px; /* Визуальная компенсация */
 }
 .h-help-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     
-    /* Наследуем шрифт и цвет от родителя (будет серым) */
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    color: inherit; 
-    
+    /* Наследует цвет родителя (var(--text-secondary)) */
+    font-size: 11px; 
+    font-weight: 600;
+    color: inherit;  
     cursor: pointer;
     
-    /* Размеры зоны клика */
     width: 20px;
     height: 20px;
-    border-radius: 50%; /* Круглая подсветка при наведении */
+    border-radius: 50%;
     transition: all 0.2s ease;
 }
 
-/* === ЭФФЕКТЫ НАВЕДЕНИЯ (HOVER) === */
-/* Для вопроса (?) */
-.h-help-btn:hover {
-    color: #fff; /* При наведении белеет */
-    background: rgba(255, 255, 255, 0.1); /* Легкий фон */
+/* При наведении цвет становится ярче (белым или почти белым) */
+.h-help-btn:hover,
+.portfolio-echelon-h-text:nth-child(3):hover {
+    color: var(--text-primary, #ffffff); /* Становится основным цветом текста */
+    background: rgba(255, 255, 255, 0.05); /* Едва заметная подсветка */
 }
-
 
 /* Темная тема (Dark Mode) */
 body.dark-mode .h-help-btn {
@@ -4188,26 +4183,18 @@ body.dark-mode .h-help-btn:hover {
     background: rgba(255, 255, 255, 0.15);
     color: #fff;
 }
-/* === НАСТРОЙКА 2-Й КОЛОНКИ (ВЫДЕЛИТЬ) === */
+/* ВЫДЕЛИТЬ */
 .portfolio-echelon-h-text:nth-child(2) {
-    text-align: center; /* Строго по центру своей колонки */
+    justify-content: center; 
+    width: 100%;
 }
 
-/* === НАСТРОЙКА 3-Й КОЛОНКИ (%) === */
+/* % */
 .portfolio-echelon-h-text:nth-child(3) {
-    /* Центрируем кнопку % */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    
-    cursor: pointer; /* Делаем курсор "рукой" */
-    
-    /* Размеры зоны нажатия (чтобы пальцем попасть было легко) */
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+    justify-content: center; 
+    width: 100%;
+    cursor: pointer;
+    transition: color 0.2s ease;
 }
 
 /* === СТИЛЬ КНОПКИ ВОПРОСА (?) === */
