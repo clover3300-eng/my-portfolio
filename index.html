@@ -9947,6 +9947,126 @@ body.dark-mode .portfolio-echelons-total-row {
 }
         /* ==================================================================== */
 
+/* === КОМПАКТНЫЙ РЕЖИМ ДЛЯ КАРТОЧКИ ПОРТФЕЛЯ (EVOLUTION V2) === */
+
+/* 1. Сам темный блок (Карточка) */
+.portfolio-capital-card {
+    padding: 16px 20px !important; /* Уменьшили с 24px */
+    border-radius: 24px !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 15px 40px -10px rgba(15, 23, 42, 0.4) !important; /* Более глубокая тень */
+}
+
+/* 2. Верхняя часть (Капитал) */
+.capital-top-row {
+    margin-bottom: 10px !important; /* Подтянули контент вверх (было 20px) */
+    align-items: center !important;
+}
+
+.capital-value {
+    font-size: 28px !important; /* Чуть аккуратнее (было 32px) */
+    letter-spacing: -0.5px !important;
+}
+
+.capital-fee-badge {
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+    border-radius: 6px !important;
+}
+
+/* 3. Линия распределения (Тонкая и изящная) */
+.capital-distribution {
+    margin-bottom: 12px !important; /* Отступ до разделителя */
+}
+
+.capital-bar {
+    height: 3px !important; /* Сделали тонкую линию (было 8px) */
+    border-radius: 2px !important;
+    margin-bottom: 8px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.capital-label-text {
+    font-size: 9px !important; /* Уменьшили подписи */
+    letter-spacing: 0.5px !important;
+    opacity: 0.5 !important;
+}
+
+.capital-label-pct {
+    font-size: 11px !important;
+}
+
+/* 4. Разделитель */
+.capital-divider {
+    margin: 8px 0 !important; /* Сжали пространство вокруг линии */
+    opacity: 0.15 !important;
+}
+
+/* 5. Блок Прогноза (Компактный) */
+.capital-forecast {
+    padding: 10px 12px !important; /* Уменьшили внутренние отступы (было 16px) */
+    border-radius: 14px !important;
+    gap: 12px !important;
+    background: rgba(16, 185, 129, 0.08) !important; /* Более легкий фон */
+    border: 1px solid rgba(16, 185, 129, 0.1) !important;
+    align-items: center !important; /* Центровка по вертикали */
+}
+
+/* Иконка прогноза - делаем маленькой и аккуратной */
+.forecast-icon-mini {
+    width: 32px !important; /* Было 44px */
+    height: 32px !important;
+    min-width: 32px !important;
+    border-radius: 10px !important;
+}
+
+.forecast-icon-mini svg {
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* Текст прогноза */
+.forecast-title-mini {
+    font-size: 9px !important;
+    margin-bottom: 2px !important;
+    opacity: 0.8;
+}
+
+/* Строка с суммой прогноза */
+.forecast-main-row {
+    margin-bottom: 0 !important; /* Убираем лишний отступ */
+}
+
+.forecast-total-mini {
+    font-size: 15px !important; /* Было 17px */
+}
+
+.forecast-percent-change {
+    font-size: 11px !important;
+    padding: 2px 6px !important;
+}
+
+/* Детали (купоны/рост) - скрываем для чистоты ИЛИ делаем в строку */
+/* Вариант А: Скрыть детали для максимальной компактности (раскомментируйте, если хотите): */
+/* .forecast-details-mini { display: none !important; } */
+
+/* Вариант Б: Оставить, но сделать очень компактно (по умолчанию): */
+.forecast-details-mini {
+    display: flex !important;
+    flex-direction: row !important; /* В одну строку */
+    gap: 12px !important;
+    margin-top: 4px !important;
+}
+
+.forecast-detail-item .detail-label {
+    font-size: 9px !important;
+}
+
+.forecast-detail-item .detail-value {
+    font-size: 9px !important;
+}
+
+    
     </style>
 </head>
 <body onclick="hideAllTips(event)">
