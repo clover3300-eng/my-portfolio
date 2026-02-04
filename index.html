@@ -16625,30 +16625,27 @@ function updateInfoBtnState(tabName) {
         margin: 0 !important;
     }
 
+    /* 3. Гарантируем, что они по разным краям */
     div#shareContainer .forecast-detail-item {
         display: flex !important;
-        justify-content: space-between !important; /* Текст слева, цифра справа */
-        align-items: center !important;
+        justify-content: space-between !important;
         width: 100% !important;
-        padding: 0 !important; /* Гарантируем отсутствие боковых отступов */
-        margin: 0 !important;
-        border: none !important;
-        background: transparent !important;
+        margin-bottom: 4px !important;
     }
 
+    /* 2. Подписи (Купоны, Рост) */
     div#shareContainer .detail-label {
-        text-align: left !important; /* Жестко влево */
-        padding-left: 0 !important;
-        margin-left: 0 !important;
-        flex-grow: 0 !important; /* Запрещаем растягиваться */
-        min-width: auto !important;
-        /* Убедимся, что нет лишних отступов от иконок, если они там скрыты */
+        color: rgba(255, 255, 255, 0.5) !important;
+        text-align: left !important; /* Строго слева */
+        width: auto !important;
     }
 
+/* 1. Цифры в деталях (Купоны, Рост) */
     div#shareContainer .detail-value {
-        text-align: right !important;
-        padding-right: 0 !important;
-        margin-right: 0 !important;
+        color: #4ade80 !important; /* Яркий зеленый цвет (Neon Green) */
+        font-family: 'JetBrains Mono', monospace !important;
+        font-weight: 500 !important;
+        text-align: right !important; /* Строго справа */
     }
 
     /* 5. Выравниваем заголовок "Прогноз" так же, как и детали */
