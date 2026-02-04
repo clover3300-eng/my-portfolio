@@ -16625,30 +16625,59 @@ function updateInfoBtnState(tabName) {
         margin: 0 !important;
     }
 
+    /* 1. Настраиваем строку-контейнер */
     div#shareContainer .forecast-detail-item {
         display: flex !important;
-        justify-content: space-between !important; /* Текст слева, цифра справа */
-        align-items: center !important;
+        align-items: flex-end !important; /* Выравнивание по нижней линии текста */
         width: 100% !important;
-        padding: 0 !important; /* Гарантируем отсутствие боковых отступов */
-        margin: 0 !important;
-        border: none !important;
+        margin-bottom: 4px !important;
         background: transparent !important;
+        padding: 0 !important;
+        gap: 0 !important; /* Убираем все зазоры, будем управлять ими внутри */
     }
 
+   /* 2. Левая часть (Текст + Квадратик + Точки) */
     div#shareContainer .detail-label {
-        text-align: left !important; /* Жестко влево */
-        padding-left: 0 !important;
-        margin-left: 0 !important;
-        flex-grow: 0 !important; /* Запрещаем растягиваться */
-        min-width: auto !important;
-        /* Убедимся, что нет лишних отступов от иконок, если они там скрыты */
+        display: flex !important;
+        align-items: center !important;
+        flex-grow: 1 !important; /* Элемент растягивается на всю свободную ширину */
+        color: rgba(255,255,255,0.6) !important;
+        font-size: 11px !important;
+        white-space: nowrap !important; /* Текст в одну строку */
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
+    /* === КВАДРАТИК (Создаем его прямо тут) === */
+    div#shareContainer .detail-label::before {
+        content: '' !important;
+        display: block !important;
+        min-width: 6px !important;
+        height: 6px !important;
+        background: #4ade80 !important; /* Салатовый цвет */
+        border-radius: 1px !important;
+        margin-right: 6px !important; /* Расстояние от квадратика до слова */
+        margin-bottom: 2px !important; /* Центровка по вертикали */
+    }
+
+    /* === МОСТИК (Точки) === */
+    div#shareContainer .detail-label::after {
+        content: '' !important;
+        flex-grow: 1 !important; /* Занимает всё место между словом и цифрой */
+        border-bottom: 1px dotted rgba(255,255,255,0.2) !important; /* Сами точки */
+        margin-left: 6px !important; /* Отступ от слова до точек */
+        margin-right: 6px !important; /* Отступ от точек до цифры */
+        margin-bottom: 4px !important; /* Поднимаем точки на уровень текста */
+    }
+
+    /* 3. Правая часть (Цифра) */
     div#shareContainer .detail-value {
+        flex-shrink: 0 !important; /* Запрещаем цифре сжиматься */
         text-align: right !important;
-        padding-right: 0 !important;
-        margin-right: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        color: #fff !important;
+        font-weight: 500 !important;
     }
 
     /* 5. Выравниваем заголовок "Прогноз" так же, как и детали */
