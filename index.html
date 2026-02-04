@@ -4132,8 +4132,8 @@ body.dark-mode .portfolio-ofz-detail-row {
     padding-right: 0;  /* Убираем лишние отступы */
 }
 .portfolio-echelon-h-text:nth-child(3) {
-    text-align: right;
-    padding-right: 6px;
+    text-align: center; /* Строго по центру колонки */
+    color: rgba(255, 255, 255, 0.4); /* (Опционально) цвет заголовка, если нужно */
 }
 
 /* Подсказка для % - убираем */
@@ -5466,18 +5466,20 @@ body.dark-mode .echelon-header-new {
 
 /* Бейдж с процентами */
 .echelon-percent-badge {
-    /* ...старые настройки шрифта... */
+    /* ... ваши старые настройки шрифта и цвета ... */
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 700;
-    color: var(--text-slate);
-    background: rgba(255, 255, 255, 0.1);
-    padding: 4px 8px;
-    border-radius: 6px;
     
-    justify-self: end; /* Прижимаем бейдж к самому правому краю */
+    /* ВАЖНОЕ ИЗМЕНЕНИЕ: */
+    justify-self: center; /* Было end -> Ставим center */
+    
     min-width: 45px;
     text-align: center;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--text-slate);
 }
 
 .echelon-info-icon {
