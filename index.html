@@ -4111,12 +4111,12 @@ body.dark-mode .portfolio-ofz-detail-row {
 /* === Заголовки таблицы эшелонов (как в Ребалансировке) === */
 .portfolio-echelons-headers {
     display: grid;
-    grid-template-columns: 1fr 110px 60px;
-    gap: 0px;
-    padding: 12px 16px;
+    /* 1fr (Название) | 110px (Колонка под Сумму) | 60px (Колонка под %) */
+    grid-template-columns: 1fr 115px 60px; 
+    gap: 8px; /* Одинаковый отступ везде */
+    padding: 12px 16px; /* Важно: боковые отступы должны совпадать с отступами в строках */
     margin-bottom: 8px;
 }
-
 .portfolio-echelon-h-text {
     font-family: 'Inter', sans-serif;
     font-size: 10px;
@@ -4126,11 +4126,11 @@ body.dark-mode .portfolio-ofz-detail-row {
     color: var(--text-slate);
 }
 
+/* Настраиваем конкретно заголовок "ВЫДЕЛИТЬ" (2-й элемент) */
 .portfolio-echelon-h-text:nth-child(2) {
-    text-align: right;    /* Выравниваем вправо, как и цифры суммы */
-    padding-right: 14px;  /* Добавляем отступ, чтобы попасть ровно над суммой */
+    text-align: center; /* Прижимаем вправо */
+    padding-right: 0;  /* Убираем лишние отступы */
 }
-
 .portfolio-echelon-h-text:nth-child(3) {
     text-align: right;
     padding-right: 6px;
@@ -5442,27 +5442,42 @@ body.dark-mode .echelon-header-new {
     color: var(--claude-text-primary);
 }
 
+* Правый контейнер внутри строки эшелона */
 .echelon-header-right {
-    display: flex;
+    display: grid;
+    /* ВАЖНО: Ширина колонок один-в-один как в шапке (115px и 60px) */
+    grid-template-columns: 115px 60px; 
+    gap: 8px; /* Тот же gap, что в шапке */
     align-items: center;
-    gap: 12px;
 }
 
+/* Сама сумма */
 .echelon-sum {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--claude-text-secondary);
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    
+    text-align: right;   /* <--- Прижимаем сумму вправо, как вы просили */
+    padding-right: 12px; /* <-- ВАЖНО: Сдвигаем цифры от края ближе к центру */
+    width: 100%;
+    white-space: nowrap; /* Запрет переноса строк */
 }
 
+/* Бейдж с процентами */
 .echelon-percent-badge {
-    padding: 4px 10px;
-    border-radius: 8px;
+    /* ...старые настройки шрифта... */
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 700;
-    background: rgba(46, 139, 87, 0.12);
-    color: #2E8B57;
+    color: var(--text-slate);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+    
+    justify-self: end; /* Прижимаем бейдж к самому правому краю */
+    min-width: 45px;
+    text-align: center;
 }
 
 .echelon-info-icon {
