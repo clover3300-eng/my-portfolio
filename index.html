@@ -4131,9 +4131,59 @@ body.dark-mode .portfolio-ofz-detail-row {
     text-align: center; /* Прижимаем вправо */
     padding-right: 0;  /* Убираем лишние отступы */
 }
+/* 3-й заголовок (%) превращаем в кнопку */
 .portfolio-echelon-h-text:nth-child(3) {
-    text-align: center; /* Строго по центру колонки */
+    /* 1. Позиционирование и размеры */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto; /* Центрируем кнопку внутри её колонки (60px) */
+    width: 28px;    /* Фиксированный размер для аккуратности */
+    height: 28px;
+    
+    /* 2. Стиль "Стекло" (Glassmorphism) */
+    background: rgba(0, 0, 0, 0.04); /* Легкая подложка для светлой темы */
+    border: 1px solid rgba(0, 0, 0, 0.08); /* Тонкая рамка */
+    border-radius: 8px; /* Мягкий квадрат (Squircle) */
+    
+    /* 3. Текст и курсор */
     color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer; /* Показываем, что можно нажать */
+    user-select: none; /* Чтобы текст не выделялся при клике */
+    
+    /* 4. Плавная анимация */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Эффект при наведении (для ПК) */
+.portfolio-echelon-h-text:nth-child(3):hover {
+    background: rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px); /* Легкое всплытие */
+}
+
+/* Эффект при нажатии (Активное состояние) */
+.portfolio-echelon-h-text:nth-child(3):active {
+    transform: scale(0.92); /* Эффект нажатия внутрь */
+    background: var(--accent-blue); /* Подсветка цветом бренда */
+    border-color: var(--accent-blue);
+    color: white; /* Текст становится белым */
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.4); /* Свечение */
+}
+
+/* === АДАПТАЦИЯ ДЛЯ ТЕМНОЙ ТЕМЫ === */
+/* Добавьте этот блок, чтобы кнопка красиво светилась в Dark Mode */
+body.dark-mode .portfolio-echelon-h-text:nth-child(3) {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+}
+
+body.dark-mode .portfolio-echelon-h-text:nth-child(3):hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
 }
 
 /* Подсказка для % - убираем */
