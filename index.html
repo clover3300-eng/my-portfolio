@@ -4150,25 +4150,43 @@ body.dark-mode .portfolio-ofz-detail-row {
     gap: 6px;                    
     padding-left: 4px; /* Визуальная компенсация */
 }
+/* Стиль кнопки "?" (Голубой кружок) */
 .h-help-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     
-    /* Наследует цвет родителя (var(--text-secondary)) */
-    font-size: 11px; 
-    font-weight: 600;
-    color: inherit;  
-    cursor: pointer;
+    /* Размеры кружка (чуть меньше, чтобы выглядело аккуратно) */
+    width: 18px; 
+    height: 18px;
     
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    transition: all 0.2s ease;
+    /* ОФОРМЛЕНИЕ: Голубой фон */
+    background: var(--accent-blue, #3498db); /* Использует ваш основной синий цвет */
+    color: #ffffff; /* Белый вопросительный знак */
+    
+    /* Форма */
+    border-radius: 50%; /* Круг */
+    
+    /* Шрифт */
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3); /* Легкая тень для объема */
+    transition: transform 0.2s ease, opacity 0.2s;
 }
 
-/* При наведении цвет становится ярче (белым или почти белым) */
-.h-help-btn:hover,
+/* Эффект при наведении */
+.h-help-btn:hover {
+    transform: scale(1.1); /* Чуть увеличивается */
+    opacity: 0.9;          /* Чуть меняется прозрачность */
+}
+
+/* Эффект при нажатии */
+.h-help-btn:active {
+    transform: scale(0.95);
+}
 .portfolio-echelon-h-text:nth-child(3):hover {
     color: var(--text-primary, #ffffff); /* Становится основным цветом текста */
     background: rgba(255, 255, 255, 0.05); /* Едва заметная подсветка */
