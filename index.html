@@ -4130,6 +4130,64 @@ body.dark-mode .portfolio-ofz-detail-row {
     color: var(--text-slate);
 }
 
+        /* 1. Настройка заголовка (Текст + Кнопка) */
+.portfolio-echelon-h-text:nth-child(1) {
+    display: flex;
+    align-items: center;         /* Центрируем по вертикали */
+    justify-content: flex-start; /* Прижимаем влево (над иконками активов) */
+    gap: 8px;                    /* Аккуратный отступ между словом и кнопкой */
+    text-align: left;
+}
+
+/* 2. Единый стиль для кнопок-подсказок (?, %, и др.) */
+.h-help-btn {
+    /* Геометрия */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;   /* Фиксированный размер */
+    height: 24px;
+    
+    /* Оформление (Glassmorphism) */
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 8px; /* Мягкий квадрат (как у Apple/современных UI) */
+    
+    /* Текст */
+    color: var(--text-secondary); /* Цвет текста (серый) */
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; /* Чуть крупнее, чем в процентах, так как это один символ */
+    font-weight: 700;
+    
+    /* Интерактивность */
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Эффект наведения (Hover) */
+.h-help-btn:hover {
+    background: rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+/* Эффект нажатия (Active) */
+.h-help-btn:active {
+    transform: scale(0.92);        /* Кнопка "пружинит" внутрь */
+    background: var(--accent-blue); /* Вспыхивает вашим синим цветом */
+    border-color: var(--accent-blue);
+    color: white;                  /* Знак вопроса становится белым */
+}
+
+/* Темная тема (Dark Mode) */
+body.dark-mode .h-help-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+body.dark-mode .h-help-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
 /* Настраиваем конкретно заголовок "ВЫДЕЛИТЬ" (2-й элемент) */
 .portfolio-echelon-h-text:nth-child(2) {
     text-align: center; /* Прижимаем вправо */
@@ -10432,16 +10490,10 @@ body.dark-mode .portfolio-echelons-total-row {
                 
                <div class="portfolio-echelons-headers">
     
-    <span class="portfolio-echelon-h-text" style="display: flex; align-items: center; gap: 6px;">
-        ЭШЕЛОН
-        <button onclick="toggleEchelonGuide(true, 'portfolio')" style="background: rgba(255,255,255,0.15); border: none; color: var(--text-secondary, #aaa); width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: all 0.2s;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-            </svg>
-        </button>
-    </span>
+    <div class="portfolio-echelon-h-text">
+    ЭШЕЛОН 
+    <div class="h-help-btn" onclick="toggleEchelonGuide(true, 'portfolio')">?</div>
+</div>
 
     <span class="portfolio-echelon-h-text">ВЫДЕЛИТЬ</span>
     <span class="portfolio-echelon-h-text clickable" onclick="toggleEchelonPercentHelp(event)">%</span>
