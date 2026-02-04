@@ -4123,24 +4123,25 @@ body.dark-mode .portfolio-ofz-detail-row {
     height: 40px; /* Фиксируем высоту шапки для аккуратности */
 }
 .portfolio-echelon-h-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-slate);
+    /* Цвет "как у Облигаций" (спокойный серый полупрозрачный) */
+    color: rgba(255, 255, 255, 0.4); 
+    
+    font-family: 'JetBrains Mono', monospace; /* На всякий случай фиксируем шрифт */
+    font-size: 11px; /* Чуть меньше основного текста, чтобы выглядело как подпись */
+    text-transform: uppercase; /* (Опционально) Делает буквы ЗАГЛАВНЫМИ, как часто бывает в заголовках */
+    letter-spacing: 0.05em;    /* Чуть разряжаем буквы для стиля */
 }
 
         /* 1. Настройка заголовка (Текст + Кнопка) */
 .portfolio-echelon-h-text:nth-child(1) {
     display: flex;
-    align-items: center; /* Центрируем слово и кнопку по вертикали */
-    justify-content: flex-start; /* Прижимаем влево */
-    gap: 8px; /* Отступ между словом и вопросом */
-    padding-left: 2px; /* Микро-отступ от края */
+    align-items: center;
+    justify-content: center; /* <--- ГЛАВНОЕ: Ставим по центру колонки */
+    gap: 6px;
+    padding-left: 0;         /* Убираем отступ, чтобы был идеальный центр */
     
     font-weight: 700;
-    color: var(--text-secondary); /* Цвет текста "ЭШЕЛОН" */
+    /* Цвет зададим ниже для всех сразу */
 }
 
 /* 2. Единый стиль для кнопок-подсказок (?, %, и др.) */
@@ -4156,7 +4157,7 @@ body.dark-mode .portfolio-ofz-detail-row {
     border: 1px solid rgba(127, 140, 141, 0.3); /* Очень тонкая серая рамка */
     border-radius: 6px;
     
-    color: var(--text-secondary);
+    color: inherit;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 700;
@@ -4210,7 +4211,7 @@ body.dark-mode .h-help-btn:hover {
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 8px;
     
-    color: var(--text-secondary);
+    color: inherit;
     font-size: 11px;
     font-weight: 700;
     cursor: pointer;
