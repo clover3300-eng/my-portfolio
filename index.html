@@ -4145,44 +4145,38 @@ body.dark-mode .portfolio-ofz-detail-row {
 
 /* 2. Единый стиль для кнопок-подсказок (?, %, и др.) */
 .h-help-btn {
-    /* Геометрия */
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;   /* Фиксированный размер */
-    height: 24px;
+    width: 20px;
+    height: 20px;
     
-    /* Оформление (Glassmorphism) */
-    background: rgba(0, 0, 0, 0.04);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 8px; /* Мягкий квадрат (как у Apple/современных UI) */
+    /* Прозрачная по умолчанию - Quiet Luxury */
+    background: transparent; 
+    border: 1px solid rgba(127, 140, 141, 0.3); /* Очень тонкая серая рамка */
+    border-radius: 6px;
     
-    /* Текст */
-    color: var(--text-secondary); /* Цвет текста (серый) */
+    color: var(--text-secondary);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px; /* Чуть крупнее, чем в процентах, так как это один символ */
+    font-size: 11px;
     font-weight: 700;
-    
-    /* Интерактивность */
     cursor: pointer;
-    user-select: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s ease;
 }
 
-/* Эффект наведения (Hover) */
+/* При наведении */
 .h-help-btn:hover {
-    background: rgba(0, 0, 0, 0.08);
-    transform: translateY(-1px);
+    background: rgba(127, 140, 141, 0.1);
+    border-color: var(--text-secondary);
 }
 
-/* Эффект нажатия (Active) */
+/* При нажатии */
 .h-help-btn:active {
-    transform: scale(0.92);        /* Кнопка "пружинит" внутрь */
-    background: var(--accent-blue); /* Вспыхивает вашим синим цветом */
+    transform: scale(0.95);
+    background: var(--accent-blue);
     border-color: var(--accent-blue);
-    color: white;                  /* Знак вопроса становится белым */
+    color: white;
 }
-
 /* Темная тема (Dark Mode) */
 body.dark-mode .h-help-btn {
     background: rgba(255, 255, 255, 0.06);
@@ -10489,7 +10483,7 @@ body.dark-mode .portfolio-echelons-total-row {
                <div class="portfolio-echelons-headers">
     
     <div class="portfolio-echelon-h-text">
-    ЭШЕЛОН 
+    <span>ЭШЕЛОН</span>
     <div class="h-help-btn" onclick="toggleEchelonGuide(true, 'portfolio')">?</div>
 </div>
 
