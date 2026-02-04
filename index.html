@@ -16520,144 +16520,126 @@ function updateInfoBtnState(tabName) {
         
         
     </script>
-<style>
-    /* 1. Карточка: компактная и без лишних зазоров */
+  <style>
+/* 1. Настройка карточки */
     div#shareContainer.portfolio-capital-card {
         padding: 14px 18px !important;
         gap: 0 !important;
         min-height: auto !important;
-        margin-bottom: 12px !important;
     }
 
-    /* 2. Верхний блок (Капитал) */
-    div#shareContainer .capital-top-row {
-        margin-bottom: 4px !important; /* Ближе к линии */
-    }
-    div#shareContainer .capital-value {
-        font-size: 28px !important;
-        line-height: 1.1 !important;
-    }
-
-    /* 3. Линия распределения (Тонкая) */
+    /* 2. Капитал и Линия */
+    div#shareContainer .capital-top-row { margin-bottom: 6px !important; }
+    div#shareContainer .capital-value { font-size: 28px !important; line-height: 1.1 !important; }
+    
     div#shareContainer .capital-distribution {
-        margin-bottom: 6px !important;
+        margin-bottom: 8px !important;
         margin-top: 4px !important;
     }
     div#shareContainer .capital-bar {
-        height: 2px !important; /* Лазерная линия */
-        margin-bottom: 4px !important;
+        height: 2px !important; /* Тонкая линия */
+        margin-bottom: 6px !important;
     }
-    
-    /* --- ВЕРНУЛИ ПОДПИСИ (Акции/ОФЗ) --- */
+
+    /* === ВОЗВРАЩАЕМ СЛОВА "АКЦИИ" И "ОБЛИГАЦИИ" === */
     div#shareContainer .capital-labels {
-        margin-top: 2px !important;
+        margin-top: 4px !important;
     }
     div#shareContainer .capital-label-text {
-        display: block !important; /* Включили обратно */
-        font-size: 9px !important;
-        opacity: 0.5 !important;
-        margin-right: 3px !important;
+        display: block !important; /* Показываем текст */
+        font-size: 10px !important; /* Мелкий шрифт */
+        opacity: 0.6 !important; /* Чуть прозрачный */
+        font-weight: 500 !important;
+        margin-top: 1px !important;
     }
     div#shareContainer .capital-label-pct {
-        font-size: 10px !important;
+        font-size: 11px !important;
     }
 
-    /* 4. Разделитель убираем (он не нужен) */
+    /* 3. Убираем разделитель */
     div#shareContainer .capital-divider { display: none !important; }
 
-    /* 5. ПРОГНОЗ: Бесшовный стиль с деталями */
+    /* === ПРОГНОЗ: БЕСШОВНЫЙ С ДЕТАЛЯМИ === */
     div#shareContainer .capital-forecast {
         background: transparent !important;
         border: none !important;
-        padding: 8px 0 0 0 !important; /* Чуть больше места сверху для воздуха */
-        margin-top: 4px !important;
-        border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important; /* Тонкая черта сверху */
         border-radius: 0 !important;
+        padding-top: 10px !important;
+        margin-top: 4px !important;
         
         display: flex !important;
         flex-direction: row !important;
-        align-items: flex-start !important; /* Выравнивание по верху */
-        gap: 10px !important;
+        align-items: flex-start !important; /* Иконка сверху */
+        gap: 12px !important;
     }
 
-    /* Иконка - маленькая */
+    /* Иконка */
     div#shareContainer .forecast-icon-mini {
-        width: 20px !important;
-        height: 20px !important;
-        min-width: 20px !important;
-        margin-top: 2px !important; /* Чуть опустим, чтобы ровно с текстом */
-        border-radius: 5px !important;
+        width: 24px !important;
+        height: 24px !important;
+        min-width: 24px !important;
         background: rgba(16, 185, 129, 0.1) !important;
-    }
-    div#shareContainer .forecast-icon-mini svg {
-        width: 12px !important;
-        height: 12px !important;
+        border-radius: 6px !important;
+        margin-top: 2px !important; /* Чуть опускаем, чтобы ровно с текстом */
     }
 
-    /* Контент: теперь в столбик, чтобы вместить детали */
+    /* Контейнер текста (Сумма + Детали) */
     div#shareContainer .forecast-content-mini {
+        display: flex !important;
+        flex-direction: column !important; /* Всё друг под другом */
+        align-items: flex-start !important;
         width: 100% !important;
+        gap: 4px !important;
         margin: 0 !important;
-        display: flex !important;
-        flex-direction: column !important; /* Строки друг под другом */
-        gap: 2px !important;
     }
 
-    /* Заголовок скрываем */
-    div#shareContainer .forecast-title-mini { display: none !important; }
-
-    /* Первая строка: Сумма прогноза */
+    /* Главная строка прогноза */
     div#shareContainer .forecast-main-row {
-        margin: 0 !important;
         display: flex !important;
-        align-items: baseline !important;
-        gap: 6px !important;
+        align-items: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin-bottom: 2px !important;
     }
+    
     div#shareContainer .forecast-total-mini {
-        font-size: 14px !important;
+        font-size: 15px !important;
         font-weight: 600 !important;
     }
     div#shareContainer .forecast-total-mini::before {
         content: "Прогноз: ";
         font-weight: 400;
         opacity: 0.6;
-        font-size: 11px;
-    }
-    div#shareContainer .forecast-percent-change {
-        font-size: 10px !important;
-        padding: 1px 4px !important;
-        align-self: center !important;
+        font-size: 12px;
     }
 
-    /* --- ВЕРНУЛИ ДЕТАЛИЗАЦИЮ (Купоны/Рост) --- */
+    /* === ДЕТАЛИЗАЦИЯ (Купоны, Рост) === */
     div#shareContainer .forecast-details-mini {
-        display: flex !important; /* Включили */
-        flex-direction: row !important;
-        gap: 10px !important;
-        margin-top: 1px !important;
-        opacity: 0.7 !important;
+        display: flex !important; /* Включаем блок */
+        flex-direction: column !important; /* Строго друг под другом */
+        width: 100% !important;
+        gap: 3px !important; /* Расстояние между строчками деталей */
+        padding-left: 0 !important;
     }
-    
+
+    /* Стиль каждой строчки деталей */
     div#shareContainer .forecast-detail-item {
         display: flex !important;
         align-items: center !important;
-        gap: 4px !important;
-    }
-
-    div#shareContainer .detail-dot {
-        width: 3px !important;
-        height: 3px !important;
-    }
-
-    div#shareContainer .detail-label {
-        font-size: 9px !important; /* Очень мелко, чтобы не шумело */
-        text-transform: lowercase !important; /* аккуратнее */
+        gap: 6px !important;
+        font-size: 11px !important; /* Компактный шрифт */
+        opacity: 0.7 !important;
+        line-height: 1.2 !important;
     }
     
+    /* Делаем цифры в деталях чуть светлее текста */
     div#shareContainer .detail-value {
-        font-size: 9px !important;
-        font-weight: 500 !important;
         color: #fff !important;
+        font-weight: 500 !important;
+    }
+    div#shareContainer .detail-label {
+        opacity: 0.7 !important;
     }
 </style>
 </body>
