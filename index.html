@@ -16520,6 +16520,112 @@ function updateInfoBtnState(tabName) {
         
         
     </script>
-  
+  <style>
+    /* 1. Делаем саму карточку компактной */
+    div#shareContainer.portfolio-capital-card {
+        padding: 12px 16px !important; /* Уменьшаем отступы */
+        gap: 0 !important;
+        min-height: auto !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* 2. Верхний блок (Капитал) */
+    div#shareContainer .capital-top-row {
+        margin-bottom: 4px !important; /* Подтягиваем к линии */
+    }
+    div#shareContainer .capital-value {
+        font-size: 26px !important; /* Оптимальный размер */
+        line-height: 1.1 !important;
+    }
+    div#shareContainer .capital-fee-badge {
+        padding: 2px 6px !important;
+        font-size: 10px !important;
+    }
+
+    /* 3. Линия распределения (Тонкая лазерная) */
+    div#shareContainer .capital-distribution {
+        margin-bottom: 6px !important;
+        margin-top: 2px !important;
+    }
+    div#shareContainer .capital-bar {
+        height: 2px !important; /* Тонкая линия */
+        border-radius: 1px !important;
+        margin-bottom: 4px !important;
+    }
+    /* Скрываем лишние подписи под линией */
+    div#shareContainer .capital-label-text { display: none !important; }
+    div#shareContainer .capital-label-pct { font-size: 10px !important; opacity: 0.7 !important; }
+
+    /* 4. Убираем разделитель */
+    div#shareContainer .capital-divider { display: none !important; }
+
+    /* 5. ПРОГНОЗ: Бесшовный стиль (как итог) */
+    div#shareContainer .capital-forecast {
+        background: transparent !important; /* Убираем фон */
+        border: none !important;
+        padding: 6px 0 0 0 !important;
+        margin-top: 2px !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1) !important; /* Тонкая черта сверху */
+        border-radius: 0 !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        min-height: auto !important;
+    }
+
+    /* Иконка прогноза - маленькая */
+    div#shareContainer .forecast-icon-mini {
+        width: 20px !important;
+        height: 20px !important;
+        min-width: 20px !important;
+        border-radius: 5px !important;
+        background: rgba(16, 185, 129, 0.1) !important;
+    }
+    div#shareContainer .forecast-icon-mini svg {
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    /* Текст прогноза */
+    div#shareContainer .forecast-content-mini {
+        margin: 0 !important;
+        width: auto !important;
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: row !important; /* В одну строку */
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    /* Прячем заголовок "Прогноз..." */
+    div#shareContainer .forecast-title-mini { display: none !important; }
+
+    /* Цифры прогноза */
+    div#shareContainer .forecast-main-row {
+        margin: 0 !important;
+        gap: 6px !important;
+    }
+    
+    /* Добавляем слово "Прогноз:" перед суммой */
+    div#shareContainer .forecast-total-mini {
+        font-size: 13px !important;
+        font-weight: 600 !important;
+    }
+    div#shareContainer .forecast-total-mini::before {
+        content: "Прогноз: ";
+        font-weight: 400;
+        opacity: 0.6;
+        font-size: 11px;
+    }
+
+    div#shareContainer .forecast-percent-change {
+        font-size: 11px !important;
+        padding: 1px 5px !important;
+    }
+
+    /* Скрываем детализацию купонов для чистоты */
+    div#shareContainer .forecast-details-mini { display: none !important; }
+</style>
 </body>
 </html>
