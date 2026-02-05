@@ -10073,11 +10073,28 @@ body.dark-mode .portfolio-echelons-total-row {
 
 <div id="screen-stub" class="screen">
     
+    <div class="aurora-container">
+        <div class="aurora-spot blue"></div>
+        <div class="aurora-spot green"></div>
+        <div class="aurora-spot orange"></div>
+    </div>
+    <div class="noise-overlay"></div>
+
     <div class="header">
         <h1>Мои Активы</h1>
     </div>
 
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; text-align: center; padding: 0 20px;">
+    <div style="
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        height: 60vh; 
+        text-align: center; 
+        padding: 0 20px; 
+        position: relative; 
+        z-index: 2; /* Чтобы контент был поверх фона */
+    ">
         
         <div class="empty-icon" style="margin-bottom: 20px;">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8;">
@@ -10086,7 +10103,13 @@ body.dark-mode .portfolio-echelons-total-row {
             </svg>
         </div>
 
-        <div style="font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--text-deep, #fff);">
+        <div style="
+            font-family: 'Inter', sans-serif; 
+            font-size: 20px; 
+            font-weight: 700; 
+            margin-bottom: 8px; 
+            color: var(--text-deep, #fff);
+        ">
             Скоро здесь
         </div>
         
