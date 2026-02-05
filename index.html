@@ -6620,7 +6620,30 @@ textarea {
 .card-titles { display: flex; flex-direction: column; }
 .card-main-title { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; color: var(--text-main); }
 .card-sub-title { font-family: 'Inter', sans-serif; font-size: 11px; color: #8A9AB0; margin-top: 2px; }
-.card-right-part { text-align: right; }
+
+/* Правая часть с разделителем */
+.card-right-part { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px;
+}
+
+/* Тонкий вертикальный разделитель */
+.card-divider {
+    width: 1px;
+    height: 28px;
+    background: linear-gradient(180deg, transparent 0%, rgba(148, 163, 184, 0.3) 20%, rgba(148, 163, 184, 0.3) 80%, transparent 100%);
+    flex-shrink: 0;
+}
+
+/* Контейнер для процентов */
+.card-pct-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    min-width: 65px;
+}
+
 .card-pct-bonds { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--bonds-color); }
 .card-pct-stocks { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--stocks-color); }
 
@@ -10254,8 +10277,11 @@ body.dark-mode .portfolio-echelons-total-row {
                 </div>
             </div>
             <div class="card-right-part">
-                <div class="card-pct-bonds" id="mainCardBonds">Обл. 50%</div>
-                <div class="card-pct-stocks" id="mainCardStocks">Акц. 50%</div>
+                <div class="card-divider"></div>
+                <div class="card-pct-group">
+                    <div class="card-pct-bonds" id="mainCardBonds">Обл. 50%</div>
+                    <div class="card-pct-stocks" id="mainCardStocks">Акц. 50%</div>
+                </div>
             </div>
         </div>
 
@@ -10274,8 +10300,11 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
         </div>
         <div class="card-right-part">
-            <div class="card-pct-bonds">Обл. 50%</div>
-            <div class="card-pct-stocks">Акц. 50%</div>
+            <div class="card-divider"></div>
+            <div class="card-pct-group">
+                <div class="card-pct-bonds">Обл. 50%</div>
+                <div class="card-pct-stocks">Акц. 50%</div>
+            </div>
         </div>
     </div>
 
@@ -10288,8 +10317,11 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
         </div>
         <div class="card-right-part">
-            <div class="card-pct-bonds">Обл. 80%</div>
-            <div class="card-pct-stocks">Акц. 20%</div>
+            <div class="card-divider"></div>
+            <div class="card-pct-group">
+                <div class="card-pct-bonds">Обл. 80%</div>
+                <div class="card-pct-stocks">Акц. 20%</div>
+            </div>
         </div>
     </div>
 
@@ -10302,8 +10334,11 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
         </div>
         <div class="card-right-part">
-            <div class="card-pct-bonds">Обл. 60%</div>
-            <div class="card-pct-stocks">Акц. 40%</div>
+            <div class="card-divider"></div>
+            <div class="card-pct-group">
+                <div class="card-pct-bonds">Обл. 60%</div>
+                <div class="card-pct-stocks">Акц. 40%</div>
+            </div>
         </div>
     </div>
 
@@ -10316,8 +10351,11 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
         </div>
         <div class="card-right-part">
-            <div class="card-pct-bonds">Обл. 40%</div>
-            <div class="card-pct-stocks">Акц. 60%</div>
+            <div class="card-divider"></div>
+            <div class="card-pct-group">
+                <div class="card-pct-bonds">Обл. 40%</div>
+                <div class="card-pct-stocks">Акц. 60%</div>
+            </div>
         </div>
     </div>
 
@@ -10330,8 +10368,11 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
         </div>
         <div class="card-right-part">
-            <div class="card-pct-bonds">Обл. 20%</div>
-            <div class="card-pct-stocks">Акц. 80%</div>
+            <div class="card-divider"></div>
+            <div class="card-pct-group">
+                <div class="card-pct-bonds">Обл. 20%</div>
+                <div class="card-pct-stocks">Акц. 80%</div>
+            </div>
         </div>
     </div>
 
@@ -11591,7 +11632,45 @@ function formatNewsDate(dateString) {
             };
 
             fetchMoex('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-imoex'), document.getElementById('dyn-imoex'), 'tile-imoex', '');
-            fetchMoex('https://iss.moex.com/iss/engines/currency/markets/selt/boards/CETS/securities/USD000UTSTOM.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-usdrub'), document.getElementById('dyn-usdrub'), 'tile-usdrub', ' ₽');
+            
+            // USD/RUB - берём курс ЦБ РФ
+            fetch('https://iss.moex.com/iss/statistics/engines/currency/markets/selt/rates.json?iss.meta=off')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP error, status = ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(json => {
+                    const valEl = document.getElementById('val-usdrub');
+                    const dynEl = document.getElementById('dyn-usdrub');
+                    const tileId = 'tile-usdrub';
+                    
+                    // Получаем индексы колонок
+                    const columns = json.cbrf.columns;
+                    const data = json.cbrf.data[0];
+                    
+                    // Текущий курс ЦБ РФ
+                    const lastIdx = columns.indexOf('CBRF_USD_LAST');
+                    const last = data[lastIdx];
+                    
+                    // Предыдущий курс для расчёта изменения (за день)
+                    const waprice = json.wap_rates?.data[0]?.[json.wap_rates.columns.indexOf('waprice')];
+                    
+                    let changePercent = 0;
+                    if (last && waprice && waprice > 0) {
+                        changePercent = ((last - waprice) / waprice) * 100;
+                    }
+                    
+                    if (last) {
+                        animateValue(valEl, last, '', ' ₽', 2);
+                    }
+                    setDynamics(dynEl, changePercent, tileId);
+                })
+                .catch(error => {
+                    console.error('USD/RUB CBRF error:', error);
+                    document.getElementById('val-usdrub').innerText = '---';
+                });
             
              fetch('https://iss.moex.com/iss/engines/stock/markets/bonds/securities/SU26244RMFS2.json?iss.meta=off&iss.only=securities,marketdata')
                 .then(r => r.json())
