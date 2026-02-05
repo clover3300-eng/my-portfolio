@@ -16659,5 +16659,135 @@ function updateInfoBtnState(tabName) {
         padding-left: 0 !important;
     }
 </style>
+    <div class="mode-switcher-container">
+    <div class="mode-switcher">
+        <div class="mode-indicator" id="modeIndicator"></div>
+
+        <button class="mode-btn active" onclick="switchMode(this, 0)">
+            <span class="mode-icon">
+                <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            </span>
+            <span class="mode-text">Портфель</span>
+        </button>
+
+        <button class="mode-btn" onclick="switchMode(this, 1)">
+            <span class="mode-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+            </span>
+            <span class="mode-text">Докупить</span>
+        </button>
+
+        <button class="mode-btn" onclick="switchMode(this, 2)">
+            <span class="mode-icon">
+                <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+            </span>
+            <span class="mode-text">Баланс</span>
+        </button>
+    </div>
+</div>
+
+<style>
+    /* Стиль контейнера (висит внизу) */
+    .mode-switcher-container {
+        position: fixed;
+        bottom: 30px; /* Отступ от низа */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        width: 90%;
+        max-width: 360px;
+    }
+
+    /* Сам пульт */
+    .mode-switcher {
+        position: relative;
+        display: flex;
+        background: rgba(15, 23, 42, 0.85); /* Темное стекло */
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px; /* Сильное скругление */
+        padding: 4px;
+        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Бегающая подсветка (активный фон) */
+    .mode-indicator {
+        position: absolute;
+        top: 4px;
+        bottom: 4px;
+        left: 4px;
+        width: calc(33.33% - 5px); /* Треть ширины */
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Кнопки */
+    .mode-btn {
+        flex: 1;
+        background: none;
+        border: none;
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        cursor: pointer;
+        z-index: 2; /* Поверх индикатора */
+        color: rgba(255, 255, 255, 0.5);
+        transition: color 0.3s;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mode-btn.active {
+        color: #fff;
+    }
+
+    /* Иконки */
+    .mode-icon svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .mode-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+</style>
+
+<script>
+    // Логика переключения (пока только визуальная + вибрация)
+    function switchMode(btn, index) {
+        // 1. Убираем класс active у всех
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        
+        // 2. Добавляем нажатой
+        btn.classList.add('active');
+        
+        // 3. Двигаем индикатор (слайдер)
+        const indicator = document.getElementById('modeIndicator');
+        // Сдвиг на 100% * индекс
+        indicator.style.transform = `translateX(${index * 100}%)`;
+        
+        // 4. Haptic Feedback (Вибрация Telegram)
+        if (window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback) {
+            Telegram.WebApp.HapticFeedback.selectionChanged();
+        }
+
+        // === ЗДЕСЬ БУДЕТ ЛОГИКА СМЕНЫ КОНТЕНТА ===
+        console.log("Режим:", index);
+        // Например: updateTableData(index);
+    }
+</script>
 </body>
 </html>
