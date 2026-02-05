@@ -11680,7 +11680,10 @@ function formatNewsDate(dateString) {
             window.scrollTo({top: 0, behavior: 'smooth'});
             if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
 
-                    checkMenuVisibility(screenId);
+                    if (typeof checkMenuVisibility === 'function') {
+        checkMenuVisibility(screenId);
+    }
+                    
         }
 
 
