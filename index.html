@@ -16664,27 +16664,37 @@ function updateInfoBtnState(tabName) {
 <div id="portfolioModeSwitcher" class="mode-switcher-container" style="display: none;">
     <div class="mode-switcher">
         
-        <button class="mode-btn-close" onclick="closePortfolioMode()">
+        <button class="mode-btn-side" onclick="closePortfolioMode()">
             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
         </button>
 
-        <div class="mode-divider"></div>
+        <div class="mode-divider-vertical"></div>
 
         <div class="mode-indicator" id="modeIndicator"></div>
 
         <button class="mode-btn active" onclick="switchMode(this, 0)">
-            <span class="mode-text">Портфель</span>
+            <span class="mode-text">Купить</span>
         </button>
 
         <button class="mode-btn" onclick="switchMode(this, 1)">
-            <span class="mode-text">Докупить</span>
+            <span class="mode-text">Активы</span>
         </button>
 
         <button class="mode-btn" onclick="switchMode(this, 2)">
-            <span class="mode-text">Баланс</span>
+            <span class="mode-text">Ребаланс</span>
         </button>
+
+        <div class="mode-divider-vertical"></div>
+
+        <button class="mode-btn-side" onclick="openSearchFromPortfolio()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        </button>
+
     </div>
 </div>
 
@@ -16692,25 +16702,26 @@ function updateInfoBtnState(tabName) {
     /* Стиль контейнера (висит внизу) */
     .mode-switcher-container {
         position: fixed;
-        bottom: 30px; /* Отступ от низа */
+        bottom: 30px; 
         left: 50%;
         transform: translateX(-50%);
-        z-index: 1000;
-        width: 90%;
-        max-width: 360px;
+        z-index: 9999; /* Поверх всего */
+        width: 94%; /* Чуть шире, чтобы все влезло */
+        max-width: 380px;
     }
 
     /* Сам пульт */
     .mode-switcher {
         position: relative;
         display: flex;
-        background: rgba(15, 23, 42, 0.85); /* Темное стекло */
+        align-items: center;
+        background: rgba(15, 23, 42, 0.9); /* Плотный темный фон */
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px; /* Сильное скругление */
-        padding: 4px;
-        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+        border-radius: 20px;
+        padding: 4px 0; /* Отступы только вертикальные */
+        box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.6);
     }
 
     /* Бегающая подсветка (активный фон) */
@@ -16726,81 +16737,75 @@ function updateInfoBtnState(tabName) {
         border: 1px solid rgba(255,255,255,0.05);
     }
 
-    /* Кнопки */
-    .mode-btn {
-        flex: 1;
-        background: none;
-        border: none;
-        padding: 10px 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        cursor: pointer;
-        z-index: 2; /* Поверх индикатора */
-        color: rgba(255, 255, 255, 0.5);
-        transition: color 0.3s;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    .mode-btn.active {
-        color: #fff;
-    }
-
-    /* Иконки */
-    .mode-icon svg {
-        width: 20px;
-        height: 20px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
-    .mode-text {
-        font-family: 'Inter', sans-serif;
-        font-size: 10px;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-    }
-    /* Добавляем стиль для разделителя и кнопки выхода */
-    .mode-switcher {
-        padding-left: 0; /* Убираем отступ слева для кнопки выхода */
-        gap: 2px;
-    }
-
-    /* Кнопка "Назад/Домой" */
-    .mode-btn-close {
-        width: 40px;
+   /* Боковые кнопки (Выход и Поиск) */
+    .mode-btn-side {
+        width: 44px; /* Фиксированная ширина боковых кнопок */
+        height: 100%;
         background: transparent;
         border: none;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        color: rgba(255, 255, 255, 0.4);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
-        margin-right: 2px;
+        color: rgba(255, 255, 255, 0.5);
+        flex-shrink: 0; /* Не сжиматься */
     }
-    .mode-btn-close svg {
+    .mode-btn-side svg {
         width: 20px;
         height: 20px;
-        fill: none;
+    }
+    .mode-btn-side:active {
+        color: #fff;
+        transform: scale(0.9);
     }
 
-    /* Корректируем индикатор, так как появилась доп. кнопка слева */
-    /* Теперь кнопок 3 штуки в основной зоне. Нужно учитывать отступ кнопки выхода */
-    .mode-indicator {
-        left: 46px; /* Ширина кнопки выхода + отступы */
-        width: calc((100% - 50px) / 3); /* Делим оставшееся место на 3 */
+    /* Вертикальные разделители */
+    .mode-divider-vertical {
+        width: 1px;
+        height: 16px;
+        background: rgba(255, 255, 255, 0.1);
     }
-    
+
+    /* Центральные кнопки (Табы) */
     .mode-btn {
-        /* Убираем иконки из кнопок, оставляем только текст для компактности,
-           или верните иконки, если хотите */
-        padding: 12px 0; 
+        flex: 1; /* Растягиваются равномерно */
+        background: none;
+        border: none;
+        padding: 12px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2;
+        color: rgba(255, 255, 255, 0.5);
+        transition: color 0.2s;
+        font-family: 'Inter', sans-serif;
+        font-size: 11px; /* Чуть меньше шрифт, чтобы влезли длинные слова */
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .mode-btn.active {
+        color: #fff;
+    }
+
+    /* --- ГЛАВНОЕ: ИНДИКАТОР --- */
+    .mode-indicator {
+        position: absolute;
+        top: 4px;
+        bottom: 4px;
+        /* МАТЕМАТИКА: */
+        /* Отступ слева = Ширина кнопки выхода (44px) + Разделитель (1px) */
+        left: 45px; 
+        
+        /* Ширина индикатора = (Вся ширина - Боковые кнопки (88px) - Разделители (2px)) / 3 таба */
+        width: calc((100% - 92px) / 3);
+        
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 14px;
+        transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        z-index: 1;
+    }
     }
 </style>
     <script>
@@ -16809,80 +16814,64 @@ function updateInfoBtnState(tabName) {
     // Функция, которую нужно вызывать при переходе на экран
     // Например: showScreen('screen-portfolio') -> вызываем checkMenuVisibility('screen-portfolio')
     function checkMenuVisibility(screenId) {
-        const mainMenu = document.getElementById('navWrapper'); // Ваше старое меню
-        const portfolioMenu = document.getElementById('portfolioModeSwitcher'); // Наш новый пульт
+        const mainMenu = document.getElementById('navWrapper'); // Старое нижнее меню
+        const portfolioMenu = document.getElementById('portfolioModeSwitcher'); // Новый пульт
 
         if (screenId === 'screen-portfolio') { 
-            // 1. Если мы в Портфеле:
-            if (mainMenu) mainMenu.style.display = 'none'; // Прячем старое
-            if (portfolioMenu) portfolioMenu.style.display = 'block'; // Показываем пульт
-            
-            // Сбрасываем пульт на первую вкладку (опционально)
-            // switchMode(document.querySelector('.mode-btn'), 0); 
+            // === РЕЖИМ ПОРТФЕЛЯ ===
+            // 1. Скрываем старое меню намертво
+            if (mainMenu) mainMenu.style.display = 'none'; 
+            // 2. Показываем новый пульт
+            if (portfolioMenu) portfolioMenu.style.display = 'block';
         } else {
-            // 2. Если мы на любом другом экране:
-            if (mainMenu) mainMenu.style.display = 'flex'; // Возвращаем старое
-            if (portfolioMenu) portfolioMenu.style.display = 'none'; // Прячем пульт
+            // === ОБЫЧНЫЙ РЕЖИМ ===
+            // 1. Возвращаем старое меню
+            if (mainMenu) mainMenu.style.display = 'flex'; 
+            // 2. Прячем пульт
+            if (portfolioMenu) portfolioMenu.style.display = 'none';
         }
     }
 
-    // === ЛОГИКА НОВОГО ПУЛЬТА ===
-
-    // Функция кнопки "Назад" (стрелочка слева)
+    // 2. ФУНКЦИЯ ВЫХОДА (Стрелочка)
     function closePortfolioMode() {
-        // Здесь укажите ID вашего главного экрана
-        // Обычно это showScreen('screen-home') или 'screen-app'
-        showScreen('screen-app'); 
+        showScreen('screen-app'); // Возврат на главный экран
     }
 
-    // Логика переключения режимов (Адаптированная под новую ширину)
+    // 3. ФУНКЦИЯ ПОИСКА (Лупа)
+    function openSearchFromPortfolio() {
+        // Скрываем пульт, чтобы он не мешал на экране поиска
+        document.getElementById('portfolioModeSwitcher').style.display = 'none';
+        
+        // Переходим на экран поиска (у вас он, вероятно, так называется)
+        showScreen('screen-search'); 
+    }
+
+    // 4. ПЕРЕКЛЮЧЕНИЕ ТАБОВ (Купить / Активы / Ребаланс)
     function switchMode(btn, index) {
-        // Убираем активный класс у соседей
+        // UI
         const parent = btn.closest('.mode-switcher');
         parent.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        // Двигаем индикатор
+        // ДВИЖЕНИЕ ИНДИКАТОРА
         const indicator = document.getElementById('modeIndicator');
-        // Смещение: 46px (отступ кнопки выхода) + (100% ширины индикатора * индекс)
+        // Сдвигаем на 100% ширины индикатора * индекс
         indicator.style.transform = `translateX(${index * 100}%)`;
 
-        // Вибрация
+        // ВИБРАЦИЯ
         if (window.Telegram?.WebApp?.HapticFeedback) {
             Telegram.WebApp.HapticFeedback.selectionChanged();
         }
 
-        // Тут ваша логика переключения карточек
+        // ЛОГИКА
         console.log("Выбран режим:", index);
-        // if (index === 0) showPortfolioAssets();
-        // if (index === 1) showPortfolioBuyList();
-        // if (index === 2) showPortfolioRebalance();
+        // Тут вы можете вызывать функции показа нужных блоков:
+        // if (index === 0) renderBuyList();
+        // if (index === 1) renderMyAssets();
+        // if (index === 2) renderRebalance();
     }
 </script>
 
-<script>
-    // Логика переключения (пока только визуальная + вибрация)
-    function switchMode(btn, index) {
-        // 1. Убираем класс active у всех
-        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        
-        // 2. Добавляем нажатой
-        btn.classList.add('active');
-        
-        // 3. Двигаем индикатор (слайдер)
-        const indicator = document.getElementById('modeIndicator');
-        // Сдвиг на 100% * индекс
-        indicator.style.transform = `translateX(${index * 100}%)`;
-        
-        // 4. Haptic Feedback (Вибрация Telegram)
-        if (window.Telegram && Telegram.WebApp && Telegram.WebApp.HapticFeedback) {
-            Telegram.WebApp.HapticFeedback.selectionChanged();
-        }
 
-        // === ЗДЕСЬ БУДЕТ ЛОГИКА СМЕНЫ КОНТЕНТА ===
-        console.log("Режим:", index);
-        // Например: updateTableData(index);
-    }
-</script>
 </body>
 </html>
