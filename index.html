@@ -3564,25 +3564,17 @@ body.dark-mode .portfolio-capital-card {
 .forecast-detail-item {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 2px; /* Минимальный gap для прижатия */
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: rgba(148, 163, 184, 0.8);
-}
-
-/* Прижимаем label к квадратику */
-.forecast-detail-item .detail-dot {
-    margin-right: 0;
-}
-
-.forecast-detail-item .detail-label {
-    margin-left: -2px;
 }
 
 .forecast-detail-item .detail-dot {
     width: 6px;
     height: 6px;
     border-radius: 2px;
+    flex-shrink: 0;
 }
 
 .forecast-detail-item .detail-dot.bonds {
@@ -3596,6 +3588,7 @@ body.dark-mode .portfolio-capital-card {
 .forecast-detail-item .detail-label {
     color: #64748B;
     font-size: 10px;
+    margin-right: 4px; /* Отступ между label и value */
 }
 
 .forecast-detail-item .detail-value {
@@ -10595,7 +10588,7 @@ body.dark-mode .portfolio-echelons-total-row {
     </div>
 
     <div class="total-percent-col">
-        <span class="total-percent">100%</span>
+        <span class="total-percent" id="bondsTotalPercent">0%</span>
     </div>
 </div>
                 
@@ -10654,7 +10647,13 @@ body.dark-mode .portfolio-echelons-total-row {
               <div class="portfolio-echelons-headers">
     <div class="portfolio-echelon-h-text">
         <span>ЭШЕЛОН</span>
-        <div class="h-help-btn" onclick="toggleEchelonGuide(true, 'portfolio')">?</div>
+        <div class="h-help-btn" onclick="toggleEchelonGuide(true, 'portfolio')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+        </div>
     </div>
 
     <div class="portfolio-echelon-h-text">ВЫДЕЛИТЬ</div>
@@ -10686,60 +10685,11 @@ body.dark-mode .portfolio-echelons-total-row {
     </div>
 
     <div class="total-percent-col">
-        <span class="total-percent">100%</span>
+        <span class="total-percent" id="stocksTotalPercent">0%</span>
     </div>
 </div>
                 
   
-                
-                <!-- Раскрывающийся блок ЭШЕЛОНЫ как в Ребалансировке -->
-                <div class="echelons-explainer-card" id="portfolioEchelonsExplainer">
-                    <div class="echelons-explainer-header" onclick="togglePortfolioEchelonsInfo()">
-                        <div class="echelons-explainer-header-left">
-                            <div class="echelons-explainer-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                                    <path d="M2 17l10 5 10-5"/>
-                                    <path d="M2 12l10 5 10-5"/>
-                                </svg>
-                            </div>
-                            <div class="echelons-explainer-title">Что такое эшелоны?</div>
-                        </div>
-                        <svg class="echelons-explainer-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </div>
-                    <div class="echelons-explainer-content" id="portfolioEchelonsInfo">
-                        <div class="echelon-explain-item">
-                            <div class="echelon-explain-badge e1">I</div>
-                            <div class="echelon-explain-text">
-                                <div class="echelon-explain-name">Надёжный</div>
-                                <div class="echelon-explain-desc">Компании, которые платят дивиденды и стараются их повышать</div>
-                            </div>
-                        </div>
-                        <div class="echelon-explain-item">
-                            <div class="echelon-explain-badge e2">II</div>
-                            <div class="echelon-explain-text">
-                                <div class="echelon-explain-name">Стабильный</div>
-                                <div class="echelon-explain-desc">Компании, которые платят дивиденды, но выплаты разнятся</div>
-                            </div>
-                        </div>
-                        <div class="echelon-explain-item">
-                            <div class="echelon-explain-badge e3">III</div>
-                            <div class="echelon-explain-text">
-                                <div class="echelon-explain-name">Рисковый</div>
-                                <div class="echelon-explain-desc">Компании, которые могут платить, но не платят</div>
-                            </div>
-                        </div>
-                        <div class="echelon-explain-item">
-                            <div class="echelon-explain-badge e4">IV</div>
-                            <div class="echelon-explain-text">
-                                <div class="echelon-explain-name">Венчурный</div>
-                                <div class="echelon-explain-desc">Компании, которые не платят дивидендов</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 
                 <!-- Блок Важно - Aurora Design -->
                 <div class="portfolio-important-aurora" id="footer-important-v2">
@@ -15283,7 +15233,7 @@ if(document.getElementById('listBonds')) {
           
 // === ОБНОВЛЕНИЕ ИТОГО ОФЗ + % ИСПОЛНЕНИЯ БЮДЖЕТА ===
     const bondsTotalRow = document.getElementById('bondsTotalSum');
-    const bondsPercentBadge = document.querySelector('#bondsTotalRow .total-percent');
+    const bondsPercentBadge = document.getElementById('bondsTotalPercent');
     
     // 1. Берем видимые суммы из списка (как мы уже сделали, это работает верно)
     const bondSumItems = document.querySelectorAll('#listBondsV2 .portfolio-ofz-sum');
@@ -15739,7 +15689,7 @@ if(totalRow) {
                     echelonContainerV2.innerHTML = echelonsHtmlV2;
                     // === ВСТАВЛЯЕМ СЮДА (ШАГ 3) ===
 const totalStocksRow = document.getElementById('echelonsTotalSum');
-const totalStocksPctBadge = document.querySelector('.portfolio-echelons-total-row .total-percent');
+const totalStocksPctBadge = document.getElementById('stocksTotalPercent');
 
 if(totalStocksRow) {
     // Выводим сумму
