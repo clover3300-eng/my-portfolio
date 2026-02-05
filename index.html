@@ -16817,21 +16817,30 @@ function updateInfoBtnState(tabName) {
     // Функция, которую нужно вызывать при переходе на экран
     // Например: showScreen('screen-portfolio') -> вызываем checkMenuVisibility('screen-portfolio')
     function checkMenuVisibility(screenId) {
-        const mainMenu = document.getElementById('navWrapper'); // Старое нижнее меню
-        const portfolioMenu = document.getElementById('portfolioModeSwitcher'); // Новый пульт
+        const mainMenu = document.getElementById('navWrapper');
+        const portfolioMenu = document.getElementById('portfolioModeSwitcher');
+        
+        // СПИСОК ЭКРАНОВ, ГДЕ ДОЛЖЕН БЫТЬ НОВЫЙ ПУЛЬТ
+        // Добавьте сюда ID экранов активов и ребалансировки, если они у вас отдельные
+        const portfolioScreens = ['screen-portfolio', 'screen-assets', 'screen-rebalance'];
 
-        if (screenId === 'screen-portfolio') { 
+        if (portfolioScreens.includes(screenId)) { 
             // === РЕЖИМ ПОРТФЕЛЯ ===
-            // 1. Скрываем старое меню намертво
-            if (mainMenu) mainMenu.style.display = 'none'; 
-            // 2. Показываем новый пульт
-            if (portfolioMenu) portfolioMenu.style.display = 'block';
+            if (mainMenu) {
+                // ИСПОЛЬЗУЕМ !important ЧТОБЫ ПЕРЕБИТЬ CSS
+                mainMenu.style.setProperty('display', 'none', 'important');
+            }
+            if (portfolioMenu) {
+                portfolioMenu.style.display = 'block';
+            }
         } else {
             // === ОБЫЧНЫЙ РЕЖИМ ===
-            // 1. Возвращаем старое меню
-            if (mainMenu) mainMenu.style.display = 'flex'; 
-            // 2. Прячем пульт
-            if (portfolioMenu) portfolioMenu.style.display = 'none';
+            if (mainMenu) {
+                mainMenu.style.setProperty('display', 'flex', 'important');
+            }
+            if (portfolioMenu) {
+                portfolioMenu.style.display = 'none';
+            }
         }
     }
 
