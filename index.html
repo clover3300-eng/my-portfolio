@@ -3476,14 +3476,6 @@ body.dark-mode .portfolio-capital-card {
     color: #F1F5F9;
 }
 
-.capital-label-income {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 600;
-    color: rgba(16, 185, 129, 0.8);
-    margin-left: 2px;
-}
-
 /* Разделитель */
 .capital-divider {
     height: 1px;
@@ -3565,14 +3557,15 @@ body.dark-mode .portfolio-capital-card {
 
 .forecast-details-mini {
     display: flex;
-    flex-direction: column; /* Элементы встанут друг под другом */
-    gap: 4px;               /* Уменьшаем отступ между строками */
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
 }
 
 .forecast-detail-item {
     display: flex;
     align-items: center;
-    gap: 2px; /* Минимальный gap для прижатия */
+    gap: 6px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: rgba(148, 163, 184, 0.8);
@@ -4120,8 +4113,9 @@ body.dark-mode .portfolio-ofz-detail-row {
 /* === Заголовки таблицы эшелонов (как в Ребалансировке) === */
 .portfolio-echelons-headers {
     display: grid;
-    /* 1fr | 115px | 60px */
+    /* 1fr | 115px | 60px — совпадает с echelon-header-right */
     grid-template-columns: 1fr 115px 60px; 
+    column-gap: 8px; /* Совпадает с gap в echelon-header-right */
     align-items: center; 
     
     /* Отступы */
@@ -5144,21 +5138,21 @@ body.dark-mode .portfolio-echelon-columns-header {
 .portfolio-header-row {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     position: relative;
-    margin-bottom: 20px;
+    padding: 10px 0 20px;
 }
 
 .portfolio-header-row h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text-deep);
     margin: 0;
-    text-align: center;
 }
 
 .portfolio-dots-btn {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
     width: 36px;
     height: 36px;
     display: flex;
@@ -5173,6 +5167,7 @@ body.dark-mode .portfolio-echelon-columns-header {
     cursor: pointer;
     transition: all 0.2s ease;
     padding: 0;
+    flex-shrink: 0;
     -webkit-tap-highlight-color: transparent;
 }
 .portfolio-dots-btn svg {
@@ -5180,7 +5175,7 @@ body.dark-mode .portfolio-echelon-columns-header {
     height: 18px;
 }
 .portfolio-dots-btn:active {
-    transform: translateY(-50%) scale(0.92);
+    transform: scale(0.92);
     background: rgba(255, 255, 255, 0.7);
 }
 
@@ -10866,13 +10861,11 @@ body.dark-mode .portfolio-echelons-total-row {
                             <span class="capital-label-dot bonds"></span>
                             <span class="capital-label-text">ОФЗ</span>
                             <span class="capital-label-pct" id="srl-bond-pct-v2">50%</span>
-                            <span class="capital-label-income" id="srl-bond-income-inline">+0 ₽</span>
                         </div>
                         <div class="capital-label-item">
                             <span class="capital-label-dot stocks"></span>
                             <span class="capital-label-text">Акции</span>
                             <span class="capital-label-pct" id="srl-stock-pct-v2">50%</span>
-                            <span class="capital-label-income" id="srl-stock-growth-inline">+0 ₽</span>
                         </div>
                     </div>
                 </div>
@@ -10892,6 +10885,18 @@ body.dark-mode .portfolio-echelons-total-row {
                         <div class="forecast-main-row">
                             <span class="forecast-total-mini" id="summ-total-value-v2">~0 ₽</span>
                             <span class="forecast-percent-change" id="summ-total-percent-v2">+0%</span>
+                        </div>
+                        <div class="forecast-details-mini">
+                            <div class="forecast-detail-item">
+                                <span class="detail-dot bonds"></span>
+                                <span class="detail-label">Купоны:</span>
+                                <span class="detail-value" id="summ-bond-income-mini">+0 ₽</span>
+                            </div>
+                            <div class="forecast-detail-item">
+                                <span class="detail-dot stocks"></span>
+                                <span class="detail-label">Рост:</span>
+                                <span class="detail-value" id="summ-stock-growth-mini">+0 ₽</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -15888,8 +15893,6 @@ if(totalRow) {
                 const totalPercentV2 = document.getElementById('summ-total-percent-v2');
                 const bondIncomeMini = document.getElementById('summ-bond-income-mini');
                 const stockGrowthMini = document.getElementById('summ-stock-growth-mini');
-                const bondIncomeInline = document.getElementById('srl-bond-income-inline');
-                const stockGrowthInline = document.getElementById('srl-stock-growth-inline');
                 
                 if (totalValueV2) {
                     totalValueV2.textContent = '~' + Math.round(projectedTotal).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
@@ -15904,12 +15907,6 @@ if(totalRow) {
                 }
                 if (stockGrowthMini) {
                     stockGrowthMini.textContent = '+' + Math.round(totalStockProjectedGrowth).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
-                }
-                if (bondIncomeInline) {
-                    bondIncomeInline.textContent = '+' + Math.round(totalBondProjectedIncome).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
-                }
-                if (stockGrowthInline) {
-                    stockGrowthInline.textContent = '+' + Math.round(totalStockProjectedGrowth).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
                 }
                 
                 // Рендерим список облигаций в новый контейнер V2
