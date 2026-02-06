@@ -16336,19 +16336,18 @@ function openShoppingList() {
     }
     
     const S = {
-        label: 'font-family:Inter,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748B;margin-bottom:8px;padding-left:2px;',
-        card: 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:16px;',
-        row: 'display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
-        rowLast: 'display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
-        check: 'width:20px;height:20px;border-radius:6px;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;',
-        checkDone: 'width:20px;height:20px;border-radius:6px;border:2px solid #10B981;background:#10B981;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;',
-        ticker: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:#F1F5F9;overflow:hidden;text-overflow:ellipsis;',
-        name: 'display:block;font-family:Inter,sans-serif;font-size:10px;font-weight:400;color:#64748B;margin-top:1px;overflow:hidden;text-overflow:ellipsis;',
+        label: 'font-family:Inter,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary, #94A3B8);margin-bottom:8px;padding-left:2px;',
+        card: 'background:var(--card-glass-aurora, rgba(255,255,255,0.06));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--card-border-aurora, rgba(255,255,255,0.1));border-radius:16px;overflow:hidden;margin-bottom:16px;',
+        row: 'display:grid;grid-template-columns:28px 1fr auto auto;gap:10px;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
+        rowLast: 'display:grid;grid-template-columns:28px 1fr auto auto;gap:10px;align-items:center;padding:12px 14px;cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
+        check: 'width:22px;height:22px;border-radius:7px;border:2px solid rgba(148,163,184,0.4);background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;',
+        ticker: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:var(--text-deep, #F1F5F9);overflow:hidden;text-overflow:ellipsis;',
+        name: 'display:block;font-family:Inter,sans-serif;font-size:10px;font-weight:400;color:var(--text-secondary, #94A3B8);margin-top:2px;overflow:hidden;text-overflow:ellipsis;',
         qty: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:#10B981;text-align:right;white-space:nowrap;',
-        sum: 'font-family:JetBrains Mono,monospace;font-size:12px;font-weight:500;color:#94A3B8;text-align:right;min-width:70px;white-space:nowrap;',
-        total: 'display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.08);',
-        tLabel: 'font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:0.05em;',
-        tVal: 'font-family:JetBrains Mono,monospace;font-size:15px;font-weight:700;color:#F1F5F9;',
+        sum: 'font-family:JetBrains Mono,monospace;font-size:12px;font-weight:500;color:var(--text-secondary, #94A3B8);text-align:right;min-width:70px;white-space:nowrap;',
+        total: 'display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.08);',
+        tLabel: 'font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:var(--text-secondary, #94A3B8);text-transform:uppercase;letter-spacing:0.05em;',
+        tVal: 'font-family:JetBrains Mono,monospace;font-size:15px;font-weight:700;color:var(--text-deep, #F1F5F9);',
     };
     const badgeColors = {1:'rgba(46,204,113,0.25);color:#2ecc71', 2:'rgba(52,152,219,0.25);color:#3498db', 3:'rgba(241,196,15,0.25);color:#f1c40f', 4:'rgba(231,76,60,0.25);color:#e74c3c'};
     const roman = ['I','II','III','IV'];
@@ -16400,16 +16399,15 @@ function toggleShopItem(row) {
     if (done) {
         row.dataset.done = '0';
         row.style.opacity = '1';
-        row.style.textDecoration = 'none';
-        check.style.border = '2px solid rgba(255,255,255,0.15)';
-        check.style.background = 'transparent';
+        check.style.border = '2px solid rgba(148,163,184,0.4)';
+        check.style.background = 'rgba(255,255,255,0.05)';
         check.innerHTML = '';
     } else {
         row.dataset.done = '1';
-        row.style.opacity = '0.35';
+        row.style.opacity = '0.3';
         check.style.border = '2px solid #10B981';
         check.style.background = '#10B981';
-        check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>';
+        check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><polyline points="20 6 9 17 4 12"/></svg>';
     }
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
