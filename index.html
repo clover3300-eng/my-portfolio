@@ -4113,8 +4113,8 @@ body.dark-mode .portfolio-ofz-detail-row {
 /* === Заголовки таблицы эшелонов (как в Ребалансировке) === */
 .portfolio-echelons-headers {
     display: grid;
-    /* 1fr | 115px | 60px | 20px — 4я колонка для стрелки раскрытия */
-    grid-template-columns: 1fr 115px 60px 20px; 
+    /* 1fr | 115px | 60px — совпадает с echelon-header-right */
+    grid-template-columns: 1fr 115px 60px; 
     column-gap: 8px; /* Совпадает с gap в echelon-header-right */
     align-items: center; 
     
@@ -4870,6 +4870,7 @@ body.dark-mode .portfolio-echelon-number {
     width: 115px;
     text-align: right;
     flex-shrink: 0;
+    box-sizing: border-box;
 }
 
 .portfolio-echelon-percent {
@@ -10411,18 +10412,9 @@ body.dark-mode .portfolio-echelons-total-row {
     bottom: 0;
     background: var(--bg-base, #0F172A);
     z-index: 9999;
-    display: none;
     flex-direction: column;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    animation: slideUpShop 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.shopping-list-overlay.open {
-    display: flex;
-}
-@keyframes slideUpShop {
-    from { transform: translateY(100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
 }
 
 .shopping-list-header {
@@ -11304,7 +11296,6 @@ body:not(.dark-mode) .shop-total-value {
 
     <div class="portfolio-echelon-h-text">ВЫДЕЛИТЬ</div>
     <span class="portfolio-echelon-h-text clickable" onclick="toggleEchelonPercentHelp(event)">%</span>
-    <span class="portfolio-echelon-h-text"></span>
 </div>
                 
                 <!-- Подсказка для % эшелонов -->
@@ -11401,7 +11392,7 @@ body:not(.dark-mode) .shop-total-value {
 </div>
 
 <!-- Overlay: Список к покупке (ВНЕ screen-portfolio) -->
-<div class="shopping-list-overlay" id="shoppingListOverlay">
+<div class="shopping-list-overlay" id="shoppingListOverlay" style="display:none;">
     <div class="shopping-list-header">
         <button class="shopping-list-back" onclick="closeShoppingList()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -16579,12 +16570,12 @@ function closePortfolioMenuOnClick(e) {
 function openShoppingList() {
     const overlay = document.getElementById('shoppingListOverlay');
     const body = document.getElementById('shoppingListBody');
-    if (!overlay || !body) return;
+    if (!overlay || !body) { console.error('Shopping list elements not found'); return; }
     
     const data = window._shoppingListData;
     if (!data || (data.bonds.length === 0 && data.stocks.length === 0)) {
         body.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#64748B;font-size:14px;">Сначала рассчитайте портфель в терминале</div>';
-        overlay.classList.add('open');
+        overlay.style.display = 'flex';
         return;
     }
     
@@ -16639,7 +16630,7 @@ function openShoppingList() {
     </div>`;
     
     body.innerHTML = html;
-    overlay.classList.add('open');
+    overlay.style.display = 'flex';
     
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
@@ -16649,10 +16640,7 @@ function openShoppingList() {
 function closeShoppingList() {
     const overlay = document.getElementById('shoppingListOverlay');
     if (overlay) {
-        overlay.style.animation = 'none';
-        overlay.offsetHeight; // reflow
-        overlay.style.animation = '';
-        overlay.classList.remove('open');
+        overlay.style.display = 'none';
     }
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
