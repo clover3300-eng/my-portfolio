@@ -4113,8 +4113,8 @@ body.dark-mode .portfolio-ofz-detail-row {
 /* === Заголовки таблицы эшелонов (как в Ребалансировке) === */
 .portfolio-echelons-headers {
     display: grid;
-    /* 1fr | 115px | 60px — совпадает с echelon-header-right */
-    grid-template-columns: 1fr 115px 60px; 
+    /* 1fr | 115px | 60px | 20px — 4я колонка для стрелки раскрытия */
+    grid-template-columns: 1fr 115px 60px 20px; 
     column-gap: 8px; /* Совпадает с gap в echelon-header-right */
     align-items: center; 
     
@@ -4230,6 +4230,8 @@ body.dark-mode .h-help-btn:hover {
     width: 100%;
     cursor: pointer;
     transition: color 0.2s ease;
+    padding-right: 28px; /* Сдвиг влево = ширина стрелки(20) + gap(8) */
+    box-sizing: border-box;
 }
 
 /* === СТИЛЬ КНОПКИ ВОПРОСА (?) === */
@@ -4855,9 +4857,10 @@ body.dark-mode .portfolio-echelon-number {
 }
 
 .portfolio-echelon-header-right {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 115px 60px 20px;
     gap: 8px;
+    align-items: center;
 }
 
 .portfolio-echelon-sum {
@@ -4875,6 +4878,8 @@ body.dark-mode .portfolio-echelon-number {
     font-weight: 700;
     background: rgba(0, 0, 0, 0.05);
     color: var(--text-slate);
+    text-align: center;
+    justify-self: center;
 }
 
 body.dark-mode .portfolio-echelon-percent {
@@ -4886,6 +4891,7 @@ body.dark-mode .portfolio-echelon-percent {
     height: 20px;
     color: var(--text-slate);
     transition: transform 0.3s ease;
+    justify-self: center;
 }
 
 .portfolio-echelon-card.expanded .portfolio-echelon-arrow {
@@ -5141,6 +5147,12 @@ body.dark-mode .portfolio-echelon-columns-header {
     justify-content: space-between;
     position: relative;
     padding: 10px 0 20px;
+    padding-top: calc(80px + env(safe-area-inset-top));
+    z-index: 10;
+}
+
+@supports not (padding-top: env(safe-area-inset-top)) {
+    .portfolio-header-row { padding-top: 50px; }
 }
 
 .portfolio-header-row h1 {
@@ -5269,9 +5281,13 @@ body.dark-mode #screen-portfolio {
     background: var(--bg-base);
 }
 
-#screen-portfolio > *:not(.aurora-container):not(.noise-overlay) {
+#screen-portfolio > *:not(.aurora-container):not(.noise-overlay):not(.portfolio-header-row) {
     position: relative;
     z-index: 2;
+}
+#screen-portfolio > .portfolio-header-row {
+    position: relative;
+    z-index: 100;
 }
 
 /* === Заголовок экрана === */
@@ -10382,8 +10398,258 @@ body.dark-mode .portfolio-echelons-total-row {
     background: transparent !important; /* Убираем фон у процентов */
 }
 
-#shareContainer .forecast-details-mini {
-    display: none !important; /* Скрываем детали (купоны/рост) для чистоты */
+/* === SHOPPING LIST OVERLAY === */
+.shopping-list-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-base, #0F172A);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    animation: slideUpShop 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.shopping-list-overlay.open {
+    display: flex;
+}
+@keyframes slideUpShop {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.shopping-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 12px;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    position: sticky;
+    top: 0;
+    background: var(--bg-base, #0F172A);
+    z-index: 10;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+@supports not (padding-top: env(safe-area-inset-top)) {
+    .shopping-list-header { padding-top: 44px; }
+}
+
+.shopping-list-back {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    color: #94A3B8;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s;
+}
+.shopping-list-back svg {
+    width: 20px;
+    height: 20px;
+}
+.shopping-list-back:active {
+    transform: scale(0.9);
+    background: rgba(255,255,255,0.1);
+}
+
+.shopping-list-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-deep, #F1F5F9);
+    letter-spacing: -0.02em;
+}
+
+.shopping-list-copy-all {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    color: #94A3B8;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s;
+}
+.shopping-list-copy-all svg {
+    width: 18px;
+    height: 18px;
+}
+.shopping-list-copy-all:active {
+    transform: scale(0.9);
+    background: rgba(16, 185, 129, 0.2);
+    color: #10B981;
+}
+
+.shopping-list-body {
+    padding: 12px 16px 40px;
+    flex: 1;
+}
+
+.shop-section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748B;
+    margin-bottom: 8px;
+    padding-left: 2px;
+}
+
+.shop-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.shop-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.shop-item:last-child {
+    border-bottom: none;
+}
+
+.shop-ticker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #F1F5F9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.shop-ticker .shop-name {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: #64748B;
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.shop-qty {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #10B981;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.shop-sum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: #94A3B8;
+    text-align: right;
+    min-width: 75px;
+    white-space: nowrap;
+}
+
+.shop-echelon-badge {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 6px;
+    color: #fff;
+    vertical-align: middle;
+}
+.shop-echelon-badge.e1 { background: rgba(46, 204, 113, 0.25); color: #2ecc71; }
+.shop-echelon-badge.e2 { background: rgba(52, 152, 219, 0.25); color: #3498db; }
+.shop-echelon-badge.e3 { background: rgba(241, 196, 15, 0.25); color: #f1c40f; }
+.shop-echelon-badge.e4 { background: rgba(231, 76, 60, 0.25); color: #e74c3c; }
+
+.shop-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.shop-total-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.shop-total-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #F1F5F9;
+}
+
+/* Light mode */
+body:not(.dark-mode) .shopping-list-overlay {
+    background: #F8FAFC;
+}
+body:not(.dark-mode) .shopping-list-header {
+    background: #F8FAFC;
+    border-bottom-color: rgba(0,0,0,0.06);
+}
+body:not(.dark-mode) .shopping-list-back,
+body:not(.dark-mode) .shopping-list-copy-all {
+    background: rgba(0,0,0,0.04);
+    border-color: rgba(0,0,0,0.08);
+    color: #64748B;
+}
+body:not(.dark-mode) .shopping-list-title {
+    color: #1E293B;
+}
+body:not(.dark-mode) .shop-card {
+    background: #fff;
+    border-color: rgba(0,0,0,0.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+body:not(.dark-mode) .shop-item {
+    border-bottom-color: rgba(0,0,0,0.04);
+}
+body:not(.dark-mode) .shop-ticker {
+    color: #1E293B;
+}
+body:not(.dark-mode) .shop-sum {
+    color: #64748B;
+}
+body:not(.dark-mode) .shop-total-row {
+    background: rgba(0,0,0,0.02);
+    border-top-color: rgba(0,0,0,0.06);
+}
+body:not(.dark-mode) .shop-total-value {
+    color: #1E293B;
+}
+
+#shareContainer.sharing-mode .forecast-details-mini {
+    display: none !important; /* Скрываем детали (купоны/рост) только при генерации PDF */
 }
 
     
@@ -10801,6 +11067,15 @@ body.dark-mode .portfolio-echelons-total-row {
             </svg>
         </button>
         <div class="portfolio-dropdown-menu" id="portfolioDropdownMenu">
+            <div class="portfolio-dropdown-item" onclick="openShoppingList(); closePortfolioMenu();">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                    <rect x="9" y="3" width="6" height="4" rx="1"/>
+                    <path d="M9 12l2 2 4-4"/>
+                </svg>
+                <span>Список к покупке</span>
+            </div>
+            <div class="portfolio-dropdown-divider"></div>
             <div class="portfolio-dropdown-item" onclick="newCalculationWithHaptic(); closePortfolioMenu();">
                 <svg viewBox="0 0 24 24">
                     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
@@ -11025,6 +11300,7 @@ body.dark-mode .portfolio-echelons-total-row {
 
     <div class="portfolio-echelon-h-text">ВЫДЕЛИТЬ</div>
     <span class="portfolio-echelon-h-text clickable" onclick="toggleEchelonPercentHelp(event)">%</span>
+    <span class="portfolio-echelon-h-text"></span>
 </div>
                 
                 <!-- Подсказка для % эшелонов -->
@@ -11116,6 +11392,27 @@ body.dark-mode .portfolio-echelons-total-row {
         <div id="couponList"></div>
         <div id="couponTotalHeader"></div>
         <div id="portfolioActionPanel"></div>
+    </div>
+    
+    <!-- Overlay: Список к покупке -->
+    <div class="shopping-list-overlay" id="shoppingListOverlay">
+        <div class="shopping-list-header">
+            <button class="shopping-list-back" onclick="closeShoppingList()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <div class="shopping-list-title">Список к покупке</div>
+            <button class="shopping-list-copy-all" onclick="copyShoppingList()" title="Скопировать">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+            </button>
+        </div>
+        <div class="shopping-list-body" id="shoppingListBody">
+            <!-- JS заполнит -->
+        </div>
     </div>
 </div>
 
@@ -16123,6 +16420,30 @@ if(totalStocksRow) {
             
             updateEchelonTable();
             renderOfzList();
+            
+            // Сохраняем данные для списка к покупке
+            window._shoppingListData = { bonds: [], stocks: [] };
+            if (bonds.length > 0) {
+                const perBondBudgetSL = bondBudget / bonds.length;
+                bonds.forEach(b => {
+                    const fc = (b.p + b.nkd) * (1 + brokerFee);
+                    const qty = fc > 0 ? Math.floor(perBondBudgetSL / fc) : 0;
+                    if (qty > 0) window._shoppingListData.bonds.push({ ticker: b.t, name: b.n, qty, price: b.p, sum: Math.round(qty * b.p) });
+                });
+            }
+            echelons.forEach((e, idx) => {
+                const eBudget = stockBudget * e.weight;
+                const perA = e.assets.length > 0 ? eBudget / e.assets.length : 0;
+                let calcs = e.assets.map(a => {
+                    const fc = a.p * (1 + brokerFee);
+                    return { ...a, qty: fc > 0 ? Math.floor(perA / fc) : 0, fc };
+                });
+                let left = eBudget - calcs.reduce((acc, s) => acc + (s.qty * s.fc), 0);
+                if (calcs.length > 0 && left >= calcs[0].fc && calcs[0].fc > 0) calcs[0].qty += Math.floor(left / calcs[0].fc);
+                calcs.forEach(s => {
+                    if (s.qty > 0) window._shoppingListData.stocks.push({ ticker: s.t, name: s.n, qty: s.qty, price: s.p, sum: Math.round(s.qty * s.p), echelon: idx + 1 });
+                });
+            });
         } // Закрытие функции draw
 
 /* =================================================================
@@ -16246,6 +16567,132 @@ function closePortfolioMenuOnClick(e) {
     const btn = document.getElementById('portfolioDotsBtn');
     if (menu && !menu.contains(e.target) && !btn.contains(e.target)) {
         menu.classList.remove('open');
+    }
+}
+
+// === SHOPPING LIST (Список к покупке) ===
+function openShoppingList() {
+    const overlay = document.getElementById('shoppingListOverlay');
+    const body = document.getElementById('shoppingListBody');
+    if (!overlay || !body) return;
+    
+    const data = window._shoppingListData;
+    if (!data || (data.bonds.length === 0 && data.stocks.length === 0)) {
+        body.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#64748B;font-size:14px;">Сначала рассчитайте портфель в терминале</div>';
+        overlay.classList.add('open');
+        return;
+    }
+    
+    let html = '';
+    let grandTotal = 0;
+    
+    // ОФЗ
+    if (data.bonds.length > 0) {
+        const bondsTotal = data.bonds.reduce((a, b) => a + b.sum, 0);
+        grandTotal += bondsTotal;
+        html += '<div class="shop-section-label">Облигации (ОФЗ)</div>';
+        html += '<div class="shop-card">';
+        data.bonds.forEach(b => {
+            html += `<div class="shop-item">
+                <div class="shop-ticker">${b.ticker}<span class="shop-name">${b.name}</span></div>
+                <div class="shop-qty">${b.qty} шт</div>
+                <div class="shop-sum">${b.sum.toLocaleString('ru-RU')} ₽</div>
+            </div>`;
+        });
+        html += `<div class="shop-total-row">
+            <span class="shop-total-label">Итого ОФЗ</span>
+            <span class="shop-total-value">${bondsTotal.toLocaleString('ru-RU')} ₽</span>
+        </div></div>`;
+    }
+    
+    // Акции
+    if (data.stocks.length > 0) {
+        const stocksTotal = data.stocks.reduce((a, s) => a + s.sum, 0);
+        grandTotal += stocksTotal;
+        const roman = ['I','II','III','IV'];
+        html += '<div class="shop-section-label">Акции</div>';
+        html += '<div class="shop-card">';
+        data.stocks.forEach(s => {
+            html += `<div class="shop-item">
+                <div class="shop-ticker"><span class="shop-echelon-badge e${s.echelon}">${roman[s.echelon-1]}</span>${s.ticker}<span class="shop-name">${s.name}</span></div>
+                <div class="shop-qty">${s.qty} шт</div>
+                <div class="shop-sum">${s.sum.toLocaleString('ru-RU')} ₽</div>
+            </div>`;
+        });
+        html += `<div class="shop-total-row">
+            <span class="shop-total-label">Итого Акции</span>
+            <span class="shop-total-value">${stocksTotal.toLocaleString('ru-RU')} ₽</span>
+        </div></div>`;
+    }
+    
+    // Grand total
+    html += `<div class="shop-card" style="background:rgba(16,185,129,0.06);border-color:rgba(16,185,129,0.12);">
+        <div class="shop-total-row" style="border:none;">
+            <span class="shop-total-label" style="color:#10B981;">ВСЕГО К ПОКУПКЕ</span>
+            <span class="shop-total-value" style="color:#10B981;font-size:18px;">${grandTotal.toLocaleString('ru-RU')} ₽</span>
+        </div>
+    </div>`;
+    
+    body.innerHTML = html;
+    overlay.classList.add('open');
+    
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
+
+function closeShoppingList() {
+    const overlay = document.getElementById('shoppingListOverlay');
+    if (overlay) {
+        overlay.style.animation = 'none';
+        overlay.offsetHeight; // reflow
+        overlay.style.animation = '';
+        overlay.classList.remove('open');
+    }
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
+
+function copyShoppingList() {
+    const data = window._shoppingListData;
+    if (!data) return;
+    
+    let text = '📋 СПИСОК К ПОКУПКЕ\n\n';
+    const roman = ['I','II','III','IV'];
+    
+    if (data.bonds.length > 0) {
+        text += '🔵 ОФЗ:\n';
+        data.bonds.forEach(b => {
+            text += `  ${b.ticker} — ${b.qty} шт. (${b.sum.toLocaleString('ru-RU')} ₽)\n`;
+        });
+        text += '\n';
+    }
+    
+    if (data.stocks.length > 0) {
+        text += '🟢 Акции:\n';
+        data.stocks.forEach(s => {
+            text += `  [${roman[s.echelon-1]}] ${s.ticker} — ${s.qty} шт. (${s.sum.toLocaleString('ru-RU')} ₽)\n`;
+        });
+        text += '\n';
+    }
+    
+    const total = (data.bonds.reduce((a,b) => a + b.sum, 0) + data.stocks.reduce((a,s) => a + s.sum, 0));
+    text += `💰 Итого: ${total.toLocaleString('ru-RU')} ₽`;
+    
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.querySelector('.shopping-list-copy-all');
+            if (btn) {
+                btn.style.background = 'rgba(16, 185, 129, 0.2)';
+                btn.style.color = '#10B981';
+                setTimeout(() => { btn.style.background = ''; btn.style.color = ''; }, 1500);
+            }
+        });
+    }
+    
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
     }
 }
 
@@ -16376,6 +16823,7 @@ function syncPortfolioDataToV2() {
             btn.disabled = true; 
             if (brand) brand.style.display = 'block'; 
             if (dateEl) dateEl.innerText = new Date().toLocaleString();
+            container.classList.add('sharing-mode');
             
             try {
                 const canvas = await html2canvas(container, { backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-color'), scale: 2, logging: false, useCORS: true });
@@ -16388,7 +16836,7 @@ function syncPortfolioDataToV2() {
                     const file = new File([pdfBlob], "Madame_Solomina_Portfolio.pdf", { type: "application/pdf" });
                     if (navigator.canShare({ files: [file] })) {
                         await navigator.share({ files: [file], title: 'Мой портфель', text: 'Расчет от Madame Solomi\'na' });
-                        btn.innerHTML = originalText; btn.disabled = false; if (brand) brand.style.display = 'none'; return;
+                        btn.innerHTML = originalText; btn.disabled = false; if (brand) brand.style.display = 'none'; container.classList.remove('sharing-mode'); return;
                     }
                 }
                 doc.save('Solomina_Portfolio.pdf');
@@ -16396,7 +16844,7 @@ function syncPortfolioDataToV2() {
             } catch(e) {
                 console.error(e); alert("Не удалось открыть меню отправки. Файл будет скачан.");
                 btn.innerHTML = originalText; btn.disabled = false;
-            } finally { if (brand) brand.style.display = 'none'; }
+            } finally { if (brand) brand.style.display = 'none'; container.classList.remove('sharing-mode'); }
         }
     function resetAndGoToTerminal() {
     // Сбрасываем поле ввода суммы
@@ -17057,10 +17505,11 @@ function updateInfoBtnState(tabName) {
         margin: 0 !important;
     }
 
-    /* 3. Гарантируем, что они по разным краям */
+    /* 3. Прижимаем к левому краю */
     div#shareContainer .forecast-detail-item {
         display: flex !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
+        gap: 6px !important;
         width: 100% !important;
         margin-bottom: 4px !important;
     }
