@@ -5637,17 +5637,21 @@ body.dark-mode .echelon-header-new {
 
 /* Выравнивание заголовков */
 .echelon-columns-header span:nth-child(1) { text-align: left; }
-.echelon-columns-header span:nth-child(2) { text-align: left; }
-.echelon-columns-header span:nth-child(3) { text-align: center; padding-right: 8px; }
+.echelon-columns-header span:nth-child(2) { text-align: center; justify-self: center; }
+.echelon-columns-header span:nth-child(3) { text-align: right; padding-right: 8px; }
 .echelon-columns-header span:nth-child(4) { text-align: right; }
 
 body.dark-mode .echelon-columns-header {
     border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
-.echelon-columns-header span:nth-child(2),
-.echelon-columns-header span:nth-child(3) {
+.echelon-columns-header span:nth-child(2) {
     text-align: center;
+}
+
+.echelon-columns-header span:nth-child(3) {
+    text-align: right;
+    padding-right: 8px;
 }
 
 .echelon-columns-header span:last-child {
@@ -6334,6 +6338,61 @@ textarea {
             box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.3),
                         0 2px 8px rgba(0, 0, 0, 0.2) !important;
             color: rgba(148, 163, 184, 0.5) !important;
+        }
+
+        /* === COMPACT NAV: EXPANDED SEARCH BAR === */
+        body.compact-nav .nav-search-expanded {
+            height: 50px !important;
+            background: rgba(255, 255, 255, 0.55) !important;
+            backdrop-filter: blur(16px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.7) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.08),
+                        0 2px 8px rgba(0, 0, 0, 0.04) !important;
+            padding: 0 4px !important;
+            gap: 4px !important;
+        }
+        body.compact-nav .nav-search-expanded .nav-search-input-bar {
+            height: 36px !important;
+            border-radius: 14px !important;
+            font-size: 13px !important;
+            background: rgba(0, 0, 0, 0.04) !important;
+        }
+        body.compact-nav .nav-search-expanded .nav-back-island {
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 12px !important;
+            background: rgba(255, 255, 255, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+        }
+        body.compact-nav .nav-search-expanded .nav-back-island svg {
+            width: 18px !important;
+            height: 18px !important;
+        }
+        body.compact-nav .nav-search-expanded .nav-item {
+            width: 36px !important;
+            height: 36px !important;
+        }
+        body.compact-nav .nav-search-expanded .nav-item svg {
+            width: 18px !important;
+            height: 18px !important;
+        }
+
+        /* Compact search bar dark mode */
+        body.dark-mode.compact-nav .nav-search-expanded {
+            background: rgba(30, 41, 59, 0.65) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.3),
+                        0 2px 8px rgba(0, 0, 0, 0.2) !important;
+        }
+        body.dark-mode.compact-nav .nav-search-expanded .nav-search-input-bar {
+            background: rgba(255, 255, 255, 0.08) !important;
+        }
+        body.dark-mode.compact-nav .nav-search-expanded .nav-back-island {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
         /* ========== КОНЕЦ КОМПАКТНОГО МЕНЮ ========== */
 
@@ -11333,7 +11392,7 @@ body.dark-mode .portfolio-echelons-total-row {
             <div class="nav-item" id="nav-portfolio" onclick="showScreen('screen-portfolio')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
             </div>
-            <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets')">
+            <div class="nav-item" id="nav-assets" onclick="showScreen('screen-assets', true)">
                 <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
         </div>
@@ -11780,9 +11839,19 @@ function formatNewsDate(dateString) {
         setInterval(updateMarketData, 30000);
         
         
-                function showScreen(screenId) {
+                // Глобальный флаг: пришли ли мы на screen-assets через главное меню
+                var assetsFromMainNav = false;
+
+                function showScreen(screenId, fromMainNav) {
             // Список портфельных экранов
             const portfolioScreens = ['screen-portfolio', 'screen-stub', 'screen-assets'];
+
+            // Запоминаем флаг для screen-assets
+            if (screenId === 'screen-assets') {
+                assetsFromMainNav = !!fromMainNav;
+            } else {
+                assetsFromMainNav = false;
+            }
 
             // 1. Логика для меню: если это Главная (screen-home)
             if (screenId === 'screen-home') {
@@ -11793,8 +11862,8 @@ function formatNewsDate(dateString) {
             } else {
                 document.body.classList.remove('home-mode'); // Выключаем "прозрачный" режим (возвращаем как было)
                 
-                // Компактный режим: на всех страницах кроме главной и портфельных
-                if (!portfolioScreens.includes(screenId)) {
+                // Компактный режим: на всех страницах кроме главной и портфельных (за исключением screen-assets из главного меню)
+                if (!portfolioScreens.includes(screenId) || (screenId === 'screen-assets' && assetsFromMainNav)) {
                     document.body.classList.add('compact-nav');
                 } else {
                     document.body.classList.remove('compact-nav');
@@ -16987,8 +17056,14 @@ function updateInfoBtnState(tabName) {
         const portfolioMenu = document.getElementById('portfolioModeSwitcher'); // Новый пульт
 
         // Список экранов, которые относятся к "Портфельному режиму"
-        // Сюда добавляем: Портфель (Купить), Заглушку (Активы), Ребаланс (screen-assets)
         const portfolioScreens = ['screen-portfolio', 'screen-stub', 'screen-assets'];
+
+        // Если screen-assets открыт через главное меню (иконку $) — показываем главное меню
+        if (screenId === 'screen-assets' && assetsFromMainNav) {
+            if (mainMenu) mainMenu.style.setProperty('display', 'flex', 'important');
+            if (portfolioMenu) portfolioMenu.style.display = 'none';
+            return;
+        }
 
         if (portfolioScreens.includes(screenId)) { 
             // === МЫ ВНУТРИ ПОРТФЕЛЯ ===
@@ -17031,15 +17106,18 @@ function updateInfoBtnState(tabName) {
 
     // 3. ФУНКЦИЯ ПОИСКА (Лупа)
     function openSearchFromPortfolio() {
-        // Имитируем нажатие на лупу из главного меню
-        // Обычно это открывает экран "Интересное" или спец. экран поиска
-        showScreen('screen-interesting'); 
+        // Показываем главное меню (нужно для expandedNav)
+        const mainMenu = document.getElementById('navWrapper');
+        const portfolioMenu = document.getElementById('portfolioModeSwitcher');
         
-        // Фокус на поле ввода (если оно есть)
-        setTimeout(() => {
-            const searchInput = document.getElementById('searchInput'); // Или ваш ID поля
-            if (searchInput) searchInput.focus();
-        }, 300);
+        if (mainMenu) mainMenu.style.setProperty('display', 'flex', 'important');
+        if (portfolioMenu) portfolioMenu.style.display = 'none';
+        
+        // Добавляем compact-nav для светлого стиля
+        document.body.classList.add('compact-nav');
+        
+        // Открываем поиск как из главного меню
+        expandSearch();
     }
 
     // 4. ПЕРЕКЛЮЧЕНИЕ ТАБОВ (Купить / Активы / Ребаланс)
