@@ -3574,7 +3574,7 @@ body.dark-mode .portfolio-capital-card {
 
 .forecast-detail-item {
     display: grid;
-    grid-template-columns: 6px auto 1fr auto;
+    grid-template-columns: 6px auto 1fr;
     align-items: center;
     gap: 6px;
     font-family: 'JetBrains Mono', monospace;
@@ -3601,7 +3601,8 @@ body.dark-mode .portfolio-capital-card {
 .forecast-detail-item .detail-label {
     color: #64748B;
     font-size: 10px;
-    min-width: 52px;
+    width: 55px;
+    flex-shrink: 0;
 }
 
 .forecast-detail-item .detail-value {
@@ -3609,13 +3610,6 @@ body.dark-mode .portfolio-capital-card {
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     text-align: right;
-}
-
-.forecast-detail-item .detail-currency {
-    color: #E2E8F0;
-    font-weight: 600;
-    text-align: left;
-    width: 12px;
 }
 
 /* === Переключатель Денежный поток / Растущая часть === */
@@ -10801,11 +10795,11 @@ body.dark-mode .portfolio-echelons-total-row {
     <div class="portfolio-header-row">
         <h1>Портфель</h1>
         <button class="portfolio-dots-btn" id="portfolioDotsBtn" onclick="togglePortfolioMenu(event)">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                <rect x="3" y="3" width="8" height="8" rx="2.5"/>
-                <rect x="13" y="3" width="8" height="8" rx="2.5"/>
-                <rect x="3" y="13" width="8" height="8" rx="2.5"/>
-                <rect x="13" y="13" width="8" height="8" rx="2.5"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20">
+                <rect x="3" y="3" width="7" height="7" rx="2"/>
+                <rect x="14" y="3" width="7" height="7" rx="2"/>
+                <rect x="3" y="14" width="7" height="7" rx="2"/>
+                <rect x="14" y="14" width="7" height="7" rx="2"/>
             </svg>
         </button>
         <div class="portfolio-dropdown-menu" id="portfolioDropdownMenu">
@@ -10907,14 +10901,12 @@ body.dark-mode .portfolio-echelons-total-row {
         <div class="forecast-detail-item">
             <span class="detail-dot bonds"></span>
             <span class="detail-label">Купоны:</span>
-            <span class="detail-value" id="summ-bond-income-mini">+0</span>
-            <span class="detail-currency">₽</span>
+            <span class="detail-value" id="summ-bond-income-mini">+0 ₽</span>
         </div>
         <div class="forecast-detail-item">
             <span class="detail-dot stocks"></span>
             <span class="detail-label">Рост:</span>
-            <span class="detail-value" id="summ-stock-growth-mini">+0</span>
-            <span class="detail-currency">₽</span>
+            <span class="detail-value" id="summ-stock-growth-mini">+0 ₽</span>
         </div>
     </div>
     <span class="forecast-percent-change" id="summ-total-percent-v2">+0%</span>
@@ -15938,10 +15930,10 @@ if(totalRow) {
                     totalPercentV2.style.color = percentageChange >= 0 ? '#10B981' : '#EF4444';
                 }
                 if (bondIncomeMini) {
-                    bondIncomeMini.textContent = '+' + Math.round(totalBondProjectedIncome).toLocaleString('ru-RU').replace(/\s/g, '.');
+                    bondIncomeMini.textContent = '+' + Math.round(totalBondProjectedIncome).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
                 }
                 if (stockGrowthMini) {
-                    stockGrowthMini.textContent = '+' + Math.round(totalStockProjectedGrowth).toLocaleString('ru-RU').replace(/\s/g, '.');
+                    stockGrowthMini.textContent = '+' + Math.round(totalStockProjectedGrowth).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
                 }
                 
                 // Рендерим список облигаций в новый контейнер V2
@@ -16584,7 +16576,7 @@ function syncPortfolioDataToV2() {
             try {
                 const { jsPDF } = window.jspdf;
                 
-                // Рендерим основную карточку капитала
+                // Рендерим карточку капитала
                 const canvas1 = await html2canvas(container, { 
                     backgroundColor: '#0f172a', 
                     scale: 2, 
@@ -16592,104 +16584,71 @@ function syncPortfolioDataToV2() {
                     useCORS: true 
                 });
                 
-                // Рендерим таблицы портфеля (облигации + акции)
-                const bondsList = document.getElementById('portfolio-tab-bonds');
-                const stocksList = document.getElementById('portfolio-tab-stocks');
-                
-                let canvas2 = null;
-                let canvas3 = null;
-                
-                // Временно показываем оба таба для рендера
-                const bondsWasActive = bondsList && bondsList.classList.contains('active');
-                const stocksWasActive = stocksList && stocksList.classList.contains('active');
-                
-                if (bondsList) {
-                    bondsList.style.display = 'block';
-                    canvas2 = await html2canvas(bondsList, { 
-                        backgroundColor: '#0f172a', scale: 2, logging: false, useCORS: true,
-                        onclone: function(clonedDoc) {
-                            const el = clonedDoc.querySelector('#portfolio-tab-bonds');
-                            if (el) { el.style.display = 'block'; el.style.opacity = '1'; }
-                        }
-                    });
-                }
-                
-                if (stocksList) {
-                    stocksList.style.display = 'block';
-                    // Раскрываем все эшелоны для PDF
-                    const echelonCards = stocksList.querySelectorAll('.portfolio-echelon-card');
-                    echelonCards.forEach(card => card.classList.add('expanded'));
-                    
-                    canvas3 = await html2canvas(stocksList, { 
-                        backgroundColor: '#0f172a', scale: 2, logging: false, useCORS: true,
-                        onclone: function(clonedDoc) {
-                            const el = clonedDoc.querySelector('#portfolio-tab-stocks');
-                            if (el) { el.style.display = 'block'; el.style.opacity = '1'; }
-                            clonedDoc.querySelectorAll('.portfolio-echelon-card').forEach(c => c.classList.add('expanded'));
-                        }
-                    });
-                    
-                    echelonCards.forEach(card => {
-                        if (!card.dataset.wasExpanded) card.classList.remove('expanded');
-                    });
-                }
-                
-                // Восстанавливаем табы
-                if (bondsList && !bondsWasActive) bondsList.style.display = '';
-                if (stocksList && !stocksWasActive) stocksList.style.display = '';
-                
-                // Собираем PDF из блоков
                 const pageWidth = canvas1.width;
-                let totalHeight = canvas1.height;
-                if (canvas2) totalHeight += canvas2.height + 40;
-                if (canvas3) totalHeight += canvas3.height + 40;
                 
-                // Добавляем высоту для списка к покупке
+                // Считаем высоту для списка к покупке
                 const shopData = window._shoppingListData;
                 const hasShopData = shopData && (shopData.bonds.length > 0 || shopData.stocks.length > 0);
-                const shopListHeight = hasShopData ? (80 + (shopData.bonds.length + shopData.stocks.length) * 60 + 200) * 2 : 0;
-                totalHeight += shopListHeight;
+                const scale = 2;
+                const lineH = 22 * scale;
+                const sectionGap = 30 * scale;
                 
-                const doc = new jsPDF({ orientation: 'p', unit: 'px', format: [pageWidth, totalHeight + 100] });
+                let shopHeight = 0;
+                if (hasShopData) {
+                    shopHeight += 50 * scale; // Заголовок "СПИСОК К ПОКУПКЕ"
+                    if (shopData.bonds.length > 0) {
+                        shopHeight += 25 * scale; // "Облигации"
+                        shopHeight += shopData.bonds.length * lineH;
+                        shopHeight += 30 * scale; // Итого + отступ
+                    }
+                    if (shopData.stocks.length > 0) {
+                        shopHeight += 25 * scale; // "Акции"
+                        shopHeight += shopData.stocks.length * lineH;
+                        shopHeight += 30 * scale; // Итого + отступ
+                    }
+                    shopHeight += 50 * scale; // Grand total
+                }
+                
+                const totalHeight = canvas1.height + (hasShopData ? sectionGap + shopHeight : 0) + 120;
+                
+                const doc = new jsPDF({ orientation: 'p', unit: 'px', format: [pageWidth, totalHeight] });
+                
+                // Заливаем весь PDF тёмным фоном
+                doc.setFillColor(15, 23, 42); // #0f172a
+                doc.rect(0, 0, pageWidth, totalHeight, 'F');
+                
                 let yPos = 0;
                 
                 // 1. Карточка капитала
                 doc.addImage(canvas1.toDataURL('image/png'), 'PNG', 0, yPos, canvas1.width, canvas1.height);
-                yPos += canvas1.height + 40;
+                yPos += canvas1.height + sectionGap;
                 
-                // 2. ОФЗ
-                if (canvas2) {
-                    doc.addImage(canvas2.toDataURL('image/png'), 'PNG', 0, yPos, canvas2.width, canvas2.height);
-                    yPos += canvas2.height + 40;
-                }
-                
-                // 3. Акции
-                if (canvas3) {
-                    doc.addImage(canvas3.toDataURL('image/png'), 'PNG', 0, yPos, canvas3.width, canvas3.height);
-                    yPos += canvas3.height + 60;
-                }
-                
-                // 4. Список к покупке
+                // 2. Список к покупке
                 if (hasShopData) {
-                    const scale = 2;
                     const margin = 40 * scale;
                     const colWidth = pageWidth - margin * 2;
+                    const roman = ['I','II','III','IV'];
                     
                     // Заголовок
                     doc.setFont('helvetica', 'bold');
-                    doc.setFontSize(13 * scale);
+                    doc.setFontSize(14 * scale);
                     doc.setTextColor(241, 245, 249);
-                    doc.text('СПИСОК К ПОКУПКЕ', pageWidth / 2, yPos + 20, { align: 'center' });
-                    yPos += 50 * scale;
+                    doc.text('СПИСОК К ПОКУПКЕ', pageWidth / 2, yPos, { align: 'center' });
+                    yPos += 40 * scale;
                     
-                    const roman = ['I','II','III','IV'];
+                    // Разделительная линия
+                    doc.setDrawColor(255, 255, 255);
+                    doc.setLineWidth(0.3);
+                    doc.line(margin, yPos, margin + colWidth, yPos);
+                    yPos += 15 * scale;
                     
                     // ОФЗ
                     if (shopData.bonds.length > 0) {
                         doc.setFontSize(9 * scale);
                         doc.setTextColor(100, 116, 139);
+                        doc.setFont('helvetica', 'bold');
                         doc.text('Облигации (ОФЗ)', margin, yPos);
-                        yPos += 20 * scale;
+                        yPos += 22 * scale;
                         
                         let bondsSubtotal = 0;
                         shopData.bonds.forEach(b => {
@@ -16699,23 +16658,24 @@ function syncPortfolioDataToV2() {
                             doc.text(b.ticker, margin, yPos);
                             
                             doc.setFont('helvetica', 'normal');
-                            doc.setFontSize(8 * scale);
+                            doc.setFontSize(8.5 * scale);
                             doc.setTextColor(16, 185, 129);
-                            doc.text(b.qty + ' шт', margin + colWidth * 0.55, yPos);
+                            doc.text(b.qty + ' шт', margin + colWidth * 0.6, yPos);
                             
                             doc.setTextColor(148, 163, 184);
                             doc.text(b.sum.toLocaleString('ru-RU') + ' ₽', margin + colWidth, yPos, { align: 'right' });
                             
                             bondsSubtotal += b.sum;
-                            yPos += 18 * scale;
+                            yPos += lineH;
                         });
                         
                         // Итого ОФЗ
-                        doc.setDrawColor(255, 255, 255, 0.1);
-                        doc.line(margin, yPos, margin + colWidth, yPos);
-                        yPos += 12 * scale;
+                        doc.setDrawColor(255, 255, 255);
+                        doc.setLineWidth(0.2);
+                        doc.line(margin, yPos - 5, margin + colWidth, yPos - 5);
+                        yPos += 8 * scale;
                         doc.setFont('helvetica', 'bold');
-                        doc.setFontSize(8 * scale);
+                        doc.setFontSize(8.5 * scale);
                         doc.setTextColor(100, 116, 139);
                         doc.text('Итого ОФЗ', margin, yPos);
                         doc.setTextColor(241, 245, 249);
@@ -16727,8 +16687,9 @@ function syncPortfolioDataToV2() {
                     if (shopData.stocks.length > 0) {
                         doc.setFontSize(9 * scale);
                         doc.setTextColor(100, 116, 139);
+                        doc.setFont('helvetica', 'bold');
                         doc.text('Акции', margin, yPos);
-                        yPos += 20 * scale;
+                        yPos += 22 * scale;
                         
                         let stocksSubtotal = 0;
                         shopData.stocks.forEach(s => {
@@ -16738,33 +16699,38 @@ function syncPortfolioDataToV2() {
                             doc.text('[' + roman[s.echelon - 1] + '] ' + s.ticker, margin, yPos);
                             
                             doc.setFont('helvetica', 'normal');
-                            doc.setFontSize(8 * scale);
+                            doc.setFontSize(8.5 * scale);
                             doc.setTextColor(16, 185, 129);
-                            doc.text(s.qty + ' шт', margin + colWidth * 0.55, yPos);
+                            doc.text(s.qty + ' шт', margin + colWidth * 0.6, yPos);
                             
                             doc.setTextColor(148, 163, 184);
                             doc.text(s.sum.toLocaleString('ru-RU') + ' ₽', margin + colWidth, yPos, { align: 'right' });
                             
                             stocksSubtotal += s.sum;
-                            yPos += 18 * scale;
+                            yPos += lineH;
                         });
                         
                         // Итого Акции
-                        doc.setDrawColor(255, 255, 255, 0.1);
-                        doc.line(margin, yPos, margin + colWidth, yPos);
-                        yPos += 12 * scale;
+                        doc.setDrawColor(255, 255, 255);
+                        doc.setLineWidth(0.2);
+                        doc.line(margin, yPos - 5, margin + colWidth, yPos - 5);
+                        yPos += 8 * scale;
                         doc.setFont('helvetica', 'bold');
-                        doc.setFontSize(8 * scale);
+                        doc.setFontSize(8.5 * scale);
                         doc.setTextColor(100, 116, 139);
                         doc.text('Итого Акции', margin, yPos);
                         doc.setTextColor(241, 245, 249);
                         doc.text(stocksSubtotal.toLocaleString('ru-RU') + ' ₽', margin + colWidth, yPos, { align: 'right' });
-                        yPos += 25 * scale;
+                        yPos += 30 * scale;
                     }
                     
                     // GRAND TOTAL
                     const grandTotal = (shopData.bonds.reduce((a, b) => a + b.sum, 0) + shopData.stocks.reduce((a, s) => a + s.sum, 0));
-                    yPos += 10 * scale;
+                    doc.setDrawColor(16, 185, 129);
+                    doc.setLineWidth(0.5);
+                    doc.line(margin, yPos - 5, margin + colWidth, yPos - 5);
+                    yPos += 12 * scale;
+                    doc.setFont('helvetica', 'bold');
                     doc.setFontSize(10 * scale);
                     doc.setTextColor(16, 185, 129);
                     doc.text('ВСЕГО К ПОКУПКЕ', margin, yPos);
@@ -16772,8 +16738,9 @@ function syncPortfolioDataToV2() {
                     doc.text(grandTotal.toLocaleString('ru-RU') + ' ₽', margin + colWidth, yPos, { align: 'right' });
                 }
                 
-                // Бренд
-                yPos += 80;
+                // Бренд внизу
+                yPos = totalHeight - 60;
+                doc.setFont('helvetica', 'bold');
                 doc.setFontSize(16);
                 doc.setTextColor(217, 119, 87);
                 doc.text("Madame Solomi'na Portfolio", pageWidth / 2, yPos, { align: 'center' });
@@ -16784,7 +16751,7 @@ function syncPortfolioDataToV2() {
                 const pdfBlob = doc.output('blob');
                 const pdfFile = new File([pdfBlob], "Madame_Solomina_Portfolio.pdf", { type: "application/pdf" });
 
-                // 1. Пробуем Web Share API
+                // Пробуем Web Share API
                 if (navigator.share && navigator.canShare) {
                     try {
                         if (navigator.canShare({ files: [pdfFile] })) {
@@ -16803,7 +16770,7 @@ function syncPortfolioDataToV2() {
                     }
                 }
 
-                // 2. Fallback: скачивание
+                // Fallback: скачивание
                 const blobUrl = URL.createObjectURL(pdfBlob);
                 const a = document.createElement('a');
                 a.href = blobUrl;
