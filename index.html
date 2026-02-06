@@ -3534,15 +3534,12 @@ body.dark-mode .portfolio-capital-card {
     display: flex;
     align-items: baseline;
     gap: 10px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
-/* Нижняя строка: детали слева, бейдж % справа */
-.forecast-bottom-row {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 12px;
+/* Строка с акцентным бейджем % */
+.forecast-badge-row {
+    margin-bottom: 10px;
 }
 
 .forecast-percent-badge-big {
@@ -3556,8 +3553,6 @@ body.dark-mode .portfolio-capital-card {
     border: 1px solid rgba(16, 185, 129, 0.2);
     border-radius: 10px;
     letter-spacing: 0.02em;
-    white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .forecast-total-mini {
@@ -10923,20 +10918,20 @@ body.dark-mode .portfolio-echelons-total-row {
                         <div class="forecast-main-row">
                             <span class="forecast-total-mini" id="summ-total-value-v2">~0 ₽</span>
                         </div>
-                        <div class="forecast-bottom-row">
-                            <div class="forecast-details-mini">
-                                <div class="forecast-detail-item">
-                                    <span class="detail-dot bonds"></span>
-                                    <span class="detail-label">Купоны:</span>
-                                    <span class="detail-value" id="summ-bond-income-mini">+0 ₽</span>
-                                </div>
-                                <div class="forecast-detail-item">
-                                    <span class="detail-dot stocks"></span>
-                                    <span class="detail-label">Рост:</span>
-                                    <span class="detail-value" id="summ-stock-growth-mini">+0 ₽</span>
-                                </div>
-                            </div>
+                        <div class="forecast-badge-row">
                             <span class="forecast-percent-badge-big" id="summ-total-percent-v2">+0%</span>
+                        </div>
+                        <div class="forecast-details-mini">
+                            <div class="forecast-detail-item">
+                                <span class="detail-dot bonds"></span>
+                                <span class="detail-label">Купоны:</span>
+                                <span class="detail-value" id="summ-bond-income-mini">+0 ₽</span>
+                            </div>
+                            <div class="forecast-detail-item">
+                                <span class="detail-dot stocks"></span>
+                                <span class="detail-label">Рост:</span>
+                                <span class="detail-value" id="summ-stock-growth-mini">+0 ₽</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -16336,18 +16331,19 @@ function openShoppingList() {
     }
     
     const S = {
-        label: 'font-family:Inter,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary, #94A3B8);margin-bottom:8px;padding-left:2px;',
-        card: 'background:var(--card-glass-aurora, rgba(255,255,255,0.06));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--card-border-aurora, rgba(255,255,255,0.1));border-radius:16px;overflow:hidden;margin-bottom:16px;',
-        row: 'display:grid;grid-template-columns:28px 1fr auto auto;gap:10px;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
-        rowLast: 'display:grid;grid-template-columns:28px 1fr auto auto;gap:10px;align-items:center;padding:12px 14px;cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
-        check: 'width:22px;height:22px;border-radius:7px;border:2px solid rgba(148,163,184,0.4);background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;',
-        ticker: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:var(--text-deep, #F1F5F9);overflow:hidden;text-overflow:ellipsis;',
-        name: 'display:block;font-family:Inter,sans-serif;font-size:10px;font-weight:400;color:var(--text-secondary, #94A3B8);margin-top:2px;overflow:hidden;text-overflow:ellipsis;',
+        label: 'font-family:Inter,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748B;margin-bottom:8px;padding-left:2px;',
+        card: 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:16px;',
+        row: 'display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
+        rowLast: 'display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
+        check: 'width:20px;height:20px;border-radius:6px;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;',
+        checkDone: 'width:20px;height:20px;border-radius:6px;border:2px solid #10B981;background:#10B981;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;',
+        ticker: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:#F1F5F9;overflow:hidden;text-overflow:ellipsis;',
+        name: 'display:block;font-family:Inter,sans-serif;font-size:10px;font-weight:400;color:#64748B;margin-top:1px;overflow:hidden;text-overflow:ellipsis;',
         qty: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:#10B981;text-align:right;white-space:nowrap;',
-        sum: 'font-family:JetBrains Mono,monospace;font-size:12px;font-weight:500;color:var(--text-secondary, #94A3B8);text-align:right;min-width:70px;white-space:nowrap;',
-        total: 'display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.08);',
-        tLabel: 'font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:var(--text-secondary, #94A3B8);text-transform:uppercase;letter-spacing:0.05em;',
-        tVal: 'font-family:JetBrains Mono,monospace;font-size:15px;font-weight:700;color:var(--text-deep, #F1F5F9);',
+        sum: 'font-family:JetBrains Mono,monospace;font-size:12px;font-weight:500;color:#94A3B8;text-align:right;min-width:70px;white-space:nowrap;',
+        total: 'display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.08);',
+        tLabel: 'font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:0.05em;',
+        tVal: 'font-family:JetBrains Mono,monospace;font-size:15px;font-weight:700;color:#F1F5F9;',
     };
     const badgeColors = {1:'rgba(46,204,113,0.25);color:#2ecc71', 2:'rgba(52,152,219,0.25);color:#3498db', 3:'rgba(241,196,15,0.25);color:#f1c40f', 4:'rgba(231,76,60,0.25);color:#e74c3c'};
     const roman = ['I','II','III','IV'];
@@ -16399,15 +16395,16 @@ function toggleShopItem(row) {
     if (done) {
         row.dataset.done = '0';
         row.style.opacity = '1';
-        check.style.border = '2px solid rgba(148,163,184,0.4)';
-        check.style.background = 'rgba(255,255,255,0.05)';
+        row.style.textDecoration = 'none';
+        check.style.border = '2px solid rgba(255,255,255,0.15)';
+        check.style.background = 'transparent';
         check.innerHTML = '';
     } else {
         row.dataset.done = '1';
-        row.style.opacity = '0.3';
+        row.style.opacity = '0.35';
         check.style.border = '2px solid #10B981';
         check.style.background = '#10B981';
-        check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><polyline points="20 6 9 17 4 12"/></svg>';
+        check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>';
     }
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
@@ -17556,22 +17553,13 @@ function updateInfoBtnState(tabName) {
 
 <!-- Overlay: Список к покупке — ПОСЛЕДНИЙ элемент в body для максимального z-index -->
 <div id="shoppingListOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:99999; background:var(--bg-base, #0F172A); flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;">
-    <!-- Aurora Background -->
-    <div class="aurora-container">
-        <div class="aurora-spot blue"></div>
-        <div class="aurora-spot green"></div>
-        <div class="aurora-spot orange"></div>
-    </div>
-    <div class="noise-overlay"></div>
-    
-    <!-- Header -->
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 16px 20px; padding-top:calc(80px + env(safe-area-inset-top, 20px)); position:sticky; top:0; background:transparent; z-index:10;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px; padding-top:calc(70px + env(safe-area-inset-top, 20px)); position:sticky; top:0; background:var(--bg-base, #0F172A); z-index:10; border-bottom:1px solid rgba(255,255,255,0.06);">
         <button onclick="closeShoppingList()" style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#94A3B8; cursor:pointer; -webkit-tap-highlight-color:transparent;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
                 <path d="M15 19l-7-7 7-7"/>
             </svg>
         </button>
-        <h1 style="font-family:'Inter',sans-serif; font-size:32px; font-weight:700; color:var(--text-deep, #F1F5F9); letter-spacing:-0.03em; margin:0;">Список к покупке</h1>
+        <div style="font-family:'Inter',sans-serif; font-size:16px; font-weight:700; color:#F1F5F9; letter-spacing:-0.02em;">Список к покупке</div>
         <button onclick="copyShoppingList()" style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#94A3B8; cursor:pointer; -webkit-tap-highlight-color:transparent;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
@@ -17579,7 +17567,7 @@ function updateInfoBtnState(tabName) {
             </svg>
         </button>
     </div>
-    <div id="shoppingListBody" style="padding:0 16px 40px; flex:1; position:relative; z-index:2;">
+    <div id="shoppingListBody" style="padding:12px 16px 40px; flex:1;">
         <!-- JS заполнит -->
     </div>
 </div>
