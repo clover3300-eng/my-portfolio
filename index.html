@@ -4147,9 +4147,9 @@ body.dark-mode .portfolio-ofz-detail-row {
 
 /* ЭШЕЛОН + ? */
 .portfolio-echelon-h-text:nth-child(1) {
-    justify-content: center; 
+    justify-content: flex-start; 
     gap: 6px;                    
-    padding-left: 0;
+    padding-left: 28px; /* 16px padding echelon + 12px gap = 28px — центр иконки и текста */
     flex: 1;
 }
 /* Стиль кнопки "?" (Элегантный стиль в тон дизайну) */
@@ -10389,10 +10389,10 @@ body.dark-mode .portfolio-echelons-total-row {
     opacity: 0.7;
 }
 
-#shareContainer .forecast-percent-change {
+#shareContainer.sharing-mode .forecast-percent-change {
     font-size: 11px !important;
     padding: 2px 6px !important;
-    background: transparent !important; /* Убираем фон у процентов */
+    background: transparent !important;
 }
 
 
@@ -16314,8 +16314,10 @@ function openShoppingList() {
     const S = {
         label: 'font-family:Inter,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748B;margin-bottom:8px;padding-left:2px;',
         card: 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:16px;',
-        row: 'display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);',
-        rowLast: 'display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px 14px;',
+        row: 'display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
+        rowLast: 'display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
+        check: 'width:20px;height:20px;border-radius:6px;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;',
+        checkDone: 'width:20px;height:20px;border-radius:6px;border:2px solid #10B981;background:#10B981;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;',
         ticker: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:#F1F5F9;overflow:hidden;text-overflow:ellipsis;',
         name: 'display:block;font-family:Inter,sans-serif;font-size:10px;font-weight:400;color:#64748B;margin-top:1px;overflow:hidden;text-overflow:ellipsis;',
         qty: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:#10B981;text-align:right;white-space:nowrap;',
@@ -16326,6 +16328,7 @@ function openShoppingList() {
     };
     const badgeColors = {1:'rgba(46,204,113,0.25);color:#2ecc71', 2:'rgba(52,152,219,0.25);color:#3498db', 3:'rgba(241,196,15,0.25);color:#f1c40f', 4:'rgba(231,76,60,0.25);color:#e74c3c'};
     const roman = ['I','II','III','IV'];
+    const svgCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>';
     
     let html = '';
     let grandTotal = 0;
@@ -16337,7 +16340,7 @@ function openShoppingList() {
         html += `<div style="${S.label}">Облигации (ОФЗ)</div><div style="${S.card}">`;
         data.bonds.forEach((b, i) => {
             const rs = i === data.bonds.length - 1 ? S.rowLast : S.row;
-            html += `<div style="${rs}"><div style="${S.ticker}">${b.ticker}<span style="${S.name}">${b.name}</span></div><div style="${S.qty}">${b.qty} шт</div><div style="${S.sum}">${b.sum.toLocaleString('ru-RU')} ₽</div></div>`;
+            html += `<div style="${rs}" onclick="toggleShopItem(this)"><div class="sl-check" style="${S.check}"></div><div style="${S.ticker}">${b.ticker}<span style="${S.name}">${b.name}</span></div><div style="${S.qty}">${b.qty} шт</div><div style="${S.sum}">${b.sum.toLocaleString('ru-RU')} ₽</div></div>`;
         });
         html += `<div style="${S.total}"><span style="${S.tLabel}">Итого ОФЗ</span><span style="${S.tVal}">${bondsTotal.toLocaleString('ru-RU')} ₽</span></div></div>`;
     }
@@ -16350,7 +16353,7 @@ function openShoppingList() {
         data.stocks.forEach((s, i) => {
             const rs = i === data.stocks.length - 1 ? S.rowLast : S.row;
             const bc = badgeColors[s.echelon];
-            html += `<div style="${rs}"><div style="${S.ticker}"><span style="display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-right:6px;background:${bc};vertical-align:middle;">${roman[s.echelon-1]}</span>${s.ticker}<span style="${S.name}">${s.name}</span></div><div style="${S.qty}">${s.qty} шт</div><div style="${S.sum}">${s.sum.toLocaleString('ru-RU')} ₽</div></div>`;
+            html += `<div style="${rs}" onclick="toggleShopItem(this)"><div class="sl-check" style="${S.check}"></div><div style="${S.ticker}"><span style="display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-right:6px;background:${bc};vertical-align:middle;">${roman[s.echelon-1]}</span>${s.ticker}<span style="${S.name}">${s.name}</span></div><div style="${S.qty}">${s.qty} шт</div><div style="${S.sum}">${s.sum.toLocaleString('ru-RU')} ₽</div></div>`;
         });
         html += `<div style="${S.total}"><span style="${S.tLabel}">Итого Акции</span><span style="${S.tVal}">${stocksTotal.toLocaleString('ru-RU')} ₽</span></div></div>`;
     }
@@ -16361,6 +16364,29 @@ function openShoppingList() {
     body.innerHTML = html;
     overlay.style.display = 'flex';
     
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
+
+function toggleShopItem(row) {
+    const check = row.querySelector('.sl-check');
+    if (!check) return;
+    const done = row.dataset.done === '1';
+    if (done) {
+        row.dataset.done = '0';
+        row.style.opacity = '1';
+        row.style.textDecoration = 'none';
+        check.style.border = '2px solid rgba(255,255,255,0.15)';
+        check.style.background = 'transparent';
+        check.innerHTML = '';
+    } else {
+        row.dataset.done = '1';
+        row.style.opacity = '0.35';
+        check.style.border = '2px solid #10B981';
+        check.style.background = '#10B981';
+        check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>';
+    }
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
@@ -17215,8 +17241,8 @@ function updateInfoBtnState(tabName) {
         width: 100% !important;
     }
 
-    /* Проценты скрываем отсюда, они дублируют смысл */
-    div#shareContainer .forecast-percent-change { display: none !important; }
+    /* Проценты скрываем только при PDF генерации */
+    div#shareContainer.sharing-mode .forecast-percent-change { display: none !important; }
 
     /* --- ДЕТАЛИ (КУПОНЫ, РОСТ) --- */
     div#shareContainer .forecast-details-mini {
@@ -17508,7 +17534,7 @@ function updateInfoBtnState(tabName) {
 
 <!-- Overlay: Список к покупке — ПОСЛЕДНИЙ элемент в body для максимального z-index -->
 <div id="shoppingListOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:99999; background:#0F172A; flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;">
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px; padding-top:max(16px, env(safe-area-inset-top, 44px)); position:sticky; top:0; background:#0F172A; z-index:10; border-bottom:1px solid rgba(255,255,255,0.06);">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px; padding-top:calc(60px + env(safe-area-inset-top, 20px)); position:sticky; top:0; background:#0F172A; z-index:10; border-bottom:1px solid rgba(255,255,255,0.06);">
         <button onclick="closeShoppingList()" style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#94A3B8; cursor:pointer; -webkit-tap-highlight-color:transparent;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
                 <path d="M15 19l-7-7 7-7"/>
