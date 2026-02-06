@@ -3476,6 +3476,14 @@ body.dark-mode .portfolio-capital-card {
     color: #F1F5F9;
 }
 
+.capital-label-income {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(16, 185, 129, 0.8);
+    margin-left: 2px;
+}
+
 /* Разделитель */
 .capital-divider {
     height: 1px;
@@ -4147,26 +4155,27 @@ body.dark-mode .portfolio-ofz-detail-row {
 
 /* ЭШЕЛОН + ? */
 .portfolio-echelon-h-text:nth-child(1) {
-    justify-content: flex-start; 
+    justify-content: center; 
     gap: 6px;                    
-    padding-left: 4px; /* Визуальная компенсация */
+    padding-left: 0;
 }
-/* Стиль кнопки "?" (Голубой кружок) */
+/* Стиль кнопки "?" (Элегантный стиль в тон дизайну) */
 .h-help-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     
-    /* Размеры кружка (чуть меньше, чтобы выглядело аккуратно) */
+    /* Размеры кружка */
     width: 18px; 
     height: 18px;
     
-    /* ОФОРМЛЕНИЕ: Голубой фон */
-    background: var(--accent-blue, #3498db); /* Использует ваш основной синий цвет */
-    color: #ffffff; /* Белый вопросительный знак */
+    /* ОФОРМЛЕНИЕ: Тонкий нейтральный стиль */
+    background: rgba(0, 0, 0, 0.06);
+    color: rgba(100, 116, 139, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     
     /* Форма */
-    border-radius: 50%; /* Круг */
+    border-radius: 50%;
     
     /* Шрифт */
     font-family: 'Inter', sans-serif;
@@ -4174,19 +4183,29 @@ body.dark-mode .portfolio-ofz-detail-row {
     font-weight: 700;
     
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3); /* Легкая тень для объема */
-    transition: transform 0.2s ease, opacity 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    animation: helpPulse 3s ease-in-out infinite;
+}
+
+@keyframes helpPulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.08); opacity: 1; }
 }
 
 /* Эффект при наведении */
 .h-help-btn:hover {
-    transform: scale(1.1); /* Чуть увеличивается */
-    opacity: 0.9;          /* Чуть меняется прозрачность */
+    background: rgba(0, 0, 0, 0.1);
+    color: rgba(15, 23, 42, 0.8);
+    border-color: rgba(0, 0, 0, 0.15);
+    animation: none;
+    transform: scale(1.1);
 }
 
 /* Эффект при нажатии */
 .h-help-btn:active {
     transform: scale(0.95);
+    animation: none;
 }
 .portfolio-echelon-h-text:nth-child(3):hover {
     color: var(--text-primary, #ffffff); /* Становится основным цветом текста */
@@ -4195,12 +4214,15 @@ body.dark-mode .portfolio-ofz-detail-row {
 
 /* Темная тема (Dark Mode) */
 body.dark-mode .h-help-btn {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(148, 163, 184, 0.6);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 body.dark-mode .h-help-btn:hover {
     background: rgba(255, 255, 255, 0.15);
-    color: #fff;
+    color: rgba(241, 245, 249, 0.85);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 /* ВЫДЕЛИТЬ */
 .portfolio-echelon-h-text:nth-child(2) {
@@ -5116,6 +5138,136 @@ body.dark-mode .portfolio-echelon-columns-header {
     min-height: 100vh;
     margin: -16px;
     padding: 20px 16px 140px 16px;
+}
+
+/* === Заголовок Портфель с меню три точки === */
+.portfolio-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.portfolio-header-row h1 {
+    margin: 0;
+    text-align: center;
+}
+
+.portfolio-dots-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    color: var(--text-slate, #64748B);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+.portfolio-dots-btn svg {
+    width: 18px;
+    height: 18px;
+}
+.portfolio-dots-btn:active {
+    transform: translateY(-50%) scale(0.92);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .portfolio-dots-btn {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-slate);
+}
+
+/* Выпадающее меню */
+.portfolio-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 200px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+    padding: 6px;
+    box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.15),
+                0 4px 12px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.portfolio-dropdown-menu.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+body.dark-mode .portfolio-dropdown-menu {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.4),
+                0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.portfolio-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-deep, #0F172A);
+    -webkit-tap-highlight-color: transparent;
+}
+.portfolio-dropdown-item svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    flex-shrink: 0;
+    opacity: 0.6;
+}
+.portfolio-dropdown-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+.portfolio-dropdown-item:active {
+    background: rgba(0, 0, 0, 0.08);
+    transform: scale(0.98);
+}
+
+body.dark-mode .portfolio-dropdown-item {
+    color: #f1f5f9;
+}
+body.dark-mode .portfolio-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.portfolio-dropdown-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.08), transparent);
+    margin: 2px 12px;
+}
+body.dark-mode .portfolio-dropdown-divider {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
 }
 
 body.dark-mode #screen-portfolio {
@@ -10643,9 +10795,34 @@ body.dark-mode .portfolio-echelons-total-row {
     </div>
     <div class="noise-overlay"></div>
     
-    <!-- Заголовок -->
-    <div class="header">
+    <!-- Заголовок с меню -->
+    <div class="portfolio-header-row">
         <h1>Портфель</h1>
+        <button class="portfolio-dots-btn" id="portfolioDotsBtn" onclick="togglePortfolioMenu(event)">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                <circle cx="12" cy="5" r="2"/>
+                <circle cx="12" cy="12" r="2"/>
+                <circle cx="12" cy="19" r="2"/>
+            </svg>
+        </button>
+        <div class="portfolio-dropdown-menu" id="portfolioDropdownMenu">
+            <div class="portfolio-dropdown-item" onclick="newCalculationWithHaptic(); closePortfolioMenu();">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                </svg>
+                <span>Новый расчёт</span>
+            </div>
+            <div class="portfolio-dropdown-divider"></div>
+            <div class="portfolio-dropdown-item" onclick="shareWithHaptic(); closePortfolioMenu();">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                    <polyline points="16 6 12 2 8 6"/>
+                    <line x1="12" y1="2" x2="12" y2="15"/>
+                </svg>
+                <span>Поделиться</span>
+            </div>
+        </div>
     </div>
     
     <!-- Empty State (показывается если расчёт не производился) -->
@@ -10689,11 +10866,13 @@ body.dark-mode .portfolio-echelons-total-row {
                             <span class="capital-label-dot bonds"></span>
                             <span class="capital-label-text">ОФЗ</span>
                             <span class="capital-label-pct" id="srl-bond-pct-v2">50%</span>
+                            <span class="capital-label-income" id="srl-bond-income-inline">+0 ₽</span>
                         </div>
                         <div class="capital-label-item">
                             <span class="capital-label-dot stocks"></span>
                             <span class="capital-label-text">Акции</span>
                             <span class="capital-label-pct" id="srl-stock-pct-v2">50%</span>
+                            <span class="capital-label-income" id="srl-stock-growth-inline">+0 ₽</span>
                         </div>
                     </div>
                 </div>
@@ -10713,18 +10892,6 @@ body.dark-mode .portfolio-echelons-total-row {
                         <div class="forecast-main-row">
                             <span class="forecast-total-mini" id="summ-total-value-v2">~0 ₽</span>
                             <span class="forecast-percent-change" id="summ-total-percent-v2">+0%</span>
-                        </div>
-                        <div class="forecast-details-mini">
-                            <div class="forecast-detail-item">
-                                <span class="detail-dot bonds"></span>
-                                <span class="detail-label">Купоны:</span>
-                                <span class="detail-value" id="summ-bond-income-mini">+0 ₽</span>
-                            </div>
-                            <div class="forecast-detail-item">
-                                <span class="detail-dot stocks"></span>
-                                <span class="detail-label">Рост:</span>
-                                <span class="detail-value" id="summ-stock-growth-mini">+0 ₽</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -10924,24 +11091,7 @@ body.dark-mode .portfolio-echelons-total-row {
         </div>
     </div>
     
-    <!-- ===== ACTION PANEL (Sticky внизу) ===== -->
-    <div class="portfolio-action-panel-v2" id="portfolioActionPanelV2" style="display: none;">
-        <button class="portfolio-action-btn secondary" onclick="newCalculationWithHaptic()">
-            <svg viewBox="0 0 24 24">
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                <path d="M3 3v5h5"/>
-            </svg>
-            Новый расчёт
-        </button>
-        <button class="portfolio-action-btn primary" onclick="shareWithHaptic()">
-            <svg viewBox="0 0 24 24">
-                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                <polyline points="16 6 12 2 8 6"/>
-                <line x1="12" y1="2" x2="12" y2="15"/>
-            </svg>
-            Поделиться
-        </button>
-    </div>
+    <!-- Action panel removed - moved to header dots menu -->
     
     <!-- Старые элементы для совместимости (скрытые) -->
     <div style="display:none;">
@@ -15738,6 +15888,8 @@ if(totalRow) {
                 const totalPercentV2 = document.getElementById('summ-total-percent-v2');
                 const bondIncomeMini = document.getElementById('summ-bond-income-mini');
                 const stockGrowthMini = document.getElementById('summ-stock-growth-mini');
+                const bondIncomeInline = document.getElementById('srl-bond-income-inline');
+                const stockGrowthInline = document.getElementById('srl-stock-growth-inline');
                 
                 if (totalValueV2) {
                     totalValueV2.textContent = '~' + Math.round(projectedTotal).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
@@ -15752,6 +15904,12 @@ if(totalRow) {
                 }
                 if (stockGrowthMini) {
                     stockGrowthMini.textContent = '+' + Math.round(totalStockProjectedGrowth).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
+                }
+                if (bondIncomeInline) {
+                    bondIncomeInline.textContent = '+' + Math.round(totalBondProjectedIncome).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
+                }
+                if (stockGrowthInline) {
+                    stockGrowthInline.textContent = '+' + Math.round(totalStockProjectedGrowth).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
                 }
                 
                 // Рендерим список облигаций в новый контейнер V2
@@ -16061,6 +16219,37 @@ function shareWithHaptic() {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
     }
     shareAsPDF();
+}
+
+// Выпадающее меню портфеля (три точки)
+function togglePortfolioMenu(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('portfolioDropdownMenu');
+    if (menu) {
+        menu.classList.toggle('open');
+        if (menu.classList.contains('open')) {
+            // Закрытие при клике вне меню
+            setTimeout(() => {
+                document.addEventListener('click', closePortfolioMenuOnClick, { once: true });
+            }, 10);
+        }
+    }
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    }
+}
+
+function closePortfolioMenu() {
+    const menu = document.getElementById('portfolioDropdownMenu');
+    if (menu) menu.classList.remove('open');
+}
+
+function closePortfolioMenuOnClick(e) {
+    const menu = document.getElementById('portfolioDropdownMenu');
+    const btn = document.getElementById('portfolioDotsBtn');
+    if (menu && !menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.remove('open');
+    }
 }
 
 // Переключение раскрытия эшелона
