@@ -4112,14 +4112,12 @@ body.dark-mode .portfolio-ofz-detail-row {
 
 /* === Заголовки таблицы эшелонов (как в Ребалансировке) === */
 .portfolio-echelons-headers {
-    display: grid;
-    /* 1fr | 115px | 60px — совпадает с echelon-header-right */
-    grid-template-columns: 1fr 115px 60px; 
-    column-gap: 8px; /* Совпадает с gap в echelon-header-right */
-    align-items: center; 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     
-    /* Отступы */
-    padding: 0 16px;       
+    /* Отступы — padding-right: 16px + 20px(стрелка) + 8px(gap) = 44px */
+    padding: 0 44px 0 16px;       
     margin-top: 24px;      
     margin-bottom: 12px;   
     height: 24px; 
@@ -4152,6 +4150,7 @@ body.dark-mode .portfolio-ofz-detail-row {
     justify-content: center; 
     gap: 6px;                    
     padding-left: 0;
+    flex: 1;
 }
 /* Стиль кнопки "?" (Элегантный стиль в тон дизайну) */
 .h-help-btn {
@@ -4221,17 +4220,13 @@ body.dark-mode .h-help-btn:hover {
 /* ВЫДЕЛИТЬ */
 .portfolio-echelon-h-text:nth-child(2) {
     justify-content: center; 
-    width: 100%;
 }
 
 /* % */
 .portfolio-echelon-h-text:nth-child(3) {
     justify-content: center; 
-    width: 100%;
     cursor: pointer;
     transition: color 0.2s ease;
-    padding-right: 28px; /* Сдвиг влево = ширина стрелки(20) + gap(8) */
-    box-sizing: border-box;
 }
 
 /* === СТИЛЬ КНОПКИ ВОПРОСА (?) === */
@@ -4857,9 +4852,10 @@ body.dark-mode .portfolio-echelon-number {
 }
 
 .portfolio-echelon-header-right {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: auto auto 20px;
     gap: 8px;
+    align-items: center;
 }
 
 .portfolio-echelon-sum {
@@ -4867,24 +4863,20 @@ body.dark-mode .portfolio-echelon-number {
     font-size: 13px;
     font-weight: 600;
     color: var(--text-deep);
-    width: 115px;
     text-align: right;
-    flex-shrink: 0;
-    box-sizing: border-box;
+    white-space: nowrap;
 }
 
 .portfolio-echelon-percent {
-    padding: 4px 10px;
-    border-radius: 8px;
+    padding: 3px 8px;
+    border-radius: 6px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 700;
     background: rgba(0, 0, 0, 0.05);
     color: var(--text-slate);
-    width: 60px;
     text-align: center;
-    flex-shrink: 0;
-    box-sizing: border-box;
+    white-space: nowrap;
 }
 
 body.dark-mode .portfolio-echelon-percent {
@@ -10403,246 +10395,6 @@ body.dark-mode .portfolio-echelons-total-row {
     background: transparent !important; /* Убираем фон у процентов */
 }
 
-/* === SHOPPING LIST OVERLAY === */
-.shopping-list-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--bg-base, #0F172A);
-    z-index: 9999;
-    flex-direction: column;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-.shopping-list-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 16px 12px;
-    padding-top: calc(16px + env(safe-area-inset-top));
-    position: sticky;
-    top: 0;
-    background: var(--bg-base, #0F172A);
-    z-index: 10;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-@supports not (padding-top: env(safe-area-inset-top)) {
-    .shopping-list-header { padding-top: 44px; }
-}
-
-.shopping-list-back {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    color: #94A3B8;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: all 0.2s;
-}
-.shopping-list-back svg {
-    width: 20px;
-    height: 20px;
-}
-.shopping-list-back:active {
-    transform: scale(0.9);
-    background: rgba(255,255,255,0.1);
-}
-
-.shopping-list-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-deep, #F1F5F9);
-    letter-spacing: -0.02em;
-}
-
-.shopping-list-copy-all {
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    color: #94A3B8;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: all 0.2s;
-}
-.shopping-list-copy-all svg {
-    width: 18px;
-    height: 18px;
-}
-.shopping-list-copy-all:active {
-    transform: scale(0.9);
-    background: rgba(16, 185, 129, 0.2);
-    color: #10B981;
-}
-
-.shopping-list-body {
-    padding: 12px 16px 40px;
-    flex: 1;
-}
-
-.shop-section-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #64748B;
-    margin-bottom: 8px;
-    padding-left: 2px;
-}
-
-.shop-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 14px;
-    overflow: hidden;
-    margin-bottom: 16px;
-}
-
-.shop-item {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 8px;
-    align-items: center;
-    padding: 10px 14px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.shop-item:last-child {
-    border-bottom: none;
-}
-
-.shop-ticker {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    color: #F1F5F9;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.shop-ticker .shop-name {
-    display: block;
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    font-weight: 400;
-    color: #64748B;
-    margin-top: 1px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.shop-qty {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    color: #10B981;
-    text-align: right;
-    white-space: nowrap;
-}
-
-.shop-sum {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    color: #94A3B8;
-    text-align: right;
-    min-width: 75px;
-    white-space: nowrap;
-}
-
-.shop-echelon-badge {
-    display: inline-block;
-    font-family: 'Inter', sans-serif;
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-right: 6px;
-    color: #fff;
-    vertical-align: middle;
-}
-.shop-echelon-badge.e1 { background: rgba(46, 204, 113, 0.25); color: #2ecc71; }
-.shop-echelon-badge.e2 { background: rgba(52, 152, 219, 0.25); color: #3498db; }
-.shop-echelon-badge.e3 { background: rgba(241, 196, 15, 0.25); color: #f1c40f; }
-.shop-echelon-badge.e4 { background: rgba(231, 76, 60, 0.25); color: #e74c3c; }
-
-.shop-total-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 14px;
-    background: rgba(255,255,255,0.02);
-    border-top: 1px solid rgba(255,255,255,0.08);
-}
-
-.shop-total-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    color: #64748B;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.shop-total-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 15px;
-    font-weight: 700;
-    color: #F1F5F9;
-}
-
-/* Light mode */
-body:not(.dark-mode) .shopping-list-overlay {
-    background: #F8FAFC;
-}
-body:not(.dark-mode) .shopping-list-header {
-    background: #F8FAFC;
-    border-bottom-color: rgba(0,0,0,0.06);
-}
-body:not(.dark-mode) .shopping-list-back,
-body:not(.dark-mode) .shopping-list-copy-all {
-    background: rgba(0,0,0,0.04);
-    border-color: rgba(0,0,0,0.08);
-    color: #64748B;
-}
-body:not(.dark-mode) .shopping-list-title {
-    color: #1E293B;
-}
-body:not(.dark-mode) .shop-card {
-    background: #fff;
-    border-color: rgba(0,0,0,0.06);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-body:not(.dark-mode) .shop-item {
-    border-bottom-color: rgba(0,0,0,0.04);
-}
-body:not(.dark-mode) .shop-ticker {
-    color: #1E293B;
-}
-body:not(.dark-mode) .shop-sum {
-    color: #64748B;
-}
-body:not(.dark-mode) .shop-total-row {
-    background: rgba(0,0,0,0.02);
-    border-top-color: rgba(0,0,0,0.06);
-}
-body:not(.dark-mode) .shop-total-value {
-    color: #1E293B;
-}
 
 #shareContainer.sharing-mode .forecast-details-mini {
     display: none !important; /* Скрываем детали (купоны/рост) только при генерации PDF */
@@ -11391,26 +11143,6 @@ body:not(.dark-mode) .shop-total-value {
     
 </div>
 
-<!-- Overlay: Список к покупке (ВНЕ screen-portfolio) -->
-<div class="shopping-list-overlay" id="shoppingListOverlay" style="display:none;">
-    <div class="shopping-list-header">
-        <button class="shopping-list-back" onclick="closeShoppingList()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 19l-7-7 7-7"/>
-            </svg>
-        </button>
-        <div class="shopping-list-title">Список к покупке</div>
-        <button class="shopping-list-copy-all" onclick="copyShoppingList()" title="Скопировать">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
-        </button>
-    </div>
-    <div class="shopping-list-body" id="shoppingListBody">
-        <!-- JS заполнит -->
-    </div>
-</div>
 
 <div id="screen-assets" class="screen">
     <!-- Aurora Background -->
@@ -16579,6 +16311,22 @@ function openShoppingList() {
         return;
     }
     
+    const S = {
+        label: 'font-family:Inter,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748B;margin-bottom:8px;padding-left:2px;',
+        card: 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:16px;',
+        row: 'display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);',
+        rowLast: 'display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px 14px;',
+        ticker: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:#F1F5F9;overflow:hidden;text-overflow:ellipsis;',
+        name: 'display:block;font-family:Inter,sans-serif;font-size:10px;font-weight:400;color:#64748B;margin-top:1px;overflow:hidden;text-overflow:ellipsis;',
+        qty: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:#10B981;text-align:right;white-space:nowrap;',
+        sum: 'font-family:JetBrains Mono,monospace;font-size:12px;font-weight:500;color:#94A3B8;text-align:right;min-width:70px;white-space:nowrap;',
+        total: 'display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.08);',
+        tLabel: 'font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:0.05em;',
+        tVal: 'font-family:JetBrains Mono,monospace;font-size:15px;font-weight:700;color:#F1F5F9;',
+    };
+    const badgeColors = {1:'rgba(46,204,113,0.25);color:#2ecc71', 2:'rgba(52,152,219,0.25);color:#3498db', 3:'rgba(241,196,15,0.25);color:#f1c40f', 4:'rgba(231,76,60,0.25);color:#e74c3c'};
+    const roman = ['I','II','III','IV'];
+    
     let html = '';
     let grandTotal = 0;
     
@@ -16586,48 +16334,29 @@ function openShoppingList() {
     if (data.bonds.length > 0) {
         const bondsTotal = data.bonds.reduce((a, b) => a + b.sum, 0);
         grandTotal += bondsTotal;
-        html += '<div class="shop-section-label">Облигации (ОФЗ)</div>';
-        html += '<div class="shop-card">';
-        data.bonds.forEach(b => {
-            html += `<div class="shop-item">
-                <div class="shop-ticker">${b.ticker}<span class="shop-name">${b.name}</span></div>
-                <div class="shop-qty">${b.qty} шт</div>
-                <div class="shop-sum">${b.sum.toLocaleString('ru-RU')} ₽</div>
-            </div>`;
+        html += `<div style="${S.label}">Облигации (ОФЗ)</div><div style="${S.card}">`;
+        data.bonds.forEach((b, i) => {
+            const rs = i === data.bonds.length - 1 ? S.rowLast : S.row;
+            html += `<div style="${rs}"><div style="${S.ticker}">${b.ticker}<span style="${S.name}">${b.name}</span></div><div style="${S.qty}">${b.qty} шт</div><div style="${S.sum}">${b.sum.toLocaleString('ru-RU')} ₽</div></div>`;
         });
-        html += `<div class="shop-total-row">
-            <span class="shop-total-label">Итого ОФЗ</span>
-            <span class="shop-total-value">${bondsTotal.toLocaleString('ru-RU')} ₽</span>
-        </div></div>`;
+        html += `<div style="${S.total}"><span style="${S.tLabel}">Итого ОФЗ</span><span style="${S.tVal}">${bondsTotal.toLocaleString('ru-RU')} ₽</span></div></div>`;
     }
     
     // Акции
     if (data.stocks.length > 0) {
         const stocksTotal = data.stocks.reduce((a, s) => a + s.sum, 0);
         grandTotal += stocksTotal;
-        const roman = ['I','II','III','IV'];
-        html += '<div class="shop-section-label">Акции</div>';
-        html += '<div class="shop-card">';
-        data.stocks.forEach(s => {
-            html += `<div class="shop-item">
-                <div class="shop-ticker"><span class="shop-echelon-badge e${s.echelon}">${roman[s.echelon-1]}</span>${s.ticker}<span class="shop-name">${s.name}</span></div>
-                <div class="shop-qty">${s.qty} шт</div>
-                <div class="shop-sum">${s.sum.toLocaleString('ru-RU')} ₽</div>
-            </div>`;
+        html += `<div style="${S.label}">Акции</div><div style="${S.card}">`;
+        data.stocks.forEach((s, i) => {
+            const rs = i === data.stocks.length - 1 ? S.rowLast : S.row;
+            const bc = badgeColors[s.echelon];
+            html += `<div style="${rs}"><div style="${S.ticker}"><span style="display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-right:6px;background:${bc};vertical-align:middle;">${roman[s.echelon-1]}</span>${s.ticker}<span style="${S.name}">${s.name}</span></div><div style="${S.qty}">${s.qty} шт</div><div style="${S.sum}">${s.sum.toLocaleString('ru-RU')} ₽</div></div>`;
         });
-        html += `<div class="shop-total-row">
-            <span class="shop-total-label">Итого Акции</span>
-            <span class="shop-total-value">${stocksTotal.toLocaleString('ru-RU')} ₽</span>
-        </div></div>`;
+        html += `<div style="${S.total}"><span style="${S.tLabel}">Итого Акции</span><span style="${S.tVal}">${stocksTotal.toLocaleString('ru-RU')} ₽</span></div></div>`;
     }
     
     // Grand total
-    html += `<div class="shop-card" style="background:rgba(16,185,129,0.06);border-color:rgba(16,185,129,0.12);">
-        <div class="shop-total-row" style="border:none;">
-            <span class="shop-total-label" style="color:#10B981;">ВСЕГО К ПОКУПКЕ</span>
-            <span class="shop-total-value" style="color:#10B981;font-size:18px;">${grandTotal.toLocaleString('ru-RU')} ₽</span>
-        </div>
-    </div>`;
+    html += `<div style="${S.card}background:rgba(16,185,129,0.06);border-color:rgba(16,185,129,0.12);"><div style="${S.total}border:none;"><span style="${S.tLabel}color:#10B981;">ВСЕГО К ПОКУПКЕ</span><span style="${S.tVal}color:#10B981;font-size:18px;">${grandTotal.toLocaleString('ru-RU')} ₽</span></div></div>`;
     
     body.innerHTML = html;
     overlay.style.display = 'flex';
@@ -17776,6 +17505,27 @@ function updateInfoBtnState(tabName) {
     }
 </script>
 
+
+<!-- Overlay: Список к покупке — ПОСЛЕДНИЙ элемент в body для максимального z-index -->
+<div id="shoppingListOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:99999; background:#0F172A; flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px; padding-top:max(16px, env(safe-area-inset-top, 44px)); position:sticky; top:0; background:#0F172A; z-index:10; border-bottom:1px solid rgba(255,255,255,0.06);">
+        <button onclick="closeShoppingList()" style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#94A3B8; cursor:pointer; -webkit-tap-highlight-color:transparent;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
+                <path d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <div style="font-family:'Inter',sans-serif; font-size:16px; font-weight:700; color:#F1F5F9; letter-spacing:-0.02em;">Список к покупке</div>
+        <button onclick="copyShoppingList()" style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#94A3B8; cursor:pointer; -webkit-tap-highlight-color:transparent;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+        </button>
+    </div>
+    <div id="shoppingListBody" style="padding:12px 16px 40px; flex:1;">
+        <!-- JS заполнит -->
+    </div>
+</div>
 
 </body>
 </html>
