@@ -3529,12 +3529,30 @@ body.dark-mode .portfolio-capital-card {
     margin-bottom: 8px;
 }
 
-/* Главная строка с суммой и процентом */
+/* Главная строка с суммой */
 .forecast-main-row {
     display: flex;
     align-items: baseline;
     gap: 10px;
+    margin-bottom: 6px;
+}
+
+/* Строка с акцентным бейджем % */
+.forecast-badge-row {
     margin-bottom: 10px;
+}
+
+.forecast-percent-badge-big {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 800;
+    color: #10B981;
+    padding: 5px 14px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 10px;
+    letter-spacing: 0.02em;
 }
 
 .forecast-total-mini {
@@ -3545,15 +3563,6 @@ body.dark-mode .portfolio-capital-card {
     letter-spacing: -0.01em;
 }
 
-.forecast-percent-change {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 700;
-    color: #10B981;
-    padding: 3px 8px;
-    background: rgba(16, 185, 129, 0.15);
-    border-radius: 6px;
-}
 
 .forecast-details-mini {
     display: flex;
@@ -10389,10 +10398,11 @@ body.dark-mode .portfolio-echelons-total-row {
     opacity: 0.7;
 }
 
-#shareContainer.sharing-mode .forecast-percent-change {
+#shareContainer.sharing-mode .forecast-percent-badge-big {
     font-size: 11px !important;
     padding: 2px 6px !important;
     background: transparent !important;
+    border: none !important;
 }
 
 
@@ -10907,7 +10917,9 @@ body.dark-mode .portfolio-echelons-total-row {
                         <div class="forecast-title-mini">Прогноз через 3 года</div>
                         <div class="forecast-main-row">
                             <span class="forecast-total-mini" id="summ-total-value-v2">~0 ₽</span>
-                            <span class="forecast-percent-change" id="summ-total-percent-v2">+0%</span>
+                        </div>
+                        <div class="forecast-badge-row">
+                            <span class="forecast-percent-badge-big" id="summ-total-percent-v2">+0%</span>
                         </div>
                         <div class="forecast-details-mini">
                             <div class="forecast-detail-item">
@@ -15924,8 +15936,15 @@ if(totalRow) {
                 }
                 if (totalPercentV2) {
                     totalPercentV2.textContent = changeSign + percentageChange.toFixed(1) + '%';
-                    totalPercentV2.style.background = percentageChange >= 0 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)';
-                    totalPercentV2.style.color = percentageChange >= 0 ? '#10B981' : '#EF4444';
+                    if (percentageChange >= 0) {
+                        totalPercentV2.style.background = 'rgba(16, 185, 129, 0.12)';
+                        totalPercentV2.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                        totalPercentV2.style.color = '#10B981';
+                    } else {
+                        totalPercentV2.style.background = 'rgba(239, 68, 68, 0.12)';
+                        totalPercentV2.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                        totalPercentV2.style.color = '#EF4444';
+                    }
                 }
                 if (bondIncomeMini) {
                     bondIncomeMini.textContent = '+' + Math.round(totalBondProjectedIncome).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
@@ -17242,7 +17261,7 @@ function updateInfoBtnState(tabName) {
     }
 
     /* Проценты скрываем только при PDF генерации */
-    div#shareContainer.sharing-mode .forecast-percent-change { display: none !important; }
+    div#shareContainer.sharing-mode .forecast-percent-badge-big { display: none !important; }
 
     /* --- ДЕТАЛИ (КУПОНЫ, РОСТ) --- */
     div#shareContainer .forecast-details-mini {
@@ -17533,8 +17552,8 @@ function updateInfoBtnState(tabName) {
 
 
 <!-- Overlay: Список к покупке — ПОСЛЕДНИЙ элемент в body для максимального z-index -->
-<div id="shoppingListOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:99999; background:#0F172A; flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;">
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px; padding-top:calc(60px + env(safe-area-inset-top, 20px)); position:sticky; top:0; background:#0F172A; z-index:10; border-bottom:1px solid rgba(255,255,255,0.06);">
+<div id="shoppingListOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:99999; background:var(--bg-base, #0F172A); flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px; padding-top:calc(70px + env(safe-area-inset-top, 20px)); position:sticky; top:0; background:var(--bg-base, #0F172A); z-index:10; border-bottom:1px solid rgba(255,255,255,0.06);">
         <button onclick="closeShoppingList()" style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#94A3B8; cursor:pointer; -webkit-tap-highlight-color:transparent;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
                 <path d="M15 19l-7-7 7-7"/>
