@@ -3092,7 +3092,7 @@ body.dark-mode #screen-interesting .results-glass-container {
 /* Таблица выплат - внутри тёмного блока */
 #screen-interesting .coupon-table-head {
     display: grid;
-    grid-template-columns: 55px 1fr 50px 70px;
+    grid-template-columns: 65px 1fr 40px 85px;
     gap: 8px;
     padding: 12px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -3125,7 +3125,7 @@ body.dark-mode #screen-interesting .coupon-table-head {
 /* Строка выплаты - внутри тёмного блока */
 #screen-interesting .coupon-result-row {
     display: grid;
-    grid-template-columns: 55px 1fr 50px 70px;
+    grid-template-columns: 65px 1fr 40px 85px;
     gap: 8px;
     padding: 12px 0;
     margin-bottom: 0;
@@ -11361,8 +11361,7 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
             
             <div class="rate-row-item">
-                <span class="rate-row-label">ОФЗ 10 лет</span>
-                <span class="rate-row-value" id="val-ofz10">---%</span>
+                <span class="rate-row-label">ОФЗ 10 лет <span id="val-ofz10" style="font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text-deep,#0F172A);margin-left:8px;">---%</span></span>
             </div>
         </div>
     </div>
@@ -11374,23 +11373,20 @@ body.dark-mode .portfolio-echelons-total-row {
             <div class="calc-accordion-header-left">
                 <div class="calc-accordion-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/>
-                        <line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
-                        <circle cx="8" cy="14" r="1"/>
-                        <circle cx="12" cy="14" r="1"/>
-                        <circle cx="16" cy="14" r="1"/>
-                        <circle cx="8" cy="18" r="1"/>
-                        <circle cx="12" cy="18" r="1"/>
+                        <path d="M12 2v20"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                     </svg>
                 </div>
                 <div>
                     <div class="calc-accordion-title">Ежемесячный доход</div>
-                    <div class="calc-accordion-subtitle">Рассчитайте выплаты по ОФЗ</div>
+                    <div class="calc-accordion-subtitle" style="display:flex;align-items:center;gap:8px;">
+                        <span>Выплаты по ОФЗ</span>
+                        <span id="calcPreviewAmount" style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#10B981;font-size:11px;display:none;"></span>
+                    </div>
                 </div>
             </div>
-            <div style="display: flex; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div id="calcPreviewBadge" style="display:none;padding:4px 10px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#10B981;white-space:nowrap;"></div>
                 <svg class="calc-accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -11990,12 +11986,28 @@ function formatNewsDate(dateString) {
                     const lastIdx = columns.indexOf('CBRF_USD_LAST');
                     const last = data[lastIdx];
                     
-                    // Предыдущий курс для расчёта изменения (за день)
-                    const waprice = json.wap_rates?.data[0]?.[json.wap_rates.columns.indexOf('waprice')];
-                    
+                    // Пробуем несколько источников для изменения
                     let changePercent = 0;
-                    if (last && waprice && waprice > 0) {
-                        changePercent = ((last - waprice) / waprice) * 100;
+                    
+                    // 1. Пробуем CBRF_USD_LASTCHANGEPRCNT
+                    const changePrcntIdx = columns.indexOf('CBRF_USD_LASTCHANGEPRCNT');
+                    if (changePrcntIdx >= 0 && data[changePrcntIdx] != null) {
+                        changePercent = data[changePrcntIdx];
+                    } else {
+                        // 2. Пробуем wap_rates
+                        const waprice = json.wap_rates?.data[0]?.[json.wap_rates.columns.indexOf('waprice')];
+                        if (last && waprice && waprice > 0) {
+                            changePercent = ((last - waprice) / waprice) * 100;
+                        } else {
+                            // 3. Пробуем CBRF_USD_LASTCHANGE для абсолютного изменения
+                            const changeIdx = columns.indexOf('CBRF_USD_LASTCHANGE');
+                            if (changeIdx >= 0 && data[changeIdx] != null && last) {
+                                const prevRate = last - data[changeIdx];
+                                if (prevRate > 0) {
+                                    changePercent = (data[changeIdx] / prevRate) * 100;
+                                }
+                            }
+                        }
                     }
                     
                     if (last) {
@@ -13621,7 +13633,7 @@ function recalcCustomCoupons() {
     const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
     totalAmount += netAmount;
       html += `
-    <div class="coupon-row" style="display:grid; grid-template-columns: 45px 1fr 40px 70px; gap:2px; align-items:center; margin-bottom:8px;">
+    <div class="coupon-row" style="display:grid; grid-template-columns: 50px 1fr 40px 80px; gap:4px; align-items:center; margin-bottom:8px;">
         
         <div><b>${payment.dateStr.slice(0, 5)}</b></div>
 
@@ -13641,6 +13653,18 @@ function recalcCustomCoupons() {
     
     if (footer) {
         footer.innerHTML = totalAmount > 0 ? `Итого за год: <span style="color:var(--accent-green)">${Math.round(totalAmount).toLocaleString()} ₽</span>` : '';
+    }
+    
+    // Обновляем превью-бейдж в заголовке аккордеона
+    const previewBadge = document.getElementById('calcPreviewBadge');
+    const previewAmount = document.getElementById('calcPreviewAmount');
+    if (totalAmount > 0) {
+        const monthlyAvg = Math.round(totalAmount / 12);
+        if (previewBadge) { previewBadge.textContent = '~' + monthlyAvg.toLocaleString('ru-RU') + ' ₽/мес'; previewBadge.style.display = 'block'; }
+        if (previewAmount) { previewAmount.textContent = Math.round(totalAmount).toLocaleString('ru-RU') + ' ₽/год'; previewAmount.style.display = 'inline'; }
+    } else {
+        if (previewBadge) previewBadge.style.display = 'none';
+        if (previewAmount) previewAmount.style.display = 'none';
     }
 }
 
@@ -16555,17 +16579,11 @@ function syncPortfolioDataToV2() {
 
         async function shareAsPDF() {
             let btn = document.getElementById('btnShare');
-            if (!btn) {
-                btn = document.querySelector('.portfolio-action-btn.primary');
-            }
+            if (!btn) btn = document.querySelector('.portfolio-action-btn.primary');
             const container = document.getElementById('shareContainer');
             const brand = document.getElementById('shareBrand'); 
             const dateEl = document.getElementById('shareDate');
-            
-            if (!container) {
-                console.error('Required elements not found for PDF');
-                return;
-            }
+            if (!container) { console.error('Required elements not found for PDF'); return; }
             
             const originalText = btn ? btn.innerHTML : '';
             if (btn) { btn.innerHTML = "⏳ Генерация..."; btn.disabled = true; }
@@ -16576,217 +16594,122 @@ function syncPortfolioDataToV2() {
             try {
                 const { jsPDF } = window.jspdf;
                 
-                // Рендерим карточку капитала
-                const canvas1 = await html2canvas(container, { 
-                    backgroundColor: '#0f172a', 
-                    scale: 2, 
-                    logging: false, 
-                    useCORS: true 
-                });
+                // 1. Рендерим карточку капитала
+                const canvas1 = await html2canvas(container, { backgroundColor: '#0f172a', scale: 2, logging: false, useCORS: true });
                 
-                const pageWidth = canvas1.width;
-                
-                // Считаем высоту для списка к покупке
+                // 2. Рендерим список к покупке через временный DOM элемент
                 const shopData = window._shoppingListData;
                 const hasShopData = shopData && (shopData.bonds.length > 0 || shopData.stocks.length > 0);
-                const scale = 2;
-                const lineH = 22 * scale;
-                const sectionGap = 30 * scale;
+                let canvas2 = null;
                 
-                let shopHeight = 0;
                 if (hasShopData) {
-                    shopHeight += 50 * scale; // Заголовок "СПИСОК К ПОКУПКЕ"
+                    const roman = ['I','II','III','IV'];
+                    const badgeColors = {1:'#2ecc71', 2:'#3498db', 3:'#f1c40f', 4:'#e74c3c'};
+                    
+                    let shopHtml = `
+                        <div style="padding:24px;font-family:'Inter',system-ui,sans-serif;">
+                            <div style="text-align:center;font-size:16px;font-weight:800;color:#F1F5F9;margin-bottom:20px;letter-spacing:0.08em;">СПИСОК К ПОКУПКЕ</div>
+                            <div style="border-top:1px solid rgba(255,255,255,0.15);margin-bottom:16px;"></div>
+                    `;
+                    
                     if (shopData.bonds.length > 0) {
-                        shopHeight += 25 * scale; // "Облигации"
-                        shopHeight += shopData.bonds.length * lineH;
-                        shopHeight += 30 * scale; // Итого + отступ
+                        let bondsTotal = 0;
+                        shopHtml += `<div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Облигации (ОФЗ)</div>`;
+                        shopData.bonds.forEach(b => {
+                            bondsTotal += b.sum;
+                            shopHtml += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                                <span style="font-weight:700;color:#F1F5F9;font-size:13px;">${b.ticker}</span>
+                                <div style="display:flex;gap:16px;align-items:center;">
+                                    <span style="color:#10B981;font-weight:600;font-size:12px;">${b.qty} шт</span>
+                                    <span style="color:#94A3B8;font-size:12px;min-width:80px;text-align:right;">${b.sum.toLocaleString('ru-RU')} ₽</span>
+                                </div>
+                            </div>`;
+                        });
+                        shopHtml += `<div style="display:flex;justify-content:space-between;padding:10px 0 16px;border-top:1px solid rgba(255,255,255,0.1);margin-top:4px;">
+                            <span style="font-size:11px;font-weight:600;color:#64748B;">Итого ОФЗ</span>
+                            <span style="font-size:13px;font-weight:700;color:#F1F5F9;">${bondsTotal.toLocaleString('ru-RU')} ₽</span>
+                        </div>`;
                     }
+                    
                     if (shopData.stocks.length > 0) {
-                        shopHeight += 25 * scale; // "Акции"
-                        shopHeight += shopData.stocks.length * lineH;
-                        shopHeight += 30 * scale; // Итого + отступ
+                        let stocksTotal = 0;
+                        shopHtml += `<div style="font-size:10px;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Акции</div>`;
+                        shopData.stocks.forEach(s => {
+                            stocksTotal += s.sum;
+                            shopHtml += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;background:${badgeColors[s.echelon]}30;color:${badgeColors[s.echelon]};">${roman[s.echelon-1]}</span>
+                                    <span style="font-weight:700;color:#F1F5F9;font-size:13px;">${s.ticker}</span>
+                                </div>
+                                <div style="display:flex;gap:16px;align-items:center;">
+                                    <span style="color:#10B981;font-weight:600;font-size:12px;">${s.qty} шт</span>
+                                    <span style="color:#94A3B8;font-size:12px;min-width:80px;text-align:right;">${s.sum.toLocaleString('ru-RU')} ₽</span>
+                                </div>
+                            </div>`;
+                        });
+                        shopHtml += `<div style="display:flex;justify-content:space-between;padding:10px 0 16px;border-top:1px solid rgba(255,255,255,0.1);margin-top:4px;">
+                            <span style="font-size:11px;font-weight:600;color:#64748B;">Итого Акции</span>
+                            <span style="font-size:13px;font-weight:700;color:#F1F5F9;">${stocksTotal.toLocaleString('ru-RU')} ₽</span>
+                        </div>`;
                     }
-                    shopHeight += 50 * scale; // Grand total
+                    
+                    const grandTotal = shopData.bonds.reduce((a,b) => a + b.sum, 0) + shopData.stocks.reduce((a,s) => a + s.sum, 0);
+                    shopHtml += `<div style="display:flex;justify-content:space-between;padding:14px 16px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15);border-radius:12px;margin-top:8px;">
+                        <span style="font-size:12px;font-weight:700;color:#10B981;">ВСЕГО К ПОКУПКЕ</span>
+                        <span style="font-size:16px;font-weight:800;color:#10B981;">${grandTotal.toLocaleString('ru-RU')} ₽</span>
+                    </div>`;
+                    
+                    shopHtml += `<div style="text-align:center;padding-top:20px;">
+                        <div style="font-size:14px;font-weight:700;color:#D97757;">Madame Solomi'na Portfolio</div>
+                        <div style="font-size:9px;color:#64748B;margin-top:4px;">${new Date().toLocaleString()}</div>
+                    </div></div>`;
+                    
+                    // Создаем временный элемент
+                    const tempDiv = document.createElement('div');
+                    tempDiv.style.cssText = `position:fixed;left:-9999px;top:0;width:${canvas1.width / 2}px;background:#0f172a;`;
+                    tempDiv.innerHTML = shopHtml;
+                    document.body.appendChild(tempDiv);
+                    
+                    canvas2 = await html2canvas(tempDiv, { backgroundColor: '#0f172a', scale: 2, logging: false });
+                    document.body.removeChild(tempDiv);
                 }
                 
-                const totalHeight = canvas1.height + (hasShopData ? sectionGap + shopHeight : 0) + 120;
+                // Собираем PDF
+                const pageWidth = canvas1.width;
+                let totalHeight = canvas1.height;
+                if (canvas2) totalHeight += canvas2.height + 30;
                 
                 const doc = new jsPDF({ orientation: 'p', unit: 'px', format: [pageWidth, totalHeight] });
-                
-                // Заливаем весь PDF тёмным фоном
-                doc.setFillColor(15, 23, 42); // #0f172a
+                doc.setFillColor(15, 23, 42);
                 doc.rect(0, 0, pageWidth, totalHeight, 'F');
                 
                 let yPos = 0;
-                
-                // 1. Карточка капитала
                 doc.addImage(canvas1.toDataURL('image/png'), 'PNG', 0, yPos, canvas1.width, canvas1.height);
-                yPos += canvas1.height + sectionGap;
+                yPos += canvas1.height + 30;
                 
-                // 2. Список к покупке
-                if (hasShopData) {
-                    const margin = 40 * scale;
-                    const colWidth = pageWidth - margin * 2;
-                    const roman = ['I','II','III','IV'];
-                    
-                    // Заголовок
-                    doc.setFont('helvetica', 'bold');
-                    doc.setFontSize(14 * scale);
-                    doc.setTextColor(241, 245, 249);
-                    doc.text('СПИСОК К ПОКУПКЕ', pageWidth / 2, yPos, { align: 'center' });
-                    yPos += 40 * scale;
-                    
-                    // Разделительная линия
-                    doc.setDrawColor(255, 255, 255);
-                    doc.setLineWidth(0.3);
-                    doc.line(margin, yPos, margin + colWidth, yPos);
-                    yPos += 15 * scale;
-                    
-                    // ОФЗ
-                    if (shopData.bonds.length > 0) {
-                        doc.setFontSize(9 * scale);
-                        doc.setTextColor(100, 116, 139);
-                        doc.setFont('helvetica', 'bold');
-                        doc.text('Облигации (ОФЗ)', margin, yPos);
-                        yPos += 22 * scale;
-                        
-                        let bondsSubtotal = 0;
-                        shopData.bonds.forEach(b => {
-                            doc.setFont('helvetica', 'bold');
-                            doc.setFontSize(9 * scale);
-                            doc.setTextColor(241, 245, 249);
-                            doc.text(b.ticker, margin, yPos);
-                            
-                            doc.setFont('helvetica', 'normal');
-                            doc.setFontSize(8.5 * scale);
-                            doc.setTextColor(16, 185, 129);
-                            doc.text(b.qty + ' шт', margin + colWidth * 0.6, yPos);
-                            
-                            doc.setTextColor(148, 163, 184);
-                            doc.text(b.sum.toLocaleString('ru-RU') + ' ₽', margin + colWidth, yPos, { align: 'right' });
-                            
-                            bondsSubtotal += b.sum;
-                            yPos += lineH;
-                        });
-                        
-                        // Итого ОФЗ
-                        doc.setDrawColor(255, 255, 255);
-                        doc.setLineWidth(0.2);
-                        doc.line(margin, yPos - 5, margin + colWidth, yPos - 5);
-                        yPos += 8 * scale;
-                        doc.setFont('helvetica', 'bold');
-                        doc.setFontSize(8.5 * scale);
-                        doc.setTextColor(100, 116, 139);
-                        doc.text('Итого ОФЗ', margin, yPos);
-                        doc.setTextColor(241, 245, 249);
-                        doc.text(bondsSubtotal.toLocaleString('ru-RU') + ' ₽', margin + colWidth, yPos, { align: 'right' });
-                        yPos += 25 * scale;
-                    }
-                    
-                    // Акции
-                    if (shopData.stocks.length > 0) {
-                        doc.setFontSize(9 * scale);
-                        doc.setTextColor(100, 116, 139);
-                        doc.setFont('helvetica', 'bold');
-                        doc.text('Акции', margin, yPos);
-                        yPos += 22 * scale;
-                        
-                        let stocksSubtotal = 0;
-                        shopData.stocks.forEach(s => {
-                            doc.setFont('helvetica', 'bold');
-                            doc.setFontSize(9 * scale);
-                            doc.setTextColor(241, 245, 249);
-                            doc.text('[' + roman[s.echelon - 1] + '] ' + s.ticker, margin, yPos);
-                            
-                            doc.setFont('helvetica', 'normal');
-                            doc.setFontSize(8.5 * scale);
-                            doc.setTextColor(16, 185, 129);
-                            doc.text(s.qty + ' шт', margin + colWidth * 0.6, yPos);
-                            
-                            doc.setTextColor(148, 163, 184);
-                            doc.text(s.sum.toLocaleString('ru-RU') + ' ₽', margin + colWidth, yPos, { align: 'right' });
-                            
-                            stocksSubtotal += s.sum;
-                            yPos += lineH;
-                        });
-                        
-                        // Итого Акции
-                        doc.setDrawColor(255, 255, 255);
-                        doc.setLineWidth(0.2);
-                        doc.line(margin, yPos - 5, margin + colWidth, yPos - 5);
-                        yPos += 8 * scale;
-                        doc.setFont('helvetica', 'bold');
-                        doc.setFontSize(8.5 * scale);
-                        doc.setTextColor(100, 116, 139);
-                        doc.text('Итого Акции', margin, yPos);
-                        doc.setTextColor(241, 245, 249);
-                        doc.text(stocksSubtotal.toLocaleString('ru-RU') + ' ₽', margin + colWidth, yPos, { align: 'right' });
-                        yPos += 30 * scale;
-                    }
-                    
-                    // GRAND TOTAL
-                    const grandTotal = (shopData.bonds.reduce((a, b) => a + b.sum, 0) + shopData.stocks.reduce((a, s) => a + s.sum, 0));
-                    doc.setDrawColor(16, 185, 129);
-                    doc.setLineWidth(0.5);
-                    doc.line(margin, yPos - 5, margin + colWidth, yPos - 5);
-                    yPos += 12 * scale;
-                    doc.setFont('helvetica', 'bold');
-                    doc.setFontSize(10 * scale);
-                    doc.setTextColor(16, 185, 129);
-                    doc.text('ВСЕГО К ПОКУПКЕ', margin, yPos);
-                    doc.setFontSize(12 * scale);
-                    doc.text(grandTotal.toLocaleString('ru-RU') + ' ₽', margin + colWidth, yPos, { align: 'right' });
+                if (canvas2) {
+                    const scale2 = pageWidth / canvas2.width;
+                    doc.addImage(canvas2.toDataURL('image/png'), 'PNG', 0, yPos, canvas2.width * scale2, canvas2.height * scale2);
                 }
-                
-                // Бренд внизу
-                yPos = totalHeight - 60;
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(16);
-                doc.setTextColor(217, 119, 87);
-                doc.text("Madame Solomi'na Portfolio", pageWidth / 2, yPos, { align: 'center' });
-                doc.setFontSize(10);
-                doc.setTextColor(136, 136, 136);
-                doc.text(new Date().toLocaleString(), pageWidth / 2, yPos + 20, { align: 'center' });
 
                 const pdfBlob = doc.output('blob');
                 const pdfFile = new File([pdfBlob], "Madame_Solomina_Portfolio.pdf", { type: "application/pdf" });
 
-                // Пробуем Web Share API
                 if (navigator.share && navigator.canShare) {
                     try {
                         if (navigator.canShare({ files: [pdfFile] })) {
-                            await navigator.share({ 
-                                files: [pdfFile], 
-                                title: 'Мой портфель', 
-                                text: 'Расчёт от Madame Solomi\'na' 
-                            });
+                            await navigator.share({ files: [pdfFile], title: 'Мой портфель', text: 'Расчёт от Madame Solomi\'na' });
                             if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
-                            if (brand) brand.style.display = 'none'; 
-                            container.classList.remove('sharing-mode'); 
-                            return;
+                            if (brand) brand.style.display = 'none'; container.classList.remove('sharing-mode'); return;
                         }
-                    } catch(shareErr) {
-                        console.log('Web Share cancelled or failed:', shareErr);
-                    }
+                    } catch(shareErr) { console.log('Web Share cancelled or failed:', shareErr); }
                 }
 
-                // Fallback: скачивание
                 const blobUrl = URL.createObjectURL(pdfBlob);
-                const a = document.createElement('a');
-                a.href = blobUrl;
-                a.download = 'Madame_Solomina_Portfolio.pdf';
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(blobUrl);
-                }, 1000);
-                
-                if (btn) {
-                    btn.innerHTML = '✅ PDF скачан';
-                    setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000);
-                }
+                const a = document.createElement('a'); a.href = blobUrl; a.download = 'Madame_Solomina_Portfolio.pdf';
+                a.style.display = 'none'; document.body.appendChild(a); a.click();
+                setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(blobUrl); }, 1000);
+                if (btn) { btn.innerHTML = '✅ PDF скачан'; setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2000); }
             } catch(e) {
                 console.error(e); alert("Не удалось создать PDF: " + e.message);
                 if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
