@@ -3535,7 +3535,14 @@ body.dark-mode .portfolio-capital-card {
     display: flex;
     align-items: baseline;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+}
+
+.forecast-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
 }
 
 .forecast-total-mini {
@@ -3551,9 +3558,12 @@ body.dark-mode .portfolio-capital-card {
     font-size: 12px;
     font-weight: 700;
     color: #10B981;
-    padding: 3px 8px;
+    padding: 6px 10px;
     background: rgba(16, 185, 129, 0.15);
-    border-radius: 6px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 8px;
+    white-space: nowrap;
+    align-self: center;
 }
 
 .forecast-details-mini {
@@ -10907,21 +10917,23 @@ body.dark-mode .portfolio-echelons-total-row {
                     <div class="forecast-content-mini">
                         <div class="forecast-title-mini">Прогноз через 3 года</div>
                         <div class="forecast-main-row">
-                            <span class="forecast-total-mini" id="summ-total-value-v2">~0 ₽</span>
-                            <span class="forecast-percent-change" id="summ-total-percent-v2">+0%</span>
-                        </div>
-                        <div class="forecast-details-mini">
-                            <div class="forecast-detail-item">
-                                <span class="detail-dot bonds"></span>
-                                <span class="detail-label">Купоны:</span>
-                                <span class="detail-value" id="summ-bond-income-mini">+0 ₽</span>
-                            </div>
-                            <div class="forecast-detail-item">
-                                <span class="detail-dot stocks"></span>
-                                <span class="detail-label">Рост:</span>
-                                <span class="detail-value" id="summ-stock-growth-mini">+0 ₽</span>
-                            </div>
-                        </div>
+    <span class="forecast-total-mini" id="summ-total-value-v2">~0 ₽</span>
+</div>
+<div class="forecast-bottom-row">
+    <div class="forecast-details-mini">
+        <div class="forecast-detail-item">
+            <span class="detail-dot bonds"></span>
+            <span class="detail-label">Купоны:</span>
+            <span class="detail-value" id="summ-bond-income-mini">+0 ₽</span>
+        </div>
+        <div class="forecast-detail-item">
+            <span class="detail-dot stocks"></span>
+            <span class="detail-label">Рост:</span>
+            <span class="detail-value" id="summ-stock-growth-mini">+0 ₽</span>
+        </div>
+    </div>
+    <span class="forecast-percent-change" id="summ-total-percent-v2">+0%</span>
+</div>
                     </div>
                 </div>
                 
