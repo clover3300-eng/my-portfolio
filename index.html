@@ -10729,9 +10729,9 @@ body.dark-mode .portfolio-echelons-total-row {
         <!-- Индикатор точек (для красоты) -->
         <div class="custom-dots-indicator" id="customDotsIndicator" style="margin-bottom: 25px;">
             <div class="custom-dot" data-value="0"></div>
-            <div class="custom-dot" data-value="25"></div>
+            <div class="custom-dot" data-value="15"></div>
             <div class="custom-dot active" data-value="50"></div>
-            <div class="custom-dot" data-value="75"></div>
+            <div class="custom-dot" data-value="85"></div>
             <div class="custom-dot" data-value="100"></div>
         </div>
         
@@ -12275,8 +12275,25 @@ function calculateAndShowPortfolio() {
         
         // Сбрасываем на страницу "К ПОКУПКЕ"
         switchPortfolioPage('buy');
-        // Сбрасываем на вкладку "Денежный поток"
-        switchPortfolioContentTab('bonds');
+        
+        // Логика переключателя Денежный поток / Растущая часть
+        const slider = document.getElementById('ratioSlider');
+        const currentBondPct = slider ? parseInt(slider.value) : 50;
+        const tabSwitcher = document.getElementById('portfolioTabSwitcher');
+        
+        if (currentBondPct === 0) {
+            // 100% акций — показываем только Растущую часть
+            if (tabSwitcher) tabSwitcher.style.display = 'none';
+            switchPortfolioContentTab('stocks');
+        } else if (currentBondPct === 100) {
+            // 100% облигаций — показываем только Денежный поток
+            if (tabSwitcher) tabSwitcher.style.display = 'none';
+            switchPortfolioContentTab('bonds');
+        } else {
+            // Смешанный — показываем обе вкладки
+            if (tabSwitcher) tabSwitcher.style.display = '';
+            switchPortfolioContentTab('bonds');
+        }
         
         showScreen('screen-portfolio');
     } catch(e) {
@@ -12984,7 +13001,19 @@ function updateStrategyCardSelection(bondPercent) {
 
 // NEW: Обновление кастомного слайдера
 function updateCustomSlider(value) {
-    const bondPct = parseInt(value);
+    let bondPct = parseInt(value);
+    const slider = document.getElementById('customRatioSlider');
+    
+    // Snap через «мёртвые зоны»: 1-14% и 86-99%
+    if (bondPct > 0 && bondPct < 15) {
+        bondPct = bondPct < 8 ? 0 : 15;
+        if (slider) slider.value = bondPct;
+    }
+    if (bondPct > 85 && bondPct < 100) {
+        bondPct = bondPct > 92 ? 100 : 85;
+        if (slider) slider.value = bondPct;
+    }
+    
     updateCustomSliderDisplay(bondPct);
     
     // НЕ обновляем основной слайдер до нажатия "Готово"
@@ -13112,8 +13141,18 @@ function adjustCustomRatio(delta) {
     let newValue = parseInt(slider.value) + delta;
     newValue = Math.max(0, Math.min(100, newValue));
     
+    // Прыжок через «мёртвые зоны»: 1-14% и 86-99%
+    // Если доля облигаций < 15% но > 0% → прыгаем на 0% или 15%
+    if (newValue > 0 && newValue < 15) {
+        newValue = delta > 0 ? 15 : 0; // + → 15%, − → 0%
+    }
+    // Если доля облигаций > 85% но < 100% → прыгаем на 85% или 100%
+    if (newValue > 85 && newValue < 100) {
+        newValue = delta > 0 ? 100 : 85; // + → 100%, − → 85%
+    }
+    
     slider.value = newValue;
-    updateCustomSliderDisplay(newValue); // Вызываем нашу новую безопасную функцию
+    updateCustomSliderDisplay(newValue);
     
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
@@ -15636,18 +15675,35 @@ function highlightKeywords(text) {
             
        // === ГЕНЕРАЦИЯ СПИСКА ОБЛИГАЦИЙ (С ПОДСВЕТКОЙ ISIN) ===
             let bHtml = '';
-            if (bonds.length > 0) {
-                const perBondBudget = bondBudget / bonds.length;
+            if (bonds.length > 0 && bondBudget > 0) {
+                // Считаем полную стоимость каждой облигации
                 let bondCalculations = bonds.map(b => { 
                     const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); 
-                    let qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0; 
-                    return { ...b, qty, fullCostPerUnit }; 
+                    return { ...b, qty: 0, fullCostPerUnit }; 
                 });
                 
-                let leftover = bondBudget - bondCalculations.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
-                if (bondCalculations.length > 0 && leftover >= bondCalculations[0].fullCostPerUnit && bondCalculations[0].fullCostPerUnit > 0) {
-                    bondCalculations[0].qty += Math.floor(leftover / bondCalculations[0].fullCostPerUnit);
+                // Фильтруем: оставляем только те облигации, на которые хватает бюджета (хотя бы 1 шт)
+                let affordableBonds = bondCalculations.filter(b => b.fullCostPerUnit > 0 && b.fullCostPerUnit <= bondBudget);
+                
+                if (affordableBonds.length > 0) {
+                    // Равномерно распределяем бюджет по доступным облигациям
+                    const perBondBudget = bondBudget / affordableBonds.length;
+                    affordableBonds.forEach(b => {
+                        b.qty = Math.floor(perBondBudget / b.fullCostPerUnit);
+                    });
+                    
+                    // Остаток добавляем первой облигации
+                    let leftover = bondBudget - affordableBonds.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
+                    if (leftover >= affordableBonds[0].fullCostPerUnit) {
+                        affordableBonds[0].qty += Math.floor(leftover / affordableBonds[0].fullCostPerUnit);
+                    }
+                    
+                    // Убираем облигации с qty=0 (не влезли даже по 1 шт)
+                    affordableBonds = affordableBonds.filter(b => b.qty > 0);
                 }
+                
+                // Объединяем: показываем только купленные облигации
+                bondCalculations = affordableBonds;
                 
                 bondCalculations.forEach(b => {
                     actualSpentTotal += (b.qty * b.fullCostPerUnit); 
