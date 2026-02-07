@@ -15668,9 +15668,9 @@ function highlightKeywords(text) {
                         rainData.push({ date: info.date, name: b.n, qty: b.qty, amount: netAmount });
                     }
                     
-                    // Данные для деталей
-                    const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
-                    const calculatedCY = (b.p > 0 && details.couponValue && details.freq) ? ((details.couponValue * details.freq) / b.p * 100).toFixed(2) : '0.00';
+                    // Данные для деталей (используем уже объявленный details)
+                    const detailsFull = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—', couponYield:'—', freq:0 };
+                    const calculatedCY = (b.p > 0 && detailsFull.couponValue && detailsFull.freq) ? ((detailsFull.couponValue * detailsFull.freq) / b.p * 100).toFixed(2) : '0.00';
                     
                     bHtml += `
                     <div class="portfolio-list-item" onclick="this.classList.toggle('expanded')">
