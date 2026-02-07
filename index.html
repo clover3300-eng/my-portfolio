@@ -2850,8 +2850,8 @@ body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
 /* Заголовки таблицы: "Облигация" слева, "Кол-во" справа */
 #screen-interesting .calc-table-header {
     display: grid;
-    grid-template-columns: 1fr 50px 112px;
-    gap: 8px;
+    grid-template-columns: 1fr 60px 112px;
+    gap: 12px;
     padding: 12px 0;
     margin-bottom: 0;
 }
@@ -2880,8 +2880,8 @@ body.dark-mode #screen-interesting .calc-table-header {
 /* Строки списка облигаций - прозрачный фон */
 #screen-interesting .calc-bond-row {
     display: grid;
-    grid-template-columns: 1fr 50px 112px;
-    gap: 8px;
+    grid-template-columns: 1fr 60px 112px;
+    gap: 12px;
     padding: 16px 0;
     margin-bottom: 0;
     border-radius: 0;
@@ -11386,14 +11386,10 @@ body.dark-mode .portfolio-echelons-total-row {
                 </div>
                 <div>
                     <div class="calc-accordion-title">Ежемесячный доход</div>
-                    <div class="calc-accordion-subtitle" style="display:flex;align-items:center;gap:8px;">
-                        <span>Выплаты по ОФЗ</span>
-                        <span id="calcPreviewAmount" style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#10B981;font-size:11px;display:none;"></span>
-                    </div>
+                    <div class="calc-accordion-subtitle">Рассчитайте выплаты по ОФЗ</div>
                 </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div id="calcPreviewBadge" style="display:none;padding:4px 10px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#10B981;white-space:nowrap;"></div>
+            <div style="display: flex; align-items: center;">
                 <svg class="calc-accordion-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
@@ -11421,8 +11417,11 @@ body.dark-mode .portfolio-echelons-total-row {
                 </div>
                 
                 <!-- Информационный текст -->
-                <div class="calc-info-text">
-                    Калькулятор предлагает к покупке список ОФЗ, благодаря которому Вы будете получать ежемесячно выплаты купонов.
+                <div class="calc-info-text" style="display:flex;align-items:flex-start;gap:12px;border-left:none;background:linear-gradient(135deg,rgba(59,130,246,0.06),rgba(16,185,129,0.04));border:1px solid rgba(59,130,246,0.1);border-radius:14px;">
+                    <div style="min-width:32px;height:32px;background:rgba(59,130,246,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                    </div>
+                    <span style="line-height:1.55;">Калькулятор подбирает ОФЗ с разными датами купонов, чтобы выплаты приходили каждый месяц.</span>
                 </div>
                 
                 <!-- Переключатель налога -->
@@ -12780,6 +12779,10 @@ document.addEventListener('click', function(event) {
 
         function shortenTicker(t) { return t.length > 7 ? t.substring(0, 7) : t; }
         function limitName(n) { return n.length > 18 ? n.substring(0, 16) + '...' : n; }
+        function styledName(n) {
+            const limited = limitName(n);
+            return limited.replace(/(\d+)/g, '<span style="font-family:\'JetBrains Mono\',monospace">$1</span>');
+        }
         function hideAllTips(event) { 
             document.querySelectorAll('.echelon-tip, .info-preview-box').forEach(el => {
                 if(!el.contains(event.target) && !event.target.closest('.section-header-styled')) {
@@ -13186,26 +13189,40 @@ function resetCustomTo50() {
         
         let lastPrice = 0;
         
-        // 1. Ищем цену в рыночных данных (сделки сегодня)
+        // 1. Ищем цену в рыночных данных (перебираем ВСЕ строки — разные boardid)
         if (data.marketdata && data.marketdata.data.length > 0) {
              const m_cols = data.marketdata.columns;
-             const m_row = data.marketdata.data[0];
              const lastIdx = m_cols.indexOf('LAST');
-             const prevIdx = m_cols.indexOf('PREVPRICE'); 
-
-             if (lastIdx !== -1 && m_row[lastIdx]) {
-                lastPrice = m_row[lastIdx];
-             } 
-             else if (prevIdx !== -1 && m_row[prevIdx]) {
-                lastPrice = m_row[prevIdx];
+             const prevIdx = m_cols.indexOf('PREVPRICE');
+             
+             for (let i = 0; i < data.marketdata.data.length; i++) {
+                 const m_row = data.marketdata.data[i];
+                 if (lastIdx !== -1 && m_row[lastIdx]) {
+                     lastPrice = m_row[lastIdx];
+                     break;
+                 }
+             }
+             
+             if (!lastPrice) {
+                 for (let i = 0; i < data.marketdata.data.length; i++) {
+                     const m_row = data.marketdata.data[i];
+                     if (prevIdx !== -1 && m_row[prevIdx]) {
+                         lastPrice = m_row[prevIdx];
+                         break;
+                     }
+                 }
              }
         }
         
-        // 2. Если цены всё еще нет, ищем Цену Закрытия в блоке SECURITIES
-        if (!lastPrice && sec_row) {
+        // 2. Если цены всё еще нет, ищем в SECURITIES (перебираем все строки)
+        if (!lastPrice && data.securities && data.securities.data.length > 0) {
              const prevPriceIdx = sec_cols.indexOf('PREVPRICE');
-             if (prevPriceIdx !== -1 && sec_row[prevPriceIdx]) {
-                 lastPrice = sec_row[prevPriceIdx];
+             for (let i = 0; i < data.securities.data.length; i++) {
+                 const row = data.securities.data[i];
+                 if (prevPriceIdx !== -1 && row[prevPriceIdx]) {
+                     lastPrice = row[prevPriceIdx];
+                     break;
+                 }
              }
         }
 
@@ -13569,7 +13586,7 @@ function renderMonthlyIncomeCards() {
     monthlyIncomeBonds.forEach(b => {
         html += `
         <div class="calc-bond-row">
-            <div class="calc-bond-name">${limitName(b.n)}</div>
+            <div class="calc-bond-name">${styledName(b.n)}</div>
             <div class="calc-bond-yield" style="text-align:center;">${b.y.replace('%', '')}%</div>
             
             <div class="qty-controls">
@@ -13652,7 +13669,7 @@ function recalcCustomCoupons() {
         <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,0.4);font-weight:500;">${payment.dateStr.slice(0, 5)}</div>
 
         <div style="color:#fff; font-weight:500; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:8px;">
-            ${limitName(payment.displayName)}
+            ${styledName(payment.displayName)}
         </div>
 
         <div style="background:rgba(255,255,255,0.08);border-radius:6px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#fff;text-align:center;white-space:nowrap;">${qty} шт</div>
@@ -13666,19 +13683,8 @@ function recalcCustomCoupons() {
     resultList.innerHTML = html || '<div style="text-align:center; padding:15px; color:#aaa;">Введите количество для расчета...</div>';
     
     if (footer) {
-        footer.innerHTML = totalAmount > 0 ? `Итого за год: <span style="color:var(--accent-green)">${Math.round(totalAmount).toLocaleString()} ₽</span>` : '';
-    }
-    
-    // Обновляем превью-бейдж в заголовке аккордеона
-    const previewBadge = document.getElementById('calcPreviewBadge');
-    const previewAmount = document.getElementById('calcPreviewAmount');
-    if (totalAmount > 0) {
-        const monthlyAvg = Math.round(totalAmount / 12);
-        if (previewBadge) { previewBadge.textContent = '~' + monthlyAvg.toLocaleString('ru-RU') + ' ₽/мес'; previewBadge.style.display = 'block'; }
-        if (previewAmount) { previewAmount.textContent = Math.round(totalAmount).toLocaleString('ru-RU') + ' ₽/год'; previewAmount.style.display = 'inline'; }
-    } else {
-        if (previewBadge) previewBadge.style.display = 'none';
-        if (previewAmount) previewAmount.style.display = 'none';
+        const monthlyAvg = totalAmount > 0 ? Math.round(totalAmount / 12) : 0;
+        footer.innerHTML = monthlyAvg > 0 ? `Средняя сумма в месяц: <span style="color:var(--accent-green);font-family:'JetBrains Mono',monospace;font-weight:700;">~${monthlyAvg.toLocaleString()} ₽</span>` : '';
     }
 }
 
