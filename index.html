@@ -15833,8 +15833,6 @@ if(document.getElementById('listBonds')) {
             let eHtml = '';
             let totalStockProjectedGrowth = 0;
             let echelonIndex = 0;
-            let totalStockInvested = 0;
-            let weightedTargetSum = 0; // для средневзвешенной цели
 
             echelons.forEach(e => {
                 const echelonBudget = stockBudget * e.weight; 
@@ -15889,15 +15887,15 @@ if(document.getElementById('listBonds')) {
                 
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
-                    const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
-                    const invested = s.qty * s.p;
+                    const targetPct = parseFloat(s.target.replace(/[^\d.\-]/g,'')) || 0; // target — это % роста
                     
-                    // Собираем данные для средневзвешенной цели
-                    if (s.qty > 0 && s.p > 0 && targetPrice > 0) {
-                        const targetPct = ((targetPrice - s.p) / s.p) * 100; // % роста до цели
-                        weightedTargetSum += targetPct * invested;
-                        totalStockInvested += invested;
-                        console.log(`[FORECAST STOCK] ${s.t}: price=${s.p}, target=${targetPrice}, targetPct=${targetPct.toFixed(1)}%, qty=${s.qty}, invested=${invested}`);
+                    // Рост = qty * price * (targetPct / 100)
+                    if (s.qty > 0 && targetPct > 0) {
+                        const growth = s.qty * s.p * (targetPct / 100);
+                        totalStockProjectedGrowth += growth;
+                        console.log(`[FORECAST STOCK] ${s.t}: price=${s.p}, target=${targetPct}%, qty=${s.qty}, growth=+${growth.toFixed(0)}`);
+                    } else if (s.qty > 0) {
+                        console.log(`[FORECAST STOCK] ${s.t}: price=${s.p}, target=${targetPct}%, qty=${s.qty}, growth=0 (цель ≤ 0%)`);
                     }
                     
                     eHtml += `
@@ -15944,13 +15942,6 @@ if(document.getElementById('listBonds')) {
                 echelonIndex++;
             });
 
-            // === РАСЧЁТ СРЕДНЕВЗВЕШЕННОГО РОСТА АКЦИЙ ===
-            if (totalStockInvested > 0 && weightedTargetSum !== 0) {
-                const weightedAvgTargetPct = weightedTargetSum / totalStockInvested;
-                totalStockProjectedGrowth = totalStockInvested * (weightedAvgTargetPct / 100);
-                console.log(`[FORECAST STOCKS] weightedAvgTarget=${weightedAvgTargetPct.toFixed(2)}%, totalInvested=${totalStockInvested}, growth=${totalStockProjectedGrowth}`);
-            }
-            
             console.log(`[FORECAST TOTAL] inputSum=${inputSum}, bonds=${totalBondProjectedIncome}, stocks=${totalStockProjectedGrowth}, fee=${inputSum * brokerFee}, total=${inputSum + totalBondProjectedIncome + totalStockProjectedGrowth - inputSum * brokerFee}`);
 
             // === ОБНОВЛЕНИЕ ИНТЕРФЕЙСА (ОДИН РАЗ, БЕЗ ДУБЛЕЙ) ===
