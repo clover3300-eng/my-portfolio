@@ -15640,9 +15640,27 @@ function highlightKeywords(text) {
                 bondCalculations.forEach(b => {
                     actualSpentTotal += (b.qty * b.fullCostPerUnit); 
                     bondQuantities[b.t] = b.qty;
-                    const bondYieldVal = parseFloat(b.y.replace('%', '')) || 0;
-                    const investedInBond = b.qty * b.p;
-                    totalBondProjectedIncome += (investedInBond * (bondYieldVal / 100) * 3);
+                    
+                    // === ПРАВИЛЬНЫЙ РАСЧЁТ КУПОННОГО ДОХОДА ===
+                    // couponValue × кол-во_оставшихся_купонов × qty
+                    const details = bondDetailsMap[b.t] || {};
+                    const couponVal = details.couponValue || 0;
+                    const freq = details.freq || 2; // частота купонов в год (по умолчанию 2)
+                    const matDateStr = details.matDate || '';
+                    
+                    let remainingCoupons = freq * 3; // fallback: 3 года × частота
+                    if (matDateStr && matDateStr !== '—') {
+                        const matDate = new Date(matDateStr);
+                        const now = new Date();
+                        if (matDate > now) {
+                            // Кол-во оставшихся дней / (365 / freq) = кол-во купонов
+                            const daysRemaining = (matDate - now) / (1000 * 60 * 60 * 24);
+                            const couponPeriodDays = freq > 0 ? 365 / freq : 182;
+                            remainingCoupons = Math.floor(daysRemaining / couponPeriodDays);
+                        }
+                    }
+                    
+                    totalBondProjectedIncome += (couponVal * remainingCoupons * b.qty);
                     
                     if(b.qty > 0 && bondCouponsMap[b.t]) {
                         const info = bondCouponsMap[b.t];
@@ -15801,6 +15819,8 @@ if(document.getElementById('listBonds')) {
             let eHtml = '';
             let totalStockProjectedGrowth = 0;
             let echelonIndex = 0;
+            let totalStockInvested = 0;
+            let weightedTargetSum = 0; // для средневзвешенной цели
 
             echelons.forEach(e => {
                 const echelonBudget = stockBudget * e.weight; 
@@ -15856,7 +15876,14 @@ if(document.getElementById('listBonds')) {
                 stockCalculations.forEach(s => {
                     actualSpentTotal += (s.qty * s.fullCostPerUnit);
                     const targetPrice = parseFloat(s.target.replace(/[^\d.]/g,'')) || s.p;
-                    if(targetPrice > s.p) totalStockProjectedGrowth += (s.qty * (targetPrice - s.p));
+                    const invested = s.qty * s.p;
+                    
+                    // Собираем данные для средневзвешенной цели
+                    if (s.qty > 0 && s.p > 0 && targetPrice > 0) {
+                        const targetPct = ((targetPrice - s.p) / s.p) * 100; // % роста до цели
+                        weightedTargetSum += targetPct * invested;
+                        totalStockInvested += invested;
+                    }
                     
                     eHtml += `
                     <div class="portfolio-list-item" onclick="this.classList.toggle('expanded')">
@@ -15901,6 +15928,12 @@ if(document.getElementById('listBonds')) {
                 eHtml += `</div>`; // Закрываем div.portfolio-list
                 echelonIndex++;
             });
+
+            // === РАСЧЁТ СРЕДНЕВЗВЕШЕННОГО РОСТА АКЦИЙ ===
+            if (totalStockInvested > 0 && weightedTargetSum !== 0) {
+                const weightedAvgTargetPct = weightedTargetSum / totalStockInvested; // средневзвешенный % роста
+                totalStockProjectedGrowth = totalStockInvested * (weightedAvgTargetPct / 100);
+            }
 
             // === ОБНОВЛЕНИЕ ИНТЕРФЕЙСА (ОДИН РАЗ, БЕЗ ДУБЛЕЙ) ===
             if(document.getElementById('echelonContainer')) {
