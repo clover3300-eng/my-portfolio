@@ -11741,6 +11741,7 @@ function formatNewsDate(dateString) {
         let bonds = [];
         let bondDataCache = {};
         let monthlyIncomeBonds = []; // New list for the specific calculator
+        let bondQtyMap = {}; // Глобальная карта количеств для калькулятора
         let allScheduledPayments = [];
         let brokerFee = 0.0005; // По умолчанию Премиум 
         let currentTax = 0.13;
@@ -13631,7 +13632,7 @@ function recalcCustomCoupons() {
     if (!resultList) return;
     
     let html = '';
-    const bondQtyMap = {};
+    bondQtyMap = {};
     let totalAmount = 0;
     
     // Собираем количества из полей ввода
