@@ -13398,6 +13398,9 @@ function resetCustomTo50() {
                     echelons[2].assets = allStocks.slice(6, 9); 
                     echelons[3].assets = allStocks.slice(9, 12);
                 }
+                
+                console.log('[DATA LOADED] stocks:', allStocks.length);
+                allStocks.forEach(s => console.log(`[DATA STOCK] ${s.t}: price=${s.p}, target=${s.target}`));
 
                 // === 6. НОВАЯ ЛОГИКА: 4 Вкладка (Ребалансировка) с поиском имен ===
                 
@@ -15119,6 +15122,13 @@ function showLuxuryToast(title, message) {
     });
     
     await Promise.all(promises);
+    
+    // Лог загруженных данных
+    console.log('[DATA LOADED] bonds:', bonds.length, 'bondDetailsMap keys:', Object.keys(bondDetailsMap).length);
+    bonds.forEach(b => {
+        const d = bondDetailsMap[b.t] || {};
+        console.log(`[DATA] ${b.t}: p=${b.p}, nkd=${b.nkd}, couponValue=${d.couponValue}, freq=${d.freq}, matDate=${d.matDate}`);
+    });
     
     // После загрузки обновляем отображение
     renderOfzList();
