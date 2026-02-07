@@ -15653,14 +15653,18 @@ function highlightKeywords(text) {
                         const matDate = new Date(matDateStr);
                         const now = new Date();
                         if (matDate > now) {
-                            // Кол-во оставшихся дней / (365 / freq) = кол-во купонов
                             const daysRemaining = (matDate - now) / (1000 * 60 * 60 * 24);
                             const couponPeriodDays = freq > 0 ? 365 / freq : 182;
                             remainingCoupons = Math.floor(daysRemaining / couponPeriodDays);
+                        } else {
+                            remainingCoupons = 0; // облигация уже погашена
                         }
                     }
                     
-                    totalBondProjectedIncome += (couponVal * remainingCoupons * b.qty);
+                    const bondCouponIncome = couponVal * remainingCoupons * b.qty;
+                    totalBondProjectedIncome += bondCouponIncome;
+                    
+                    console.log(`[FORECAST BONDS] ${b.t}: couponVal=${couponVal}, freq=${freq}, matDate=${matDateStr}, remainCoupons=${remainingCoupons}, qty=${b.qty}, income=${bondCouponIncome}`);
                     
                     if(b.qty > 0 && bondCouponsMap[b.t]) {
                         const info = bondCouponsMap[b.t];
@@ -15883,6 +15887,7 @@ if(document.getElementById('listBonds')) {
                         const targetPct = ((targetPrice - s.p) / s.p) * 100; // % роста до цели
                         weightedTargetSum += targetPct * invested;
                         totalStockInvested += invested;
+                        console.log(`[FORECAST STOCK] ${s.t}: price=${s.p}, target=${targetPrice}, targetPct=${targetPct.toFixed(1)}%, qty=${s.qty}, invested=${invested}`);
                     }
                     
                     eHtml += `
@@ -15931,9 +15936,12 @@ if(document.getElementById('listBonds')) {
 
             // === РАСЧЁТ СРЕДНЕВЗВЕШЕННОГО РОСТА АКЦИЙ ===
             if (totalStockInvested > 0 && weightedTargetSum !== 0) {
-                const weightedAvgTargetPct = weightedTargetSum / totalStockInvested; // средневзвешенный % роста
+                const weightedAvgTargetPct = weightedTargetSum / totalStockInvested;
                 totalStockProjectedGrowth = totalStockInvested * (weightedAvgTargetPct / 100);
+                console.log(`[FORECAST STOCKS] weightedAvgTarget=${weightedAvgTargetPct.toFixed(2)}%, totalInvested=${totalStockInvested}, growth=${totalStockProjectedGrowth}`);
             }
+            
+            console.log(`[FORECAST TOTAL] inputSum=${inputSum}, bonds=${totalBondProjectedIncome}, stocks=${totalStockProjectedGrowth}, fee=${inputSum * brokerFee}, total=${inputSum + totalBondProjectedIncome + totalStockProjectedGrowth - inputSum * brokerFee}`);
 
             // === ОБНОВЛЕНИЕ ИНТЕРФЕЙСА (ОДИН РАЗ, БЕЗ ДУБЛЕЙ) ===
             if(document.getElementById('echelonContainer')) {
