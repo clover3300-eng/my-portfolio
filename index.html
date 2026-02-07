@@ -2903,9 +2903,9 @@ body.dark-mode #screen-interesting .calc-bond-row {
     font-size: 15px;
     font-weight: 600;
     color: var(--text-deep, #0F172A);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #screen-interesting .calc-bond-name .bond-number {
@@ -2928,8 +2928,9 @@ body.dark-mode #screen-interesting .calc-bond-name {
 /* Контейнер для названия + доходности */
 #screen-interesting .calc-bond-info {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
 }
 
 /* Контроллер количества [- N +] */
@@ -3051,8 +3052,10 @@ body.dark-mode #screen-interesting .btn-reset-glass {
 #screen-interesting .results-glass-container {
     background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
     border-radius: 16px;
-    padding: 16px;
+    padding: 20px;
     margin-top: 20px;
+    margin-left: -8px;
+    margin-right: -8px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
     overflow: hidden;
@@ -3092,22 +3095,22 @@ body.dark-mode #screen-interesting .results-glass-container {
 /* Таблица выплат - внутри тёмного блока */
 #screen-interesting .coupon-table-head {
     display: grid;
-    grid-template-columns: 65px 1fr 40px 85px;
-    gap: 8px;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 8px;
+    grid-template-columns: 48px 1fr auto 80px;
+    gap: 0;
+    padding: 8px 0 12px;
+    border-bottom: none;
+    margin-bottom: 4px;
     position: relative;
     z-index: 1;
 }
 
 #screen-interesting .coupon-table-head span {
     font-family: 'Inter', sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.3);
 }
 
 #screen-interesting .coupon-table-head span:nth-child(3) {
@@ -3125,15 +3128,14 @@ body.dark-mode #screen-interesting .coupon-table-head {
 /* Строка выплаты - внутри тёмного блока */
 #screen-interesting .coupon-result-row {
     display: grid;
-    grid-template-columns: 65px 1fr 40px 85px;
-    gap: 8px;
-    padding: 12px 0;
+    grid-template-columns: 48px 1fr auto 80px;
+    gap: 0;
+    padding: 10px 0;
     margin-bottom: 0;
     border-radius: 0;
     background: transparent;
     border: none;
-    /* Мостик - пунктирная линия */
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+    border-bottom: none;
     font-family: 'Inter', sans-serif;
     font-size: 13px;
     position: relative;
@@ -13633,18 +13635,18 @@ function recalcCustomCoupons() {
     const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
     totalAmount += netAmount;
       html += `
-    <div class="coupon-row" style="display:grid; grid-template-columns: 50px 1fr 40px 80px; gap:4px; align-items:center; margin-bottom:8px;">
+    <div class="coupon-row" style="display:grid; grid-template-columns: 48px 1fr auto 80px; gap:0; align-items:center; padding:10px 0;">
         
-        <div><b>${payment.dateStr.slice(0, 5)}</b></div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,0.4);font-weight:500;">${payment.dateStr.slice(0, 5)}</div>
 
-        <div style="color:#8e8e93; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+        <div style="color:#fff; font-weight:600; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:8px;">
             ${limitName(payment.displayName)}
         </div>
 
-        <div style="text-align:center">${qty}шт.</div>
+        <div style="background:rgba(255,255,255,0.08);border-radius:6px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#fff;text-align:center;white-space:nowrap;">${qty} шт</div>
 
-        <div style="text-align:right">
-            <b>${netAmount.toFixed(0)}₽</b>
+        <div style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#10B981;">
+            +${netAmount.toFixed(0)} ₽
         </div>
     </div>`;
     });
