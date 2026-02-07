@@ -2850,7 +2850,7 @@ body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
 /* Заголовки таблицы: "Облигация" слева, "Кол-во" справа */
 #screen-interesting .calc-table-header {
     display: grid;
-    grid-template-columns: 1fr 112px;
+    grid-template-columns: 1fr 50px 112px;
     gap: 8px;
     padding: 12px 0;
     margin-bottom: 0;
@@ -2873,10 +2873,14 @@ body.dark-mode #screen-interesting .calc-table-header {
     text-align: center;
 }
 
+#screen-interesting .calc-table-header span:nth-child(3) {
+    text-align: center;
+}
+
 /* Строки списка облигаций - прозрачный фон */
 #screen-interesting .calc-bond-row {
     display: grid;
-    grid-template-columns: 1fr 112px;
+    grid-template-columns: 1fr 50px 112px;
     gap: 8px;
     padding: 16px 0;
     margin-bottom: 0;
@@ -11363,7 +11367,8 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
             
             <div class="rate-row-item">
-                <span class="rate-row-label">ОФЗ 10 лет <span id="val-ofz10" style="font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text-deep,#0F172A);margin-left:8px;">---%</span></span>
+                <span class="rate-row-label">ОФЗ 10 лет</span>
+                <span class="rate-row-value" id="val-ofz10">---%</span>
             </div>
         </div>
     </div>
@@ -11430,6 +11435,7 @@ body.dark-mode .portfolio-echelons-total-row {
                 <!-- Заголовки таблицы -->
                 <div class="calc-table-header">
                     <span>Облигация</span>
+                    <span>%</span>
                     <span>Кол-во</span>
                 </div>
                 
@@ -11941,18 +11947,26 @@ function formatNewsDate(dateString) {
                         if (marketdata) {
                             last = getVal(marketdata, 'LAST') || getVal(marketdata, 'CURRENTVALUE') || getVal(marketdata, 'YIELD');
                             open = getVal(marketdata, 'OPEN');
+                            
+                            // Приоритет: LASTCHANGEPRCNT → LASTCHANGE → ручной расчёт
+                            const lastChangePrcnt = getVal(marketdata, 'LASTCHANGEPRCNT');
+                            const lastChange = getVal(marketdata, 'LASTCHANGE');
+                            
+                            if (lastChangePrcnt != null && lastChangePrcnt !== 0) {
+                                changePercent = lastChangePrcnt;
+                            } else if (lastChange != null && last && (last - lastChange) > 0) {
+                                changePercent = (lastChange / (last - lastChange)) * 100;
+                            } else if (last && open && open > 0) {
+                                changePercent = ((last - open) / open) * 100;
+                            }
                         }
 
-                        if ((!last || !open) && d.securities && d.securities.data.length > 0) {
+                        if (changePercent === 0 && d.securities && d.securities.data.length > 0) {
                              prev = getVal(d.securities, 'PREVPRICE');
                              if(!last) last = prev; 
-                             if(!open) open = prev; 
-                        }
-                        
-                        if(last && open && open > 0) {
-                            changePercent = ((last - open) / open) * 100;
-                        } else if (last && prev && prev > 0) {
-                             changePercent = ((last - prev) / prev) * 100;
+                             if(last && prev && prev > 0) {
+                                 changePercent = ((last - prev) / prev) * 100;
+                             }
                         }
                         
                         if(last) {
@@ -13555,10 +13569,8 @@ function renderMonthlyIncomeCards() {
     monthlyIncomeBonds.forEach(b => {
         html += `
         <div class="calc-bond-row">
-            <div class="calc-bond-info">
-                <div class="calc-bond-name">${limitName(b.n)}</div>
-                <div class="calc-bond-yield">${b.y.replace('%', '')}%</div>
-            </div>
+            <div class="calc-bond-name">${limitName(b.n)}</div>
+            <div class="calc-bond-yield" style="text-align:center;">${b.y.replace('%', '')}%</div>
             
             <div class="qty-controls">
                 <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
@@ -13639,7 +13651,7 @@ function recalcCustomCoupons() {
         
         <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,0.4);font-weight:500;">${payment.dateStr.slice(0, 5)}</div>
 
-        <div style="color:#fff; font-weight:600; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:8px;">
+        <div style="color:#fff; font-weight:500; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:8px;">
             ${limitName(payment.displayName)}
         </div>
 
