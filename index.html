@@ -6973,12 +6973,12 @@ textarea {
 .card-pct-group {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    min-width: 65px;
+    align-items: flex-start;
+    min-width: 75px;
 }
 
-.card-pct-bonds { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--bonds-color); }
-.card-pct-stocks { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--stocks-color); }
+.card-pct-bonds { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--bonds-color); white-space: nowrap; }
+.card-pct-stocks { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--stocks-color); white-space: nowrap; }
 
 /* Скрытие старых элементов, если они где-то остались */
 .strategy-cards-container, .strategy-expand-trigger { display: none !important; }
@@ -9678,7 +9678,7 @@ body.dark-mode .stock-btn-info {
     gap: 15px;
     padding: 0;
     background: transparent;
-    margin-bottom: 10px;
+    margin-bottom: 0;
 }
 
 .custom-value-item {
@@ -9755,7 +9755,7 @@ body.dark-mode .stock-btn-info {
 /* Кнопки +/- в стиле Soft UI */
 .custom-controls-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     margin-bottom: 25px;
 }
@@ -9763,7 +9763,7 @@ body.dark-mode .stock-btn-info {
 .custom-adjust-btn {
     width: 44px;
     height: 44px;
-    border-radius: 50%; /* Круглые */
+    border-radius: 50%;
     background: #FFFFFF;
     border: 1px solid #F1F5F9;
     color: #2C364C;
@@ -9775,6 +9775,8 @@ body.dark-mode .stock-btn-info {
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
     transition: all 0.2s;
+    margin-top: 2px; /* Центрируем по середине цифр (48px высота цифр, 44px кнопка) */
+    flex-shrink: 0;
 }
 
 .custom-adjust-btn:active {
@@ -12074,9 +12076,9 @@ function formatNewsDate(dateString) {
                 document.getElementById('navWrapper').style.display = 'flex'; // Убеждаемся, что меню видно
                 document.getElementById('stickyPanel').style.display = 'none'; // Скрываем нижнюю панель (где кнопка "Сформировать")
             } else {
-                document.body.classList.remove('home-mode'); // Выключаем "прозрачный" режим (возвращаем как было)
+                document.body.classList.remove('home-mode');
                 
-                // Компактный режим: на всех страницах кроме главной и портфельных (за исключением screen-assets из главного меню)
+                // Компактный режим: на всех страницах кроме главной и портфельных
                 if (!portfolioScreens.includes(screenId) || (screenId === 'screen-assets' && assetsFromMainNav)) {
                     document.body.classList.add('compact-nav');
                 } else {
@@ -17533,6 +17535,43 @@ function updateInfoBtnState(tabName) {
         border-radius: 20px;
         padding: 4px 0; /* Отступы только вертикальные */
         box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.6);
+        transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+    
+    /* Светлый режим локального меню (до расчёта портфеля) */
+    .mode-switcher.mode-light {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .mode-switcher.mode-light .mode-btn {
+        color: rgba(100, 116, 139, 0.7);
+    }
+    .mode-switcher.mode-light .mode-btn.active {
+        color: #0F172A;
+    }
+    .mode-switcher.mode-light .mode-indicator {
+        background: rgba(0, 0, 0, 0.06);
+        border-color: rgba(0, 0, 0, 0.04);
+    }
+    .mode-switcher.mode-light .mode-btn-side {
+        color: rgba(100, 116, 139, 0.5);
+    }
+    .mode-switcher.mode-light .mode-divider-vertical {
+        background: rgba(0, 0, 0, 0.08);
+    }
+    
+    /* Тёмный режим mode-light для dark-mode */
+    body.dark-mode .mode-switcher.mode-light {
+        background: rgba(30, 41, 59, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.3);
+    }
+    body.dark-mode .mode-switcher.mode-light .mode-btn {
+        color: rgba(148, 163, 184, 0.6);
+    }
+    body.dark-mode .mode-switcher.mode-light .mode-btn.active {
+        color: #fff;
     }
 
     /* Бегающая подсветка (активный фон) */
@@ -17641,6 +17680,16 @@ function updateInfoBtnState(tabName) {
             // === МЫ ВНУТРИ ПОРТФЕЛЯ ===
             if (mainMenu) mainMenu.style.setProperty('display', 'none', 'important');
             if (portfolioMenu) portfolioMenu.style.display = 'block';
+            
+            // Светлое меню если портфель ещё не сформирован, тёмное после
+            const modeSwitcher = portfolioMenu ? portfolioMenu.querySelector('.mode-switcher') : null;
+            if (modeSwitcher) {
+                if (isPortfolioCalculated) {
+                    modeSwitcher.classList.remove('mode-light');
+                } else {
+                    modeSwitcher.classList.add('mode-light');
+                }
+            }
 
             // Обновляем подсветку кнопок на пульте в зависимости от экрана
             updatePortfolioTabs(screenId);
