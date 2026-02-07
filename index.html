@@ -11615,7 +11615,7 @@ body.dark-mode .portfolio-echelons-total-row {
     </div>
     <div class="notify-content">
         <span class="notify-title">Минимальный капитал</span>
-        <span class="notify-message">Введите сумму от 10 000 ₽</span>
+        <span class="notify-message">Введите сумму от 100 000 ₽</span>
     </div>
 </div>
 
@@ -12217,7 +12217,7 @@ function showLuxuryNotification() {
 function calculateAndShowPortfolio() {
     // 1. Проверка СУММЫ (как было)
     const sum = getSumInputValue();
-    if (sum < 10000) {
+    if (sum < 100000) {
         showLuxuryNotification();
         const inputBlock = document.querySelector('.input-wrapper');
         if (inputBlock) {
@@ -15103,7 +15103,7 @@ function showLuxuryToast(title, message) {
         // Возвращаем через 500мс (после анимации скрытия), чтобы вернуть состояние "Ошибки"
         setTimeout(() => {
             titleEl.innerText = "Минимальный капитал"; // или верните исходное
-            msgEl.innerText = "Введите сумму от 10 000 ₽";
+            msgEl.innerText = "Введите сумму от 100 000 ₽";
             iconContainer.innerHTML = oldIcon;
             iconContainer.style.color = "";
         }, 500);
