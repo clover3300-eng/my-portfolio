@@ -10402,19 +10402,17 @@ body.dark-mode .portfolio-echelons-total-row {
 
 /* 1. Блок "ВАЖНО" (Зеленый) - Делаем прозрачным */
 .portfolio-important-aurora {
-    /* Принудительно убираем фон */
-    background: transparent !important;
-    background-color: transparent !important;
+    /* Оригинальный glassmorphism фон */
+    background: var(--card-glass-aurora) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
     
-    /* Убираем все границы, кроме левой */
-    border: none !important;
-    border-left: 4px solid #2E8B57 !important;
-    
-    /* Убираем радиус слева */
-    border-radius: 0 !important;
+    /* Жёлтая рамка вокруг всего блока */
+    border: 1px solid rgba(251, 191, 36, 0.2) !important;
+    border-radius: 16px !important;
     
     /* Отступы */
-    padding: 12px 0 12px 20px !important;
+    padding: 18px !important;
     margin-top: 24px !important;
     
     display: flex !important;
@@ -10424,7 +10422,7 @@ body.dark-mode .portfolio-echelons-total-row {
 
 /* Элементы внутри блока "Важно" */
 .important-aurora-icon {
-    color: #2E8B57 !important;
+    color: #F59E0B !important;
     width: 24px; 
     height: 24px;
     display: flex; 
@@ -10433,7 +10431,7 @@ body.dark-mode .portfolio-echelons-total-row {
     margin-top: 2px;
 }
 .important-aurora-title {
-    color: #2E8B57 !important;
+    color: #F59E0B !important;
     font-weight: 700; 
     font-size: 13px; 
     text-transform: uppercase; 
@@ -11048,11 +11046,11 @@ body.dark-mode .portfolio-echelons-total-row {
             <div class="portfolio-dropdown-divider"></div>
             <div class="portfolio-dropdown-item" onclick="shareWithHaptic(); closePortfolioMenu();">
                 <svg viewBox="0 0 24 24">
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                    <polyline points="16 6 12 2 8 6"/>
-                    <line x1="12" y1="2" x2="12" y2="15"/>
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
-                <span>Поделиться</span>
+                <span>Сохранить</span>
             </div>
         </div>
     </div>
