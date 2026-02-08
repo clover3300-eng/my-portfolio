@@ -16120,10 +16120,19 @@ function highlightKeywords(text) {
                         b.qty = Math.floor(perBondBudget / b.fullCostPerUnit);
                     });
                     
-                    // Остаток добавляем первой облигации
+                    // Итеративно распределяем остаток — добавляем по 1 шт самой дешёвой доступной
                     let leftover = bondBudget - affordableBonds.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
-                    if (leftover >= affordableBonds[0].fullCostPerUnit) {
-                        affordableBonds[0].qty += Math.floor(leftover / affordableBonds[0].fullCostPerUnit);
+                    const sortedByPrice = [...affordableBonds].sort((a, b) => a.fullCostPerUnit - b.fullCostPerUnit);
+                    let distributed = true;
+                    while (distributed) {
+                        distributed = false;
+                        for (const bond of sortedByPrice) {
+                            if (leftover >= bond.fullCostPerUnit) {
+                                bond.qty += 1;
+                                leftover -= bond.fullCostPerUnit;
+                                distributed = true;
+                            }
+                        }
                     }
                     
                     // Убираем облигации с qty=0 (не влезли даже по 1 шт)
