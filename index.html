@@ -16502,12 +16502,10 @@ if(totalRow) {
                     totalPercentV2.style.color = percentageChange >= 0 ? '#10B981' : '#EF4444';
                 }
                 if (bondIncomeMini) {
-                    const bondVal = isNaN(totalBondProjectedIncome) ? 0 : totalBondProjectedIncome;
-                    bondIncomeMini.textContent = '+' + Math.round(bondVal).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
+                    bondIncomeMini.textContent = '+' + Math.round(totalBondProjectedIncome).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
                 }
                 if (stockGrowthMini) {
-                    const growthVal = isNaN(totalStockProjectedGrowth) ? 0 : totalStockProjectedGrowth;
-                    stockGrowthMini.textContent = '+' + Math.round(growthVal).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
+                    stockGrowthMini.textContent = '+' + Math.round(totalStockProjectedGrowth).toLocaleString('ru-RU').replace(/\s/g, '.') + ' ₽';
                 }
                 
                 // Рендерим список облигаций в новый контейнер V2
