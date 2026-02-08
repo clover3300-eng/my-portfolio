@@ -16874,71 +16874,94 @@ function closePortfolioMenuOnClick(e) {
     }
 }
 
-// === SHOPPING LIST (Список к покупке) ===
+// === ТЕРМИНАЛ (Список к покупке) ===
+let _slTotalSum = 0;
+let _slExecutedSum = 0;
+
 function openShoppingList() {
     const overlay = document.getElementById('shoppingListOverlay');
     const body = document.getElementById('shoppingListBody');
-    if (!overlay || !body) { console.error('Shopping list elements not found'); return; }
+    if (!overlay || !body) return;
     
     const data = window._shoppingListData;
     if (!data || (data.bonds.length === 0 && data.stocks.length === 0)) {
-        body.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#64748B;font-size:14px;">Сначала рассчитайте портфель в терминале</div>';
+        body.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#64748B;font-size:14px;">Сначала рассчитайте портфель</div>';
         overlay.style.display = 'flex';
         return;
     }
     
-    const S = {
-        label: 'font-family:Inter,sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748B;margin-bottom:8px;padding-left:2px;',
-        card: 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;margin-bottom:16px;',
-        row: 'display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
-        rowLast: 'display:grid;grid-template-columns:24px 1fr auto auto;gap:8px;align-items:center;padding:10px 14px;cursor:pointer;transition:opacity 0.3s;-webkit-tap-highlight-color:transparent;',
-        check: 'width:20px;height:20px;border-radius:6px;border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;',
-        checkDone: 'width:20px;height:20px;border-radius:6px;border:2px solid #10B981;background:#10B981;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;',
-        ticker: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:#F1F5F9;overflow:hidden;text-overflow:ellipsis;',
-        name: 'display:block;font-family:Inter,sans-serif;font-size:10px;font-weight:400;color:#64748B;margin-top:1px;overflow:hidden;text-overflow:ellipsis;',
-        qty: 'font-family:JetBrains Mono,monospace;font-size:13px;font-weight:700;color:#10B981;text-align:right;white-space:nowrap;',
-        sum: 'font-family:JetBrains Mono,monospace;font-size:12px;font-weight:500;color:#94A3B8;text-align:right;min-width:70px;white-space:nowrap;',
-        total: 'display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.08);',
-        tLabel: 'font-family:Inter,sans-serif;font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:0.05em;',
-        tVal: 'font-family:JetBrains Mono,monospace;font-size:15px;font-weight:700;color:#F1F5F9;',
-    };
-    const badgeColors = {1:'rgba(46,204,113,0.25);color:#2ecc71', 2:'rgba(52,152,219,0.25);color:#3498db', 3:'rgba(241,196,15,0.25);color:#f1c40f', 4:'rgba(231,76,60,0.25);color:#e74c3c'};
     const roman = ['I','II','III','IV'];
     const svgCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>';
     
     let html = '';
-    let grandTotal = 0;
+    _slTotalSum = 0;
+    _slExecutedSum = 0;
     
-    // ОФЗ
+    // Облигации
     if (data.bonds.length > 0) {
         const bondsTotal = data.bonds.reduce((a, b) => a + b.sum, 0);
-        grandTotal += bondsTotal;
-        html += `<div style="${S.label}">Облигации (ОФЗ)</div><div style="${S.card}">`;
-        data.bonds.forEach((b, i) => {
-            const rs = i === data.bonds.length - 1 ? S.rowLast : S.row;
-            html += `<div style="${rs}" onclick="toggleShopItem(this)"><div class="sl-check" style="${S.check}"></div><div style="${S.ticker}">${b.ticker}<span style="${S.name}">${b.name}</span></div><div style="${S.qty}">${b.qty} шт</div><div style="${S.sum}">${b.sum.toLocaleString('ru-RU')} ₽</div></div>`;
+        _slTotalSum += bondsTotal;
+        
+        html += `<div class="sl-section-label">Облигации / OFZ</div>`;
+        html += `<div class="sl-card-group">`;
+        data.bonds.forEach(b => {
+            html += `
+            <div class="sl-item" data-sum="${b.sum}" onclick="toggleShopItem(this)">
+                <div class="sl-checkbox"></div>
+                <div class="sl-info">
+                    <div class="sl-info-top">
+                        <span class="sl-badge sl-badge-ofz">OFZ</span>
+                        <span class="sl-ticker">${b.ticker}</span>
+                    </div>
+                    <div class="sl-name">${b.name}</div>
+                </div>
+                <div class="sl-right">
+                    <div class="sl-qty">${b.qty} шт</div>
+                    <div class="sl-sum">${b.sum.toLocaleString('ru-RU')} ₽</div>
+                </div>
+            </div>`;
         });
-        html += `<div style="${S.total}"><span style="${S.tLabel}">Итого ОФЗ</span><span style="${S.tVal}">${bondsTotal.toLocaleString('ru-RU')} ₽</span></div></div>`;
+        html += `<div class="sl-group-total">
+            <span class="sl-group-total-label">Итого ОФЗ</span>
+            <span class="sl-group-total-value">${bondsTotal.toLocaleString('ru-RU')} ₽</span>
+        </div></div>`;
     }
     
     // Акции
     if (data.stocks.length > 0) {
         const stocksTotal = data.stocks.reduce((a, s) => a + s.sum, 0);
-        grandTotal += stocksTotal;
-        html += `<div style="${S.label}">Акции</div><div style="${S.card}">`;
-        data.stocks.forEach((s, i) => {
-            const rs = i === data.stocks.length - 1 ? S.rowLast : S.row;
-            const bc = badgeColors[s.echelon];
-            html += `<div style="${rs}" onclick="toggleShopItem(this)"><div class="sl-check" style="${S.check}"></div><div style="${S.ticker}"><span style="display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-right:6px;background:${bc};vertical-align:middle;">${roman[s.echelon-1]}</span>${s.ticker}<span style="${S.name}">${s.name}</span></div><div style="${S.qty}">${s.qty} шт</div><div style="${S.sum}">${s.sum.toLocaleString('ru-RU')} ₽</div></div>`;
+        _slTotalSum += stocksTotal;
+        
+        html += `<div class="sl-section-label">Акции / Stocks</div>`;
+        html += `<div class="sl-card-group">`;
+        data.stocks.forEach(s => {
+            const tier = s.echelon || 1;
+            const badgeClass = tier <= 3 ? `sl-badge-t${tier}` : 'sl-badge-t3';
+            html += `
+            <div class="sl-item" data-sum="${s.sum}" onclick="toggleShopItem(this)">
+                <div class="sl-checkbox"></div>
+                <div class="sl-info">
+                    <div class="sl-info-top">
+                        <span class="sl-badge ${badgeClass}">TIER ${roman[tier-1]}</span>
+                        <span class="sl-ticker">${s.ticker}</span>
+                    </div>
+                    <div class="sl-name">${s.name}</div>
+                </div>
+                <div class="sl-right">
+                    <div class="sl-qty">${s.qty} шт</div>
+                    <div class="sl-sum">${s.sum.toLocaleString('ru-RU')} ₽</div>
+                </div>
+            </div>`;
         });
-        html += `<div style="${S.total}"><span style="${S.tLabel}">Итого Акции</span><span style="${S.tVal}">${stocksTotal.toLocaleString('ru-RU')} ₽</span></div></div>`;
+        html += `<div class="sl-group-total">
+            <span class="sl-group-total-label">Итого Акции</span>
+            <span class="sl-group-total-value">${stocksTotal.toLocaleString('ru-RU')} ₽</span>
+        </div></div>`;
     }
-    
-    // Grand total
-    html += `<div style="${S.card}background:rgba(16,185,129,0.06);border-color:rgba(16,185,129,0.12);"><div style="${S.total}border:none;"><span style="${S.tLabel}color:#10B981;">ВСЕГО К ПОКУПКЕ</span><span style="${S.tVal}color:#10B981;font-size:18px;">${grandTotal.toLocaleString('ru-RU')} ₽</span></div></div>`;
     
     body.innerHTML = html;
     overlay.style.display = 'flex';
+    updateSlFooter();
     
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
@@ -16946,33 +16969,49 @@ function openShoppingList() {
 }
 
 function toggleShopItem(row) {
-    const check = row.querySelector('.sl-check');
-    if (!check) return;
-    const done = row.dataset.done === '1';
-    if (done) {
-        row.dataset.done = '0';
-        row.style.opacity = '1';
-        row.style.textDecoration = 'none';
-        check.style.border = '2px solid rgba(255,255,255,0.15)';
-        check.style.background = 'transparent';
-        check.innerHTML = '';
+    const checkbox = row.querySelector('.sl-checkbox');
+    if (!checkbox) return;
+    const sum = parseFloat(row.dataset.sum) || 0;
+    const isFilled = row.classList.contains('filled');
+    
+    if (isFilled) {
+        row.classList.remove('filled');
+        checkbox.innerHTML = '';
+        _slExecutedSum -= sum;
     } else {
-        row.dataset.done = '1';
-        row.style.opacity = '0.35';
-        check.style.border = '2px solid #10B981';
-        check.style.background = '#10B981';
-        check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>';
+        row.classList.add('filled');
+        checkbox.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><polyline points="20 6 9 17 4 12"/></svg>';
+        _slExecutedSum += sum;
     }
+    
+    _slExecutedSum = Math.max(0, _slExecutedSum);
+    updateSlFooter();
+    
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    } else if (navigator.vibrate) {
+        navigator.vibrate(10);
     }
+}
+
+function updateSlFooter() {
+    const remaining = _slTotalSum - _slExecutedSum;
+    const percent = _slTotalSum > 0 ? Math.round((_slExecutedSum / _slTotalSum) * 100) : 0;
+    
+    const elRemaining = document.getElementById('slRemaining');
+    const elPlan = document.getElementById('slPlan');
+    const elBar = document.getElementById('slProgressBar');
+    const elLabel = document.getElementById('slProgressLabel');
+    
+    if (elRemaining) elRemaining.textContent = remaining.toLocaleString('ru-RU') + ' ₽';
+    if (elPlan) elPlan.textContent = _slTotalSum.toLocaleString('ru-RU') + ' ₽';
+    if (elBar) elBar.style.width = percent + '%';
+    if (elLabel) elLabel.textContent = percent + '%';
 }
 
 function closeShoppingList() {
     const overlay = document.getElementById('shoppingListOverlay');
-    if (overlay) {
-        overlay.style.display = 'none';
-    }
+    if (overlay) overlay.style.display = 'none';
     if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
     }
@@ -16982,35 +17021,37 @@ function copyShoppingList() {
     const data = window._shoppingListData;
     if (!data) return;
     
-    let text = '📋 СПИСОК К ПОКУПКЕ\n\n';
     const roman = ['I','II','III','IV'];
+    let text = '📋 ПЛАН ПОКУПОК:\n\n';
+    
+    // Собираем статусы из DOM
+    const items = document.querySelectorAll('.sl-item');
+    let idx = 0;
     
     if (data.bonds.length > 0) {
-        text += '🔵 ОФЗ:\n';
         data.bonds.forEach(b => {
-            text += `  ${b.ticker} — ${b.qty} шт. (${b.sum.toLocaleString('ru-RU')} ₽)\n`;
+            const filled = items[idx] && items[idx].classList.contains('filled');
+            text += `${filled ? '✅' : '⚪️'} ${b.ticker} — ${b.qty} шт\n`;
+            idx++;
         });
-        text += '\n';
     }
     
     if (data.stocks.length > 0) {
-        text += '🟢 Акции:\n';
         data.stocks.forEach(s => {
-            text += `  [${roman[s.echelon-1]}] ${s.ticker} — ${s.qty} шт. (${s.sum.toLocaleString('ru-RU')} ₽)\n`;
+            const filled = items[idx] && items[idx].classList.contains('filled');
+            text += `${filled ? '✅' : '⚪️'} ${s.ticker} — ${s.qty} шт\n`;
+            idx++;
         });
-        text += '\n';
     }
     
-    const total = (data.bonds.reduce((a,b) => a + b.sum, 0) + data.stocks.reduce((a,s) => a + s.sum, 0));
-    text += `💰 Итого: ${total.toLocaleString('ru-RU')} ₽`;
+    text += `\n💰 Всего к исполнению: ${_slTotalSum.toLocaleString('ru-RU')} ₽`;
     
     if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(() => {
-            const btn = document.querySelector('.shopping-list-copy-all');
-            if (btn) {
-                btn.style.background = 'rgba(16, 185, 129, 0.2)';
-                btn.style.color = '#10B981';
-                setTimeout(() => { btn.style.background = ''; btn.style.color = ''; }, 1500);
+            const toast = document.getElementById('slToast');
+            if (toast) {
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
             }
         });
     }
@@ -18145,6 +18186,272 @@ function updateInfoBtnState(tabName) {
         transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         z-index: 1;
     }
+
+/* === ТЕРМИНАЛ (Список к покупке) === */
+.sl-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 99999;
+    background: #0F172A;
+    flex-direction: column;
+    overflow: hidden;
+}
+.sl-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    padding-top: calc(12px + env(safe-area-inset-top, 20px));
+    position: sticky;
+    top: 0;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 10;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sl-header-btn {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    color: #94A3B8;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s;
+}
+.sl-header-btn svg { width: 20px; height: 20px; }
+.sl-header-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.1); }
+.sl-header-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #F1F5F9;
+    letter-spacing: 0.12em;
+}
+.sl-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px;
+    padding-bottom: 140px;
+}
+.sl-section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748B;
+    margin-bottom: 10px;
+    padding-left: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.sl-section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+}
+.sl-card-group {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.sl-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.25s ease;
+}
+.sl-item:last-of-type { border-bottom: none; }
+.sl-item.filled {
+    background: rgba(16, 185, 129, 0.04);
+}
+.sl-item.filled .sl-ticker { text-decoration: line-through; color: #64748B; }
+.sl-item.filled .sl-name { color: #475569; }
+.sl-item.filled .sl-qty { color: #475569; }
+.sl-item.filled .sl-sum { color: #475569; }
+.sl-checkbox {
+    width: 22px; height: 22px;
+    min-width: 22px;
+    border-radius: 7px;
+    border: 2px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+.sl-item.filled .sl-checkbox {
+    border-color: #10B981;
+    background: #10B981;
+}
+.sl-info { flex: 1; min-width: 0; }
+.sl-info-top { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+.sl-ticker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #F1F5F9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.25s;
+}
+.sl-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 5px;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+}
+.sl-badge-ofz { background: rgba(52,152,219,0.2); color: #3498db; }
+.sl-badge-t1 { background: rgba(52,152,219,0.2); color: #3498db; }
+.sl-badge-t2 { background: rgba(245,158,11,0.2); color: #f59e0b; }
+.sl-badge-t3 { background: rgba(239,68,68,0.2); color: #ef4444; }
+.sl-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #64748B;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.25s;
+}
+.sl-right { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; gap: 2px; }
+.sl-qty {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #10B981;
+    white-space: nowrap;
+    transition: color 0.25s;
+}
+.sl-sum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: #94A3B8;
+    white-space: nowrap;
+    transition: color 0.25s;
+}
+.sl-group-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+.sl-group-total-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.sl-group-total-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #F1F5F9;
+}
+/* Footer */
+.sl-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 14px 20px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 10px));
+    z-index: 10;
+}
+.sl-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.sl-footer-block { display: flex; flex-direction: column; gap: 2px; }
+.sl-footer-block:last-child { align-items: flex-end; }
+.sl-footer-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.sl-footer-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: #F1F5F9;
+}
+.sl-footer-plan { font-size: 14px; color: #94A3B8; }
+.sl-footer-divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(255,255,255,0.08);
+}
+.sl-progress-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+.sl-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #3498db, #10B981);
+    border-radius: 3px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sl-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748B;
+    text-align: center;
+}
+.sl-toast {
+    position: fixed;
+    bottom: 160px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(16, 185, 129, 0.9);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 20;
+}
+.sl-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
 </style>
     <script>
     // === ГЛАВНЫЙ КОНТРОЛЛЕР МЕНЮ ===
@@ -18256,24 +18563,39 @@ function updateInfoBtnState(tabName) {
 
 
 <!-- Overlay: Список к покупке — ПОСЛЕДНИЙ элемент в body для максимального z-index -->
-<div id="shoppingListOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; z-index:99999; background:#0F172A; flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;">
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:16px; padding-top:calc(100px + env(safe-area-inset-top, 20px)); position:sticky; top:0; background:#0F172A; z-index:10; border-bottom:1px solid rgba(255,255,255,0.06);">
-        <button onclick="closeShoppingList()" style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#94A3B8; cursor:pointer; -webkit-tap-highlight-color:transparent;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;">
-                <path d="M15 19l-7-7 7-7"/>
-            </svg>
+<div id="shoppingListOverlay" class="sl-overlay">
+    <!-- Sticky Header -->
+    <div class="sl-header">
+        <button class="sl-header-btn" onclick="closeShoppingList()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 19l-7-7 7-7"/></svg>
         </button>
-        <div style="font-family:'Inter',sans-serif; font-size:16px; font-weight:700; color:#F1F5F9; letter-spacing:-0.02em;">СПИСОК К ПОКУПКЕ</div>
-        <button onclick="copyShoppingList()" style="width:36px; height:36px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:#94A3B8; cursor:pointer; -webkit-tap-highlight-color:transparent;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-            </svg>
+        <div class="sl-header-title">ТЕРМИНАЛ</div>
+        <button class="sl-header-btn" onclick="copyShoppingList()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         </button>
     </div>
-    <div id="shoppingListBody" style="padding:12px 16px 40px; flex:1;">
-        <!-- JS заполнит -->
+    <!-- Scrollable Body -->
+    <div id="shoppingListBody" class="sl-body"></div>
+    <!-- Floating Footer -->
+    <div class="sl-footer" id="slFooter">
+        <div class="sl-footer-row">
+            <div class="sl-footer-block">
+                <span class="sl-footer-label">Осталось купить</span>
+                <span class="sl-footer-value" id="slRemaining">0 ₽</span>
+            </div>
+            <div class="sl-footer-divider"></div>
+            <div class="sl-footer-block">
+                <span class="sl-footer-label">План</span>
+                <span class="sl-footer-value sl-footer-plan" id="slPlan">0 ₽</span>
+            </div>
+        </div>
+        <div class="sl-progress-track">
+            <div class="sl-progress-bar" id="slProgressBar"></div>
+        </div>
+        <div class="sl-progress-label" id="slProgressLabel">0%</div>
     </div>
+    <!-- Toast -->
+    <div class="sl-toast" id="slToast">Скопировано ✓</div>
 </div>
 
 </body>
