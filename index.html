@@ -17876,6 +17876,44 @@ function updateInfoBtnState(tabName) {
     }
 }
 
+    document.addEventListener("DOMContentLoaded", function() {
+    // 1. Инициализируем Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Развернуть на весь экран (по желанию)
+
+    // 2. Проверяем, есть ли данные о пользователе
+    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        const user = tg.initDataUnsafe.user;
+
+        // 3. Формируем данные для отправки
+        const logData = {
+            action: "webapp_log", // <--- ОБЯЗАТЕЛЬНАЯ МЕТКА (пароль для скрипта)
+            id: user.id,
+            username: user.username ? "@" + user.username : "No Username",
+            first_name: user.first_name
+        };
+
+        // 4. СЮДА ВСТАВЬТЕ ВАШ URL ОТ GOOGLE SCRIPT
+        // (Тот же самый, что вы использовали для Webhook, заканчивается на /exec)
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnTFvToIhJ1PBvqRAssCU88X3YE_yS__qBZ6WsKuJ2PH5P82LUnYYF65RfRka1sAoC/exec"; 
+
+        // 5. Отправляем данные
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors", // Важно для работы с Google без ошибок в консоли
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(logData)
+        })
+        .then(() => {
+            console.log("Лог отправлен успешно");
+        })
+        .catch(err => {
+            console.error("Ошибка отправки лога:", err);
+        });
+    }
+});
 
 
 
