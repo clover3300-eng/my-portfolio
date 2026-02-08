@@ -3017,8 +3017,8 @@ body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
 /* Заголовки таблицы: "Облигация" слева, "Кол-во" справа */
 #screen-interesting .calc-table-header {
     display: grid;
-    grid-template-columns: 1fr 40px 112px;
-    gap: 6px 16px;
+    grid-template-columns: 1fr 55px 112px;
+    gap: 6px 6px;
     padding: 12px 0;
     margin-bottom: 0;
 }
@@ -3047,8 +3047,8 @@ body.dark-mode #screen-interesting .calc-table-header {
 /* Строки списка облигаций - прозрачный фон */
 #screen-interesting .calc-bond-row {
     display: grid;
-    grid-template-columns: 1fr 40px 112px;
-    gap: 6px 16px;
+    grid-template-columns: 1fr 55px 112px;
+    gap: 6px 6px;
     padding: 16px 0;
     margin-bottom: 0;
     border-radius: 0;
@@ -12677,15 +12677,24 @@ function calculateAndShowPortfolio() {
     }
     
     // Новая функция для аккордеона калькулятора в "Интересное"
+// Флаг: инпут калькулятора был только что в фокусе
+let _calcInputWasActive = false;
+
+// Отслеживаем blur на инпутах калькулятора
+document.addEventListener('focusout', function(e) {
+    if (e.target && (e.target.id === 'monthlySumInput' || e.target.classList.contains('calc-input'))) {
+        _calcInputWasActive = true;
+        setTimeout(() => { _calcInputWasActive = false; }, 300);
+    }
+});
+
 function toggleCalcAccordion() {
     const accordion = document.getElementById('calcAccordion');
     if (!accordion) return;
     
-    // Если поле ввода суммы или количества активно — просто закрываем клавиатуру, не сворачиваем
-    const mInput = document.getElementById('monthlySumInput');
-    const activeCalcInput = document.activeElement && document.activeElement.classList.contains('calc-input');
-    if ((mInput && document.activeElement === mInput) || activeCalcInput) {
-        document.activeElement.blur();
+    // Если инпут калькулятора только что потерял фокус — не сворачиваем, клавиатура уже закрылась
+    if (_calcInputWasActive) {
+        _calcInputWasActive = false;
         return;
     }
     
