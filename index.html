@@ -16540,7 +16540,7 @@ if(totalRow) {
                                     <div class="portfolio-ofz-name">${formattedName}</div>
                                     <div class="portfolio-ofz-yield">${b.y}</div>
                                     <div class="portfolio-ofz-qty">${qty}</div>
-                                    <div class="portfolio-ofz-sum">${Math.round(qty * (b.p + b.nkd)).toLocaleString()} ₽</div>
+                                    <div class="portfolio-ofz-sum">${Math.round(qty * b.fullCostPerUnit).toLocaleString()} ₽</div>
                                 </div>
                                 <div class="portfolio-ofz-details">
                                     <div class="portfolio-ofz-details-grid">
@@ -16741,7 +16741,7 @@ if(totalStocksRow) {
             window._shoppingListData = { bonds: [], stocks: [] };
             if (bondCalculations.length > 0) {
                 bondCalculations.forEach(b => {
-                    if (b.qty > 0) window._shoppingListData.bonds.push({ ticker: b.t, name: b.n, qty: b.qty, price: b.p, sum: Math.round(b.qty * b.p) });
+                    if (b.qty > 0) window._shoppingListData.bonds.push({ ticker: b.t, name: b.n, qty: b.qty, price: b.p, sum: Math.round(b.qty * b.fullCostPerUnit) });
                 });
             }
             echelons.forEach((e, idx) => {
