@@ -13666,7 +13666,7 @@ function resetCustomTo50() {
                     if (!rows[i]) continue;
                     const dateVal = rows[i][27] || "---"; 
                     const nameVal = rows[i][28] || "---"; 
-                    const couponVal = parseFloat(String(rows[i][29]).replace(',', '.')) || 0; 
+                    const couponVal = parseFloat(String(rows[i][30]).replace(',', '.')) || 0; 
                     const ticker = rows[i][31] ? String(rows[i][31]).trim() : ''; 
 
                     allScheduledPayments.push({
@@ -13675,6 +13675,7 @@ function resetCustomTo50() {
                         paymentTicker: ticker,
                         staticCouponVal: couponVal
                     });
+                    console.log(`[COUPON SCHEDULE] row ${i}: date=${dateVal}, name=${nameVal}, coupon(AE)=${couponVal}, ticker=${ticker}, col_AD="${rows[i][29]}", col_AE="${rows[i][30]}"`);
 
                     if (ticker && !uniqueBondsMap.has(ticker)) {
                         uniqueBondsMap.set(ticker, {
@@ -13975,6 +13976,7 @@ function recalcCustomCoupons() {
     // --- КОНЕЦ БЛОКА ПОИСКА ---
 
     const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
+    console.log(`[CALC ROW] ${payment.displayName} (${payment.paymentTicker}): coupon=${payment.staticCouponVal} × qty=${qty} × (1-${customTax}) = ${netAmount.toFixed(2)}`);
     totalAmount += netAmount;
       html += `
     <div class="coupon-row" style="display:grid; grid-template-columns: 48px 1fr 56px 80px; gap:0; align-items:center; padding:10px 0;">
