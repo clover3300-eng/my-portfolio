@@ -3373,8 +3373,7 @@ body.dark-mode #screen-interesting .coupon-result-row .coupon-sum {
 /* Footer итогов */
 #screen-interesting .results-glass-footer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     padding-top: 14px;
     margin-top: 14px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -13998,7 +13997,29 @@ function recalcCustomCoupons() {
     
     if (footer) {
         const monthlyAvg = totalAmount > 0 ? Math.round(totalAmount / 12) : 0;
-        footer.innerHTML = monthlyAvg > 0 ? `Средняя сумма в месяц: <span style="color:var(--accent-green);font-family:'JetBrains Mono',monospace;font-weight:700;">~${monthlyAvg.toLocaleString()} ₽</span>` : '';
+        const investInput = document.getElementById('monthlySumInput');
+        const investSum = investInput ? (parseFloat(investInput.value.replace(/\s/g, '')) || 0) : 0;
+        const yearlyPercent = investSum > 0 ? ((totalAmount / investSum) * 100).toFixed(1) : '0.0';
+        
+        if (monthlyAvg > 0) {
+            footer.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; color:rgba(255,255,255,0.5); font-weight:500;">Средняя сумма в месяц</span>
+                        <span style="color:var(--accent-green); font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px;">~${monthlyAvg.toLocaleString()} ₽</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; color:rgba(255,255,255,0.5); font-weight:500;">Итого в год</span>
+                        <span style="color:#3B82F6; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px;">${Math.round(totalAmount).toLocaleString()} ₽</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid rgba(255,255,255,0.06);">
+                        <span style="font-size:12px; color:rgba(255,255,255,0.5); font-weight:500;">Доходность от суммы</span>
+                        <span style="font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px; color:${parseFloat(yearlyPercent) >= 10 ? '#10B981' : parseFloat(yearlyPercent) >= 5 ? '#3B82F6' : 'rgba(255,255,255,0.7)'};">${yearlyPercent}%</span>
+                    </div>
+                </div>`;
+        } else {
+            footer.innerHTML = '';
+        }
     }
 }
 
