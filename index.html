@@ -10202,15 +10202,13 @@ body.dark-mode .portfolio-echelons-total-row {
     color: var(--text-main);
     width: 36px;
     height: 36px;
-    border-radius: 12px; /* Мягкий квадрат, как у вас везде */
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    
-    /* Анимация скрытия/появления */
-    /* opacity: 0; 
-    /* pointer-events: none;
+    opacity: 0;
+    pointer-events: none;
     transform: scale(0.8);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -11054,7 +11052,7 @@ body.dark-mode .portfolio-echelons-total-row {
                     <polyline points="16 6 12 2 8 6"/>
                     <line x1="12" y1="2" x2="12" y2="15"/>
                 </svg>
-                <span>Сохранить</span>
+                <span>Поделиться</span>
             </div>
         </div>
     </div>
@@ -14514,7 +14512,7 @@ function switchRebalanceTab(tabName) {
         // Перерендериваем таблицу
         renderAuroraStocksTable();
     }
-    updateInfoBtnState(tab);
+    updateInfoBtnState(tabName);
 }
 
 // Инициализация Spotlight эффекта для карточки "Умная замена"
@@ -17649,8 +17647,8 @@ initSwipeBack();
                             <div style="display:flex; flex-direction:column; gap:12px;">
                                 ${createEchelonItem('I', 'Надёжный', 'Компании, которые платят дивиденды и стараются их повышать', 'e1')}
                                 ${createEchelonItem('II', 'Стабильный', 'Компании, которые платят дивиденды, но выплаты разнятся', 'e2')}
-                                ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят, потому что предпочитают инвестировать в развитие', 'e3')}
-                                ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов, но имеют хороший потенциал роста', 'e4')}
+                                ${createEchelonItem('III', 'Рисковый', 'Компании, которые могут платить, но не платят', 'e3')}
+                                ${createEchelonItem('IV', 'Венчурный', 'Компании, которые не платят дивидендов', 'e4')}
                             </div>
                             
                             <!-- Bottom Block -->
