@@ -11423,7 +11423,7 @@ body.dark-mode .portfolio-echelons-total-row {
    <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
     <h1>Ребалансировка</h1>
     
-    <button id="stocksInfoBtn" class="info-trigger-btn h-help-animated" onclick="this.classList.remove('h-help-animated'); toggleEchelonGuide(true, 'rebalance')">
+    <button id="stocksInfoBtn" class="info-trigger-btn" onclick="this.classList.remove('h-help-animated'); this.dataset.clicked='1'; if(window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium'); else if(navigator.vibrate) navigator.vibrate(10); toggleEchelonGuide(true, 'rebalance')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -17806,8 +17806,13 @@ function updateInfoBtnState(tabName) {
     
     if (tabName === 'stocks') {
         btn.classList.add('visible');
+        // Добавляем анимацию только если ещё не кликали
+        if (!btn.dataset.clicked) {
+            setTimeout(() => btn.classList.add('h-help-animated'), 350);
+        }
     } else {
         btn.classList.remove('visible');
+        btn.classList.remove('h-help-animated');
     }
 }
 
