@@ -11250,7 +11250,7 @@ body.dark-mode .portfolio-echelons-total-row {
               <div class="portfolio-echelons-headers">
     <div class="portfolio-echelon-h-text">
         <span>ЭШЕЛОН</span>
-        <div class="h-help-btn h-help-animated" onclick="toggleEchelonGuide(true, 'portfolio')">
+        <div class="h-help-btn h-help-animated" onclick="this.classList.remove('h-help-animated'); toggleEchelonGuide(true, 'portfolio')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;">
                 <circle cx="12" cy="12" r="10"/>
                 <line x1="12" y1="16" x2="12" y2="12"/>
@@ -11264,7 +11264,7 @@ body.dark-mode .portfolio-echelons-total-row {
     </div>
     <div class="portfolio-echelon-h-text clickable" onclick="toggleEchelonPercentHelp(event)">
         <span>%</span>
-        <div class="h-help-btn h-help-animated" onclick="event.stopPropagation(); toggleEchelonPercentHelp(event)">
+        <div class="h-help-btn h-help-animated" onclick="event.stopPropagation(); this.classList.remove('h-help-animated'); toggleEchelonPercentHelp(event)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;">
                 <circle cx="12" cy="12" r="10"/>
                 <line x1="12" y1="16" x2="12" y2="12"/>
@@ -16325,7 +16325,7 @@ if(document.getElementById('listBonds')) {
         <div class="echelon-header-left">
             <div class="echelon-number e${echelonNum}">${echelonLabel}</div>
             <span class="echelon-title-new" style="color: var(--text-slate); font-family: 'Inter', sans-serif !important; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; background: transparent; padding: 0;"> ${e.title} </span>
-            <div class="h-help-btn h-help-animated" style="width:16px;height:16px;font-size:9px;margin-left:2px;">ⓘ</div>
+            <div class="h-help-btn h-help-animated" style="width:16px;height:16px;font-size:9px;margin-left:2px;" onclick="event.stopPropagation(); this.classList.remove('h-help-animated');">ⓘ</div>
         </div>
         <div class="echelon-header-right">
             <span class="echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
