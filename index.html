@@ -3017,8 +3017,8 @@ body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
 /* Заголовки таблицы: "Облигация" слева, "Кол-во" справа */
 #screen-interesting .calc-table-header {
     display: grid;
-    grid-template-columns: 1fr 55px 112px;
-    gap: 6px 16px;
+    grid-template-columns: 1fr 40px 112px;
+    gap: 6px 8px;
     padding: 12px 0;
     margin-bottom: 0;
 }
@@ -3047,8 +3047,8 @@ body.dark-mode #screen-interesting .calc-table-header {
 /* Строки списка облигаций - прозрачный фон */
 #screen-interesting .calc-bond-row {
     display: grid;
-    grid-template-columns: 1fr 55px 112px;
-    gap: 6px 16px;
+    grid-template-columns: 1fr 40px 112px;
+    gap: 6px 8px;
     padding: 16px 0;
     margin-bottom: 0;
     border-radius: 0;
@@ -11639,7 +11639,7 @@ body.dark-mode .portfolio-echelons-total-row {
         </div>
         
         <!-- Обертка для плавного сворачивания -->
-        <div class="calc-content-wrapper">
+        <div class="calc-content-wrapper" onclick="event.stopPropagation(); var mi = document.getElementById('monthlySumInput'); if(mi && document.activeElement === mi) mi.blur(); document.querySelectorAll('.calc-input').forEach(function(inp){ if(document.activeElement === inp) inp.blur(); });">
             <!-- Контент аккордеона -->
             <div class="calc-accordion-content">
                 <!-- Поле ввода суммы -->
