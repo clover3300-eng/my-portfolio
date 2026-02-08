@@ -16100,12 +16100,13 @@ function highlightKeywords(text) {
             let actualSpentTotal = 0; let bondQuantities = {};
             let totalBondProjectedIncome = 0;
             let rainData = [];
+            let bondCalculations = [];
             
        // === ГЕНЕРАЦИЯ СПИСКА ОБЛИГАЦИЙ (С ПОДСВЕТКОЙ ISIN) ===
             let bHtml = '';
             if (bonds.length > 0 && bondBudget > 0) {
                 // Считаем полную стоимость каждой облигации
-                let bondCalculations = bonds.map(b => { 
+                bondCalculations = bonds.map(b => { 
                     const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee); 
                     return { ...b, qty: 0, fullCostPerUnit }; 
                 });
