@@ -16115,19 +16115,20 @@ function highlightKeywords(text) {
                 let affordableBonds = bondCalculations.filter(b => b.fullCostPerUnit > 0 && b.fullCostPerUnit <= bondBudget);
                 
                 if (affordableBonds.length > 0) {
-                    // Равномерно распределяем бюджет по доступным облигациям
+                    // 1. Равномерно распределяем бюджет по всем облигациям
                     const perBondBudget = bondBudget / affordableBonds.length;
                     affordableBonds.forEach(b => {
                         b.qty = Math.floor(perBondBudget / b.fullCostPerUnit);
                     });
                     
-                    // Итеративно распределяем остаток — добавляем по 1 шт самой дешёвой доступной
+                    // 2. Суммируем остаток от каждой и распределяем на первые (лучшие)
                     let leftover = bondBudget - affordableBonds.reduce((acc, b) => acc + (b.qty * b.fullCostPerUnit), 0);
-                    const sortedByPrice = [...affordableBonds].sort((a, b) => a.fullCostPerUnit - b.fullCostPerUnit);
+                    
+                    // Идём по порядку (первые = лучшие), добавляем по 1 шт пока хватает
                     let distributed = true;
                     while (distributed) {
                         distributed = false;
-                        for (const bond of sortedByPrice) {
+                        for (const bond of affordableBonds) {
                             if (leftover >= bond.fullCostPerUnit) {
                                 bond.qty += 1;
                                 leftover -= bond.fullCostPerUnit;
