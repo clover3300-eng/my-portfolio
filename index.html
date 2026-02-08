@@ -16524,11 +16524,9 @@ if(totalRow) {
                 const listBondsV2 = document.getElementById('listBondsV2');
                 if (listBondsV2) {
                     let bondsHtmlV2 = '';
-                    if (bonds.length > 0) {
-                        const perBondBudget = bondBudget / bonds.length;
-                        bonds.forEach(b => {
-                            const fullCostPerUnit = (b.p + b.nkd) * (1 + brokerFee);
-                            const qty = fullCostPerUnit > 0 ? Math.floor(perBondBudget / fullCostPerUnit) : 0;
+                    if (bondCalculations.length > 0) {
+                        bondCalculations.forEach(b => {
+                            const qty = b.qty;
                             const details = bondDetailsMap[b.t] || { matDate:'—', couponValue:0, nextCoupon:'—' };
                             
                             // Форматируем название с цифрами в моноширинном стиле
@@ -16739,12 +16737,9 @@ if(totalStocksRow) {
             
             // Сохраняем данные для списка к покупке
             window._shoppingListData = { bonds: [], stocks: [] };
-            if (bonds.length > 0) {
-                const perBondBudgetSL = bondBudget / bonds.length;
-                bonds.forEach(b => {
-                    const fc = (b.p + b.nkd) * (1 + brokerFee);
-                    const qty = fc > 0 ? Math.floor(perBondBudgetSL / fc) : 0;
-                    if (qty > 0) window._shoppingListData.bonds.push({ ticker: b.t, name: b.n, qty, price: b.p, sum: Math.round(qty * b.p) });
+            if (bondCalculations.length > 0) {
+                bondCalculations.forEach(b => {
+                    if (b.qty > 0) window._shoppingListData.bonds.push({ ticker: b.t, name: b.n, qty: b.qty, price: b.p, sum: Math.round(b.qty * b.p) });
                 });
             }
             echelons.forEach((e, idx) => {
