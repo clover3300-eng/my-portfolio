@@ -3018,7 +3018,7 @@ body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
 #screen-interesting .calc-table-header {
     display: grid;
     grid-template-columns: 1fr 55px 112px;
-    gap: 6px 6px;
+    gap: 6px 12px;
     padding: 12px 0;
     margin-bottom: 0;
 }
@@ -3036,8 +3036,13 @@ body.dark-mode #screen-interesting .calc-table-header {
     color: var(--text-slate, #64748B);
 }
 
+#screen-interesting .calc-table-header span:nth-child(1) {
+    text-align: left;
+    padding-right: 8px;
+}
+
 #screen-interesting .calc-table-header span:nth-child(2) {
-    text-align: center;
+    text-align: left;
 }
 
 #screen-interesting .calc-table-header span:nth-child(3) {
@@ -3048,7 +3053,7 @@ body.dark-mode #screen-interesting .calc-table-header {
 #screen-interesting .calc-bond-row {
     display: grid;
     grid-template-columns: 1fr 55px 112px;
-    gap: 6px 6px;
+    gap: 6px 12px;
     padding: 16px 0;
     margin-bottom: 0;
     border-radius: 0;
@@ -3094,6 +3099,7 @@ body.dark-mode #screen-interesting .calc-bond-name {
     font-size: 13px;
     font-weight: 600;
     color: #10B981;
+    text-align: left;
 }
 
 /* Контейнер для названия + доходности */
@@ -3156,12 +3162,13 @@ body.dark-mode #screen-interesting .qty-controls .qty-btn {
 
 #screen-interesting .calc-qty-controller input,
 #screen-interesting .qty-controls .calc-input {
-    width: 40px;
+    width: 48px;
+    min-width: 0;
     height: 40px;
     border: none;
     background: transparent;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--text-deep, #0F172A);
     text-align: center;
@@ -13917,7 +13924,7 @@ function renderMonthlyIncomeCards() {
         html += `
         <div class="calc-bond-row">
             <div class="calc-bond-name">${styledName(b.n)}</div>
-            <div class="calc-bond-yield" style="text-align:center;">${b.y.replace('%', '')}%</div>
+            <div class="calc-bond-yield">${b.y.replace('%', '')}%</div>
             
             <div class="qty-controls">
                 <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
@@ -13996,18 +14003,18 @@ function recalcCustomCoupons() {
     console.log(`[CALC ROW] ${payment.displayName} (${payment.paymentTicker}): coupon=${payment.staticCouponVal} × qty=${qty} × (1-${customTax}) = ${netAmount.toFixed(2)}`);
     totalAmount += netAmount;
       html += `
-    <div class="coupon-row" style="display:grid; grid-template-columns: 48px 1fr 56px 80px; gap:0; align-items:center; padding:10px 0;">
+    <div class="coupon-row" style="display:grid; grid-template-columns: 44px 1fr auto auto; gap:0 8px; align-items:center; padding:10px 0;">
         
         <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,0.4);font-weight:500;">${payment.dateStr.slice(0, 5)}</div>
 
-        <div style="color:#fff; font-weight:500; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:8px;">
+        <div style="color:#fff; font-weight:500; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; padding-right:4px; min-width:0;">
             ${styledName(payment.displayName)}
         </div>
 
-        <div style="background:rgba(255,255,255,0.08);border-radius:6px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#fff;text-align:center;white-space:nowrap;">${qty} шт</div>
+        <div style="background:rgba(255,255,255,0.08);border-radius:6px;padding:3px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#fff;text-align:center;white-space:nowrap;flex-shrink:0;">${qty} шт</div>
 
-        <div style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#10B981;">
-            +${netAmount.toFixed(0)} ₽
+        <div style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#10B981;white-space:nowrap;flex-shrink:0;">
+            +${Math.round(netAmount).toLocaleString('ru-RU')} ₽
         </div>
     </div>`;
     });
