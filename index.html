@@ -4378,6 +4378,37 @@ body.dark-mode .portfolio-ofz-detail-row {
     50% { transform: scale(1.08); opacity: 1; }
 }
 
+/* Усиленная анимация для ? кнопок — привлекает внимание */
+.h-help-animated {
+    animation: helpAttention 3s ease-in-out infinite !important;
+    position: relative;
+}
+
+@keyframes helpAttention {
+    0%, 100% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    15% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
+    30% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    45% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+    60% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+.h-help-animated:hover,
+.h-help-animated:active {
+    animation: none !important;
+    transform: scale(1.15);
+    opacity: 1;
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #3B82F6;
+}
+
+body.dark-mode .h-help-animated:hover,
+body.dark-mode .h-help-animated:active {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.35);
+    color: #60A5FA;
+}
+
 /* Эффект при наведении */
 .h-help-btn:hover {
     background: rgba(0, 0, 0, 0.1);
@@ -11219,16 +11250,13 @@ body.dark-mode .portfolio-echelons-total-row {
               <div class="portfolio-echelons-headers">
     <div class="portfolio-echelon-h-text">
         <span>ЭШЕЛОН</span>
-        <div class="h-help-btn" onclick="toggleEchelonGuide(true, 'portfolio')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 10px; height: 10px;">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="16" x2="12" y2="12"/>
-                <line x1="12" y1="8" x2="12.01" y2="8"/>
-            </svg>
-        </div>
+        <div class="h-help-btn h-help-animated" onclick="toggleEchelonGuide(true, 'portfolio')">ⓘ</div>
     </div>
 
-    <div class="portfolio-echelon-h-text">ВЫДЕЛИТЬ</div>
+    <div class="portfolio-echelon-h-text">
+        <span>ВЫДЕЛИТЬ</span>
+        <div class="h-help-btn h-help-animated" onclick="toggleAllocHelp(event)">ⓘ</div>
+    </div>
     <div class="portfolio-echelon-h-text clickable" onclick="toggleEchelonPercentHelp(event)">
         <span>%</span>
         <div class="h-help-btn" onclick="event.stopPropagation(); toggleEchelonPercentHelp(event)">
@@ -11241,6 +11269,14 @@ body.dark-mode .portfolio-echelons-total-row {
     </div>
 </div>
                 
+                <!-- Подсказка для ВЫДЕЛИТЬ -->
+                <div class="yield-help-tooltip" id="allocHelpTooltip">
+                    <div class="yield-help-title">Выделить на эшелон</div>
+                    <div class="yield-help-text">
+                        Сумма, которая выделяется на покупку акций данного эшелона из общего бюджета на акции.
+                    </div>
+                </div>
+
                 <!-- Подсказка для % эшелонов -->
                 <div class="yield-help-tooltip" id="echelonPercentTooltip">
                     <div class="yield-help-title">Распределение по эшелонам</div>
@@ -16284,6 +16320,7 @@ if(document.getElementById('listBonds')) {
         <div class="echelon-header-left">
             <div class="echelon-number e${echelonNum}">${echelonLabel}</div>
             <span class="echelon-title-new" style="color: var(--text-slate); font-family: 'Inter', sans-serif !important; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; background: transparent; padding: 0;"> ${e.title} </span>
+            <div class="h-help-btn h-help-animated" style="width:16px;height:16px;font-size:9px;margin-left:2px;">ⓘ</div>
         </div>
         <div class="echelon-header-right">
             <span class="echelon-sum">${Math.round(echelonBudget).toLocaleString()} ₽</span>
