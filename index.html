@@ -16540,7 +16540,7 @@ if(totalRow) {
                                     <div class="portfolio-ofz-name">${formattedName}</div>
                                     <div class="portfolio-ofz-yield">${b.y}</div>
                                     <div class="portfolio-ofz-qty">${qty}</div>
-                                    <div class="portfolio-ofz-sum">${Math.round(qty * b.p).toLocaleString()} ₽</div>
+                                    <div class="portfolio-ofz-sum">${Math.round(qty * (b.p + b.nkd)).toLocaleString()} ₽</div>
                                 </div>
                                 <div class="portfolio-ofz-details">
                                     <div class="portfolio-ofz-details-grid">
