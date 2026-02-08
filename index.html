@@ -3126,7 +3126,9 @@ body.dark-mode #screen-interesting .qty-controls {
 
 #screen-interesting .calc-qty-controller button,
 #screen-interesting .qty-controls .qty-btn {
-    width: 36px;
+    width: 30px;
+    min-width: 30px;
+    flex-shrink: 0;
     height: 40px;
     border: none;
     background: transparent;
@@ -3157,7 +3159,9 @@ body.dark-mode #screen-interesting .qty-controls .qty-btn {
 
 #screen-interesting .calc-qty-controller input,
 #screen-interesting .qty-controls .calc-input {
-    width: 40px;
+    flex: 1;
+    min-width: 0;
+    width: 0;
     height: 40px;
     border: none;
     background: transparent;
@@ -3168,7 +3172,6 @@ body.dark-mode #screen-interesting .qty-controls .qty-btn {
     text-align: center;
     outline: none;
     -moz-appearance: textfield;
-    overflow: hidden;
 }
 
 #screen-interesting .qty-controls .calc-input::-webkit-outer-spin-button,
@@ -13997,6 +14000,12 @@ function recalcCustomCoupons() {
     const netAmount = (payment.staticCouponVal * qty) * (1 - customTax);
     console.log(`[CALC ROW] ${payment.displayName} (${payment.paymentTicker}): coupon=${payment.staticCouponVal} × qty=${qty} × (1-${customTax}) = ${netAmount.toFixed(2)}`);
     totalAmount += netAmount;
+      // Адаптивный размер шрифта для кол-ва и суммы
+      const qtyStr = `${qty} шт`;
+      const qtyFontSize = qtyStr.length > 6 ? 8 : qtyStr.length > 4 ? 9 : 11;
+      const sumStr = `+${Math.round(netAmount).toLocaleString('ru-RU')} ₽`;
+      const sumFontSize = sumStr.length > 10 ? 9 : sumStr.length > 8 ? 10 : sumStr.length > 6 ? 11 : 13;
+      
       html += `
     <div class="coupon-row" style="display:grid; grid-template-columns: 48px 1fr 56px 80px; gap:0; align-items:center; padding:10px 0;">
         
@@ -14006,10 +14015,10 @@ function recalcCustomCoupons() {
             ${styledName(payment.displayName)}
         </div>
 
-        <div style="background:rgba(255,255,255,0.08);border-radius:6px;padding:3px 6px;font-family:'JetBrains Mono',monospace;font-size:${qty > 99 ? '9' : '11'}px;font-weight:600;color:#fff;text-align:center;white-space:nowrap;overflow:hidden;">${qty} шт</div>
+        <div style="background:rgba(255,255,255,0.08);border-radius:6px;padding:3px 4px;font-family:'JetBrains Mono',monospace;font-size:${qtyFontSize}px;font-weight:600;color:#fff;text-align:center;white-space:nowrap;overflow:hidden;">${qtyStr}</div>
 
-        <div style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:${netAmount >= 10000 ? '11' : '13'}px;font-weight:700;color:#10B981;white-space:nowrap;overflow:hidden;">
-            +${Math.round(netAmount).toLocaleString('ru-RU')} ₽
+        <div style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:${sumFontSize}px;font-weight:700;color:#10B981;white-space:nowrap;overflow:hidden;">
+            ${sumStr}
         </div>
     </div>`;
     });
