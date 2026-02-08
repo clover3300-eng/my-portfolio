@@ -5403,6 +5403,16 @@ body.dark-mode .portfolio-echelon-columns-header {
     flex-shrink: 0;
     -webkit-tap-highlight-color: transparent;
 }
+.portfolio-dots-btn.hint-animate {
+    animation: bentoHint 3s ease-in-out 2;
+}
+@keyframes bentoHint {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-8deg); }
+    40% { transform: rotate(8deg); }
+    60% { transform: rotate(-4deg); }
+    80% { transform: rotate(0deg); }
+}
 .portfolio-dots-btn svg {
     width: 18px;
     height: 18px;
@@ -11020,7 +11030,7 @@ body.dark-mode .portfolio-echelons-total-row {
     <!-- Заголовок с меню -->
     <div class="portfolio-header-row">
         <h1>Портфель</h1>
-        <button class="portfolio-dots-btn" id="portfolioDotsBtn" onclick="togglePortfolioMenu(event)">
+        <button class="portfolio-dots-btn hint-animate" id="portfolioDotsBtn" onclick="this.classList.remove('hint-animate'); togglePortfolioMenu(event)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20">
                 <rect x="3" y="3" width="7" height="7" rx="2"/>
                 <rect x="14" y="3" width="7" height="7" rx="2"/>
