@@ -3018,7 +3018,7 @@ body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
 #screen-interesting .calc-table-header {
     display: grid;
     grid-template-columns: 1fr 40px 112px;
-    gap: 6px 8px;
+    gap: 6px 16px;
     padding: 12px 0;
     margin-bottom: 0;
 }
@@ -3048,7 +3048,7 @@ body.dark-mode #screen-interesting .calc-table-header {
 #screen-interesting .calc-bond-row {
     display: grid;
     grid-template-columns: 1fr 40px 112px;
-    gap: 6px 8px;
+    gap: 6px 16px;
     padding: 16px 0;
     margin-bottom: 0;
     border-radius: 0;
@@ -11639,7 +11639,7 @@ body.dark-mode .portfolio-echelons-total-row {
         </div>
         
         <!-- Обертка для плавного сворачивания -->
-        <div class="calc-content-wrapper" onclick="event.stopPropagation(); var mi = document.getElementById('monthlySumInput'); if(mi && document.activeElement === mi) mi.blur(); document.querySelectorAll('.calc-input').forEach(function(inp){ if(document.activeElement === inp) inp.blur(); });">
+        <div class="calc-content-wrapper">
             <!-- Контент аккордеона -->
             <div class="calc-accordion-content">
                 <!-- Поле ввода суммы -->
@@ -12679,15 +12679,23 @@ function calculateAndShowPortfolio() {
     // Новая функция для аккордеона калькулятора в "Интересное"
 function toggleCalcAccordion() {
     const accordion = document.getElementById('calcAccordion');
-    if (accordion) {
-        accordion.classList.toggle('collapsed');
-        
-        // Haptic feedback
-        if (window.Telegram?.WebApp?.HapticFeedback) {
-            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-        } else if (navigator.vibrate) {
-            navigator.vibrate(5);
-        }
+    if (!accordion) return;
+    
+    // Если поле ввода суммы или количества активно — просто закрываем клавиатуру, не сворачиваем
+    const mInput = document.getElementById('monthlySumInput');
+    const activeCalcInput = document.activeElement && document.activeElement.classList.contains('calc-input');
+    if ((mInput && document.activeElement === mInput) || activeCalcInput) {
+        document.activeElement.blur();
+        return;
+    }
+    
+    accordion.classList.toggle('collapsed');
+    
+    // Haptic feedback
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+    } else if (navigator.vibrate) {
+        navigator.vibrate(5);
     }
 }
 
