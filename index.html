@@ -16942,7 +16942,7 @@ function openShoppingList() {
                 <div class="sl-checkbox"></div>
                 <div class="sl-info">
                     <div class="sl-info-top">
-                        <span class="sl-badge ${badgeClass}">TIER ${roman[tier-1]}</span>
+                        <span class="sl-badge ${badgeClass}">${roman[tier-1]}</span>
                         <span class="sl-ticker">${s.ticker}</span>
                     </div>
                     <div class="sl-name">${s.name}</div>
@@ -18202,7 +18202,7 @@ function updateInfoBtnState(tabName) {
     align-items: center;
     justify-content: space-between;
     padding: 12px 16px;
-    padding-top: calc(12px + env(safe-area-inset-top, 20px));
+    padding-top: calc(100px + env(safe-area-inset-top, 20px));
     position: sticky;
     top: 0;
     background: rgba(15, 23, 42, 0.85);
