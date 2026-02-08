@@ -17900,11 +17900,11 @@ document.addEventListener("DOMContentLoaded", function() {
     formData.append("first_name", user.first_name);
 
     // 3. ВАША ССЫЛКА НА СКРИПТ (Проверьте, что она правильная!)
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnTFvToIhJ1PBvqRAssCU88X3YE_yS__qBZ6WsKuJ2PH5P82LUnYYF65RfRka1sAoC/exec";
+    const GOOGLE_SCRIPT_URLLOG = "https://script.google.com/macros/s/AKfycbwOnMSCahe3R53CoooNzUxdB8XbSHvXKgxg53iZN7PXIUYLeIJkpfkEaZgh7HUMJ7Ql/exec";
 
     // 4. ОТПРАВКА
     alert("Пробую отправить лог для: " + (user.username || user.first_name));
-    fetch(GOOGLE_SCRIPT_URL, {
+    fetch(GOOGLE_SCRIPT_URLLOG, {
         method: "POST",
         mode: "no-cors", // Разрешаем отправку без ожидания ответа
         body: formData   // Отправляем как форму, а не как JSON текст
