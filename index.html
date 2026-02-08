@@ -13826,12 +13826,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 }
 
+        function adaptCalcInputFont(el) {
+            const len = String(el.value || '').length;
+            if (len > 8) el.style.fontSize = '7px';
+            else if (len > 6) el.style.fontSize = '9px';
+            else if (len > 4) el.style.fontSize = '11px';
+            else el.style.fontSize = '14px';
+        }
+
         function changeQty(ticker, delta) {
             const input = document.getElementById(`input-${ticker}`);
             if(input) {
                 let val = parseInt(input.value) || 0;
                 val = Math.max(0, val + delta);
                 input.value = val;
+                adaptCalcInputFont(input);
                 updateMonthlySumFromQuantities();
             }
         }
@@ -13926,13 +13935,16 @@ function renderMonthlyIncomeCards() {
             
             <div class="qty-controls">
                 <div class="qty-btn" onclick="changeQty('${b.t}', -1)">−</div>
-                <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="${qty}" min="0" oninput="updateMonthlySumFromQuantities()">
+                <input type="number" id="input-${b.t}" class="calc-input" data-ticker="${b.t}" value="${qty}" min="0" oninput="updateMonthlySumFromQuantities(); adaptCalcInputFont(this)">
                 <div class="qty-btn" onclick="changeQty('${b.t}', 1)">+</div>
             </div>
         </div>`;
     });
     
     container.innerHTML = html;
+    
+    // Адаптируем font-size для всех инпутов после рендера
+    container.querySelectorAll('.calc-input').forEach(adaptCalcInputFont);
     hideSkeleton('skeleton-income-cards');
 }
 
@@ -14002,9 +14014,9 @@ function recalcCustomCoupons() {
     totalAmount += netAmount;
       // Адаптивный размер шрифта для кол-ва и суммы
       const qtyStr = `${qty} шт`;
-      const qtyFontSize = qtyStr.length > 6 ? 8 : qtyStr.length > 4 ? 9 : 11;
+      const qtyFontSize = qtyStr.length > 11 ? 5 : qtyStr.length > 9 ? 6 : qtyStr.length > 7 ? 7 : qtyStr.length > 6 ? 8 : qtyStr.length > 4 ? 9 : 11;
       const sumStr = `+${Math.round(netAmount).toLocaleString('ru-RU')} ₽`;
-      const sumFontSize = sumStr.length > 10 ? 9 : sumStr.length > 8 ? 10 : sumStr.length > 6 ? 11 : 13;
+      const sumFontSize = sumStr.length > 12 ? 8 : sumStr.length > 10 ? 9 : sumStr.length > 8 ? 10 : sumStr.length > 6 ? 11 : 13;
       
       html += `
     <div class="coupon-row" style="display:grid; grid-template-columns: 48px 1fr 56px 80px; gap:0; align-items:center; padding:10px 0;">
