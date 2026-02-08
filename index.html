@@ -14706,6 +14706,9 @@ function toggleAuroraOfzList() {
         });
         text.innerText = 'ОТКРЫТЬ СПИСОК';
         trigger.classList.remove('open');
+        
+        // Прокрутка к верху страницы
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
         // Разворачиваем — показываем все с анимацией
         items.forEach((item, index) => {
