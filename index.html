@@ -3018,7 +3018,7 @@ body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
 #screen-interesting .calc-table-header {
     display: grid;
     grid-template-columns: 1fr 60px 112px;
-    gap: 6px 8px;
+    gap: 0 16px;
     padding: 12px 0;
     margin-bottom: 0;
 }
@@ -3048,7 +3048,7 @@ body.dark-mode #screen-interesting .calc-table-header {
 #screen-interesting .calc-bond-row {
     display: grid;
     grid-template-columns: 1fr 60px 112px;
-    gap: 6px 8px;
+    gap: 0 16px;
     padding: 16px 0;
     margin-bottom: 0;
     border-radius: 0;
@@ -5433,8 +5433,15 @@ body.dark-mode .portfolio-dots-btn {
 /* === 3 Action Buttons === */
 .portfolio-action-btns {
     display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.portfolio-action-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
 }
 
 .portfolio-action-icon-btn {
@@ -5456,6 +5463,13 @@ body.dark-mode .portfolio-dots-btn {
     -webkit-tap-highlight-color: transparent;
 }
 
+.portfolio-action-icon-btn.active-hint {
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #3B82F6;
+    transform: scale(1.05);
+}
+
 .portfolio-action-icon-btn svg {
     width: 17px;
     height: 17px;
@@ -5463,7 +5477,35 @@ body.dark-mode .portfolio-dots-btn {
 
 .portfolio-action-icon-btn:active {
     transform: scale(0.92);
-    background: rgba(255, 255, 255, 0.7);
+}
+
+.portfolio-action-label {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-deep, #0F172A);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    padding: 5px 10px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 50;
+}
+
+.portfolio-action-wrapper.show-label .portfolio-action-label {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
 }
 
 body.dark-mode .portfolio-action-icon-btn {
@@ -5472,8 +5514,21 @@ body.dark-mode .portfolio-action-icon-btn {
     color: var(--text-slate);
 }
 
+body.dark-mode .portfolio-action-icon-btn.active-hint {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #60A5FA;
+}
+
 body.dark-mode .portfolio-action-icon-btn:active {
     background: rgba(30, 41, 59, 0.8);
+}
+
+body.dark-mode .portfolio-action-label {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #E2E8F0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Выпадающее меню */
@@ -11081,26 +11136,35 @@ body.dark-mode .portfolio-echelons-total-row {
     <div class="portfolio-header-row">
         <h1>Портфель</h1>
         <div class="portfolio-action-btns" id="portfolioActionBtns" style="display:none;">
-            <button class="portfolio-action-icon-btn" onclick="openShoppingList()" title="Список к покупке">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
-                    <rect x="9" y="3" width="6" height="4" rx="1"/>
-                    <path d="M9 12l2 2 4-4"/>
-                </svg>
-            </button>
-            <button class="portfolio-action-icon-btn" onclick="newCalculationWithHaptic()" title="Новый расчёт">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                    <path d="M3 3v5h5"/>
-                </svg>
-            </button>
-            <button class="portfolio-action-icon-btn" onclick="shareWithHaptic()" title="Сохранить">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-            </button>
+            <div class="portfolio-action-wrapper">
+                <button class="portfolio-action-icon-btn" onclick="handleActionBtn(this, openShoppingList)" title="Список к покупке">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                        <rect x="9" y="3" width="6" height="4" rx="1"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </button>
+                <div class="portfolio-action-label">Список</div>
+            </div>
+            <div class="portfolio-action-wrapper">
+                <button class="portfolio-action-icon-btn" onclick="handleActionBtn(this, newCalculationWithHaptic)" title="Новый расчёт">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                        <path d="M3 3v5h5"/>
+                    </svg>
+                </button>
+                <div class="portfolio-action-label">Новый расчёт</div>
+            </div>
+            <div class="portfolio-action-wrapper">
+                <button class="portfolio-action-icon-btn" onclick="handleActionBtn(this, shareWithHaptic)" title="Сохранить">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                </button>
+                <div class="portfolio-action-label">Сохранить</div>
+            </div>
         </div>
     </div>
     
@@ -16918,6 +16982,55 @@ function shareWithHaptic() {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
     }
     shareAsPDF();
+}
+
+// === Обработчик кнопок с подтверждением (показ названия → второй тап = действие) ===
+let _activeActionWrapper = null;
+
+function handleActionBtn(btn, actionFn) {
+    const wrapper = btn.closest('.portfolio-action-wrapper');
+    
+    // Вибрация при нажатии
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+    
+    // Если эта кнопка уже активна — выполняем действие
+    if (wrapper.classList.contains('show-label')) {
+        closeAllActionLabels();
+        actionFn();
+        return;
+    }
+    
+    // Иначе — показываем название, скрываем остальные
+    closeAllActionLabels();
+    wrapper.classList.add('show-label');
+    btn.classList.add('active-hint');
+    _activeActionWrapper = wrapper;
+    
+    // Закрытие при тапе вне кнопки
+    setTimeout(() => {
+        document.addEventListener('click', _closeActionLabelsOnOutsideClick, { once: true });
+    }, 10);
+}
+
+function closeAllActionLabels() {
+    document.querySelectorAll('.portfolio-action-wrapper.show-label').forEach(w => {
+        w.classList.remove('show-label');
+        w.querySelector('.portfolio-action-icon-btn')?.classList.remove('active-hint');
+    });
+    _activeActionWrapper = null;
+}
+
+function _closeActionLabelsOnOutsideClick(e) {
+    if (_activeActionWrapper && !_activeActionWrapper.contains(e.target)) {
+        closeAllActionLabels();
+    } else if (_activeActionWrapper) {
+        // Если кликнули внутри — переставляем слушатель
+        setTimeout(() => {
+            document.addEventListener('click', _closeActionLabelsOnOutsideClick, { once: true });
+        }, 10);
+    }
 }
 
 // Выпадающее меню портфеля (три точки)
