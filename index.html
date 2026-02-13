@@ -563,7 +563,7 @@
         .market-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: #ccc; }
         .dot-online { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; animation: pulse 2s infinite; }
         .dot-offline { background: #e74c3c; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
         .home-title { font-size: 26px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
         .home-desc { font-size: 15px; color: #8e8e93; line-height: 1.6; margin-bottom: 25px; }
@@ -665,7 +665,7 @@
 
         @keyframes shimmerBtn {
     0% { box-shadow: 0 10px 25px rgba(44, 54, 76, 0.2); transform: scale(1); }
-    50% { box-shadow: 0 12px 30px rgba(44, 54, 76, 0.3); transform: scale(1.005); }
+    50% { box-shadow: 0 12px 30px rgba(44, 54, 76, 0.28); transform: scale(1.003); }
     100% { box-shadow: 0 10px 25px rgba(44, 54, 76, 0.2); transform: scale(1); }
 }
 
@@ -688,7 +688,7 @@
     width: 100%; 
     box-sizing: border-box; 
     font-weight: 700;
-    animation: shimmerBtn 3s infinite ease-in-out;
+    animation: shimmerBtn 4.5s infinite ease-in-out;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -1833,12 +1833,12 @@ body.dark-mode #screen-company {
     background: radial-gradient(circle at 30% 20%, var(--glow-color, rgba(46, 204, 113, 0.15)) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
-    animation: glowPulse 4s ease-in-out infinite;
+    animation: glowPulse 5s ease-in-out infinite;
 }
 
 @keyframes glowPulse {
     0%, 100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
+    50% { opacity: 0.9; transform: scale(1.03); }
 }
 
 #screen-company > *:not(.aurora-container):not(.noise-overlay) {
@@ -3018,7 +3018,7 @@ body.dark-mode #screen-interesting .tax-segmented-control .tax-segment.active {
 #screen-interesting .calc-table-header {
     display: grid;
     grid-template-columns: 1fr 55px 112px;
-    gap: 6px 16px;
+    gap: 6px 12px;
     padding: 12px 0;
     margin-bottom: 0;
 }
@@ -3038,6 +3038,7 @@ body.dark-mode #screen-interesting .calc-table-header {
 
 #screen-interesting .calc-table-header span:nth-child(2) {
     text-align: center;
+    justify-self: center;
 }
 
 #screen-interesting .calc-table-header span:nth-child(3) {
@@ -3048,7 +3049,7 @@ body.dark-mode #screen-interesting .calc-table-header {
 #screen-interesting .calc-bond-row {
     display: grid;
     grid-template-columns: 1fr 55px 112px;
-    gap: 6px 16px;
+    gap: 6px 12px;
     padding: 16px 0;
     margin-bottom: 0;
     border-radius: 0;
@@ -3095,6 +3096,8 @@ body.dark-mode #screen-interesting .calc-bond-name {
     font-weight: 600;
     color: #10B981;
     text-align: center;
+    justify-self: center;
+    align-self: center;
 }
 
 /* Контейнер для названия + доходности */
@@ -5428,6 +5431,52 @@ body.dark-mode .portfolio-dots-btn {
     color: var(--text-slate);
 }
 
+/* === 3 Action Buttons === */
+.portfolio-action-btns {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.portfolio-action-icon-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    color: var(--text-slate, #64748B);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.portfolio-action-icon-btn svg {
+    width: 17px;
+    height: 17px;
+}
+
+.portfolio-action-icon-btn:active {
+    transform: scale(0.92);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .portfolio-action-icon-btn {
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-slate);
+}
+
+body.dark-mode .portfolio-action-icon-btn:active {
+    background: rgba(30, 41, 59, 0.8);
+}
+
 /* Выпадающее меню */
 .portfolio-dropdown-menu {
     position: absolute;
@@ -6936,7 +6985,9 @@ textarea {
         /* 1. Сама анимация (должна быть обязательно) */
         @keyframes shimmerBlink {
             0% { opacity: 1; }
-            50% { opacity: 0; }
+            40% { opacity: 1; }
+            50% { opacity: 0.15; }
+            60% { opacity: 0.15; }
             100% { opacity: 1; }
         }
 
@@ -11030,40 +11081,27 @@ body.dark-mode .portfolio-echelons-total-row {
     <!-- Заголовок с меню -->
     <div class="portfolio-header-row">
         <h1>Портфель</h1>
-        <button class="portfolio-dots-btn hint-animate" id="portfolioDotsBtn" onclick="this.classList.remove('hint-animate'); togglePortfolioMenu(event)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20">
-                <rect x="3" y="3" width="7" height="7" rx="2"/>
-                <rect x="14" y="3" width="7" height="7" rx="2"/>
-                <rect x="3" y="14" width="7" height="7" rx="2"/>
-                <rect x="14" y="14" width="7" height="7" rx="2"/>
-            </svg>
-        </button>
-        <div class="portfolio-dropdown-menu" id="portfolioDropdownMenu">
-            <div class="portfolio-dropdown-item" onclick="openShoppingList(); closePortfolioMenu();">
-                <svg viewBox="0 0 24 24">
+        <div class="portfolio-action-btns" id="portfolioActionBtns" style="display:none;">
+            <button class="portfolio-action-icon-btn" onclick="openShoppingList()" title="Список к покупке">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
                     <rect x="9" y="3" width="6" height="4" rx="1"/>
                     <path d="M9 12l2 2 4-4"/>
                 </svg>
-                <span>Список к покупке</span>
-            </div>
-            <div class="portfolio-dropdown-divider"></div>
-            <div class="portfolio-dropdown-item" onclick="newCalculationWithHaptic(); closePortfolioMenu();">
-                <svg viewBox="0 0 24 24">
+            </button>
+            <button class="portfolio-action-icon-btn" onclick="newCalculationWithHaptic()" title="Новый расчёт">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                     <path d="M3 3v5h5"/>
                 </svg>
-                <span>Новый расчёт</span>
-            </div>
-            <div class="portfolio-dropdown-divider"></div>
-            <div class="portfolio-dropdown-item" onclick="shareWithHaptic(); closePortfolioMenu();">
-                <svg viewBox="0 0 24 24">
+            </button>
+            <button class="portfolio-action-icon-btn" onclick="shareWithHaptic()" title="Сохранить">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                     <polyline points="7 10 12 15 17 10"/>
                     <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
-                <span>Сохранить</span>
-            </div>
+            </button>
         </div>
     </div>
     
@@ -12490,6 +12528,12 @@ function formatNewsDate(dateString) {
                 }
             }
             
+            // Показываем/скрываем 3 иконки действий в заголовке портфеля
+            const portfolioActionBtns = document.getElementById('portfolioActionBtns');
+            if (portfolioActionBtns) {
+                portfolioActionBtns.style.display = (screenId === 'screen-portfolio' && isPortfolioCalculated) ? 'flex' : 'none';
+            }
+            
             // Скрываем старую панель
             const portfolioActionPanel = document.getElementById('portfolioActionPanel');
             if (portfolioActionPanel) {
@@ -12611,6 +12655,10 @@ function calculateAndShowPortfolio() {
         
         document.getElementById('portfolio-empty').style.display = 'none';
         document.getElementById('portfolio-content').style.display = 'block';
+        
+        // Показываем 3 иконки действий
+        const actionBtns = document.getElementById('portfolioActionBtns');
+        if(actionBtns) actionBtns.style.display = 'flex';
         
         // Показываем новую панель действий
         const actionPanelV2 = document.getElementById('portfolioActionPanelV2');
@@ -13148,6 +13196,9 @@ document.addEventListener('click', function(event) {
             currentTax = val;
             document.querySelectorAll('#taxGroupV2 .tax-ui-btn').forEach(b => b.classList.remove('active')); 
             btn.classList.add('active'); 
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                Telegram.WebApp.HapticFeedback.selectionChanged();
+            }
             draw();
         }
         
@@ -13160,6 +13211,11 @@ document.addEventListener('click', function(event) {
     
     // Добавляем active на нажатую кнопку
     btn.classList.add('active');
+    
+    // Вибрация
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
     
     distributeMonthlyInvestment();
 }
@@ -17370,6 +17426,10 @@ function syncPortfolioDataToV2() {
     document.getElementById('portfolio-content').style.display = 'none';
     document.getElementById('portfolio-empty').style.display = 'flex';
     document.getElementById('portfolioActionPanel').style.display = 'none';
+    
+    // Скрываем 3 иконки действий
+    const actionBtns = document.getElementById('portfolioActionBtns');
+    if(actionBtns) actionBtns.style.display = 'none';
     
     isPortfolioCalculated = false;
     
