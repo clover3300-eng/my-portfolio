@@ -11986,6 +11986,10 @@ body.dark-mode .portfolio-echelons-total-row {
 
 
 <script>
+    // ========== MOEX PROXY ==========
+    const MOEX_PROXY = 'https://functions.yandexcloud.net/d4ejkbncfpob68e9letn';
+    const moexUrl = (path) => MOEX_PROXY + '?path=' + encodeURIComponent(path);
+
     // ========== SKELETON LOADER SYSTEM ==========
     function hideSkeleton(id) {
         const el = document.getElementById(id);
@@ -12276,8 +12280,6 @@ function formatNewsDate(dateString) {
             } catch(e) { console.log("BTC fetch error:", e); }
 
             // MOEX data
-            const MOEX_PROXY = 'https://functions.yandexcloud.net/d4ejkbncfpob68e9letn';
-            const moexUrl = (path) => MOEX_PROXY + '?path=' + encodeURIComponent(path);
             const fetchMoex = (url, valEl, dynEl, tileId, suffix = '') => {
                 fetch(url)
                     .then(r => r.json())
@@ -15695,7 +15697,7 @@ function searchCompanyInternal(ticker) {
     
     // Загружаем данные о цене и изменении
     try {
-        const url = 'https://functions.yandexcloud.net/d4ejkbncfpob68e9letn' + '?path=' + encodeURIComponent(`/iss/engines/stock/markets/${isStock ? 'shares' : 'bonds'}/securities/${item.t}.json?iss.meta=off&iss.only=securities,marketdata`);
+        const url = MOEX_PROXY + '?path=' + encodeURIComponent(`/iss/engines/stock/markets/${isStock ? 'shares' : 'bonds'}/securities/${item.t}.json?iss.meta=off&iss.only=securities,marketdata`);
         const res = await fetch(url);
         const data = await res.json();
         const marketdata = data.marketdata.data[0];
