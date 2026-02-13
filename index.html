@@ -12276,6 +12276,8 @@ function formatNewsDate(dateString) {
             } catch(e) { console.log("BTC fetch error:", e); }
 
             // MOEX data
+            const MOEX_PROXY = 'https://functions.yandexcloud.net/d4ejkbncfpob68e9letn';
+            const moexUrl = (path) => MOEX_PROXY + '?path=' + encodeURIComponent(path);
             const fetchMoex = (url, valEl, dynEl, tileId, suffix = '') => {
                 fetch(url)
                     .then(r => r.json())
@@ -12327,10 +12329,10 @@ function formatNewsDate(dateString) {
                     });
             };
 
-            fetchMoex('https://iss.moex.com/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=securities,marketdata', document.getElementById('val-imoex'), document.getElementById('dyn-imoex'), 'tile-imoex', '');
+            fetchMoex(moexUrl('/iss/engines/stock/markets/index/securities/IMOEX.json?iss.meta=off&iss.only=securities,marketdata'), document.getElementById('val-imoex'), document.getElementById('dyn-imoex'), 'tile-imoex', '');
             
             // USD/RUB - берём курс ЦБ РФ
-            fetch('https://iss.moex.com/iss/statistics/engines/currency/markets/selt/rates.json?iss.meta=off')
+            fetch(moexUrl('/iss/statistics/engines/currency/markets/selt/rates.json?iss.meta=off'))
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('HTTP error, status = ' + response.status);
@@ -12384,7 +12386,7 @@ function formatNewsDate(dateString) {
                     document.getElementById('val-usdrub').innerText = '---';
                 });
             
-             fetch('https://iss.moex.com/iss/engines/stock/markets/bonds/securities/SU26244RMFS2.json?iss.meta=off&iss.only=securities,marketdata')
+             fetch(moexUrl('/iss/engines/stock/markets/bonds/securities/SU26244RMFS2.json?iss.meta=off&iss.only=securities,marketdata'))
                 .then(r => r.json())
                 .then(d => {
                      const md = d.marketdata || d.marketdata_yields;
@@ -13580,7 +13582,7 @@ function resetCustomTo50() {
     
     try {
         // ПРЯМОЙ ЗАПРОС (как было раньше)
-        const url = `https://iss.moex.com/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities,marketdata`;
+        const url = MOEX_PROXY + '?path=' + encodeURIComponent(`/iss/engines/stock/markets/bonds/securities/${code}.json?iss.meta=off&iss.only=securities,marketdata`);
         
         console.log(`[NET] Запрос к MOEX: ${code}`);
         const res = await fetch(url);
@@ -15693,7 +15695,7 @@ function searchCompanyInternal(ticker) {
     
     // Загружаем данные о цене и изменении
     try {
-        const url = `https://iss.moex.com/iss/engines/stock/markets/${isStock ? 'shares' : 'bonds'}/securities/${item.t}.json?iss.meta=off&iss.only=securities,marketdata`;
+        const url = 'https://functions.yandexcloud.net/d4ejkbncfpob68e9letn' + '?path=' + encodeURIComponent(`/iss/engines/stock/markets/${isStock ? 'shares' : 'bonds'}/securities/${item.t}.json?iss.meta=off&iss.only=securities,marketdata`);
         const res = await fetch(url);
         const data = await res.json();
         const marketdata = data.marketdata.data[0];
