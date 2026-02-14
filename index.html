@@ -7741,14 +7741,14 @@ body.dark-mode .header h1 {
     left: 0;
     bottom: 0;
     width: 0; /* Изначально ширины нет */
-    z-index: 9; /* Под активным экраном, но над фоном */
+    z-index: 9999; /* Поверх всего, кроме overlay */
     pointer-events: none;
     display: flex;
     align-items: center;
     justify-content: flex-start;
 }
 
-/* 2. Линза (Стрелка) - Революционный дизайн */
+/* 2. Линза (Стрелка) */
 .ls-lens {
     width: 50px;
     height: 80px;
@@ -7793,17 +7793,31 @@ body.dark-mode .ls-lens {
 }
 body.dark-mode .ls-arrow { color: #FFFFFF; }
 
-/* 3. Эффект для АКТИВНОГО ЭКРАНА при свайпе */
+/* 3. Экраны */
 .screen {
-    /* Добавляем точку трансформации слева, чтобы экран поворачивался как дверь */
     transform-origin: center left;
-    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
-    will-change: transform; /* Оптимизация производительности */
+    will-change: transform;
+    position: relative;
 }
 
-/* Тень, которая появляется сбоку экрана при сдвиге */
-.screen.swiping {
-    box-shadow: -20px 0 50px rgba(0,0,0,0.15);
+/* Тень-край текущей страницы при свайпе */
+.screen.swipe-active {
+    z-index: 100;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Предыдущий экран, показываемый на фоне */
+.screen.swipe-prev {
+    display: block !important;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    animation: none !important;
 }
 
         
@@ -17700,24 +17714,31 @@ function initSwipeBack() {
     let startY = 0;
     let isDragging = false;
     let isAxisLocked = false; 
+    let _swipePrevScreen = null;
+    let _swipeActiveScreen = null;
     
     const container = document.getElementById('swipeBackIndicator');
     const lens = container.querySelector('.ls-lens');
     const arrow = container.querySelector('.ls-arrow');
-    const depthText = document.querySelector('.luxury-pattern-container');
     const triggerZone = 35; 
     
     function getBackTarget() {
         if (currentScreen === 'screen-home') return null;
         if (currentScreen === 'screen-company') return 'screen-interesting';
         if (currentScreen === 'screen-app') return 'screen-home';
-        return 'screen-app'; 
+        if (currentScreen === 'screen-interesting') return 'screen-home';
+        if (currentScreen === 'screen-portfolio') return 'screen-home';
+        if (currentScreen === 'screen-assets') return 'screen-home';
+        if (currentScreen === 'screen-stub') return 'screen-portfolio';
+        return 'screen-home'; 
     }
 
     // 1. TOUCH START
     document.addEventListener('touchstart', (e) => {
         isDragging = false;
         isAxisLocked = false;
+        _swipePrevScreen = null;
+        _swipeActiveScreen = null;
         if (!getBackTarget()) return;
 
         startX = e.touches[0].clientX;
@@ -17743,45 +17764,39 @@ function initSwipeBack() {
                 return; 
             } else if (Math.abs(deltaX) > 5) {
                 isAxisLocked = true;
+                
+                // === Показываем предыдущий экран под текущим ===
+                const targetId = getBackTarget();
+                if (targetId) {
+                    _swipeActiveScreen = document.querySelector('.screen.active');
+                    _swipePrevScreen = document.getElementById(targetId);
+                    
+                    if (_swipePrevScreen && _swipeActiveScreen) {
+                        _swipePrevScreen.classList.add('swipe-prev');
+                        _swipeActiveScreen.classList.add('swipe-active');
+                    }
+                }
             }
         }
 
         if (isAxisLocked && e.cancelable) e.preventDefault();
-
-        const activeScreen = document.querySelector('.screen.active');
         
-        if (activeScreen && deltaX > 0 && isAxisLocked) {
-            activeScreen.style.transition = 'none';
+        if (_swipeActiveScreen && deltaX > 0 && isAxisLocked) {
+            _swipeActiveScreen.style.transition = 'none';
             lens.style.transition = 'none';
-            if(depthText) depthText.style.transition = 'none';
 
             // --- ФИЗИКА ---
-            let visualShift = deltaX * 0.4; // Коэф. тяжести
-            if (visualShift > 100) visualShift = 100 + (visualShift - 100) * 0.15;
-            visualShift = Math.min(visualShift, 130);
-
-            // --- 3D ПОВОРОТ + МАСШТАБИРОВАНИЕ (НОВОЕ) ---
-            const rotateY = Math.min(visualShift / 15, 8); 
-            // Уменьшаем экран до 96% по мере оттягивания
-            const scale = 1 - (visualShift / 130) * 0.04; 
-            
-            activeScreen.style.transform = `translateX(${visualShift}px) perspective(800px) rotateY(-${rotateY}deg) scale(${scale})`;
-            
-            // --- УПРАВЛЕНИЕ БЛИКОМ (НОВОЕ) ---
-            // Сдвигаем градиент блика. 0px сдвига = блик слева. 
-            // Чем больше тянем, тем дальше блик уходит вправо по экрану.
-            const sheenPos = -50 + (visualShift / 130) * 50; // от -50% до 0%
-            activeScreen.style.setProperty('--sheen-pos', `${sheenPos}%`); 
-            // Примечание: Чтобы это работало идеально, мы используем inline переменную или прямой доступ к style,
-            // но т.к. псевдо-элементы недоступны напрямую из JS, мы просто оставим CSS animation на opacity,
-            // а позицию оставим статичной или добавим логику ниже, если нужно супер-качество.
-            // *Для упрощения оставим статический красивый блик или сделаем так:*
-            // (Простой вариант без сложной JS-магии для псевдо-элемента: он просто появляется)
-
-            // --- ПАРАЛЛАКС ФОНА ---
-            if(depthText) {
-                depthText.style.transform = `rotate(-10deg) scale(1.2) translateX(${visualShift * 0.5}px)`;
+            const screenW = window.innerWidth;
+            let visualShift = deltaX * 0.65;
+            if (visualShift > screenW * 0.5) {
+                visualShift = screenW * 0.5 + (visualShift - screenW * 0.5) * 0.2;
             }
+            visualShift = Math.min(visualShift, screenW);
+
+            _swipeActiveScreen.style.transform = `translateX(${visualShift}px)`;
+            
+            const shadowIntensity = Math.min(visualShift / 200, 0.25);
+            _swipeActiveScreen.style.boxShadow = `-10px 0 40px rgba(0, 0, 0, ${shadowIntensity})`;
 
             // --- ЛИНЗА ---
             const lensProgress = Math.min(visualShift / 70, 1);
@@ -17790,13 +17805,13 @@ function initSwipeBack() {
             arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
 
             // --- ВИБРАЦИЯ ---
-            if (visualShift > 90 && !container.dataset.vibrated) {
+            if (visualShift > 120 && !container.dataset.vibrated) {
                 if (window.Telegram?.WebApp?.HapticFeedback) {
                     window.Telegram.WebApp.HapticFeedback.selectionChanged();
                 }
                 container.dataset.vibrated = "true";
                 arrow.style.strokeWidth = "3"; 
-            } else if (visualShift < 90) {
+            } else if (visualShift < 120) {
                 container.dataset.vibrated = "";
                 arrow.style.strokeWidth = "2";
             }
@@ -17805,55 +17820,88 @@ function initSwipeBack() {
 
     // 3. TOUCH END
     document.addEventListener('touchend', (e) => {
-        if (!isDragging || !isAxisLocked) return;
+        if (!isDragging || !isAxisLocked) {
+            cleanupSwipe();
+            return;
+        }
         
         isDragging = false;
         isAxisLocked = false;
 
-        const activeScreen = document.querySelector('.screen.active');
         const endX = e.changedTouches[0].clientX;
         const deltaX = endX - startX;
-        const threshold = 120; 
+        const threshold = 100; 
 
-        if (activeScreen) {
-            activeScreen.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        if (_swipeActiveScreen) {
+            _swipeActiveScreen.style.transition = 'transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease';
             lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            if(depthText) depthText.style.transition = 'transform 0.5s ease';
             
             if (deltaX > threshold) {
                 // === УСПЕХ ===
-                const targetId = getBackTarget();
-                // Вылет с поворотом и уменьшением
-                activeScreen.style.transform = `translateX(100%) perspective(800px) rotateY(-15deg) scale(0.9)`;
+                const screenW = window.innerWidth;
+                _swipeActiveScreen.style.transform = `translateX(${screenW}px)`;
+                _swipeActiveScreen.style.boxShadow = 'none';
                 
                 lens.style.transform = `translateX(-100%)`;
                 lens.style.opacity = '0';
 
+                const prevScreen = _swipePrevScreen;
+                const activeScreen = _swipeActiveScreen;
+                
                 setTimeout(() => {
-                    resetScreenStyles(activeScreen);
-                    if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
+                    if (prevScreen) prevScreen.classList.remove('swipe-prev');
+                    if (activeScreen) {
+                        activeScreen.classList.remove('swipe-active');
+                        activeScreen.style.transform = '';
+                        activeScreen.style.transition = '';
+                        activeScreen.style.boxShadow = '';
+                    }
+                    
+                    const targetId = getBackTarget();
                     showScreen(targetId);
                     
                     if (window.Telegram?.WebApp?.HapticFeedback) {
                         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
                     }
-                }, 250);
+                }, 300);
                 
             } else {
                 // === ОТМЕНА ===
-                activeScreen.style.transform = 'translateX(0) perspective(800px) rotateY(0deg) scale(1)';
+                _swipeActiveScreen.style.transform = 'translateX(0)';
+                _swipeActiveScreen.style.boxShadow = '';
                 lens.style.transform = 'translateX(-100%)';
                 lens.style.opacity = '0';
-                if(depthText) depthText.style.transform = 'rotate(-10deg) scale(1.2)';
+                
+                const prevScreen = _swipePrevScreen;
+                const activeScreen = _swipeActiveScreen;
+                setTimeout(() => {
+                    if (prevScreen) prevScreen.classList.remove('swipe-prev');
+                    if (activeScreen) {
+                        activeScreen.classList.remove('swipe-active');
+                        activeScreen.style.transition = '';
+                        activeScreen.style.boxShadow = '';
+                    }
+                }, 350);
             }
         }
+        
+        _swipePrevScreen = null;
+        _swipeActiveScreen = null;
         container.dataset.vibrated = "";
     });
 
-    function resetScreenStyles(screen) {
-        screen.style.transform = '';
-        screen.style.transition = '';
-        screen.classList.remove('swiping');
+    function cleanupSwipe() {
+        if (_swipePrevScreen) _swipePrevScreen.classList.remove('swipe-prev');
+        if (_swipeActiveScreen) {
+            _swipeActiveScreen.classList.remove('swipe-active');
+            _swipeActiveScreen.style.transform = '';
+            _swipeActiveScreen.style.transition = '';
+            _swipeActiveScreen.style.boxShadow = '';
+        }
+        _swipePrevScreen = null;
+        _swipeActiveScreen = null;
+        isDragging = false;
+        isAxisLocked = false;
     }
 }
 
