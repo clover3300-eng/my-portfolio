@@ -366,7 +366,6 @@
     margin: -16px;
     padding: 60px 30px;
     text-align: center;
-    animation: welcomeFadeIn 0.8s ease-out;
     box-sizing: border-box;
 }
 
@@ -12570,8 +12569,12 @@ function formatNewsDate(dateString) {
             currentScreen = screenId;
             
             // Показываем нужный экран
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             const targetScreen = document.getElementById(screenId);
+            document.querySelectorAll('.screen').forEach(s => {
+                // При свайпе не убираем active/display с целевого экрана — он уже виден
+                if (window._swipeNavigation && s === targetScreen) return;
+                s.classList.remove('active');
+            });
             if(targetScreen) {
                 targetScreen.classList.add('active');
             }
@@ -17853,7 +17856,7 @@ function initSwipeBack() {
                 const activeScreen = _swipeActiveScreen;
                 
                 setTimeout(() => {
-                    if (prevScreen) prevScreen.classList.remove('swipe-prev');
+                    // Очищаем текущий (уехавший) экран
                     if (activeScreen) {
                         activeScreen.classList.remove('swipe-active');
                         activeScreen.style.transform = '';
@@ -17862,15 +17865,20 @@ function initSwipeBack() {
                     }
                     
                     const targetId = getBackTarget();
-                    // Отключаем fadeIn — экран уже был виден под текущим
                     const targetEl = document.getElementById(targetId);
+                    
+                    // 1. Блокируем ВСЕ анимации
                     if (targetEl) targetEl.classList.add('no-animate');
                     
+                    // 2. Убираем swipe-prev (position:fixed) ПЕРЕД showScreen
+                    if (prevScreen) prevScreen.classList.remove('swipe-prev');
+                    
+                    // 3. Переключаем экран
                     window._swipeNavigation = true;
                     showScreen(targetId);
                     window._swipeNavigation = false;
                     
-                    // Убираем класс после рендера
+                    // 4. Снимаем блокировку анимаций через кадр
                     requestAnimationFrame(() => {
                         requestAnimationFrame(() => {
                             if (targetEl) targetEl.classList.remove('no-animate');
