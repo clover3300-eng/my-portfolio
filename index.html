@@ -643,16 +643,49 @@ body.register-mode #portfolioModeSwitcher {
     display: flex; align-items: center; gap: 14px;
 }
 .broker-logo {
-    width: 40px; height: 40px; border-radius: 12px;
+    width: 42px; height: 42px; border-radius: 13px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 800;
+    font-size: 16px; font-weight: 800;
     color: white; flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
 }
-.broker-logo.t-invest { background: linear-gradient(135deg, #FFDD2D, #F5C400); color: #1A1A1A; }
-.broker-logo.alor { background: linear-gradient(135deg, #E31E24, #C41018); }
-.broker-logo.finam { background: linear-gradient(135deg, #1E3A5F, #0D2240); }
-.broker-logo.bcs { background: linear-gradient(135deg, #00A651, #008C45); }
-.broker-logo.alfa { background: linear-gradient(135deg, #EF1C25, #CC0A12); }
+/* Inner glow */
+.broker-logo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 13px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -1px 0 rgba(0,0,0,0.1);
+    pointer-events: none;
+}
+.broker-logo.t-invest { 
+    background: linear-gradient(145deg, #FFDD2D, #E8C400); 
+    color: #1A1A1A; 
+    box-shadow: 0 4px 12px -2px rgba(255,221,45,0.35);
+}
+.broker-logo.alor { 
+    background: linear-gradient(145deg, #E31E24, #B81318); 
+    box-shadow: 0 4px 12px -2px rgba(227,30,36,0.35);
+}
+.broker-logo.finam { 
+    background: linear-gradient(145deg, #2A5082, #0D2240); 
+    box-shadow: 0 4px 12px -2px rgba(30,58,95,0.35);
+}
+.broker-logo.bcs { 
+    background: linear-gradient(145deg, #00B85C, #007A3D); 
+    box-shadow: 0 4px 12px -2px rgba(0,166,81,0.35);
+}
+.broker-logo.alfa { 
+    background: linear-gradient(145deg, #EF1C25, #B50A12); 
+    box-shadow: 0 4px 12px -2px rgba(239,28,37,0.35);
+}
+/* SVG inside broker logos */
+.broker-logo svg {
+    width: 20px; height: 20px;
+    fill: none; stroke: currentColor;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
 
 .broker-logo-placeholder {
     width: 40px; height: 40px; border-radius: 12px;
@@ -1688,6 +1721,99 @@ body.register-mode #portfolioModeSwitcher {
     margin-top: 2px;
 }
 .dark-mode .dash-date-pill { color: #64748B; }
+
+/* ===== HERO CTA — Main Action Button ===== */
+.dash-hero-cta {
+    margin-top: 16px;
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border-radius: 20px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 28px -4px rgba(15, 23, 42, 0.25),
+                0 2px 6px rgba(15, 23, 42, 0.08);
+    position: relative;
+    overflow: hidden;
+    animation: bentoFadeUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.05s backwards;
+}
+.dash-hero-cta:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 16px -4px rgba(15, 23, 42, 0.25);
+}
+/* Subtle shimmer */
+.dash-hero-cta::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
+    animation: ctaShimmer 4s ease-in-out infinite;
+}
+@keyframes ctaShimmer {
+    0%, 100% { left: -100%; }
+    50% { left: 100%; }
+}
+/* Dot pattern accent */
+.dash-hero-cta::after {
+    content: '';
+    position: absolute;
+    top: -10px; right: -10px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(59,130,246,0.15) 1px, transparent 1px);
+    background-size: 8px 8px;
+    pointer-events: none;
+    opacity: 0.8;
+}
+.dark-mode .dash-hero-cta {
+    background: linear-gradient(135deg, #1a2744 0%, #0d1529 100%);
+    box-shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.4);
+}
+.dash-hero-cta-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative; z-index: 1;
+}
+.dash-hero-cta-icon {
+    width: 44px; height: 44px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px -2px rgba(59, 130, 246, 0.4);
+}
+.dash-hero-cta-icon svg {
+    width: 20px; height: 20px;
+    stroke: white; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.dash-hero-cta-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: #F1F5F9;
+    letter-spacing: -0.01em;
+}
+.dash-hero-cta-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    color: #64748B;
+    margin-top: 2px;
+}
+.dash-hero-cta-arrow {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; z-index: 1;
+}
+.dash-hero-cta-arrow svg {
+    width: 14px; height: 14px;
+    stroke: #64748B; fill: none;
+    stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+}
 
 /* Loading spinner for registration */
 .reg-loading {
@@ -12144,7 +12270,7 @@ body.dark-mode .portfolio-echelons-total-row {
 
     <div class="reg-header">
         <div class="reg-supratitle">R E G I S T R A T I O N</div>
-        <h1 class="reg-title">Создание<br>аккаунта</h1>
+        <h1 class="reg-title">Создание аккаунта</h1>
         <p class="reg-subtitle">Заполните данные для доступа к Terminal</p>
     </div>
 
@@ -12185,35 +12311,35 @@ body.dark-mode .portfolio-echelons-total-row {
                     <div class="waterfall-inner">
                         <div class="strategy-option-card" data-broker="t-invest" onclick="selectBrokerWaterfall(this, 't-invest', 'Т-Инвестиции', 't-invest')">
                             <div class="broker-card-left">
-                                <div class="broker-logo t-invest">Т</div>
+                                <div class="broker-logo t-invest"><svg viewBox="0 0 24 24"><path d="M4 7h16M12 7v13" stroke="#1A1A1A"/></svg></div>
                                 <div class="broker-info"><div class="broker-name">Т-Инвестиции</div></div>
                             </div>
                             <div class="broker-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                         </div>
                         <div class="strategy-option-card" data-broker="alor" onclick="selectBrokerWaterfall(this, 'alor', 'АЛОР Брокер', 'alor')">
                             <div class="broker-card-left">
-                                <div class="broker-logo alor">A</div>
+                                <div class="broker-logo alor"><svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z" stroke="white"/><line x1="8" y1="16" x2="16" y2="16" stroke="white"/></svg></div>
                                 <div class="broker-info"><div class="broker-name">АЛОР Брокер</div></div>
                             </div>
                             <div class="broker-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                         </div>
                         <div class="strategy-option-card" data-broker="finam" onclick="selectBrokerWaterfall(this, 'finam', 'Финам', 'finam')">
                             <div class="broker-card-left">
-                                <div class="broker-logo finam">F</div>
+                                <div class="broker-logo finam"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 6 10" stroke="white"/></svg></div>
                                 <div class="broker-info"><div class="broker-name">Финам</div></div>
                             </div>
                             <div class="broker-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                         </div>
                         <div class="strategy-option-card" data-broker="bcs" onclick="selectBrokerWaterfall(this, 'bcs', 'БКС', 'bcs')">
                             <div class="broker-card-left">
-                                <div class="broker-logo bcs">Б</div>
+                                <div class="broker-logo bcs"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" stroke="white"/><path d="M9 12h6M12 9v6" stroke="white"/></svg></div>
                                 <div class="broker-info"><div class="broker-name">БКС</div></div>
                             </div>
                             <div class="broker-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                         </div>
                         <div class="strategy-option-card" data-broker="alfa" onclick="selectBrokerWaterfall(this, 'alfa', 'Альфа-Инвестиции', 'alfa')">
                             <div class="broker-card-left">
-                                <div class="broker-logo alfa">A</div>
+                                <div class="broker-logo alfa"><svg viewBox="0 0 24 24"><path d="M12 3l-8 18h4l2-5h8l2 5h4L12 3z" stroke="white"/><line x1="9" y1="14" x2="15" y2="14" stroke="white"/></svg></div>
                                 <div class="broker-info"><div class="broker-name">Альфа-Инвестиции</div></div>
                             </div>
                             <div class="broker-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -12317,10 +12443,27 @@ body.dark-mode .portfolio-echelons-total-row {
         </div>
     </div>
 
-    <!-- BENTO GRID -->
+    <!-- DASHBOARD CONTENT — CLEAR HIERARCHY -->
     <div class="dash-content">
-        <div class="bento-grid">
-            <!-- ROW 1: Market Pulse — full width -->
+
+        <!-- 1. HERO CTA — главное действие, самый заметный элемент -->
+        <div class="dash-hero-cta" onclick="showScreen('screen-app')">
+            <div class="dash-hero-cta-left">
+                <div class="dash-hero-cta-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                </div>
+                <div class="dash-hero-cta-text">
+                    <div class="dash-hero-cta-title">Рассчитать портфель</div>
+                    <div class="dash-hero-cta-sub">Облигации, акции, стратегии</div>
+                </div>
+            </div>
+            <div class="dash-hero-cta-arrow">
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+        </div>
+
+        <!-- 2. MARKET PULSE — котировки -->
+        <div class="bento-grid" style="margin-top:10px;">
             <div class="bento-cell bento-market-pulse span-2" onclick="showScreen('screen-interesting')">
                 <div class="market-items">
                     <div class="bento-market-item">
@@ -12341,17 +12484,7 @@ body.dark-mode .portfolio-echelons-total-row {
                 </div>
             </div>
 
-            <!-- ROW 2: Расчёт + Мои активы -->
-            <div class="bento-cell bento-action glow-blue" onclick="showScreen('screen-app')">
-                <div class="bento-action-icon blue">
-                    <svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
-                </div>
-                <div>
-                    <div class="bento-action-label">Расчёт</div>
-                    <div class="bento-action-sub">Калькулятор портфеля</div>
-                </div>
-            </div>
-
+            <!-- 3. SECONDARY ACTIONS — Активы + Ребаланс -->
             <div class="bento-cell bento-action glow-green" onclick="showScreen('screen-stub')">
                 <div class="bento-action-icon green">
                     <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -12362,7 +12495,17 @@ body.dark-mode .portfolio-echelons-total-row {
                 </div>
             </div>
 
-            <!-- ROW 3: Portfolio Ring + Subscription Mini -->
+            <div class="bento-cell bento-action glow-orange" onclick="showScreen('screen-assets', true)">
+                <div class="bento-action-icon orange">
+                    <svg viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                </div>
+                <div>
+                    <div class="bento-action-label">Ребаланс</div>
+                    <div class="bento-action-sub">Корректировка долей</div>
+                </div>
+            </div>
+
+            <!-- 4. PORTFOLIO RING + SUBSCRIPTION -->
             <div class="bento-cell bento-portfolio-ring" onclick="window.isPortfolioCalculated ? showScreen('screen-assets', true) : showScreen('screen-app')">
                 <div class="bento-ring-wrap">
                     <canvas id="bentoRingCanvas" width="160" height="160"></canvas>
@@ -12396,27 +12539,6 @@ body.dark-mode .portfolio-echelons-total-row {
                     <div class="bento-sub-arrow">
                         <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
                     </div>
-                </div>
-            </div>
-
-            <!-- ROW 4: Ребалансировка + Интересное -->
-            <div class="bento-cell bento-action glow-orange" onclick="showScreen('screen-assets', true)">
-                <div class="bento-action-icon orange">
-                    <svg viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                </div>
-                <div>
-                    <div class="bento-action-label">Ребаланс</div>
-                    <div class="bento-action-sub">Корректировка долей</div>
-                </div>
-            </div>
-
-            <div class="bento-cell bento-action glow-purple" onclick="showScreen('screen-interesting')">
-                <div class="bento-action-icon purple">
-                    <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                </div>
-                <div>
-                    <div class="bento-action-label">Интересное</div>
-                    <div class="bento-action-sub">Новости и аналитика</div>
                 </div>
             </div>
         </div>
