@@ -565,10 +565,10 @@
 .dark-mode .reg-section-label { color: #64748B; }
 
 .reg-input-group {
-    display: flex; gap: 10px; margin-bottom: 8px;
+    display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px;
 }
 .reg-input {
-    flex: 1; padding: 14px 16px;
+    width: 100%; padding: 14px 16px;
     background: rgba(255,255,255,0.65);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255,255,255,0.4);
@@ -577,6 +577,7 @@
     color: var(--text-main); outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
     -webkit-appearance: none;
+    box-sizing: border-box;
 }
 .reg-input:focus {
     border-color: var(--accent-blue);
@@ -612,6 +613,7 @@
 .broker-card:nth-child(2) { transition-delay: 0.1s; }
 .broker-card:nth-child(3) { transition-delay: 0.15s; }
 .broker-card:nth-child(4) { transition-delay: 0.2s; }
+.broker-card:nth-child(5) { transition-delay: 0.25s; }
 
 .dark-mode .broker-card {
     background: rgba(30, 41, 59, 0.6);
@@ -641,6 +643,7 @@
 .broker-logo.alor { background: linear-gradient(135deg, #E31E24, #C41018); }
 .broker-logo.finam { background: linear-gradient(135deg, #1E3A5F, #0D2240); }
 .broker-logo.bcs { background: linear-gradient(135deg, #00A651, #008C45); }
+.broker-logo.alfa { background: linear-gradient(135deg, #EF1C25, #CC0A12); }
 
 .broker-info { display: flex; flex-direction: column; gap: 2px; }
 .broker-name {
@@ -687,7 +690,7 @@
 }
 .dark-mode .plan-card.selected { background: #2d3748; }
 
-.plan-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.plan-card-top { display: flex; justify-content: flex-start; align-items: center; gap: 10px; margin-bottom: 6px; padding-right: 30px; }
 .plan-name {
     font-family: 'Inter', sans-serif; font-size: 15px;
     font-weight: 700; color: var(--text-main);
@@ -778,17 +781,13 @@
     position: relative;
 }
 
-body.dashboard-mode {
-    position: fixed; width: 100%; height: 100%;
-    overflow: hidden !important;
-    padding: 0 !important; margin: 0 !important;
-}
+/* Dashboard uses compact-nav, no special body class needed */
 
-/* Dashboard Header (Welcome style) */
+/* Dashboard Hero (Welcome style) */
 .dash-hero {
-    padding: 50px 24px 30px;
+    padding: 50px 24px 24px;
     text-align: center;
-    min-height: 45vh;
+    min-height: 38vh;
     display: flex; flex-direction: column;
     justify-content: center; align-items: center;
 }
@@ -848,17 +847,20 @@ body.dashboard-mode {
     gap: 10px; margin-bottom: 20px;
 }
 .dash-action-card {
-    background: rgba(255,255,255,0.6);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.5);
     border-radius: 18px; padding: 18px 16px;
     cursor: pointer; transition: all 0.25s ease;
     display: flex; flex-direction: column; gap: 10px;
+    box-shadow: 0 4px 20px -4px rgba(0,0,0,0.04);
 }
-.dash-action-card:active { transform: scale(0.97); }
+.dash-action-card:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
 .dark-mode .dash-action-card {
-    background: rgba(30, 41, 59, 0.6);
-    border-color: rgba(255,255,255,0.06);
+    background: rgba(30, 41, 59, 0.65);
+    border-color: rgba(255,255,255,0.08);
+    box-shadow: 0 4px 20px -4px rgba(0,0,0,0.2);
 }
 
 .dash-action-icon {
@@ -1064,34 +1066,7 @@ body.dashboard-mode {
 }
 .dark-mode .dash-plan-expires { background: rgba(255,255,255,0.03); color: #64748B; }
 
-/* Dashboard home-mode for embedded nav */
-body.dashboard-home-mode .nav-dock {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    gap: 25px;
-}
-body.dashboard-home-mode .nav-search-btn {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-}
-body.dashboard-home-mode .nav-item,
-body.dashboard-home-mode .nav-search-btn {
-    color: var(--text-secondary); opacity: 0.8;
-}
-body.dashboard-home-mode .nav-item.active {
-    background: transparent !important;
-    color: var(--text-main) !important;
-    transform: scale(1.1);
-}
-body.dashboard-home-mode #nav-home {
-    color: var(--accent-blue) !important;
-    opacity: 1 !important;
-}
+/* Dashboard uses compact-nav style — no special overrides needed */
 
 /* Loading spinner for registration */
 .reg-loading {
@@ -11558,11 +11533,13 @@ body.dark-mode .portfolio-echelons-total-row {
             <div class="reg-section-label">Личные данные</div>
             <div class="reg-input-group">
                 <input type="text" class="reg-input" id="regFirstName" placeholder="Имя" autocomplete="off">
+            </div>
+            <div class="reg-input-group">
                 <input type="text" class="reg-input" id="regLastName" placeholder="Фамилия" autocomplete="off">
             </div>
         </div>
 
-        <!-- Выбор брокера -->
+        <!-- Выбор брокера — аккордеон -->
         <div class="reg-section">
             <div class="reg-section-label">Выберите брокера</div>
             <div class="broker-accordion" id="brokerList">
@@ -11571,7 +11548,6 @@ body.dark-mode .portfolio-echelons-total-row {
                         <div class="broker-logo t-invest">Т</div>
                         <div class="broker-info">
                             <div class="broker-name">Т-Инвестиции</div>
-                            <div class="broker-api-label">T-Invest API · gRPC / REST</div>
                         </div>
                     </div>
                     <div class="broker-check">
@@ -11583,7 +11559,6 @@ body.dark-mode .portfolio-echelons-total-row {
                         <div class="broker-logo alor">A</div>
                         <div class="broker-info">
                             <div class="broker-name">АЛОР Брокер</div>
-                            <div class="broker-api-label">ALOR OpenAPI · REST / WS</div>
                         </div>
                     </div>
                     <div class="broker-check">
@@ -11595,7 +11570,6 @@ body.dark-mode .portfolio-echelons-total-row {
                         <div class="broker-logo finam">F</div>
                         <div class="broker-info">
                             <div class="broker-name">Финам</div>
-                            <div class="broker-api-label">Transaq Connector · Trading API</div>
                         </div>
                     </div>
                     <div class="broker-check">
@@ -11607,7 +11581,17 @@ body.dark-mode .portfolio-echelons-total-row {
                         <div class="broker-logo bcs">Б</div>
                         <div class="broker-info">
                             <div class="broker-name">БКС</div>
-                            <div class="broker-api-label">BCS Trade API · REST</div>
+                        </div>
+                    </div>
+                    <div class="broker-check">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                </div>
+                <div class="broker-card" data-broker="alfa" onclick="selectBroker(this)">
+                    <div class="broker-card-left">
+                        <div class="broker-logo alfa">A</div>
+                        <div class="broker-info">
+                            <div class="broker-name">Альфа-Инвестиции</div>
                         </div>
                     </div>
                     <div class="broker-check">
@@ -11636,8 +11620,8 @@ body.dark-mode .portfolio-echelons-total-row {
                         <div class="plan-name">Ежемесячная</div>
                         <span class="plan-badge popular">Популярная</span>
                     </div>
-                    <div class="plan-price">500 ₽ <span>/ месяц</span></div>
-                    <div class="plan-detail">Автопродление каждые 30 дней</div>
+                    <div class="plan-price">5 000 ₽ <span>/ месяц</span></div>
+                    <div class="plan-detail">Идеально если есть портфель и нужна ребалансировка</div>
                 </div>
                 <div class="plan-card" data-plan="yearly" onclick="selectPlan(this)">
                     <div class="plan-radio"></div>
@@ -11672,7 +11656,7 @@ body.dark-mode .portfolio-echelons-total-row {
     </div>
     <div class="noise-overlay"></div>
 
-    <!-- Hero Section -->
+    <!-- Premium Hero Section -->
     <div class="dash-hero" id="dashHero">
         <div class="dash-greeting">W E L C O M E &nbsp; B A C K</div>
         <h1 class="dash-user-name">
@@ -11700,54 +11684,26 @@ body.dark-mode .portfolio-echelons-total-row {
                     <div class="dash-action-title">Расчёт</div>
                     <div class="dash-action-desc">Калькулятор портфеля</div>
                 </div>
-                <div class="dash-action-card" onclick="showScreen('screen-portfolio')">
-                    <div class="dash-action-icon green">
-                        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                    </div>
-                    <div class="dash-action-title">Портфель</div>
-                    <div class="dash-action-desc">Мои активы и сделки</div>
-                </div>
                 <div class="dash-action-card" onclick="showScreen('screen-assets', true)">
-                    <div class="dash-action-icon orange">
+                    <div class="dash-action-icon green">
                         <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                     </div>
-                    <div class="dash-action-title">Ребаланс</div>
-                    <div class="dash-action-desc">Таблица активов</div>
+                    <div class="dash-action-title">Мои активы</div>
+                    <div class="dash-action-desc">Таблица всех позиций</div>
                 </div>
-                <div class="dash-action-card" onclick="expandSearch()">
-                    <div class="dash-action-icon purple">
-                        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <div class="dash-action-card" onclick="showScreen('screen-portfolio')">
+                    <div class="dash-action-icon orange">
+                        <svg viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                     </div>
-                    <div class="dash-action-title">Поиск</div>
-                    <div class="dash-action-desc">Тикеры и акции</div>
+                    <div class="dash-action-title">Ребалансировка</div>
+                    <div class="dash-action-desc">Корректировка долей</div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Profile Section -->
-        <div class="dash-section">
-            <div class="dash-section-header">
-                <span class="dash-section-title">Профиль</span>
-            </div>
-            <div class="dash-profile-card">
-                <div class="dash-profile-row">
-                    <span class="dash-profile-label">Имя</span>
-                    <span class="dash-profile-value" id="dashProfileName">—</span>
-                </div>
-                <div class="dash-profile-divider"></div>
-                <div class="dash-profile-row">
-                    <span class="dash-profile-label">Telegram</span>
-                    <span class="dash-profile-value" id="dashProfileTg">—</span>
-                </div>
-                <div class="dash-profile-divider"></div>
-                <div class="dash-profile-row">
-                    <span class="dash-profile-label">Брокер</span>
-                    <span class="dash-profile-value" id="dashProfileBroker">—</span>
-                </div>
-                <div class="dash-profile-divider"></div>
-                <div class="dash-profile-row">
-                    <span class="dash-profile-label">Зарегистрирован</span>
-                    <span class="dash-profile-value" id="dashProfileDate">—</span>
+                <div class="dash-action-card" onclick="showScreen('screen-interesting')">
+                    <div class="dash-action-icon purple">
+                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <div class="dash-action-title">Интересное</div>
+                    <div class="dash-action-desc">Новости и аналитика</div>
                 </div>
             </div>
         </div>
@@ -11796,7 +11752,7 @@ body.dark-mode .portfolio-echelons-total-row {
                         </div>
                         <div class="dash-plan-option" data-plan="monthly" onclick="changePlan('monthly')">
                             <span class="dash-plan-option-name">Ежемесячная</span>
-                            <span class="dash-plan-option-price">500 ₽ / мес</span>
+                            <span class="dash-plan-option-price">5 000 ₽ / мес</span>
                         </div>
                         <div class="dash-plan-option" data-plan="yearly" onclick="changePlan('yearly')">
                             <span class="dash-plan-option-name">Годовая</span>
@@ -11839,6 +11795,12 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
         </div>
     </div>
+
+    <!-- Hidden profile data elements for JS -->
+    <span id="dashProfileName" style="display:none"></span>
+    <span id="dashProfileTg" style="display:none"></span>
+    <span id="dashProfileBroker" style="display:none"></span>
+    <span id="dashProfileDate" style="display:none"></span>
 </div>
 
 <!-- Toast for dashboard operations -->
@@ -13558,10 +13520,10 @@ function formatNewsDate(dateString) {
                 document.getElementById('navWrapper').style.display = 'flex';
                 document.getElementById('stickyPanel').style.display = 'none';
             } else if (screenId === 'screen-dashboard') {
-                // Dashboard как главная для зарегистрированных
+                // Dashboard — compact nav like other screens
                 document.body.classList.remove('home-mode');
-                document.body.classList.remove('compact-nav');
-                document.body.classList.add('dashboard-home-mode');
+                document.body.classList.add('compact-nav');
+                document.body.classList.remove('dashboard-home-mode');
                 document.getElementById('navWrapper').style.display = 'flex';
                 document.getElementById('stickyPanel').style.display = 'none';
                 // Обновляем данные дашборда
@@ -19190,7 +19152,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // =============================================
 
 // !!! ВАЖНО: Замените эту ссылку на URL вашего Google Apps Script !!!
-const USERS_API_URL = "https://script.google.com/macros/s/AKfycbwOnMSCahe3R53CoooNzUxdB8XbSHvXKgxg53iZN7PXIUYLeIJkpfkEaZgh7HUMJ7Ql/exec";
+const USERS_API_URL = "ВСТАВЬТЕ_СЮДА_URL_ВАШЕГО_APPS_SCRIPT";
 
 // Глобальное состояние пользователя
 window._currentUser = null;
@@ -19267,6 +19229,7 @@ function openTerminalOrRegister() {
     }
     
     if (window._isRegistered && window._currentUser) {
+        // Уже зарегистрирован — сразу на дашборд, регистрация недоступна
         document.getElementById('navWrapper').style.display = 'flex';
         showScreen('screen-dashboard');
     } else {
@@ -19392,7 +19355,7 @@ function populateDashboard(user) {
         (user.first_name || '') + ' ' + (user.last_name || '');
     document.getElementById('dashProfileTg').textContent = user.username || '—';
     
-    const brokerNames = { 't-invest': 'Т-Инвестиции', 'alor': 'АЛОР Брокер', 'finam': 'Финам', 'bcs': 'БКС' };
+    const brokerNames = { 't-invest': 'Т-Инвестиции', 'alor': 'АЛОР Брокер', 'finam': 'Финам', 'bcs': 'БКС', 'alfa': 'Альфа-Инвестиции' };
     document.getElementById('dashProfileBroker').textContent = brokerNames[user.broker] || user.broker || '—';
     document.getElementById('dashProfileDate').textContent = user.registered_at || '—';
     
@@ -19434,7 +19397,8 @@ function updateBrokerInstructions(broker) {
         't-invest': `<strong>Т-Инвестиции (T-Invest API):</strong><br><strong>1.</strong> Откройте <strong>tinkoff.ru/invest</strong> → Настройки<br><strong>2.</strong> Раздел «Токен для API»<br><strong>3.</strong> Нажмите «Выпустить токен» → «Только чтение»<br><strong>4.</strong> Скопируйте и вставьте выше`,
         'alor': `<strong>АЛОР Брокер (ALOR OpenAPI):</strong><br><strong>1.</strong> Войдите в <strong>lk.alor.ru</strong><br><strong>2.</strong> Настройки → API<br><strong>3.</strong> Создайте Refresh Token<br><strong>4.</strong> Скопируйте и вставьте выше`,
         'finam': `<strong>Финам (Trading API):</strong><br><strong>1.</strong> Войдите в <strong>my.finam.ru</strong><br><strong>2.</strong> Настройки → Торговые API<br><strong>3.</strong> Создайте ключ с правами чтения<br><strong>4.</strong> Скопируйте и вставьте выше`,
-        'bcs': `<strong>БКС (BCS Trade API):</strong><br><strong>1.</strong> Войдите в <strong>bcs.ru/trade-api</strong><br><strong>2.</strong> Зарегистрируйтесь в API<br><strong>3.</strong> Получите токен доступа<br><strong>4.</strong> Скопируйте и вставьте выше`
+        'bcs': `<strong>БКС (BCS Trade API):</strong><br><strong>1.</strong> Войдите в <strong>bcs.ru/trade-api</strong><br><strong>2.</strong> Зарегистрируйтесь в API<br><strong>3.</strong> Получите токен доступа<br><strong>4.</strong> Скопируйте и вставьте выше`,
+        'alfa': `<strong>Альфа-Инвестиции:</strong><br><strong>1.</strong> Войдите в <strong>Альфа-Инвестиции</strong> в личный кабинет<br><strong>2.</strong> Перейдите в Настройки → API<br><strong>3.</strong> Создайте токен с правами чтения<br><strong>4.</strong> Скопируйте и вставьте выше`
     };
     const el = document.getElementById('brokerInstructionText');
     if (el && instructions[broker]) el.innerHTML = instructions[broker];
