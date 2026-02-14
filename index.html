@@ -1034,13 +1034,13 @@ body.register-mode #portfolioModeSwitcher {
     flex: 1;
     min-width: 0;
 }
-.dash-greeting {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px; font-weight: 500;
-    color: #94A3B8; text-transform: uppercase;
-    letter-spacing: 0.2em; margin-bottom: 4px;
+.dash-hero-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
 }
-.dark-mode .dash-greeting { color: #64748B; }
 .dash-user-name {
     font-family: 'Inter', sans-serif;
     font-size: 26px; line-height: 1.15; margin: 0;
@@ -1692,6 +1692,68 @@ body.register-mode #portfolioModeSwitcher {
     transform: translateX(18px);
 }
 
+/* ===== SETTINGS LINK — minimal trigger row ===== */
+.dash-settings-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 6px;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    animation: bentoFadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.4s backwards;
+}
+.dash-settings-link:active { opacity: 0.6; }
+.dsl-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.dsl-left svg {
+    width: 15px; height: 15px;
+    stroke: #94A3B8; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.dark-mode .dsl-left svg { stroke: #64748B; }
+.dsl-left span {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 600;
+    color: #94A3B8;
+}
+.dark-mode .dsl-left span { color: #64748B; }
+.dsl-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.dsl-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    color: #C8CCD0;
+    letter-spacing: 0.02em;
+}
+.dark-mode .dsl-hint { color: #475569; }
+.dsl-right svg {
+    width: 14px; height: 14px;
+    stroke: #C8CCD0; fill: none;
+    stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+    transition: transform 0.3s;
+}
+.dark-mode .dsl-right svg { stroke: #475569; }
+.dash-settings-link.dsl-open .dsl-right svg {
+    transform: rotate(90deg);
+}
+
+/* ===== SETTINGS PANEL — collapsible ===== */
+.dash-settings-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dash-settings-panel.open {
+    max-height: 1200px;
+}
+
 /* === Legacy compat: hide old settings-item if present === */
 .dash-settings-item { display: none; }
 
@@ -1717,8 +1779,8 @@ body.register-mode #portfolioModeSwitcher {
     font-size: 9px;
     font-weight: 500;
     color: #94A3B8;
-    letter-spacing: 0.06em;
-    margin-top: 2px;
+    letter-spacing: 0.04em;
+    text-align: right;
 }
 .dark-mode .dash-date-pill { color: #64748B; }
 
@@ -12472,18 +12534,19 @@ body.dark-mode .portfolio-echelons-total-row {
     </div>
     <div class="noise-overlay"></div>
 
-    <!-- Compact Hero: Name + Status aligned left -->
+    <!-- Compact Hero: Name + Date -->
     <div class="dash-hero" id="dashHero">
         <div class="dash-hero-left">
-            <div class="dash-greeting">terminal solomi'na</div>
             <h1 class="dash-user-name">
                 <span class="light" id="dashFirstName">—</span> <span class="bold" id="dashLastName">—</span>
             </h1>
-            <div class="dash-date-pill" id="dashDatePill"></div>
         </div>
-        <div class="dash-status-pill" id="dashStatusPill">
-            <div class="dash-status-dot"></div>
-            <span class="dash-status-text" id="dashStatusText">Active</span>
+        <div class="dash-hero-right">
+            <div class="dash-status-pill" id="dashStatusPill">
+                <div class="dash-status-dot"></div>
+                <span class="dash-status-text" id="dashStatusText">Active</span>
+            </div>
+            <div class="dash-date-pill" id="dashDatePill"></div>
         </div>
     </div>
 
@@ -12522,8 +12585,8 @@ body.dark-mode .portfolio-echelons-total-row {
             <div class="dqs-sep"></div>
             <div class="dqs-item">
                 <span class="dqs-dot" style="background:#F97316;"></span>
-                <span class="dqs-label">ОФЗ</span>
-                <span class="dqs-value" id="dqs-ofz">—</span>
+                <span class="dqs-label">BTC</span>
+                <span class="dqs-value" id="dqs-btc">—</span>
             </div>
         </div>
 
@@ -12602,12 +12665,20 @@ body.dark-mode .portfolio-echelons-total-row {
         </div>
         -->
 
-        <!-- Settings Section — Revolutionary Grouped Card -->
-        <div class="dash-section">
-            <div class="dash-section-header">
-                <span class="dash-section-title">Настройки</span>
+        <!-- Settings — минимальная строка -->
+        <div class="dash-settings-link" onclick="toggleDashSettingsPanel()">
+            <div class="dsl-left">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Настройки</span>
             </div>
+            <div class="dsl-right">
+                <span class="dsl-hint" id="dslHint">Подписка, токен, тема</span>
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+        </div>
 
+        <!-- Settings Panel — slides open -->
+        <div class="dash-settings-panel" id="dashSettingsPanel">
             <div class="dash-settings-group">
                 <!-- Row 1: Подписка -->
                 <div class="dash-settings-row" id="dsRowSub" onclick="toggleSettingsPanel('dsPanelSub', this)">
@@ -12697,7 +12768,7 @@ body.dark-mode .portfolio-echelons-total-row {
                     </div>
                 </div>
 
-                <!-- Row 3: Тёмная тема (toggle) -->
+                <!-- Row 3: Тёмная тема -->
                 <div class="dash-settings-row" onclick="toggleTheme(); if(window.Telegram?.WebApp?.HapticFeedback) Telegram.WebApp.HapticFeedback.selectionChanged();">
                     <div class="ds-icon slate">
                         <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -20679,11 +20750,11 @@ function syncBentoMarketData() {
         usdQs.textContent = usdSrc.textContent;
     }
     
-    // Quiet strip — OFZ 10Y
-    const ofzSrc = document.getElementById('val-ofz10');
-    const ofzQs = document.getElementById('dqs-ofz');
-    if (ofzSrc && ofzQs && ofzSrc.textContent !== '---%') {
-        ofzQs.textContent = ofzSrc.textContent;
+    // Quiet strip — BTC
+    const btcSrc = document.getElementById('val-btc');
+    const btcQs = document.getElementById('dqs-btc');
+    if (btcSrc && btcQs && btcSrc.textContent !== '---') {
+        btcQs.textContent = btcSrc.textContent;
     }
 }
 
@@ -20713,6 +20784,25 @@ setInterval(syncBentoMarketData, 2000);
 
 // Hook into populateDashboard to sync bento widgets
 const _origPopulateDashboard = typeof populateDashboard === 'function' ? populateDashboard : null;
+
+// Toggle entire settings panel
+function toggleDashSettingsPanel() {
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+    const panel = document.getElementById('dashSettingsPanel');
+    const link = document.querySelector('.dash-settings-link');
+    if (!panel) return;
+    
+    panel.classList.toggle('open');
+    if (link) link.classList.toggle('dsl-open');
+    
+    // Close inner panels when closing
+    if (!panel.classList.contains('open')) {
+        document.querySelectorAll('.ds-expand-panel').forEach(p => p.classList.remove('open'));
+        document.querySelectorAll('.dash-settings-row').forEach(r => r.classList.remove('ds-open'));
+    }
+}
 
 // New settings panel toggle
 function toggleSettingsPanel(panelId, rowEl) {
@@ -20755,13 +20845,20 @@ function syncSettingsBadges(user) {
 
 // Also update bento sub mini card to open new panel
 function openSubFromBento() {
-    const row = document.getElementById('dsRowSub');
-    toggleSettingsPanel('dsPanelSub', row);
-    // Scroll to settings
+    // Open settings panel first if closed
+    const panel = document.getElementById('dashSettingsPanel');
+    const link = document.querySelector('.dash-settings-link');
+    if (panel && !panel.classList.contains('open')) {
+        panel.classList.add('open');
+        if (link) link.classList.add('dsl-open');
+    }
+    // Then open subscription sub-panel
     setTimeout(() => {
+        const row = document.getElementById('dsRowSub');
+        toggleSettingsPanel('dsPanelSub', row);
         const section = document.querySelector('.dash-settings-group');
         if (section) section.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+    }, 150);
 }
 
 function toggleDashSettings(id) {
