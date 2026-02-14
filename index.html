@@ -162,6 +162,7 @@
 
         .screen { display: none; animation: fadeIn 0.4s ease; }
         .screen.active { display: block; }
+        .screen.no-animate { animation: none !important; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -17858,7 +17859,18 @@ function initSwipeBack() {
                     }
                     
                     const targetId = getBackTarget();
+                    // Отключаем fadeIn — экран уже был виден под текущим
+                    const targetEl = document.getElementById(targetId);
+                    if (targetEl) targetEl.classList.add('no-animate');
+                    
                     showScreen(targetId);
+                    
+                    // Убираем класс после рендера
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            if (targetEl) targetEl.classList.remove('no-animate');
+                        });
+                    });
                     
                     if (window.Telegram?.WebApp?.HapticFeedback) {
                         window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
