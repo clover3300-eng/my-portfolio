@@ -988,14 +988,14 @@ body.register-mode #portfolioModeSwitcher {
 /* ===== HERO: Compact Identity Bar ===== */
 .dash-hero {
     padding: 10px 20px 8px;
-    padding-top: calc(80px + env(safe-area-inset-top));
+    padding-top: calc(100px + env(safe-area-inset-top));
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 12px;
 }
 @supports not (padding-top: env(safe-area-inset-top)) {
-    .dash-hero { padding-top: 50px; }
+    .dash-hero { padding-top: 70px; }
 }
 .dash-hero-left {
     flex: 1;
@@ -1327,121 +1327,229 @@ body.register-mode #portfolioModeSwitcher {
 }
 .dark-mode .dash-section-title { color: #64748B; }
 
-/* ===== SETTINGS ACCORDION (KEPT) ===== */
-.dash-settings-item {
+/* ===== REVOLUTIONARY SETTINGS — GROUPED CARD ===== */
+.dash-settings-group {
     background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255,255,255,0.6);
-    border-radius: 20px; margin-bottom: 8px;
-    overflow: hidden; transition: all 0.3s;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px -2px rgba(0,0,0,0.04),
+                0 1px 3px rgba(0,0,0,0.02);
 }
-.dark-mode .dash-settings-item {
+.dark-mode .dash-settings-group {
     background: rgba(30, 41, 59, 0.6);
     border-color: rgba(255,255,255,0.08);
+    box-shadow: 0 2px 16px -2px rgba(0,0,0,0.2);
 }
-.dash-settings-header {
-    padding: 16px 18px; display: flex;
-    justify-content: space-between; align-items: center;
+
+/* Settings Row */
+.dash-settings-row {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
     cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
 }
-.dash-settings-header-left {
-    display: flex; align-items: center; gap: 12px;
+.dash-settings-row:active {
+    background: rgba(0,0,0,0.02);
 }
-.dash-settings-icon {
-    width: 32px; height: 32px; border-radius: 10px;
+.dark-mode .dash-settings-row:active {
+    background: rgba(255,255,255,0.03);
+}
+
+/* Separator between rows */
+.dash-settings-row + .dash-settings-row::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 62px; right: 18px;
+    height: 1px;
+    background: rgba(0,0,0,0.05);
+}
+.dark-mode .dash-settings-row + .dash-settings-row::before {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Icon circle */
+.ds-icon {
+    width: 36px; height: 36px; border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(52, 152, 219, 0.1);
+    flex-shrink: 0;
 }
-.dash-settings-icon svg {
-    width: 16px; height: 16px;
-    stroke: var(--accent-blue); fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+.ds-icon svg {
+    width: 17px; height: 17px;
+    fill: none; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
 }
-.dash-settings-label {
+.ds-icon.blue {
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
+}
+.ds-icon.blue svg { stroke: white; }
+.ds-icon.orange {
+    background: linear-gradient(135deg, #F97316, #EA580C);
+}
+.ds-icon.orange svg { stroke: white; }
+.ds-icon.slate {
+    background: linear-gradient(135deg, #64748B, #475569);
+}
+.ds-icon.slate svg { stroke: white; }
+.ds-icon.red {
+    background: linear-gradient(135deg, #EF4444, #DC2626);
+}
+.ds-icon.red svg { stroke: white; }
+
+/* Row content */
+.ds-row-content {
+    flex: 1;
+    min-width: 0;
+}
+.ds-row-title {
     font-family: 'Inter', sans-serif;
-    font-size: 14px; font-weight: 600; color: var(--text-main);
+    font-size: 14px; font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.2;
 }
-.dash-settings-arrow {
-    transition: transform 0.3s;
+.ds-row-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    color: #94A3B8;
+    margin-top: 1px;
+    letter-spacing: 0.01em;
+}
+.dark-mode .ds-row-subtitle { color: #64748B; }
+
+/* Right side value/badge/arrow */
+.ds-row-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.ds-row-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
     color: #94A3B8;
 }
-.dash-settings-item.open .dash-settings-arrow {
-    transform: rotate(180deg);
+.dark-mode .ds-row-value { color: #64748B; }
+.ds-row-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(16, 185, 129, 0.12);
+    color: #10B981;
 }
-.dash-settings-body {
-    max-height: 0; overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+.ds-row-badge.expired {
+    background: rgba(239, 68, 68, 0.12);
+    color: #EF4444;
+}
+.ds-chevron {
+    width: 16px; height: 16px;
+    color: #C8CCD0;
+    transition: transform 0.3s;
+}
+.dark-mode .ds-chevron { color: #475569; }
+.ds-chevron svg {
+    width: 16px; height: 16px;
+    stroke: currentColor; fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ===== EXPANDABLE PANEL (replaces accordion body) ===== */
+.ds-expand-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.3s ease;
     padding: 0 18px;
+    background: rgba(0,0,0,0.01);
 }
-.dash-settings-item.open .dash-settings-body {
-    max-height: 600px;
+.dark-mode .ds-expand-panel {
+    background: rgba(0,0,0,0.08);
+}
+.ds-expand-panel.open {
+    max-height: 700px;
     padding: 0 18px 18px;
 }
 
-/* Token input in settings */
-.dash-token-input-wrap {
-    display: flex; gap: 8px; margin-top: 10px;
+/* Rotate chevron when open */
+.dash-settings-row.ds-open .ds-chevron {
+    transform: rotate(90deg);
 }
-.dash-token-input {
-    flex: 1; padding: 12px 14px;
-    background: rgba(0,0,0,0.03);
-    border: 1px solid rgba(0,0,0,0.06);
-    border-radius: 12px; font-size: 13px;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--text-main); outline: none;
-    -webkit-appearance: none;
-}
-.dark-mode .dash-token-input {
-    background: rgba(255,255,255,0.05);
-    border-color: rgba(255,255,255,0.08);
-    color: #F1F5F9;
-}
-.dash-token-input:focus {
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.08);
-}
-.dash-token-save-btn {
-    padding: 12px 18px; border-radius: 12px;
-    background: var(--accent-blue); color: white;
-    border: none; font-size: 12px; font-weight: 700;
-    font-family: 'Inter', sans-serif; cursor: pointer;
-    white-space: nowrap;
-}
-.dash-token-save-btn:active { opacity: 0.8; }
 
-.dash-instruction {
-    background: rgba(52, 152, 219, 0.06);
-    border-radius: 12px; padding: 14px;
+/* ===== SUBSCRIPTION CARD INSIDE PANEL ===== */
+.dash-sub-card {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border-radius: 16px; padding: 16px;
+    color: white; margin-bottom: 12px;
     margin-top: 12px;
+    position: relative;
+    overflow: hidden;
 }
-.dash-instruction-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px; font-weight: 700;
-    color: var(--accent-blue); margin-bottom: 8px;
-    text-transform: uppercase; letter-spacing: 0.05em;
+/* Subtle pattern dots on sub card */
+.dash-sub-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 1px, transparent 1px);
+    background-size: 10px 10px;
+    opacity: 0.6;
+    pointer-events: none;
 }
-.dash-instruction-step {
-    font-family: 'Inter', sans-serif;
-    font-size: 12px; color: var(--text-main);
-    line-height: 1.7; opacity: 0.8;
+.dash-sub-card-row {
+    display: flex; justify-content: space-between; align-items: center;
 }
-.dash-instruction-step strong {
-    font-weight: 700; color: var(--text-main);
+.dash-sub-plan {
+    font-family: 'Inter', sans-serif; font-size: 16px;
+    font-weight: 800; text-transform: uppercase;
+}
+.dash-sub-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    padding: 4px 10px; border-radius: 8px;
+    background: rgba(16, 185, 129, 0.2); color: #4ade80;
+}
+.dash-sub-badge.expired {
+    background: rgba(239, 68, 68, 0.2); color: #f87171;
+}
+.dash-sub-dates {
+    display: flex; justify-content: space-between;
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+.dash-sub-date-block { display: flex; flex-direction: column; gap: 2px; }
+.dash-sub-date-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.4);
+}
+.dash-sub-date-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 600;
 }
 
-/* Subscription change buttons */
-.dash-plan-options { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+/* ===== PLAN CHANGE OPTIONS IN PANEL ===== */
+.dash-plan-options { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 .dash-plan-option {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 12px 14px; border-radius: 12px;
+    padding: 12px 14px; border-radius: 14px;
     background: rgba(0,0,0,0.02); border: 1.5px solid transparent;
-    cursor: pointer; transition: all 0.2s;
+    cursor: pointer; transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .dark-mode .dash-plan-option { background: rgba(255,255,255,0.03); }
+.dash-plan-option:active { transform: scale(0.98); }
 .dash-plan-option.current {
-    border-color: var(--accent-blue);
-    background: rgba(52, 152, 219, 0.06);
+    border-color: #3B82F6;
+    background: rgba(59, 130, 246, 0.06);
+    box-shadow: 0 2px 8px -2px rgba(59, 130, 246, 0.15);
 }
 .dash-plan-option-name {
     font-family: 'Inter', sans-serif;
@@ -1449,8 +1557,73 @@ body.register-mode #portfolioModeSwitcher {
 }
 .dash-plan-option-price {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px; font-weight: 600; color: var(--text-main);
+    font-size: 12px; font-weight: 600; color: var(--text-main);
 }
+
+/* ===== TOKEN INPUT ===== */
+.dash-token-input-wrap {
+    display: flex; gap: 8px; margin-top: 12px;
+}
+.dash-token-input {
+    flex: 1; padding: 12px 14px;
+    background: rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 14px; font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-main); outline: none;
+    -webkit-appearance: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.dark-mode .dash-token-input {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.08);
+    color: #F1F5F9;
+}
+.dash-token-input:focus {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+}
+.dash-token-save-btn {
+    padding: 12px 18px; border-radius: 14px;
+    background: linear-gradient(135deg, #3B82F6, #2563EB);
+    color: white;
+    border: none; font-size: 12px; font-weight: 700;
+    font-family: 'Inter', sans-serif; cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.dash-token-save-btn:active { 
+    transform: scale(0.96); 
+    box-shadow: 0 1px 4px rgba(59, 130, 246, 0.2);
+}
+
+/* Instruction card */
+.dash-instruction {
+    background: rgba(59, 130, 246, 0.04);
+    border: 1px solid rgba(59, 130, 246, 0.08);
+    border-radius: 14px; padding: 14px;
+    margin-top: 12px;
+}
+.dark-mode .dash-instruction {
+    background: rgba(59, 130, 246, 0.06);
+    border-color: rgba(59, 130, 246, 0.1);
+}
+.dash-instruction-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 700;
+    color: #3B82F6; margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+}
+.dash-instruction-step {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; color: var(--text-main);
+    line-height: 1.7; opacity: 0.75;
+}
+.dash-instruction-step strong {
+    font-weight: 700; color: var(--text-main); opacity: 1;
+}
+
 .dash-plan-expires {
     margin-top: 8px; padding: 10px 14px;
     background: rgba(0,0,0,0.02); border-radius: 10px;
@@ -1459,6 +1632,35 @@ body.register-mode #portfolioModeSwitcher {
     text-align: center;
 }
 .dark-mode .dash-plan-expires { background: rgba(255,255,255,0.03); color: #64748B; }
+
+/* ===== THEME TOGGLE SWITCH ===== */
+.ds-theme-toggle {
+    width: 44px; height: 26px;
+    background: #D1D5DB;
+    border-radius: 13px;
+    position: relative;
+    transition: background 0.3s;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+.dark-mode .ds-theme-toggle {
+    background: #3B82F6;
+}
+.ds-theme-toggle-knob {
+    width: 22px; height: 22px;
+    background: white;
+    border-radius: 11px;
+    position: absolute;
+    top: 2px; left: 2px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.dark-mode .ds-theme-toggle-knob {
+    transform: translateX(18px);
+}
+
+/* === Legacy compat: hide old settings-item if present === */
+.dash-settings-item { display: none; }
 
 /* ===== STAGGER ENTRANCE ANIMATIONS ===== */
 @keyframes bentoFadeUp {
@@ -12181,7 +12383,7 @@ body.dark-mode .portfolio-echelons-total-row {
                 </div>
             </div>
 
-            <div class="bento-cell bento-sub-mini" onclick="toggleDashSettings('settingsSubscription')">
+            <div class="bento-cell bento-sub-mini" onclick="openSubFromBento()">
                 <div class="bento-sub-top">
                     <span class="bento-sub-plan" id="bentoSubPlan">Trial</span>
                     <span class="bento-sub-badge" id="bentoSubBadge">Active</span>
@@ -12219,26 +12421,32 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
         </div>
 
-        <!-- Settings Section -->
+        <!-- Settings Section — Revolutionary Grouped Card -->
         <div class="dash-section">
             <div class="dash-section-header">
                 <span class="dash-section-title">Настройки</span>
             </div>
 
-            <!-- Subscription Settings -->
-            <div class="dash-settings-item" id="settingsSubscription">
-                <div class="dash-settings-header" onclick="toggleDashSettings('settingsSubscription')">
-                    <div class="dash-settings-header-left">
-                        <div class="dash-settings-icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        </div>
-                        <span class="dash-settings-label">Подписка</span>
+            <div class="dash-settings-group">
+                <!-- Row 1: Подписка -->
+                <div class="dash-settings-row" id="dsRowSub" onclick="toggleSettingsPanel('dsPanelSub', this)">
+                    <div class="ds-icon blue">
+                        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     </div>
-                    <div class="dash-settings-arrow">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    <div class="ds-row-content">
+                        <div class="ds-row-title">Подписка</div>
+                        <div class="ds-row-subtitle" id="dsSubHint">Управление тарифом</div>
+                    </div>
+                    <div class="ds-row-right">
+                        <span class="ds-row-badge" id="dsSubBadge">Active</span>
+                        <div class="ds-chevron">
+                            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                        </div>
                     </div>
                 </div>
-                <div class="dash-settings-body">
+
+                <!-- Expandable: Subscription panel -->
+                <div class="ds-expand-panel" id="dsPanelSub">
                     <div class="dash-sub-card" id="dashSubCard">
                         <div class="dash-sub-card-row">
                             <span class="dash-sub-plan" id="dashSubPlan">Trial</span>
@@ -12271,23 +12479,27 @@ body.dark-mode .portfolio-echelons-total-row {
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- API Token Settings -->
-            <div class="dash-settings-item" id="settingsToken">
-                <div class="dash-settings-header" onclick="toggleDashSettings('settingsToken')">
-                    <div class="dash-settings-header-left">
-                        <div class="dash-settings-icon" style="background: rgba(249, 115, 22, 0.1);">
-                            <svg viewBox="0 0 24 24" style="stroke: #f97316;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        </div>
-                        <span class="dash-settings-label">API токен брокера</span>
+                <!-- Row 2: API Token -->
+                <div class="dash-settings-row" id="dsRowToken" onclick="toggleSettingsPanel('dsPanelToken', this)">
+                    <div class="ds-icon orange">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                     </div>
-                    <div class="dash-settings-arrow">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    <div class="ds-row-content">
+                        <div class="ds-row-title">API токен</div>
+                        <div class="ds-row-subtitle">Подключение к брокеру</div>
+                    </div>
+                    <div class="ds-row-right">
+                        <span class="ds-row-value" id="dsTokenStatus">Не задан</span>
+                        <div class="ds-chevron">
+                            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                        </div>
                     </div>
                 </div>
-                <div class="dash-settings-body">
-                    <div class="reg-section-label">Ваш API токен</div>
+
+                <!-- Expandable: Token panel -->
+                <div class="ds-expand-panel" id="dsPanelToken">
+                    <div class="reg-section-label" style="margin-top:12px;">Ваш API токен</div>
                     <div class="dash-token-input-wrap">
                         <input type="password" class="dash-token-input" id="dashTokenInput" placeholder="Вставьте токен...">
                         <button class="dash-token-save-btn" onclick="saveApiToken()">Сохранить</button>
@@ -12300,6 +12512,22 @@ body.dark-mode .portfolio-echelons-total-row {
                             <strong>2.</strong> Перейдите в раздел «Настройки» → «API»<br>
                             <strong>3.</strong> Создайте новый токен с правами «Только чтение»<br>
                             <strong>4.</strong> Скопируйте и вставьте токен выше
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Тёмная тема (toggle) -->
+                <div class="dash-settings-row" onclick="toggleTheme(); if(window.Telegram?.WebApp?.HapticFeedback) Telegram.WebApp.HapticFeedback.selectionChanged();">
+                    <div class="ds-icon slate">
+                        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </div>
+                    <div class="ds-row-content">
+                        <div class="ds-row-title">Тёмная тема</div>
+                        <div class="ds-row-subtitle" id="dsThemeHint">Переключить оформление</div>
+                    </div>
+                    <div class="ds-row-right">
+                        <div class="ds-theme-toggle" id="dsThemeToggle">
+                            <div class="ds-theme-toggle-knob"></div>
                         </div>
                     </div>
                 </div>
@@ -20076,6 +20304,7 @@ function populateDashboard(user) {
     syncBentoRing();
     syncBentoMarketData();
     updateDashDatePill();
+    syncSettingsBadges(user);
 }
 
 function formatDateRu(dateStr) {
@@ -20317,6 +20546,56 @@ setInterval(syncBentoMarketData, 2000);
 
 // Hook into populateDashboard to sync bento widgets
 const _origPopulateDashboard = typeof populateDashboard === 'function' ? populateDashboard : null;
+
+// New settings panel toggle
+function toggleSettingsPanel(panelId, rowEl) {
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+    
+    const isOpen = panel.classList.contains('open');
+    
+    // Close all panels first
+    document.querySelectorAll('.ds-expand-panel').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.dash-settings-row').forEach(r => r.classList.remove('ds-open'));
+    
+    // Toggle current
+    if (!isOpen) {
+        panel.classList.add('open');
+        if (rowEl) rowEl.classList.add('ds-open');
+    }
+}
+
+// Sync new settings badge with user data
+function syncSettingsBadges(user) {
+    if (!user) return;
+    const badge = document.getElementById('dsSubBadge');
+    if (badge) {
+        badge.textContent = user.status === 'active' ? 'Active' : 'Expired';
+        badge.className = 'ds-row-badge' + (user.status !== 'active' ? ' expired' : '');
+    }
+    const hint = document.getElementById('dsSubHint');
+    const planNames = { 'trial': 'Пробный', 'monthly': 'Ежемесячная', 'yearly': 'Годовая' };
+    if (hint) hint.textContent = planNames[user.plan] || 'Управление тарифом';
+    
+    const tokenStatus = document.getElementById('dsTokenStatus');
+    if (tokenStatus) {
+        tokenStatus.textContent = user.api_token ? 'Задан' : 'Не задан';
+    }
+}
+
+// Also update bento sub mini card to open new panel
+function openSubFromBento() {
+    const row = document.getElementById('dsRowSub');
+    toggleSettingsPanel('dsPanelSub', row);
+    // Scroll to settings
+    setTimeout(() => {
+        const section = document.querySelector('.dash-settings-group');
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+}
 
 function toggleDashSettings(id) {
     const item = document.getElementById(id);
