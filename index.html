@@ -523,6 +523,15 @@
     z-index: 1;
     overflow-x: hidden;
 }
+/* Force hide ALL navigation on register screen */
+body.register-mode .nav-wrapper,
+body.register-mode #navWrapper,
+body.register-mode #portfolioModeSwitcher {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
 #screen-register > *:not(.aurora-container):not(.noise-overlay) {
     position: relative;
 }
@@ -645,6 +654,19 @@
 .broker-logo.bcs { background: linear-gradient(135deg, #00A651, #008C45); }
 .broker-logo.alfa { background: linear-gradient(135deg, #EF1C25, #CC0A12); }
 
+.broker-logo-placeholder {
+    width: 40px; height: 40px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: rgba(52, 152, 219, 0.08);
+    color: #94A3B8;
+    transition: all 0.3s;
+}
+.dark-mode .broker-logo-placeholder {
+    background: rgba(56, 189, 248, 0.1);
+    color: #64748B;
+}
+
 .broker-info { display: flex; flex-direction: column; gap: 2px; }
 .broker-name {
     font-family: 'Inter', sans-serif; font-size: 14px;
@@ -741,6 +763,7 @@
 .plan-name {
     font-family: 'Inter', sans-serif; font-size: 15px;
     font-weight: 700; color: var(--text-main);
+    flex: 1;
 }
 .plan-badge {
     font-family: 'Inter', sans-serif; font-size: 9px;
@@ -11594,7 +11617,9 @@ body.dark-mode .portfolio-echelons-total-row {
             <div class="strategy-perspective-wrapper" style="margin-top:0;">
                 <div class="broker-main-card" id="brokerMainCard" onclick="toggleBrokerList()">
                     <div class="broker-card-left">
-                        <div class="broker-logo t-invest" id="brokerMainLogo">?</div>
+                        <div class="broker-logo-placeholder" id="brokerMainLogo">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                        </div>
                         <div class="broker-info">
                             <div class="broker-name" id="brokerMainName">Выберите брокера</div>
                         </div>
@@ -11653,27 +11678,27 @@ body.dark-mode .portfolio-echelons-total-row {
             <div class="plan-cards" id="planCards">
                 <div class="plan-card selected" data-plan="trial" onclick="selectPlan(this)">
                     <div class="plan-card-top">
-                        <div class="plan-radio"></div>
                         <div class="plan-name">Пробный период</div>
                         <span class="plan-badge free">Бесплатно</span>
+                        <div class="plan-radio"></div>
                     </div>
                     <div class="plan-price">0 ₽ <span>/ 3 месяца</span></div>
                     <div class="plan-detail">Полный доступ ко всем функциям на 90 дней</div>
                 </div>
                 <div class="plan-card" data-plan="monthly" onclick="selectPlan(this)">
                     <div class="plan-card-top">
-                        <div class="plan-radio"></div>
                         <div class="plan-name">Ежемесячная</div>
                         <span class="plan-badge popular">Популярная</span>
+                        <div class="plan-radio"></div>
                     </div>
                     <div class="plan-price">5 000 ₽ <span>/ месяц</span></div>
                     <div class="plan-detail">Идеально если есть портфель и нужна ребалансировка</div>
                 </div>
                 <div class="plan-card" data-plan="yearly" onclick="selectPlan(this)">
                     <div class="plan-card-top">
-                        <div class="plan-radio"></div>
                         <div class="plan-name">Годовая подписка</div>
                         <span class="plan-badge best">Выгодно -50%</span>
+                        <div class="plan-radio"></div>
                     </div>
                     <div class="plan-price">30 000 ₽ <span>/ год</span></div>
                     <div class="plan-detail">Экономия 50% — 2 500 ₽/мес вместо 5 000 ₽</div>
@@ -13551,6 +13576,11 @@ function formatNewsDate(dateString) {
             // Список портфельных экранов
             const portfolioScreens = ['screen-portfolio', 'screen-stub', 'screen-assets'];
 
+            // Всегда снимаем register-mode при переходе на любой другой экран
+            if (screenId !== 'screen-register') {
+                document.body.classList.remove('register-mode');
+            }
+
             // Запоминаем флаг для screen-assets
             if (screenId === 'screen-assets') {
                 assetsFromMainNav = !!fromMainNav;
@@ -13579,6 +13609,7 @@ function formatNewsDate(dateString) {
                 document.body.classList.remove('home-mode');
                 document.body.classList.remove('compact-nav');
                 document.body.classList.remove('dashboard-home-mode');
+                document.body.classList.add('register-mode');
                 document.getElementById('navWrapper').style.display = 'none';
                 document.getElementById('stickyPanel').style.display = 'none';
             } else {
@@ -19194,7 +19225,12 @@ document.addEventListener("DOMContentLoaded", function() {
 // =============================================
 
 // !!! ВАЖНО: Замените эту ссылку на URL вашего Google Apps Script !!!
-const USERS_API_URL = "ВСТАВЬТЕ_СЮДА_URL_ВАШЕГО_APPS_SCRIPT";
+const USERS_API_URL = "https://script.google.com/macros/s/AKfycbwOnMSCahe3R53CoooNzUxdB8XbSHvXKgxg53iZN7PXIUYLeIJkpfkEaZgh7HUMJ7Ql/exec";
+
+// Проверяем настроен ли API
+function isApiConfigured() {
+    return USERS_API_URL && !USERS_API_URL.includes('ВСТАВЬТЕ_СЮДА');
+}
 
 // Глобальное состояние пользователя
 window._currentUser = null;
@@ -19206,8 +19242,28 @@ window._selectedPlan = 'trial';
 // ПРОВЕРКА РЕГИСТРАЦИИ ПРИ ЗАПУСКЕ
 // =============================================
 async function checkUserRegistration(telegramId) {
+    // Сначала проверяем localStorage (быстрый кэш)
+    const cached = localStorage.getItem('user_registered');
+    
+    if (!isApiConfigured()) {
+        // API не настроен — работаем только через localStorage
+        if (cached) {
+            try {
+                window._currentUser = JSON.parse(cached);
+                window._isRegistered = true;
+                isFirstVisit = false;
+                document.getElementById('navWrapper').style.display = 'flex';
+                populateDashboard(window._currentUser);
+                showScreen('screen-dashboard');
+                return;
+            } catch(e) { /* corrupted cache */ }
+        }
+        isFirstVisit = true;
+        showScreen('screen-home');
+        return;
+    }
+    
     try {
-        // Показываем welcome screen пока проверяем
         showScreen('screen-home');
         
         const url = `${USERS_API_URL}?action=check_user&telegram_id=${telegramId}`;
@@ -19217,9 +19273,7 @@ async function checkUserRegistration(telegramId) {
         if (data.success && data.registered) {
             const user = data.user;
             
-            // Проверяем статус пользователя
             if (user.status === 'deleted' || user.status === 'blocked') {
-                // Пользователь удалён/заблокирован админом — очищаем кэш
                 window._isRegistered = false;
                 window._currentUser = null;
                 localStorage.removeItem('user_registered');
@@ -19229,16 +19283,15 @@ async function checkUserRegistration(telegramId) {
                 return;
             }
             
-            // Зарегистрированный активный пользователь
             window._currentUser = user;
             window._isRegistered = true;
             isFirstVisit = false;
+            localStorage.setItem('user_registered', JSON.stringify(user));
             
             document.getElementById('navWrapper').style.display = 'flex';
             populateDashboard(user);
             showScreen('screen-dashboard');
         } else {
-            // Не зарегистрирован — очищаем кэш, показываем welcome
             window._isRegistered = false;
             localStorage.removeItem('user_registered');
             localStorage.removeItem('user_visited');
@@ -19247,8 +19300,6 @@ async function checkUserRegistration(telegramId) {
         }
     } catch (err) {
         console.error('Error checking user:', err);
-        // Оффлайн — проверяем localStorage
-        const cached = localStorage.getItem('user_registered');
         if (cached) {
             try {
                 window._currentUser = JSON.parse(cached);
@@ -19331,13 +19382,14 @@ function selectBrokerWaterfall(card, brokerId, brokerName, logoClass) {
     // Обновляем главную карточку
     const mainCard = document.getElementById('brokerMainCard');
     const mainName = document.getElementById('brokerMainName');
-    const mainLogo = document.getElementById('brokerMainLogo');
+    const mainLogoWrap = document.getElementById('brokerMainLogo');
     
     if (mainName) mainName.textContent = brokerName;
-    if (mainLogo) {
-        mainLogo.className = 'broker-logo ' + logoClass;
+    if (mainLogoWrap) {
         const letters = {'t-invest':'Т','alor':'A','finam':'F','bcs':'Б','alfa':'A'};
-        mainLogo.textContent = letters[brokerId] || '?';
+        // Заменяем placeholder на обычный broker-logo
+        mainLogoWrap.className = 'broker-logo ' + logoClass;
+        mainLogoWrap.innerHTML = letters[brokerId] || '?';
     }
     if (mainCard) mainCard.classList.add('has-selection');
     
@@ -19372,13 +19424,57 @@ async function submitRegistration() {
     
     const tg = window.Telegram?.WebApp;
     const telegramUser = tg?.initDataUnsafe?.user;
-    if (!telegramUser) { showDashToast('Откройте через Telegram', true); return; }
     
     document.getElementById('regLoading').classList.add('active');
     document.getElementById('btnRegister').disabled = true;
     
     if (window.Telegram?.WebApp?.HapticFeedback) {
         Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+    }
+    
+    // Формируем объект пользователя
+    const now = new Date();
+    const planDays = { trial: 90, monthly: 30, yearly: 365 };
+    const endDate = new Date(now.getTime() + (planDays[window._selectedPlan] || 90) * 86400000);
+    
+    const localUser = {
+        telegram_id: telegramUser ? telegramUser.id : 'local_' + Date.now(),
+        username: telegramUser?.username ? '@' + telegramUser.username : '',
+        first_name: firstName,
+        last_name: lastName,
+        broker: window._selectedBroker,
+        plan: window._selectedPlan,
+        plan_start: now.toISOString().split('T')[0],
+        plan_end: endDate.toISOString().split('T')[0],
+        status: 'active',
+        registered_at: now.toISOString().split('T')[0]
+    };
+    
+    if (!isApiConfigured()) {
+        // API не настроен — регистрация только локально
+        window._currentUser = localUser;
+        window._isRegistered = true;
+        isFirstVisit = false;
+        localStorage.setItem('user_registered', JSON.stringify(localUser));
+        localStorage.setItem('user_visited', 'true');
+        
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+        }
+        
+        document.getElementById('regLoading').classList.remove('active');
+        document.getElementById('btnRegister').disabled = false;
+        document.getElementById('navWrapper').style.display = 'flex';
+        populateDashboard(localUser);
+        showScreen('screen-dashboard');
+        return;
+    }
+    
+    if (!telegramUser) { 
+        showDashToast('Откройте через Telegram', true); 
+        document.getElementById('regLoading').classList.remove('active');
+        document.getElementById('btnRegister').disabled = false;
+        return; 
     }
     
     try {
@@ -19415,7 +19511,20 @@ async function submitRegistration() {
         }
     } catch (err) {
         console.error('Registration error:', err);
-        showDashToast('Ошибка сети', true);
+        // При ошибке сети — сохраняем локально
+        window._currentUser = localUser;
+        window._isRegistered = true;
+        isFirstVisit = false;
+        localStorage.setItem('user_registered', JSON.stringify(localUser));
+        localStorage.setItem('user_visited', 'true');
+        
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+        }
+        
+        document.getElementById('navWrapper').style.display = 'flex';
+        populateDashboard(localUser);
+        showScreen('screen-dashboard');
     } finally {
         document.getElementById('regLoading').classList.remove('active');
         document.getElementById('btnRegister').disabled = false;
@@ -20217,7 +20326,12 @@ function showDashToast(message, isError) {
 
         } else {
             // === ОБЫЧНЫЙ РЕЖИМ ===
-            if (mainMenu) mainMenu.style.setProperty('display', 'flex', 'important');
+            // Не показываем меню на странице регистрации
+            if (screenId === 'screen-register') {
+                if (mainMenu) mainMenu.style.setProperty('display', 'none', 'important');
+            } else {
+                if (mainMenu) mainMenu.style.setProperty('display', 'flex', 'important');
+            }
             if (portfolioMenu) portfolioMenu.style.display = 'none';
         }
     }
