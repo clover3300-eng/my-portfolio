@@ -162,7 +162,10 @@
 
         .screen { display: none; animation: fadeIn 0.4s ease; }
         .screen.active { display: block; }
-        .screen.no-animate { animation: none !important; }
+        .screen.no-animate,
+        .screen.no-animate * { animation: none !important; }
+        .screen.swipe-prev,
+        .screen.swipe-prev * { animation: none !important; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -12618,8 +12621,8 @@ function formatNewsDate(dateString) {
                 portfolioActionPanel.style.display = 'none';
             }
             
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+            window.scrollTo({top: 0, behavior: window._swipeNavigation ? 'auto' : 'smooth'});
+            if (!window._swipeNavigation && window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
 
                     if (typeof checkMenuVisibility === 'function') {
         checkMenuVisibility(screenId);
@@ -17863,7 +17866,9 @@ function initSwipeBack() {
                     const targetEl = document.getElementById(targetId);
                     if (targetEl) targetEl.classList.add('no-animate');
                     
+                    window._swipeNavigation = true;
                     showScreen(targetId);
+                    window._swipeNavigation = false;
                     
                     // Убираем класс после рендера
                     requestAnimationFrame(() => {
