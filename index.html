@@ -7804,10 +7804,9 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
     position: relative;
 }
 
-/* Тень-край текущей страницы при свайпе */
+/* Текущий экран при свайпе (скрыт) */
 .screen.swipe-active {
     z-index: 100;
-    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.2);
 }
 
 /* Предыдущий экран, показываемый на фоне */
@@ -7824,11 +7823,11 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     animation: none !important;
-    background: linear-gradient(180deg, #F1F6FB 0%, #F9FAFC 100%);
+    background: var(--bg-base, #F1F6FB);
 }
 
 body.dark-mode .screen.swipe-prev {
-    background: linear-gradient(180deg, #0f172a 0%, #1a2234 100%);
+    background: var(--bg-base, #0f172a);
 }
 
         
@@ -17780,53 +17779,49 @@ function initSwipeBack() {
             } else if (Math.abs(deltaX) > 5) {
                 isAxisLocked = true;
                 
-                // === Показываем предыдущий экран под текущим ===
+                // === МГНОВЕННО: скрываем текущий, показываем предыдущий ===
                 const targetId = getBackTarget();
                 if (targetId) {
                     _swipeActiveScreen = document.querySelector('.screen.active');
                     _swipePrevScreen = document.getElementById(targetId);
                     
                     if (_swipePrevScreen && _swipeActiveScreen) {
+                        // Предыдущий экран — показываем полностью
                         _swipePrevScreen.classList.add('swipe-prev');
-                        _swipeActiveScreen.classList.add('swipe-active');
+                        // Текущий экран — мгновенно прячем
+                        _swipeActiveScreen.style.opacity = '0';
+                        _swipeActiveScreen.style.pointerEvents = 'none';
                     }
+                }
+                
+                // Линза — сразу показываем
+                lens.style.transition = 'none';
+                lens.style.transform = 'translateX(0)';
+                lens.style.opacity = '1';
+                arrow.style.transform = 'scale(1.2)';
+                
+                // Вибрация при начале
+                if (window.Telegram?.WebApp?.HapticFeedback) {
+                    Telegram.WebApp.HapticFeedback.selectionChanged();
                 }
             }
         }
 
         if (isAxisLocked && e.cancelable) e.preventDefault();
         
-        if (_swipeActiveScreen && deltaX > 0 && isAxisLocked) {
-            _swipeActiveScreen.style.transition = 'none';
-            lens.style.transition = 'none';
-
-            // --- ФИЗИКА ---
-            const screenW = window.innerWidth;
-            let visualShift = deltaX * 0.65;
-            if (visualShift > screenW * 0.5) {
-                visualShift = screenW * 0.5 + (visualShift - screenW * 0.5) * 0.2;
-            }
-            visualShift = Math.min(visualShift, screenW);
-
-            _swipeActiveScreen.style.transform = `translateX(${visualShift}px)`;
+        // Обновляем линзу по ходу свайпа
+        if (isAxisLocked && deltaX > 0) {
+            const progress = Math.min(deltaX / 120, 1);
+            arrow.style.transform = `scale(${1 + progress * 0.3})`;
             
-            const shadowIntensity = Math.min(visualShift / 200, 0.25);
-            _swipeActiveScreen.style.boxShadow = `-10px 0 40px rgba(0, 0, 0, ${shadowIntensity})`;
-
-            // --- ЛИНЗА ---
-            const lensProgress = Math.min(visualShift / 70, 1);
-            lens.style.transform = `translateX(${-100 + (lensProgress * 100)}%)`;
-            lens.style.opacity = lensProgress;
-            arrow.style.transform = `scale(${0.8 + (lensProgress * 0.4)})`;
-
-            // --- ВИБРАЦИЯ ---
-            if (visualShift > 120 && !container.dataset.vibrated) {
+            // При достижении порога — усиленная вибрация
+            if (progress >= 1 && !container.dataset.vibrated) {
                 if (window.Telegram?.WebApp?.HapticFeedback) {
-                    window.Telegram.WebApp.HapticFeedback.selectionChanged();
+                    Telegram.WebApp.HapticFeedback.impactOccurred('light');
                 }
                 container.dataset.vibrated = "true";
-                arrow.style.strokeWidth = "3"; 
-            } else if (visualShift < 120) {
+                arrow.style.strokeWidth = "3";
+            } else if (progress < 1) {
                 container.dataset.vibrated = "";
                 arrow.style.strokeWidth = "2";
             }
@@ -17845,76 +17840,56 @@ function initSwipeBack() {
 
         const endX = e.changedTouches[0].clientX;
         const deltaX = endX - startX;
-        const threshold = 100; 
+        const threshold = 80; 
 
-        if (_swipeActiveScreen) {
-            _swipeActiveScreen.style.transition = 'transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease';
-            lens.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+        // Прячем линзу
+        lens.style.transition = 'transform 0.25s ease, opacity 0.25s ease';
+        lens.style.transform = 'translateX(-100%)';
+        lens.style.opacity = '0';
+
+        if (deltaX > threshold && _swipeActiveScreen && _swipePrevScreen) {
+            // === УСПЕХ: переходим на предыдущую страницу ===
+            const prevScreen = _swipePrevScreen;
+            const activeScreen = _swipeActiveScreen;
+            const targetId = getBackTarget();
             
-            if (deltaX > threshold) {
-                // === УСПЕХ ===
-                const screenW = window.innerWidth;
-                _swipeActiveScreen.style.transform = `translateX(${screenW}px)`;
-                _swipeActiveScreen.style.boxShadow = 'none';
+            // Убираем текущий
+            activeScreen.style.opacity = '';
+            activeScreen.style.pointerEvents = '';
+            
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) targetEl.classList.add('no-animate');
+            if (prevScreen) prevScreen.classList.remove('swipe-prev');
+            
+            window._swipeNavigation = true;
+            showScreen(targetId);
+            window._swipeNavigation = false;
+            
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    if (targetEl) targetEl.classList.remove('no-animate');
+                });
+            });
+            
+            if (window.Telegram?.WebApp?.HapticFeedback) {
+                Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+            }
+            
+        } else {
+            // === ОТМЕНА: возвращаем текущий экран ===
+            if (_swipeActiveScreen) {
+                _swipeActiveScreen.style.transition = 'opacity 0.2s ease';
+                _swipeActiveScreen.style.opacity = '1';
+                _swipeActiveScreen.style.pointerEvents = '';
                 
-                lens.style.transform = `translateX(-100%)`;
-                lens.style.opacity = '0';
-
-                const prevScreen = _swipePrevScreen;
-                const activeScreen = _swipeActiveScreen;
-                
-                setTimeout(() => {
-                    // Очищаем текущий (уехавший) экран
-                    if (activeScreen) {
-                        activeScreen.classList.remove('swipe-active');
-                        activeScreen.style.transform = '';
-                        activeScreen.style.transition = '';
-                        activeScreen.style.boxShadow = '';
-                    }
-                    
-                    const targetId = getBackTarget();
-                    const targetEl = document.getElementById(targetId);
-                    
-                    // 1. Блокируем ВСЕ анимации
-                    if (targetEl) targetEl.classList.add('no-animate');
-                    
-                    // 2. Убираем swipe-prev (position:fixed) ПЕРЕД showScreen
-                    if (prevScreen) prevScreen.classList.remove('swipe-prev');
-                    
-                    // 3. Переключаем экран
-                    window._swipeNavigation = true;
-                    showScreen(targetId);
-                    window._swipeNavigation = false;
-                    
-                    // 4. Снимаем блокировку анимаций через кадр
-                    requestAnimationFrame(() => {
-                        requestAnimationFrame(() => {
-                            if (targetEl) targetEl.classList.remove('no-animate');
-                        });
-                    });
-                    
-                    if (window.Telegram?.WebApp?.HapticFeedback) {
-                        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-                    }
-                }, 300);
-                
-            } else {
-                // === ОТМЕНА ===
-                _swipeActiveScreen.style.transform = 'translateX(0)';
-                _swipeActiveScreen.style.boxShadow = '';
-                lens.style.transform = 'translateX(-100%)';
-                lens.style.opacity = '0';
-                
-                const prevScreen = _swipePrevScreen;
                 const activeScreen = _swipeActiveScreen;
                 setTimeout(() => {
-                    if (prevScreen) prevScreen.classList.remove('swipe-prev');
-                    if (activeScreen) {
-                        activeScreen.classList.remove('swipe-active');
-                        activeScreen.style.transition = '';
-                        activeScreen.style.boxShadow = '';
-                    }
-                }, 350);
+                    activeScreen.style.transition = '';
+                    activeScreen.style.opacity = '';
+                }, 200);
+            }
+            if (_swipePrevScreen) {
+                _swipePrevScreen.classList.remove('swipe-prev');
             }
         }
         
@@ -17926,11 +17901,13 @@ function initSwipeBack() {
     function cleanupSwipe() {
         if (_swipePrevScreen) _swipePrevScreen.classList.remove('swipe-prev');
         if (_swipeActiveScreen) {
-            _swipeActiveScreen.classList.remove('swipe-active');
-            _swipeActiveScreen.style.transform = '';
+            _swipeActiveScreen.style.opacity = '';
+            _swipeActiveScreen.style.pointerEvents = '';
             _swipeActiveScreen.style.transition = '';
-            _swipeActiveScreen.style.boxShadow = '';
         }
+        lens.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+        lens.style.transform = 'translateX(-100%)';
+        lens.style.opacity = '0';
         _swipePrevScreen = null;
         _swipeActiveScreen = null;
         isDragging = false;
