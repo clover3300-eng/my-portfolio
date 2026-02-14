@@ -11487,7 +11487,7 @@ body.dark-mode .portfolio-echelons-total-row {
     
     </style>
 </head>
-<body onclick="hideAllTips(event)">
+<body class="home-mode" onclick="hideAllTips(event)">
 
 <div id="toast" class="toast">Скопировано!</div>
 
@@ -13280,15 +13280,44 @@ function formatNewsDate(dateString) {
         // Swipe navigation removed
 
                 function checkFirstVisit() {
-    // Проверяем зарегистрирован ли пользователь
+    // Сначала проверяем localStorage — быстрый кэш
+    const cached = localStorage.getItem('user_registered');
+    
     const tg = window.Telegram?.WebApp;
     const telegramId = tg?.initDataUnsafe?.user?.id;
     
-    if (telegramId) {
-        // Проверяем в Google Sheets
+    if (telegramId && isApiConfigured()) {
+        // В Telegram и API настроен — проверяем в Google Sheets
+        // Но сначала показываем кэш мгновенно если есть
+        if (cached) {
+            try {
+                const cachedUser = JSON.parse(cached);
+                window._currentUser = cachedUser;
+                window._isRegistered = true;
+                isFirstVisit = false;
+                document.getElementById('navWrapper').style.display = 'flex';
+                populateDashboard(cachedUser);
+                showScreen('screen-dashboard');
+            } catch(e) {
+                showScreen('screen-home');
+            }
+        }
+        // Затем проверяем актуальные данные с сервера (async)
         checkUserRegistration(telegramId);
     } else {
-        // Не в Telegram — показываем приветствие
+        // Не в Telegram или API не настроен — работаем через localStorage
+        if (cached) {
+            try {
+                const cachedUser = JSON.parse(cached);
+                window._currentUser = cachedUser;
+                window._isRegistered = true;
+                isFirstVisit = false;
+                document.getElementById('navWrapper').style.display = 'flex';
+                populateDashboard(cachedUser);
+                showScreen('screen-dashboard');
+                return;
+            } catch(e) { /* corrupted cache */ }
+        }
         isFirstVisit = true;
         showScreen('screen-home');
     }
@@ -19264,11 +19293,18 @@ async function checkUserRegistration(telegramId) {
     }
     
     try {
-        showScreen('screen-home');
-        
         const url = `${USERS_API_URL}?action=check_user&telegram_id=${telegramId}`;
-        const response = await fetch(url);
-        const data = await response.json();
+        const response = await fetch(url, { redirect: 'follow', mode: 'cors' });
+        
+        // Google Apps Script может вернуть HTML вместо JSON если что-то не так
+        const text = await response.text();
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch(parseErr) {
+            console.error('API returned non-JSON:', text.substring(0, 200));
+            throw new Error('Invalid API response');
+        }
         
         if (data.success && data.registered) {
             const user = data.user;
@@ -19488,8 +19524,10 @@ async function submitRegistration() {
             plan: window._selectedPlan
         });
         
-        const response = await fetch(`${USERS_API_URL}?${params.toString()}`);
-        const data = await response.json();
+        const response = await fetch(`${USERS_API_URL}?${params.toString()}`, { redirect: 'follow', mode: 'cors' });
+        const regText = await response.text();
+        let data;
+        try { data = JSON.parse(regText); } catch(pe) { throw new Error('Invalid API response'); }
         
         if (data.success) {
             window._currentUser = data.user;
