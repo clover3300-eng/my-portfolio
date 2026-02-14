@@ -1815,6 +1815,50 @@ body.register-mode #portfolioModeSwitcher {
     stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
 }
 
+/* ===== QUIET INFO STRIP — минимальный рыночный пульс ===== */
+.dash-quiet-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-top: 12px;
+    padding: 8px 0;
+    animation: bentoFadeUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.12s backwards;
+}
+.dqs-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 14px;
+}
+.dqs-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+.dqs-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 500;
+    color: #94A3B8;
+    letter-spacing: 0.04em;
+}
+.dark-mode .dqs-label { color: #64748B; }
+.dqs-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    color: var(--text-main);
+    opacity: 0.7;
+}
+.dqs-sep {
+    width: 1px; height: 10px;
+    background: rgba(0,0,0,0.06);
+    flex-shrink: 0;
+}
+.dark-mode .dqs-sep {
+    background: rgba(255,255,255,0.06);
+}
+
 /* Loading spinner for registration */
 .reg-loading {
     display: none; align-items: center;
@@ -12462,8 +12506,29 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
         </div>
 
+        <!-- Quiet info strip — лаконичный акцент -->
+        <div class="dash-quiet-strip" id="dashQuietStrip">
+            <div class="dqs-item">
+                <span class="dqs-dot" style="background:#3B82F6;"></span>
+                <span class="dqs-label">IMOEX</span>
+                <span class="dqs-value" id="dqs-imoex">—</span>
+            </div>
+            <div class="dqs-sep"></div>
+            <div class="dqs-item">
+                <span class="dqs-dot" style="background:#10B981;"></span>
+                <span class="dqs-label">USD</span>
+                <span class="dqs-value" id="dqs-usd">—</span>
+            </div>
+            <div class="dqs-sep"></div>
+            <div class="dqs-item">
+                <span class="dqs-dot" style="background:#F97316;"></span>
+                <span class="dqs-label">ОФЗ</span>
+                <span class="dqs-value" id="dqs-ofz">—</span>
+            </div>
+        </div>
+
         <!-- BENTO GRID -->
-        <div class="bento-grid" style="margin-top:16px;">
+        <div class="bento-grid" style="margin-top:12px;">
 
             <!-- 1. SECONDARY ACTIONS — Активы + Ребаланс -->
             <div class="bento-cell bento-action glow-green" onclick="showScreen('screen-stub')">
@@ -20598,41 +20663,27 @@ function syncBentoRing() {
     }
 }
 
-// Sync market data to bento cells
+// Sync market data to quiet strip
 function syncBentoMarketData() {
-    // IMOEX
+    // Quiet strip — IMOEX
     const imoexSrc = document.getElementById('val-imoex');
-    const imoexDst = document.getElementById('bento-val-imoex');
-    if (imoexSrc && imoexDst && imoexSrc.textContent !== '---') {
-        imoexDst.textContent = imoexSrc.textContent;
-    }
-    const dynImoexSrc = document.getElementById('dyn-imoex');
-    const dynImoexDst = document.getElementById('bento-dyn-imoex');
-    if (dynImoexSrc && dynImoexDst && dynImoexSrc.textContent) {
-        dynImoexDst.textContent = dynImoexSrc.textContent;
-        dynImoexDst.className = 'bento-market-delta ' + 
-            (dynImoexSrc.textContent.includes('-') ? 'down' : 'up');
+    const imoexQs = document.getElementById('dqs-imoex');
+    if (imoexSrc && imoexQs && imoexSrc.textContent !== '---') {
+        imoexQs.textContent = imoexSrc.textContent;
     }
     
-    // USD/RUB
+    // Quiet strip — USD/RUB
     const usdSrc = document.getElementById('val-usdrub');
-    const usdDst = document.getElementById('bento-val-usdrub');
-    if (usdSrc && usdDst && usdSrc.textContent !== '---') {
-        usdDst.textContent = usdSrc.textContent;
-    }
-    const dynUsdSrc = document.getElementById('dyn-usdrub');
-    const dynUsdDst = document.getElementById('bento-dyn-usdrub');
-    if (dynUsdSrc && dynUsdDst && dynUsdSrc.textContent) {
-        dynUsdDst.textContent = dynUsdSrc.textContent;
-        dynUsdDst.className = 'bento-market-delta ' + 
-            (dynUsdSrc.textContent.includes('-') ? 'down' : 'up');
+    const usdQs = document.getElementById('dqs-usd');
+    if (usdSrc && usdQs && usdSrc.textContent !== '---') {
+        usdQs.textContent = usdSrc.textContent;
     }
     
-    // OFZ 10Y
+    // Quiet strip — OFZ 10Y
     const ofzSrc = document.getElementById('val-ofz10');
-    const ofzDst = document.getElementById('bento-val-ofz');
-    if (ofzSrc && ofzDst && ofzSrc.textContent !== '---%') {
-        ofzDst.textContent = ofzSrc.textContent;
+    const ofzQs = document.getElementById('dqs-ofz');
+    if (ofzSrc && ofzQs && ofzSrc.textContent !== '---%') {
+        ofzQs.textContent = ofzSrc.textContent;
     }
 }
 
