@@ -668,6 +668,53 @@
 }
 .dark-mode .broker-check { border-color: #475569; }
 
+/* --- Broker Main Card (Strategy Accordion style) --- */
+.broker-main-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 1.5px solid rgba(0,0,0,0.06);
+    position: relative;
+    z-index: 20;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.broker-main-card:active { transform: scale(0.98); }
+.dark-mode .broker-main-card {
+    background: #1e293b;
+    border-color: rgba(255,255,255,0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+.broker-main-card.has-selection {
+    border-color: var(--accent-blue);
+}
+.broker-main-arrow {
+    color: #94A3B8;
+    transition: transform 0.3s;
+}
+.broker-main-arrow.open {
+    transform: rotate(180deg);
+}
+
+/* Broker waterfall cards use existing strategy-option-card styles */
+#brokerWaterfall .strategy-option-card {
+    padding: 14px 18px;
+}
+#brokerWaterfall .strategy-option-card .broker-check {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid #D1D5DB;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; flex-shrink: 0;
+}
+.dark-mode #brokerWaterfall .strategy-option-card .broker-check { border-color: #475569; }
+#brokerWaterfall .strategy-option-card.selected-in-list .broker-check {
+    background: var(--accent-blue); border-color: var(--accent-blue);
+}
+
 /* --- Subscription Plan Cards --- */
 .plan-cards { display: flex; flex-direction: column; gap: 8px; }
 
@@ -690,7 +737,7 @@
 }
 .dark-mode .plan-card.selected { background: #2d3748; }
 
-.plan-card-top { display: flex; justify-content: flex-start; align-items: center; gap: 10px; margin-bottom: 6px; padding-right: 30px; }
+.plan-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 .plan-name {
     font-family: 'Inter', sans-serif; font-size: 15px;
     font-weight: 700; color: var(--text-main);
@@ -720,9 +767,9 @@
 .dark-mode .plan-detail { color: #64748B; }
 
 .plan-radio {
-    position: absolute; top: 16px; right: 16px;
     width: 20px; height: 20px; border-radius: 50%;
     border: 2px solid #D1D5DB; transition: all 0.2s;
+    flex-shrink: 0;
 }
 .plan-card.selected .plan-radio {
     background: var(--accent-blue); border-color: var(--accent-blue);
@@ -11542,60 +11589,59 @@ body.dark-mode .portfolio-echelons-total-row {
         <!-- Выбор брокера — аккордеон -->
         <div class="reg-section">
             <div class="reg-section-label">Выберите брокера</div>
-            <div class="broker-accordion" id="brokerList">
-                <div class="broker-card" data-broker="t-invest" onclick="selectBroker(this)">
+            
+            <!-- Главная карточка (выбранный брокер) -->
+            <div class="strategy-perspective-wrapper" style="margin-top:0;">
+                <div class="broker-main-card" id="brokerMainCard" onclick="toggleBrokerList()">
                     <div class="broker-card-left">
-                        <div class="broker-logo t-invest">Т</div>
+                        <div class="broker-logo t-invest" id="brokerMainLogo">?</div>
                         <div class="broker-info">
-                            <div class="broker-name">Т-Инвестиции</div>
+                            <div class="broker-name" id="brokerMainName">Выберите брокера</div>
                         </div>
                     </div>
-                    <div class="broker-check">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    <div class="broker-main-arrow" id="brokerMainArrow">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                     </div>
                 </div>
-                <div class="broker-card" data-broker="alor" onclick="selectBroker(this)">
-                    <div class="broker-card-left">
-                        <div class="broker-logo alor">A</div>
-                        <div class="broker-info">
-                            <div class="broker-name">АЛОР Брокер</div>
+                
+                <!-- Waterfall dropdown -->
+                <div class="waterfall-container" id="brokerWaterfall">
+                    <div class="waterfall-inner">
+                        <div class="strategy-option-card" data-broker="t-invest" onclick="selectBrokerWaterfall(this, 't-invest', 'Т-Инвестиции', 't-invest')">
+                            <div class="broker-card-left">
+                                <div class="broker-logo t-invest">Т</div>
+                                <div class="broker-info"><div class="broker-name">Т-Инвестиции</div></div>
+                            </div>
+                            <div class="broker-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                         </div>
-                    </div>
-                    <div class="broker-check">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                </div>
-                <div class="broker-card" data-broker="finam" onclick="selectBroker(this)">
-                    <div class="broker-card-left">
-                        <div class="broker-logo finam">F</div>
-                        <div class="broker-info">
-                            <div class="broker-name">Финам</div>
+                        <div class="strategy-option-card" data-broker="alor" onclick="selectBrokerWaterfall(this, 'alor', 'АЛОР Брокер', 'alor')">
+                            <div class="broker-card-left">
+                                <div class="broker-logo alor">A</div>
+                                <div class="broker-info"><div class="broker-name">АЛОР Брокер</div></div>
+                            </div>
+                            <div class="broker-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                         </div>
-                    </div>
-                    <div class="broker-check">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                </div>
-                <div class="broker-card" data-broker="bcs" onclick="selectBroker(this)">
-                    <div class="broker-card-left">
-                        <div class="broker-logo bcs">Б</div>
-                        <div class="broker-info">
-                            <div class="broker-name">БКС</div>
+                        <div class="strategy-option-card" data-broker="finam" onclick="selectBrokerWaterfall(this, 'finam', 'Финам', 'finam')">
+                            <div class="broker-card-left">
+                                <div class="broker-logo finam">F</div>
+                                <div class="broker-info"><div class="broker-name">Финам</div></div>
+                            </div>
+                            <div class="broker-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                         </div>
-                    </div>
-                    <div class="broker-check">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    </div>
-                </div>
-                <div class="broker-card" data-broker="alfa" onclick="selectBroker(this)">
-                    <div class="broker-card-left">
-                        <div class="broker-logo alfa">A</div>
-                        <div class="broker-info">
-                            <div class="broker-name">Альфа-Инвестиции</div>
+                        <div class="strategy-option-card" data-broker="bcs" onclick="selectBrokerWaterfall(this, 'bcs', 'БКС', 'bcs')">
+                            <div class="broker-card-left">
+                                <div class="broker-logo bcs">Б</div>
+                                <div class="broker-info"><div class="broker-name">БКС</div></div>
+                            </div>
+                            <div class="broker-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                         </div>
-                    </div>
-                    <div class="broker-check">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <div class="strategy-option-card" data-broker="alfa" onclick="selectBrokerWaterfall(this, 'alfa', 'Альфа-Инвестиции', 'alfa')">
+                            <div class="broker-card-left">
+                                <div class="broker-logo alfa">A</div>
+                                <div class="broker-info"><div class="broker-name">Альфа-Инвестиции</div></div>
+                            </div>
+                            <div class="broker-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -11606,8 +11652,8 @@ body.dark-mode .portfolio-echelons-total-row {
             <div class="reg-section-label">Тарифный план</div>
             <div class="plan-cards" id="planCards">
                 <div class="plan-card selected" data-plan="trial" onclick="selectPlan(this)">
-                    <div class="plan-radio"></div>
                     <div class="plan-card-top">
+                        <div class="plan-radio"></div>
                         <div class="plan-name">Пробный период</div>
                         <span class="plan-badge free">Бесплатно</span>
                     </div>
@@ -11615,8 +11661,8 @@ body.dark-mode .portfolio-echelons-total-row {
                     <div class="plan-detail">Полный доступ ко всем функциям на 90 дней</div>
                 </div>
                 <div class="plan-card" data-plan="monthly" onclick="selectPlan(this)">
-                    <div class="plan-radio"></div>
                     <div class="plan-card-top">
+                        <div class="plan-radio"></div>
                         <div class="plan-name">Ежемесячная</div>
                         <span class="plan-badge popular">Популярная</span>
                     </div>
@@ -11624,8 +11670,8 @@ body.dark-mode .portfolio-echelons-total-row {
                     <div class="plan-detail">Идеально если есть портфель и нужна ребалансировка</div>
                 </div>
                 <div class="plan-card" data-plan="yearly" onclick="selectPlan(this)">
-                    <div class="plan-radio"></div>
                     <div class="plan-card-top">
+                        <div class="plan-radio"></div>
                         <div class="plan-name">Годовая подписка</div>
                         <span class="plan-badge best">Выгодно -50%</span>
                     </div>
@@ -11684,14 +11730,14 @@ body.dark-mode .portfolio-echelons-total-row {
                     <div class="dash-action-title">Расчёт</div>
                     <div class="dash-action-desc">Калькулятор портфеля</div>
                 </div>
-                <div class="dash-action-card" onclick="showScreen('screen-assets', true)">
+                <div class="dash-action-card" onclick="showScreen('screen-stub')">
                     <div class="dash-action-icon green">
                         <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                     </div>
                     <div class="dash-action-title">Мои активы</div>
-                    <div class="dash-action-desc">Таблица всех позиций</div>
+                    <div class="dash-action-desc">Активы в портфеле</div>
                 </div>
-                <div class="dash-action-card" onclick="showScreen('screen-portfolio')">
+                <div class="dash-action-card" onclick="showScreen('screen-assets', true)">
                     <div class="dash-action-icon orange">
                         <svg viewBox="0 0 24 24"><path d="M23 6l-9.5 9.5-5-5L1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                     </div>
@@ -13535,10 +13581,6 @@ function formatNewsDate(dateString) {
                 document.body.classList.remove('dashboard-home-mode');
                 document.getElementById('navWrapper').style.display = 'none';
                 document.getElementById('stickyPanel').style.display = 'none';
-                // Анимация карточек брокеров
-                setTimeout(() => {
-                    document.querySelectorAll('.broker-card').forEach(c => c.classList.add('visible'));
-                }, 200);
             } else {
                 document.body.classList.remove('home-mode');
                 document.body.classList.remove('dashboard-home-mode');
@@ -18738,7 +18780,7 @@ function initSwipeBack() {
         if (currentScreen === 'screen-interesting') return home;
         if (currentScreen === 'screen-portfolio') return home;
         if (currentScreen === 'screen-assets') return home;
-        if (currentScreen === 'screen-stub') return 'screen-portfolio';
+        if (currentScreen === 'screen-stub') return home;
         return home; 
     }
 
@@ -19177,8 +19219,11 @@ async function checkUserRegistration(telegramId) {
             
             // Проверяем статус пользователя
             if (user.status === 'deleted' || user.status === 'blocked') {
+                // Пользователь удалён/заблокирован админом — очищаем кэш
                 window._isRegistered = false;
                 window._currentUser = null;
+                localStorage.removeItem('user_registered');
+                localStorage.removeItem('user_visited');
                 isFirstVisit = true;
                 showScreen('screen-home');
                 return;
@@ -19193,7 +19238,10 @@ async function checkUserRegistration(telegramId) {
             populateDashboard(user);
             showScreen('screen-dashboard');
         } else {
+            // Не зарегистрирован — очищаем кэш, показываем welcome
             window._isRegistered = false;
+            localStorage.removeItem('user_registered');
+            localStorage.removeItem('user_visited');
             isFirstVisit = true;
             showScreen('screen-home');
         }
@@ -19250,12 +19298,54 @@ function openTerminalOrRegister() {
 // ВЫБОР БРОКЕРА
 // =============================================
 function selectBroker(card) {
+    // Legacy fallback — redirect to waterfall
+}
+
+// =============================================
+// BROKER WATERFALL ACCORDION
+// =============================================
+function toggleBrokerList() {
+    const container = document.getElementById('brokerWaterfall');
+    const arrow = document.getElementById('brokerMainArrow');
+    if (!container) return;
+    
     if (window.Telegram?.WebApp?.HapticFeedback) {
         Telegram.WebApp.HapticFeedback.selectionChanged();
     }
-    document.querySelectorAll('.broker-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    window._selectedBroker = card.dataset.broker;
+    
+    container.classList.toggle('show');
+    arrow.classList.toggle('open');
+}
+
+function selectBrokerWaterfall(card, brokerId, brokerName, logoClass) {
+    if (window.Telegram?.WebApp?.HapticFeedback) {
+        Telegram.WebApp.HapticFeedback.selectionChanged();
+    }
+    
+    // Убираем selected у всех
+    document.querySelectorAll('#brokerWaterfall .strategy-option-card').forEach(c => c.classList.remove('selected-in-list'));
+    card.classList.add('selected-in-list');
+    
+    window._selectedBroker = brokerId;
+    
+    // Обновляем главную карточку
+    const mainCard = document.getElementById('brokerMainCard');
+    const mainName = document.getElementById('brokerMainName');
+    const mainLogo = document.getElementById('brokerMainLogo');
+    
+    if (mainName) mainName.textContent = brokerName;
+    if (mainLogo) {
+        mainLogo.className = 'broker-logo ' + logoClass;
+        const letters = {'t-invest':'Т','alor':'A','finam':'F','bcs':'Б','alfa':'A'};
+        mainLogo.textContent = letters[brokerId] || '?';
+    }
+    if (mainCard) mainCard.classList.add('has-selection');
+    
+    // Закрываем waterfall
+    setTimeout(() => {
+        document.getElementById('brokerWaterfall').classList.remove('show');
+        document.getElementById('brokerMainArrow').classList.remove('open');
+    }, 200);
 }
 
 // =============================================
