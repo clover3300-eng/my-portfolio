@@ -12462,29 +12462,10 @@ body.dark-mode .portfolio-echelons-total-row {
             </div>
         </div>
 
-        <!-- 2. MARKET PULSE — котировки -->
-        <div class="bento-grid" style="margin-top:10px;">
-            <div class="bento-cell bento-market-pulse span-2" onclick="showScreen('screen-interesting')">
-                <div class="market-items">
-                    <div class="bento-market-item">
-                        <span class="bento-market-ticker">IMOEX</span>
-                        <span class="bento-market-val" id="bento-val-imoex">—</span>
-                        <span class="bento-market-delta up" id="bento-dyn-imoex">—</span>
-                    </div>
-                    <div class="bento-market-item">
-                        <span class="bento-market-ticker">USD/RUB</span>
-                        <span class="bento-market-val" id="bento-val-usdrub">—</span>
-                        <span class="bento-market-delta up" id="bento-dyn-usdrub">—</span>
-                    </div>
-                    <div class="bento-market-item">
-                        <span class="bento-market-ticker">ОФЗ 10Y</span>
-                        <span class="bento-market-val" id="bento-val-ofz">—</span>
-                        <span class="bento-market-delta" id="bento-dyn-ofz" style="background:rgba(59,130,246,0.1);color:#3B82F6;">yield</span>
-                    </div>
-                </div>
-            </div>
+        <!-- BENTO GRID -->
+        <div class="bento-grid" style="margin-top:16px;">
 
-            <!-- 3. SECONDARY ACTIONS — Активы + Ребаланс -->
+            <!-- 1. SECONDARY ACTIONS — Активы + Ребаланс -->
             <div class="bento-cell bento-action glow-green" onclick="showScreen('screen-stub')">
                 <div class="bento-action-icon green">
                     <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -12505,24 +12486,14 @@ body.dark-mode .portfolio-echelons-total-row {
                 </div>
             </div>
 
-            <!-- 4. PORTFOLIO RING + SUBSCRIPTION -->
-            <div class="bento-cell bento-portfolio-ring" onclick="window.isPortfolioCalculated ? showScreen('screen-assets', true) : showScreen('screen-app')">
-                <div class="bento-ring-wrap">
-                    <canvas id="bentoRingCanvas" width="160" height="160"></canvas>
-                    <div class="bento-ring-center">
-                        <div class="bento-ring-pct" id="bentoRingPct">—</div>
-                        <div class="bento-ring-label">облигации</div>
-                    </div>
+            <!-- 2. Интересное + Подписка -->
+            <div class="bento-cell bento-action glow-purple" onclick="showScreen('screen-interesting')">
+                <div class="bento-action-icon purple">
+                    <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 </div>
-                <div class="bento-ring-legend">
-                    <div class="bento-legend-item">
-                        <div class="bento-legend-dot" style="background:#3B82F6;"></div>
-                        <span class="bento-legend-text">ОФЗ</span>
-                    </div>
-                    <div class="bento-legend-item">
-                        <div class="bento-legend-dot" style="background:#10B981;"></div>
-                        <span class="bento-legend-text">Акции</span>
-                    </div>
+                <div>
+                    <div class="bento-action-label">Интересное</div>
+                    <div class="bento-action-sub">Новости и аналитика</div>
                 </div>
             </div>
 
@@ -12542,6 +12513,29 @@ body.dark-mode .portfolio-echelons-total-row {
                 </div>
             </div>
         </div>
+
+        <!-- PORTFOLIO RING — закомментирован, для будущего раздела "Мои активы" -->
+        <!--
+        <div class="bento-cell bento-portfolio-ring" onclick="window.isPortfolioCalculated ? showScreen('screen-assets', true) : showScreen('screen-app')">
+            <div class="bento-ring-wrap">
+                <canvas id="bentoRingCanvas" width="160" height="160"></canvas>
+                <div class="bento-ring-center">
+                    <div class="bento-ring-pct" id="bentoRingPct">—</div>
+                    <div class="bento-ring-label">облигации</div>
+                </div>
+            </div>
+            <div class="bento-ring-legend">
+                <div class="bento-legend-item">
+                    <div class="bento-legend-dot" style="background:#3B82F6;"></div>
+                    <span class="bento-legend-text">ОФЗ</span>
+                </div>
+                <div class="bento-legend-item">
+                    <div class="bento-legend-dot" style="background:#10B981;"></div>
+                    <span class="bento-legend-text">Акции</span>
+                </div>
+            </div>
+        </div>
+        -->
 
         <!-- Settings Section — Revolutionary Grouped Card -->
         <div class="dash-section">
