@@ -13279,6 +13279,22 @@ function formatNewsDate(dateString) {
         
         // Swipe navigation removed
 
+// !!! ВАЖНО: Замените эту ссылку на URL вашего НОВОГО Apps Script для управления пользователями !!!
+// Это НЕ тот же URL что LOGGING_URL — нужно создать ОТДЕЛЬНЫЙ скрипт из файла UserManagement_GoogleAppsScript.js
+// и развернуть его как веб-приложение (Развернуть → Новое развертывание → Веб-приложение)
+const USERS_API_URL = "https://script.google.com/macros/s/AKfycbwm1dbotmFNjLd-HFJkKEAqcopjzwkXmuXRe0Sebnxp1Qd9q5I03eh9Lltg1ot0jy5NRA/exec";
+
+// Проверяем настроен ли API
+function isApiConfigured() {
+    return USERS_API_URL && !USERS_API_URL.includes('ВСТАВЬТЕ_СЮДА');
+}
+
+// Глобальное состояние пользователя
+window._currentUser = null;
+window._isRegistered = false;
+window._selectedBroker = '';
+window._selectedPlan = 'trial';
+
                 function checkFirstVisit() {
     // Сначала проверяем localStorage — быстрый кэш
     const cached = localStorage.getItem('user_registered');
@@ -19253,19 +19269,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // USERS API — Registration & Dashboard System
 // =============================================
 
-// !!! ВАЖНО: Замените эту ссылку на URL вашего Google Apps Script !!!
-const USERS_API_URL = "https://script.google.com/macros/s/AKfycbwOnMSCahe3R53CoooNzUxdB8XbSHvXKgxg53iZN7PXIUYLeIJkpfkEaZgh7HUMJ7Ql/exec";
-
-// Проверяем настроен ли API
-function isApiConfigured() {
-    return USERS_API_URL && !USERS_API_URL.includes('ВСТАВЬТЕ_СЮДА');
-}
-
-// Глобальное состояние пользователя
-window._currentUser = null;
-window._isRegistered = false;
-window._selectedBroker = '';
-window._selectedPlan = 'trial';
+// USERS_API_URL и isApiConfigured перенесены выше (до checkFirstVisit)
 
 // =============================================
 // ПРОВЕРКА РЕГИСТРАЦИИ ПРИ ЗАПУСКЕ
@@ -19304,6 +19308,12 @@ async function checkUserRegistration(telegramId) {
         } catch(parseErr) {
             console.error('API returned non-JSON:', text.substring(0, 200));
             throw new Error('Invalid API response');
+        }
+        
+        // Проверяем что ответ от правильного API (должен иметь поле 'registered')
+        if (!('registered' in data)) {
+            console.error('API response missing "registered" field — wrong endpoint?');
+            throw new Error('Wrong API endpoint');
         }
         
         if (data.success && data.registered) {
