@@ -366,6 +366,7 @@
     margin: -16px;
     padding: 60px 30px;
     text-align: center;
+    animation: welcomeFadeIn 0.8s ease-out;
     box-sizing: border-box;
 }
 
@@ -7818,9 +7819,16 @@ body.dark-mode .ls-arrow { color: #FFFFFF; }
     right: 0;
     bottom: 0;
     z-index: 99;
+    padding: 16px;
+    padding-bottom: 40px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     animation: none !important;
+    background: linear-gradient(180deg, #F1F6FB 0%, #F9FAFC 100%);
+}
+
+body.dark-mode .screen.swipe-prev {
+    background: linear-gradient(180deg, #0f172a 0%, #1a2234 100%);
 }
 
         
